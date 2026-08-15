@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>여행 경로 · 일자별 · 워터/SC</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root { --ink:#1c1917; --sc:#cc0000; --water:#0077c8; --stay:#0f766e; --poi:#a16207; }
+    * { box-sizing: border-box; }
+    html, body { height:100%; margin:0; font-family:"Apple SD Gothic Neo",sans-serif; color:var(--ink); }
+    header {
+      position:absolute; top:0; left:0; right:0; z-index:500; min-height:58px;
+      display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px;
+      padding:8px 12px; background:#fff; border-bottom:2px solid #111;
+    }
+    h1 { margin:0; font-size:15px; }
+    .sub { margin:0; font-size:11px; color:#57534e; }
+    .tabs, .acts { display:flex; flex-wrap:wrap; gap:6px; }
+    button, .acts a {
+      appearance:none; border:2px solid #111; background:#fff; color:#111;
+      padding:6px 10px; font:700 12px/1 inherit; cursor:pointer; text-decoration:none;
+    }
+    button.on { background:#111; color:#fff; }
+    .acts a.naver { background:#03c75a; color:#fff; border-color:#019c46; }
+    #map { position:absolute; inset:90px 0 0; }
+    .panel {
+      position:absolute; z-index:400; top:102px; left:12px; width:min(340px, calc(100vw - 24px));
+      max-height:calc(100vh - 120px); overflow:auto; background:#fff; border:2px solid #111;
+      box-shadow:4px 4px 0 #111;
+    }
+    .panel h2 { margin:0; padding:10px 12px; font-size:13px; border-bottom:1px solid #e7e5e4; }
+    .list { list-style:none; margin:0; padding:0; }
+    .list a { display:block; padding:8px 12px; color:inherit; text-decoration:none; border-top:1px solid #f5f5f4; }
+    .list a:hover { background:#fafafa; }
+    .tag { display:inline-block; min-width:36px; margin-right:6px; padding:1px 5px; font-size:10px; font-weight:800; color:#fff; }
+    .sc { background:var(--sc); } .water { background:var(--water); }
+    .stay { background:var(--stay); } .poi { background:var(--poi); }
+    .note { padding:8px 12px 12px; font-size:11px; color:#57534e; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>8/27–29 경로 · 충전기</h1>
+      <p class="sub">네이버맵 URL 규격으로 길찾기. 마커는 워터·테슬라 SC 포함</p>
+    </div>
+    <div class="tabs" id="tabs"></div>
+    <div class="acts">
+      <a href="./">일정</a>
+      <a href="../">목록</a>
+      <a class="naver" id="naverOpen" target="_blank" rel="noreferrer">이 일정 네이버 길찾기</a>
+    </div>
+  </header>
+  <aside class="panel">
+    <h2 id="panelTitle">전체</h2>
+    <ul class="list" id="list"></ul>
+    <p class="note" id="note"></p>
+  </aside>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    function pt(lng, lat, name, type) {
+      var t = type === "addr" ? "ADDRESS_POI" : "PLACE_POI";
+      return lng + "," + lat + "," + encodeURIComponent(name) + "," + t;
+    }
+    function naverDir(start, goal, vias) {
+      var via = !vias || !vias.length ? "-" : vias.map(function (v) { return pt(v.lng, v.lat, v.name, "place"); }).join(":");
+      return "https://map.naver.com/p/directions/" + pt(start.lng, start.lat, start.name, start.type || "addr") +
+        "/" + pt(goal.lng, goal.lat, goal.name, "place") + "/" + via + "/car";
+    }
+    function naverSearch(q) {
+      return "https://map.naver.com/p/search/" + encodeURIComponent(q);
+    }
+
+    var ULSAN = { lat: 35.5384, lng: 129.3114, name: "울산", type: "addr" };
+    var ELY = { lat: 37.822123, lng: 127.589843, name: "엘리시안강촌" };
+    var SOGEUM = { lat: 37.3648, lng: 127.8322, name: "소금산그랜드밸리" };
+    var GAP_N = { lat: 37.7011875, lng: 127.5459242, name: "가평휴게소춘천방향 수퍼차저" };
+    var GAP_S = { lat: 37.6989, lng: 127.5431, name: "가평휴게소서울방향 수퍼차저" };
+    var NAMI = { lat: 37.7915, lng: 127.5253, name: "남이섬 선착장" };
+    var JADE = { lat: 37.8315, lng: 127.5458, name: "제이드가든" };
+
+    var chargers = [
+      { kind: "sc", name: "SC 김천 모다아울렛", dir: "경부 IC · V3 8기", lat: 36.1556, lng: 128.3512, q: "김천 모다아울렛 테슬라 슈퍼차저", days: ["d27", "d29", "all"] },
+      { kind: "water", name: "워터 선산휴게소", dir: "양평(북상)", lat: 36.2732, lng: 128.2478, q: "선산휴게소 양평방향 워터", days: ["d27", "all"] },
+      { kind: "water", name: "워터 문경휴게소", dir: "양평(북상) 350kW", lat: 36.62128, lng: 128.15198, q: "문경휴게소 양평방향 워터", days: ["d27", "all"] },
+      { kind: "water", name: "워터 문경휴게소", dir: "창원(남하)", lat: 36.61974, lng: 128.15056, q: "문경휴게소 창원방향 워터", days: ["d29", "all"] },
+      { kind: "water", name: "워터 괴산휴게소", dir: "창원(남하만)", lat: 36.8155, lng: 127.8630, q: "괴산휴게소 창원방향 워터", days: ["d29", "all"] },
+      { kind: "water", name: "워터 충주휴게소", dir: "양평(북상)", lat: 37.02356, lng: 127.83906, q: "충주휴게소 양평방향 워터", days: ["d27", "all"] },
+      { kind: "sc", name: "SC 제천 남제천IC", dir: "중앙고속 이탈 · V3 8기", lat: 37.0825, lng: 128.1912, q: "제천 테슬라 슈퍼차저 남제천", days: ["d27", "all"] },
+      { kind: "sc", name: "SC 원주 AK플라자", dir: "시내 V3 9기", lat: 37.3482, lng: 127.9295, q: "원주 AK플라자 테슬라 슈퍼차저", days: ["d27", "all"] },
+      { kind: "water", name: "워터 원주휴게소", dir: "춘천방향", lat: 37.4175, lng: 127.9065, q: "원주휴게소 춘천방향 워터", days: ["d27", "all"] },
+      { kind: "water", name: "워터 홍천강휴게소", dir: "춘천방향 350kW", lat: 37.6890, lng: 127.8880, q: "홍천강휴게소 춘천방향 워터", days: ["d27", "all"] },
+      { kind: "sc", name: "SC 가평휴게소 춘천", dir: "V4 · 입실 전", lat: 37.7011875, lng: 127.5459242, q: "가평휴게소춘천방향 수퍼차저", days: ["d27", "d28", "all"] },
+      { kind: "sc", name: "SC 가평휴게소 서울", dir: "V4 · 복귀", lat: 37.6989, lng: 127.5431, q: "가평휴게소서울방향 수퍼차저", days: ["d29", "d28", "all"] },
+      { kind: "water", name: "워터 서여주휴게소", dir: "창원(남하만)", lat: 37.27881, lng: 127.57846, q: "서여주휴게소 창원방향 워터", days: ["d29", "all"] }
+    ];
+
+    var days = {
+      all: {
+        title: "여행 전체",
+        note: "네이버 실측: 직행은 경부→상주영천→중앙 394km 4시간 5분. 소금산+가평SC 경유 시 448km 약 5시간. 전체는 일자별 길찾기를 이어 본 것.",
+        line: [ULSAN, SOGEUM, ELY, NAMI, ELY, ULSAN],
+        naver: naverDir(ULSAN, ULSAN, [SOGEUM, ELY, NAMI, GAP_S]),
+        extra: [
+          { kind: "stay", name: "출발 울산", dir: "8/27 06:00", lat: ULSAN.lat, lng: ULSAN.lng, q: "울산" },
+          { kind: "poi", name: "소금산 그랜드밸리", dir: "27일 경유", lat: SOGEUM.lat, lng: SOGEUM.lng, q: "소금산 그랜드밸리" },
+          { kind: "stay", name: "엘리시안 강촌", dir: "숙소", lat: ELY.lat, lng: ELY.lng, q: "엘리시안 강촌" },
+          { kind: "poi", name: "남이섬 선착장", dir: "28일 오전", lat: NAMI.lat, lng: NAMI.lng, q: "남이섬 선착장" }
+        ]
+      },
+      d27: {
+        title: "8/27 북상",
+        note: "네이버 길찾기(경유 소금산+가평SC춘천): 약 4시간 59분 · 448km. 기본 추천은 중앙고속. 충전기는 김천SC·제천SC·원주AK·가평SC.",
+        line: [ULSAN, SOGEUM, GAP_N, ELY],
+        naver: naverDir(ULSAN, ELY, [SOGEUM, GAP_N]),
+        extra: [
+          { kind: "stay", name: "출발 울산", dir: "06:00", lat: ULSAN.lat, lng: ULSAN.lng, q: "울산" },
+          { kind: "poi", name: "소금산 그랜드밸리", dir: "09:30~12:00", lat: SOGEUM.lat, lng: SOGEUM.lng, q: "소금산 그랜드밸리" },
+          { kind: "stay", name: "엘리시안 강촌", dir: "15:00 체크인", lat: ELY.lat, lng: ELY.lng, q: "엘리시안 강촌" }
+        ]
+      },
+      d28: {
+        title: "8/28 남이섬",
+        note: "숙소→남이섬→제이드가든→숙소. 급속은 가평휴게소 양방향. 리조트는 완속만.",
+        line: [ELY, NAMI, JADE, ELY],
+        naver: naverDir(ELY, ELY, [NAMI, JADE]),
+        extra: [
+          { kind: "stay", name: "엘리시안 강촌", dir: "출발·귀소", lat: ELY.lat, lng: ELY.lng, q: "엘리시안 강촌" },
+          { kind: "poi", name: "남이섬 선착장", dir: "오전 필수", lat: NAMI.lat, lng: NAMI.lng, q: "남이섬 선착장" },
+          { kind: "poi", name: "제이드가든", dir: "오후 선택", lat: JADE.lat, lng: JADE.lng, q: "제이드가든" }
+        ]
+      },
+      d29: {
+        title: "8/29 남하",
+        note: "11시 아웃 → 가평SC 서울방향 → 울산. 정체 시 워터 괴산·문경 창원방향.",
+        line: [ELY, GAP_S, ULSAN],
+        naver: naverDir(ELY, ULSAN, [GAP_S]),
+        extra: [
+          { kind: "stay", name: "엘리시안 강촌", dir: "11:00 아웃", lat: ELY.lat, lng: ELY.lng, q: "엘리시안 강촌" }
+        ]
+      }
+    };
+
+    var map = L.map("map").setView([36.7, 128.1], 8);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18, attribution: "&copy; OpenStreetMap"
+    }).addTo(map);
+    var layer = L.layerGroup().addTo(map);
+    var current = "d27";
+
+    function icon(color) {
+      return L.divIcon({
+        className: "",
+        html: '<div style="width:16px;height:16px;border:2px solid #111;border-radius:50%;background:' + color + ';box-shadow:1px 1px 0 #111"></div>',
+        iconSize: [16, 16], iconAnchor: [8, 8]
+      });
+    }
+    var colors = { sc: "#cc0000", water: "#0077c8", stay: "#0f766e", poi: "#a16207" };
+
+    function render(key) {
+      current = key;
+      var d = days[key];
+      document.getElementById("panelTitle").textContent = d.title;
+      document.getElementById("note").textContent = d.note;
+      document.getElementById("naverOpen").href = d.naver;
+      document.querySelectorAll(".tabs button").forEach(function (b) {
+        b.classList.toggle("on", b.dataset.key === key);
+      });
+      layer.clearLayers();
+      var latlngs = d.line.map(function (p) { return [p.lat, p.lng]; });
+      L.polyline(latlngs, { color: "#111", weight: 4, opacity: 0.55 }).addTo(layer);
+      var items = d.extra.concat(chargers.filter(function (c) { return c.days.indexOf(key) !== -1; }));
+      var list = document.getElementById("list");
+      list.innerHTML = "";
+      items.forEach(function (p) {
+        L.marker([p.lat, p.lng], { icon: icon(colors[p.kind]) })
+          .addTo(layer)
+          .bindPopup("<b>" + p.name + "</b>" + p.dir + "<br><a target='_blank' href='" + naverSearch(p.q) + "'>네이버맵</a>");
+        var li = document.createElement("li");
+        var lab = p.kind === "sc" ? "SC" : p.kind === "water" ? "워터" : p.kind === "stay" ? "지점" : "관광";
+        li.innerHTML = "<a target='_blank' href='" + naverSearch(p.q) + "'><span class='tag " + p.kind + "'>" + lab + "</span>" + p.name + "<br><span style='color:#78716c;font-size:11px'>" + p.dir + "</span></a>";
+        list.appendChild(li);
+      });
+      map.fitBounds(L.latLngBounds(latlngs).pad(0.2));
+    }
+
+    var tabs = document.getElementById("tabs");
+    [["d27", "27 북상"], ["d28", "28 남이섬"], ["d29", "29 남하"], ["all", "전체"]].forEach(function (t) {
+      var b = document.createElement("button");
+      b.textContent = t[1];
+      b.dataset.key = t[0];
+      b.onclick = function () { render(t[0]); };
+      tabs.appendChild(b);
+    });
+    render("d27");
+  </script>
+</body>
+</html>
