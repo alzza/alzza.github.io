@@ -81,6 +81,30 @@ a:focus-visible, button:focus-visible {
   .grid .wide { grid-column: 1 / -1; }
 }
 
+.sec-label {
+  margin: 8px 0 12px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.note-bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 48px;
+  padding: 16px 18px;
+  border: var(--border);
+  background: var(--card);
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+}
+.note-bar:hover { background: var(--sun); }
+.note-bar strong { font-size: 18px; }
+.note-bar span { color: var(--muted); font-size: 14px; }
+
 .card {
   display: flex;
   flex-direction: column;
