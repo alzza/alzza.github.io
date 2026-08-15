@@ -3,8 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("theme");
+        if (t !== "dark" && t !== "light") {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
   <title>춘천 여행 계획</title>
   <meta name="description" content="울산-엘리시안강촌 2박3일. 일정, 워터/테슬라 충전, 지도." />
+  <meta name="theme-color" content="#FFD23F" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
@@ -14,6 +29,9 @@
       <nav class="nav">
         <a class="btn" href="../">목록</a>
         <a class="btn btn-accent" href="map.html">경로 지도</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false">
+          <span class="theme-toggle-icon" aria-hidden="true">&#9790;</span>
+        </button>
       </nav>
     </div>
   </header>
@@ -66,5 +84,6 @@
 
     <footer class="site-foot"><a href="../">목록으로</a></footer>
   </div>
+  <script src="../assets/theme.js"></script>
 </body>
 </html>

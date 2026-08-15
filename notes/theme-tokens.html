@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("theme");
+        if (t !== "dark" && t !== "light") {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+  <title>테마 토큰 · alzza</title>
+  <meta name="description" content="neubrutalism.com 토큰과 이 사이트 코드 블록 쓰는 법" />
+  <meta name="theme-color" content="#FFD23F" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap site-head">
+      <a class="brand" href="../"><span class="avatar">A</span>alzza<i>.</i></a>
+      <nav class="nav">
+        <a class="btn" href="./">노트</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false">
+          <span class="theme-toggle-icon" aria-hidden="true">&#9790;</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap prose">
+    <section class="hero">
+      <span class="badge">Note</span>
+      <h1>테마 토큰</h1>
+      <p class="note-meta">2026-08-15 · 문법 출처: neubrutalism.com</p>
+    </section>
+
+    <p>공식 npm 패키지는 없다. <a href="https://github.com/neubrutalism/neubrutalism.com">neubrutalism/neubrutalism.com</a> 의 CSS 토큰을 그대로 옮겼다. 라이트 기본, 다크는 <code>data-theme="dark"</code> 로 잉크색만 뒤집는 cyber-brutalism.</p>
+
+    <h2>핵심 세 줄</h2>
+    <span class="code-label">css</span>
+    <div class="code-block-wrap">
+      <button class="code-copy" type="button" data-copy>copy</button>
+      <pre class="code-block"><code><span class="property">border</span>:        <span class="value">3px solid #000</span>;
+<span class="property">box-shadow</span>:    <span class="value">5px 5px 0 0 #000</span>;
+<span class="property">border-radius</span>: <span class="value">0</span>;</code></pre>
+    </div>
+
+    <h2>토글</h2>
+    <p>페인트 전에 <code>localStorage.theme</code> 또는 시스템 설정을 읽는다. 오른쪽 위 달/해 버튼이 <code>light</code> / <code>dark</code> 를 바꾼다.</p>
+    <span class="code-label">js</span>
+    <div class="code-block-wrap">
+      <button class="code-copy" type="button" data-copy>copy</button>
+      <pre class="code-block"><code><span class="comment">// head, before CSS</span>
+<span class="selector">var</span> t = localStorage.getItem(<span class="string">'theme'</span>);
+<span class="selector">if</span> (t !== <span class="string">'dark'</span> &amp;&amp; t !== <span class="string">'light'</span>) {
+  t = matchMedia(<span class="string">'(prefers-color-scheme: dark)'</span>).matches
+    ? <span class="string">'dark'</span> : <span class="string">'light'</span>;
+}
+document.documentElement.setAttribute(<span class="string">'data-theme'</span>, t);</code></pre>
+    </div>
+
+    <h2>노트에 코드 넣는 법</h2>
+    <p>이 HTML을 복사해서 <code>notes/</code> 아래에 새 파일을 만들면 된다. 인라인은 <code>&lt;code&gt;</code>, 블록은 아래처럼.</p>
+    <span class="code-label">html</span>
+    <div class="code-block-wrap">
+      <button class="code-copy" type="button" data-copy>copy</button>
+      <pre class="code-block"><code><span class="tag">&lt;span class="code-label"&gt;</span>py<span class="tag">&lt;/span&gt;</span>
+<span class="tag">&lt;div class="code-block-wrap"&gt;</span>
+  <span class="tag">&lt;button class="code-copy" data-copy&gt;</span>copy<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;pre class="code-block"&gt;&lt;code&gt;</span>print("ok")<span class="tag">&lt;/code&gt;&lt;/pre&gt;</span>
+<span class="tag">&lt;/div&gt;</span></code></pre>
+    </div>
+
+    <p>강조 색은 <code>.comment</code> <code>.property</code> <code>.value</code> <code>.selector</code> <code>.tag</code> <code>.string</code>. 안 넣어도 모노스페이스 블록은 그대로 읽힌다.</p>
+  </div>
+  <script src="../assets/theme.js"></script>
+</body>
+</html>

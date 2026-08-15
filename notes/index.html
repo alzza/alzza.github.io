@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("theme");
+        if (t !== "dark" && t !== "light") {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+  <title>노트 · alzza</title>
+  <meta name="description" content="짧은 메모와 코드 노트" />
+  <meta name="theme-color" content="#FFD23F" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap site-head">
+      <a class="brand" href="../"><span class="avatar">A</span>alzza<i>.</i></a>
+      <nav class="nav">
+        <a class="btn" href="../">목록</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false">
+          <span class="theme-toggle-icon" aria-hidden="true">&#9790;</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section class="hero">
+      <h1>노트</h1>
+      <p>짧은 메모. 코드가 있으면 블록으로 올립니다.</p>
+    </section>
+
+    <div class="note-list">
+      <a class="note-bar" href="theme-tokens.html">
+        <strong>테마 토큰</strong>
+        <span>라이트/다크, 코드 블록 마크업</span>
+      </a>
+      <a class="note-bar" href="../chuncheon/">
+        <strong>춘천 일정</strong>
+        <span>8/27-29 엘리시안강촌</span>
+      </a>
+    </div>
+  </div>
+  <script src="../assets/theme.js"></script>
+</body>
+</html>

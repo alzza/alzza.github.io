@@ -3,8 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("theme");
+        if (t !== "dark" && t !== "light") {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
   <title>alzza</title>
   <meta name="description" content="공개 프로젝트 목록" />
+  <meta name="theme-color" content="#FFD23F" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
@@ -12,7 +27,11 @@
     <div class="wrap site-head">
       <a class="brand" href="./"><span class="avatar">A</span>alzza<i>.</i></a>
       <nav class="nav">
+        <a class="btn" href="notes/">노트</a>
         <a class="btn" href="https://github.com/alzza">GitHub</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false">
+          <span class="theme-toggle-icon" aria-hidden="true">&#9790;</span>
+        </button>
       </nav>
     </div>
   </header>
@@ -33,7 +52,7 @@
         <span class="go">페이지 열기 →</span>
       </a>
 
-      <a class="card alt" href="https://github.com/alzza/t2-can-board">
+      <a class="card" href="https://github.com/alzza/t2-can-board">
         <span class="kicker">Tesla / CAN</span>
         <h2>t2-can-board</h2>
         <p>LILYGO T2-CAN, Tesla HW3 듀얼 CAN 펌웨어.</p>
@@ -47,7 +66,7 @@
         <span class="go">GitHub →</span>
       </a>
 
-      <a class="card alt" href="https://orca-lime.vercel.app">
+      <a class="card" href="https://orca-lime.vercel.app">
         <span class="kicker">Fork</span>
         <h2>orca_mode_studio</h2>
         <p>reallygood83/orca fork. 데모는 Vercel.</p>
@@ -60,8 +79,13 @@
       <strong>춘천 일정</strong>
       <span>8/27-29 엘리시안강촌 · 지도 · 충전</span>
     </a>
+    <a class="note-bar" href="notes/theme-tokens.html">
+      <strong>테마 토큰</strong>
+      <span>라이트/다크와 코드 블록 쓰는 법</span>
+    </a>
 
     <footer class="site-foot">alzza.github.io</footer>
   </div>
+  <script src="assets/theme.js"></script>
 </body>
 </html>

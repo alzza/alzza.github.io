@@ -3,46 +3,65 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("theme");
+        if (t !== "dark" && t !== "light") {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
   <title>여행 경로 · 일자별 · 워터/SC</title>
+  <meta name="theme-color" content="#FFD23F" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    :root { --ink:#1c1917; --sc:#cc0000; --water:#0077c8; --stay:#0f766e; --poi:#a16207; }
+    :root {
+      --ink:#000; --text:#000; --muted:#57534e; --surface:#fff; --bg:#fffdf5;
+      --sc:#cc0000; --water:#0077c8; --stay:#0f766e; --poi:#a16207; --yellow:#ffd23f;
+    }
+    [data-theme="dark"] {
+      --ink:#f3f3f6; --text:#ececed; --muted:#a6a6b0; --surface:#1f1e28; --bg:#14131a;
+    }
     * { box-sizing: border-box; }
-    html, body { height:100%; margin:0; font-family:"Apple SD Gothic Neo",sans-serif; color:var(--ink); }
+    html, body { height:100%; margin:0; font-family:"Apple SD Gothic Neo",sans-serif; color:var(--text); background:var(--bg); }
     header {
       position:absolute; top:0; left:0; right:0; z-index:500; min-height:58px;
       display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px;
-      padding:8px 12px; background:#fff; border-bottom:2px solid #111;
+      padding:8px 12px; background:var(--surface); border-bottom:3px solid var(--ink);
     }
     h1 { margin:0; font-size:15px; }
-    .sub { margin:0; font-size:11px; color:#57534e; }
+    .sub { margin:0; font-size:11px; color:var(--muted); }
     .tabs, .acts { display:flex; flex-wrap:wrap; gap:6px; }
     button, .acts a {
-      appearance:none; border:2px solid #111; background:#fff; color:#111;
+      appearance:none; border:2px solid var(--ink); background:var(--surface); color:var(--text);
       padding:6px 10px; font:700 12px/1 inherit; cursor:pointer; text-decoration:none;
     }
-    button.on { background:#111; color:#fff; }
+    button.on { background:var(--ink); color:var(--bg); }
     .acts a.naver { background:#03c75a; color:#fff; border-color:#019c46; }
+    .theme-toggle { width:34px; height:34px; padding:0; }
     #map { position:absolute; inset:90px 0 0; }
     .panel {
       position:absolute; z-index:400; top:102px; left:12px; width:min(340px, calc(100vw - 24px));
-      max-height:calc(100vh - 120px); overflow:auto; background:#fff; border:2px solid #111;
-      box-shadow:4px 4px 0 #111;
+      max-height:calc(100vh - 120px); overflow:auto; background:var(--surface); border:2px solid var(--ink);
+      box-shadow:4px 4px 0 var(--ink);
     }
-    .panel h2 { margin:0; padding:10px 12px; font-size:13px; border-bottom:1px solid #e7e5e4; }
+    .panel h2 { margin:0; padding:10px 12px; font-size:13px; border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
     .list { list-style:none; margin:0; padding:0; }
-    .list a { display:block; padding:8px 12px; color:inherit; text-decoration:none; border-top:1px solid #f5f5f4; }
-    .list a:hover { background:#fafafa; }
+    .list a { display:block; padding:8px 12px; color:inherit; text-decoration:none; border-top:1px solid color-mix(in srgb, var(--ink) 10%, transparent); }
+    .list a:hover { background:var(--yellow); color:#000; }
     .tag { display:inline-block; min-width:36px; margin-right:6px; padding:1px 5px; font-size:10px; font-weight:800; color:#fff; }
     .sc { background:var(--sc); } .water { background:var(--water); }
     .stay { background:var(--stay); } .poi { background:var(--poi); }
-    .note { padding:8px 12px 12px; font-size:11px; color:#57534e; }
+    .note { padding:8px 12px 12px; font-size:11px; color:var(--muted); }
   </style>
 </head>
 <body>
   <header>
     <div>
-      <h1>8/27–29 경로 · 충전기</h1>
+      <h1>8/27-29 경로 · 충전기</h1>
       <p class="sub">네이버맵 URL 규격으로 길찾기. 마커는 워터·테슬라 SC 포함</p>
     </div>
     <div class="tabs" id="tabs"></div>
@@ -50,6 +69,9 @@
       <a href="./">일정</a>
       <a href="../">목록</a>
       <a class="naver" id="naverOpen" target="_blank" rel="noreferrer">이 일정 네이버 길찾기</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false">
+        <span class="theme-toggle-icon" aria-hidden="true">&#9790;</span>
+      </button>
     </div>
   </header>
   <aside class="panel">
@@ -196,5 +218,6 @@
     });
     render("d27");
   </script>
+  <script src="../assets/theme.js"></script>
 </body>
 </html>
