@@ -1,13 +1,31 @@
-# alzza (Astro track)
+# alzza.github.io
 
-바닐라 라이브는 `main` / https://alzza.github.io/  
-이 브랜치(`astro`)는 배포하지 않는다. 비교용.
+Astro. 라이브: https://alzza.github.io/
 
-롤백 앵커: 태그 `vanilla-v1`
+바닐라 스냅샷: 태그 `vanilla-v1`
+
+## 로컬
 
 ```bash
 npm install
 npm run dev
 ```
 
-노트는 `src/content/notes/*.md`. 목록은 자동.
+http://localhost:4321
+
+## 무엇을 고치나
+
+| 하고 싶은 일 | 파일 |
+|---|---|
+| 노트 추가/수정 | `src/content/notes/이름.md` |
+| 홈 타일 | `src/pages/index.astro` |
+| 춘천 일정 | `src/pages/chuncheon/index.astro` |
+| 지도 | `src/pages/chuncheon/map.astro` |
+| 헤더 | `src/components/Header.astro` |
+| 색·테마 | `src/styles/global.css` |
+
+자세한 예시: 사이트 노트 [페이지 올리고 고치는 법](https://alzza.github.io/notes/how-to-post/) 또는 `src/content/notes/how-to-post.md`
+
+## 배포
+
+`main` 푸시 → GitHub Actions → Pages. HTML을 루트에 직접 올리지 않는다.
