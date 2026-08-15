@@ -17,8 +17,15 @@
       var icon = toggle.querySelector(".theme-toggle-icon");
       if (icon) icon.textContent = dark ? "\u2600" : "\u263E";
     }
+    document.querySelectorAll("[data-set-theme]").forEach(function (btn) {
+      var on = btn.getAttribute("data-set-theme") === t;
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.classList.toggle("is-on", on);
+    });
     if (themeColorMeta) {
-      themeColorMeta.setAttribute("content", t === "dark" ? "#14131a" : "#FFD23F");
+      var lightC = themeColorMeta.getAttribute("data-light") || "#FFD23F";
+      var darkC = themeColorMeta.getAttribute("data-dark") || "#14131a";
+      themeColorMeta.setAttribute("content", t === "dark" ? darkC : lightC);
     }
   }
 
@@ -30,6 +37,12 @@
       applyTheme(next);
     });
   }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-set-theme]");
+    if (!btn) return;
+    applyTheme(btn.getAttribute("data-set-theme"));
+  });
 
   document.querySelectorAll("[data-copy]").forEach(function (btn) {
     btn.addEventListener("click", function () {
