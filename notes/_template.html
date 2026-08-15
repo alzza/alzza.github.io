@@ -14,8 +14,8 @@
       } catch (e) {}
     })();
   </script>
-  <title>노트 · alzza</title>
-  <meta name="description" content="짧은 메모와 코드 노트" />
+  <title>제목 · alzza</title>
+  <meta name="description" content="한 줄 요약" />
   <meta name="theme-color" content="#FFD23F" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,33 +27,26 @@
     <div class="wrap site-head">
       <a class="brand" href="../"><span class="avatar">A</span>alzza<i>.</i></a>
       <nav class="nav">
-        <a class="btn" href="../">목록</a>
+        <a class="btn" href="./">노트</a>
       </nav>
       <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false"></button>
     </div>
   </header>
 
-  <div class="wrap">
+  <div class="wrap prose">
     <section class="hero">
-      <h1>노트</h1>
-      <p>목록은 게시판처럼. 글은 HTML 파일로 올립니다.</p>
+      <span class="badge">노트</span>
+      <h1>제목</h1>
+      <p class="note-meta">YYYY-MM-DD</p>
     </section>
 
-    <div class="board">
-      <a class="board-row" href="theme-tokens.html">
-        <span class="board-date">2026-08-15</span>
-        <span>
-          <span class="board-title">테마 토큰</span>
-          <span class="board-ex">라이트/다크와 코드 블록 쓰는 법</span>
-        </span>
-      </a>
-      <a class="board-row" href="../chuncheon/">
-        <span class="board-date">2026-08-27</span>
-        <span>
-          <span class="board-title">춘천 일정</span>
-          <span class="board-ex">엘리시안강촌 · 지도 · 충전</span>
-        </span>
-      </a>
+    <p>본문.</p>
+
+    <h2>코드</h2>
+    <span class="code-label">txt</span>
+    <div class="code-block-wrap">
+      <button class="code-copy" type="button" data-copy>copy</button>
+      <pre class="code-block"><code>print("ok")</code></pre>
     </div>
   </div>
   <script src="../assets/theme.js?v=4"></script>

@@ -2,10 +2,19 @@
   "use strict";
 
   var KEY = "theme";
+  var ICONS =
+    '<svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.5 2.8a1 1 0 0 1 1.2 1.5A8.2 8.2 0 1 0 19.7 16a1 1 0 0 1 1.7 1 10.2 10.2 0 1 1-5-14.2z"/></svg>' +
+    '<svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path fill="currentColor" d="M11 1h2v3h-2zm0 19h2v3h-2zM1 11h3v2H1zm19 0h3v2h-3zM4.2 3.8l1.4-1.4 2.1 2.1-1.4 1.4zm12.1 12.1 2.1 2.1-1.4 1.4-2.1-2.1zm2.1-12.1 1.4 1.4-2.1 2.1-1.4-1.4zM6.3 17.7l1.4 1.4-2.1 2.1-1.4-1.4z"/></svg>';
+
   var toggle = document.getElementById("theme-toggle");
   var themeColorMeta = document.querySelector('meta[name="theme-color"]');
 
+  if (toggle && !toggle.querySelector(".icon-moon")) {
+    toggle.innerHTML = ICONS;
+  }
+
   function applyTheme(t) {
+    if (t !== "dark" && t !== "light") t = "light";
     document.documentElement.setAttribute("data-theme", t);
     try {
       localStorage.setItem(KEY, t);
@@ -14,14 +23,7 @@
       var dark = t === "dark";
       toggle.setAttribute("aria-pressed", dark ? "true" : "false");
       toggle.setAttribute("aria-label", dark ? "라이트 테마로 전환" : "다크 테마로 전환");
-      var icon = toggle.querySelector(".theme-toggle-icon");
-      if (icon) icon.textContent = dark ? "\u2600" : "\u263E";
     }
-    document.querySelectorAll("[data-set-theme]").forEach(function (btn) {
-      var on = btn.getAttribute("data-set-theme") === t;
-      btn.setAttribute("aria-pressed", on ? "true" : "false");
-      btn.classList.toggle("is-on", on);
-    });
     if (themeColorMeta) {
       var lightC = themeColorMeta.getAttribute("data-light") || "#FFD23F";
       var darkC = themeColorMeta.getAttribute("data-dark") || "#14131a";
@@ -37,12 +39,6 @@
       applyTheme(next);
     });
   }
-
-  document.addEventListener("click", function (e) {
-    var btn = e.target.closest("[data-set-theme]");
-    if (!btn) return;
-    applyTheme(btn.getAttribute("data-set-theme"));
-  });
 
   document.querySelectorAll("[data-copy]").forEach(function (btn) {
     btn.addEventListener("click", function () {
