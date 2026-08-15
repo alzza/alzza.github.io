@@ -1,9 +1,11 @@
+---
+---
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>
+  <script is:inline>
     (function () {
       try {
         var t = localStorage.getItem("theme");
@@ -15,9 +17,9 @@
     })();
   </script>
   <title>여행 경로 · 일자별 · 워터/SC</title>
-  <meta name="theme-color" content="#FFD23F" />
+  <meta name="theme-color" content="#FFD23F" data-light="#FFD23F" data-dark="#14131a" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <style>
+  <style is:global>
     :root {
       --ink:#000; --text:#000; --muted:#57534e; --surface:#fff; --bg:#fffdf5;
       --sc:#cc0000; --water:#0077c8; --stay:#0f766e; --poi:#a16207; --yellow:#ffd23f;
@@ -26,7 +28,7 @@
       --ink:#f3f3f6; --text:#ececed; --muted:#a6a6b0; --surface:#1f1e28; --bg:#14131a;
     }
     * { box-sizing: border-box; }
-    html, body { height:100%; margin:0; font-family:"Apple SD Gothic Neo",sans-serif; color:var(--text); background:var(--bg); }
+    html, body { height:100%; margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo",sans-serif; color:var(--text); background:var(--bg); }
     header {
       position:absolute; top:0; left:0; right:0; z-index:500; min-height:58px;
       display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px;
@@ -77,8 +79,8 @@
     </div>
     <div class="tabs" id="tabs"></div>
     <div class="acts">
-      <a href="./">일정</a>
-      <a href="../">목록</a>
+      <a href="/chuncheon/">일정</a>
+      <a href="/">목록</a>
       <a class="naver" id="naverOpen" target="_blank" rel="noreferrer">이 일정 네이버 길찾기</a>
     </div>
   </header>
@@ -88,8 +90,8 @@
     <p class="note" id="note"></p>
   </aside>
   <div id="map"></div>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script>
+  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script is:inline>
     function pt(lng, lat, name, type) {
       var t = type === "addr" ? "ADDRESS_POI" : "PLACE_POI";
       return lng + "," + lat + "," + encodeURIComponent(name) + "," + t;
@@ -178,7 +180,6 @@
       maxZoom: 18, attribution: "&copy; OpenStreetMap"
     }).addTo(map);
     var layer = L.layerGroup().addTo(map);
-    var current = "d27";
 
     function icon(color) {
       return L.divIcon({
@@ -190,7 +191,6 @@
     var colors = { sc: "#cc0000", water: "#0077c8", stay: "#0f766e", poi: "#a16207" };
 
     function render(key) {
-      current = key;
       var d = days[key];
       document.getElementById("panelTitle").textContent = d.title;
       document.getElementById("note").textContent = d.note;
@@ -226,6 +226,6 @@
     });
     render("d27");
   </script>
-  <script src="../assets/theme.js?v=4"></script>
+  <script is:inline src="/theme.js"></script>
 </body>
 </html>

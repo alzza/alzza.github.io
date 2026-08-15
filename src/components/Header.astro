@@ -1,0 +1,27 @@
+---
+interface Link {
+  href: string;
+  label: string;
+  accent?: boolean;
+}
+
+interface Props {
+  links?: Link[];
+}
+
+const { links = [] } = Astro.props;
+---
+
+<header class="bar">
+  <div class="wrap site-head">
+    <a class="brand" href="/"><span class="avatar">A</span>alzza<i>.</i></a>
+    <nav class="nav">
+      {links.map((link) => (
+        <a class:list={["btn", { "btn-accent": link.accent }]} href={link.href}>
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false"></button>
+  </div>
+</header>

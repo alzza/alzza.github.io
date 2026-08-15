@@ -1,35 +1,10 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>
-    (function () {
-      try {
-        var t = localStorage.getItem("theme");
-        if (t !== "dark" && t !== "light") {
-          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        }
-        document.documentElement.setAttribute("data-theme", t);
-      } catch (e) {}
-    })();
-  </script>
-  <title>alzza</title>
-  <meta name="description" content="공개 프로젝트 목록" />
-  <meta name="theme-color" content="#FFD23F" />
-  <link rel="stylesheet" href="assets/style.css?v=6" />
-</head>
-<body>
-  <header class="bar">
-    <div class="wrap site-head">
-      <a class="brand" href="./"><span class="avatar">A</span>alzza<i>.</i></a>
-      <nav class="nav">
-        <a class="btn" href="notes/">노트</a>
-        <a class="btn" href="https://github.com/alzza">GitHub</a>
-      </nav>
-      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false"></button>
-    </div>
-  </header>
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+---
+
+<Base title="alzza" description="공개 프로젝트 목록">
+  <Header links={[{ href: "/notes/", label: "노트" }, { href: "https://github.com/alzza", label: "GitHub" }]} />
 
   <section class="hero-band">
     <div class="wrap">
@@ -49,21 +24,18 @@
         <p>Sheet Conveyor 2 파라미터 오토튠. Trend CSV와 시뮬.</p>
         <span class="go">페이지 열기 →</span>
       </a>
-
       <a class="card fill-yellow" href="https://github.com/alzza/t2-can-board">
         <span class="kicker">Tesla / CAN</span>
         <h2>t2-can-board</h2>
         <p>LILYGO T2-CAN, Tesla HW3 듀얼 CAN 펌웨어.</p>
         <span class="go">GitHub →</span>
       </a>
-
       <a class="card fill-pink" href="https://github.com/alzza/tesla-can-moniter">
         <span class="kicker">Tesla / CAN</span>
         <h2>tesla-can-moniter</h2>
         <p>테슬라 CAN 모니터.</p>
         <span class="go">GitHub →</span>
       </a>
-
       <a class="card fill-blue" href="https://orca-lime.vercel.app">
         <span class="kicker">Fork</span>
         <h2>orca_mode_studio</h2>
@@ -73,11 +45,11 @@
     </section>
 
     <p class="sec-label">Notes</p>
-    <a class="note-bar" href="chuncheon/">
+    <a class="note-bar" href="/chuncheon/">
       <strong>춘천 일정</strong>
       <span>8/27-29 엘리시안강촌 · 지도 · 충전</span>
     </a>
-    <a class="note-bar" href="notes/theme-tokens.html">
+    <a class="note-bar" href="/notes/theme-tokens/">
       <strong>테마 토큰</strong>
       <span>라이트/다크와 코드 블록 쓰는 법</span>
     </a>
@@ -86,6 +58,4 @@
   <footer class="site-foot band">
     <div class="wrap">alzza.github.io</div>
   </footer>
-  <script src="assets/theme.js?v=4"></script>
-</body>
-</html>
+</Base>

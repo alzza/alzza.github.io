@@ -1,0 +1,37 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+
+const notes = (await getCollection("notes")).sort((a, b) => (a.data.date < b.data.date ? 1 : -1));
+---
+
+<Base title="노트 · alzza" description="짧은 메모와 코드 노트">
+  <Header links={[{ href: "/", label: "목록" }]} />
+  <div class="wrap">
+    <section class="hero">
+      <h1>노트</h1>
+      <p>목록은 게시판처럼. 글은 Markdown으로 올립니다.</p>
+    </section>
+    <div class="board">
+      {
+        notes.map((note) => (
+          <a class="board-row" href={`/notes/${note.slug}/`}>
+            <span class="board-date">{note.data.date}</span>
+            <span>
+              <span class="board-title">{note.data.title}</span>
+              <span class="board-ex">{note.data.excerpt}</span>
+            </span>
+          </a>
+        ))
+      }
+      <a class="board-row" href="/chuncheon/">
+        <span class="board-date">2026-08-27</span>
+        <span>
+          <span class="board-title">춘천 일정</span>
+          <span class="board-ex">엘리시안강촌 · 지도 · 충전</span>
+        </span>
+      </a>
+    </div>
+  </div>
+</Base>

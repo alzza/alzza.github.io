@@ -1,36 +1,15 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>
-    (function () {
-      try {
-        var t = localStorage.getItem("theme");
-        if (t !== "dark" && t !== "light") {
-          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        }
-        document.documentElement.setAttribute("data-theme", t);
-      } catch (e) {}
-    })();
-  </script>
-  <title>춘천 여행 계획</title>
-  <meta name="description" content="울산-엘리시안강촌 2박3일. 일정, 워터/테슬라 충전, 지도." />
-  <meta name="theme-color" content="#FFD23F" />
-  <link rel="stylesheet" href="../assets/style.css?v=6" />
-</head>
-<body>
-  <header class="bar">
-    <div class="wrap site-head">
-      <a class="brand" href="../"><span class="avatar">A</span>alzza<i>.</i></a>
-      <nav class="nav">
-        <a class="btn" href="../">목록</a>
-        <a class="btn btn-accent" href="map.html">경로 지도</a>
-      </nav>
-      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false"></button>
-    </div>
-  </header>
+---
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+---
 
+<Base title="춘천 여행 계획" description="울산-엘리시안강촌 2박3일. 일정, 워터/테슬라 충전, 지도.">
+  <Header
+    links={[
+      { href: "/", label: "목록" },
+      { href: "/chuncheon/map/", label: "경로 지도", accent: true },
+    ]}
+  />
   <div class="wrap">
     <section class="hero">
       <h1>춘천 · 엘리시안강촌</h1>
@@ -38,7 +17,7 @@
     </section>
 
     <div class="actions">
-      <a class="btn btn-accent" href="map.html">일자별 지도 · 워터/SC</a>
+      <a class="btn btn-accent" href="/chuncheon/map/">일자별 지도 · 워터/SC</a>
       <a class="btn" href="https://map.naver.com/p/directions/129.3114,35.5384,울산,ADDRESS_POI/127.589843,37.822123,엘리시안강촌,PLACE_POI/127.8322,37.3648,소금산그랜드밸리,PLACE_POI:127.5459242,37.7011875,가평휴게소춘천방향수퍼차저,PLACE_POI/car" target="_blank" rel="noreferrer">27일 네이버 길찾기</a>
     </div>
 
@@ -77,8 +56,6 @@
       <p>북상 워터는 양평 방향만. 괴산·서여주 워터는 창원(남하)만.</p>
     </article>
 
-    <footer class="site-foot"><a href="../">목록으로</a></footer>
+    <footer class="site-foot"><a href="/">목록으로</a></footer>
   </div>
-  <script src="../assets/theme.js?v=4"></script>
-</body>
-</html>
+</Base>

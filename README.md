@@ -1,5 +1,13 @@
-# alzza.github.io
+# alzza (Astro track)
 
-프로젝트 목록. https://alzza.github.io/
+바닐라 라이브는 `main` / https://alzza.github.io/  
+이 브랜치(`astro`)는 배포하지 않는다. 비교용.
 
-테마 토큰은 [neubrutalism/neubrutalism.com](https://github.com/neubrutalism/neubrutalism.com) 문법을 옮긴 것. 라이트/다크 토글, 노트 코드 블록 포함.
+롤백 앵커: 태그 `vanilla-v1`
+
+```bash
+npm install
+npm run dev
+```
+
+노트는 `src/content/notes/*.md`. 목록은 자동.
