@@ -14,7 +14,7 @@
   }
 
   function applyTheme(t) {
-    if (t !== "dark" && t !== "light") t = "light";
+    if (t !== "dark") t = "light";
     document.documentElement.setAttribute("data-theme", t);
     try {
       localStorage.setItem(KEY, t);

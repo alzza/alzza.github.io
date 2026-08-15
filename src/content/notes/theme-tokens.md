@@ -17,16 +17,12 @@ border-radius: 0;
 
 ## 토글
 
-페인트 전에 `localStorage.theme` 또는 시스템 설정을 읽는다. 오른쪽 위 달/해 버튼이 `light` / `dark` 를 바꾼다.
+기본은 라이트다. `localStorage.theme` 이 `dark` 일 때만 다크다. 오른쪽 위 달/해 버튼이 바꾼다.
 
 ```js
 // head, before CSS
 var t = localStorage.getItem("theme");
-if (t !== "dark" && t !== "light") {
-  t = matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark" : "light";
-}
-document.documentElement.setAttribute("data-theme", t);
+document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
 ```
 
 ## 노트에 코드 넣는 법
