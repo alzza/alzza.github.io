@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("theme");
+        if (t !== "dark" && t !== "light") {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+  <title>코드 하이라이트 테스트 · alzza</title>
+  <meta name="description" content="파이썬과 C++ 발췌로 코드 블록 가독성 확인" />
+  <meta name="theme-color" content="#FFD23F" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/style.css?v=5" />
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap site-head">
+      <a class="brand" href="../"><span class="avatar">A</span>alzza<i>.</i></a>
+      <nav class="nav">
+        <a class="btn" href="./">노트</a>
+      </nav>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false"></button>
+    </div>
+  </header>
+
+  <div class="wrap prose">
+    <section class="hero">
+      <span class="badge">노트</span>
+      <h1>코드 하이라이트 테스트</h1>
+      <p class="note-meta">2026-08-15 · 발췌로 가독성만 확인</p>
+    </section>
+
+    <p>인라인은 <code>code</code> 칩. 블록은 남색 배경에 토큰 색만 쓴다. 흰 박스 칩이 블록 안에 생기면 실패한 것이다.</p>
+
+    <h2>Python</h2>
+    <p>CPython <code>pathlib</code> 의 <code>iterdir</code> 를 줄인 것.</p>
+    <span class="code-label">py</span>
+    <div class="code-block-wrap">
+      <button class="code-copy" type="button" data-copy>copy</button>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">iterdir</span>(self):
+    <span class="string">"""Yield path objects of the directory contents."""</span>
+    root = os.fspath(self)
+    <span class="kw">with</span> os.<span class="fn">scandir</span>(root) <span class="kw">as</span> scandir_it:
+        paths = [self.<span class="fn">_make_child_relpath</span>(entry.name)
+                 <span class="kw">for</span> entry <span class="kw">in</span> scandir_it]
+    <span class="kw">if</span> isinstance(self, PurePath) <span class="kw">and</span> self == self.<span class="fn">with_name</span>(<span class="string">'.'</span>):
+        <span class="kw">return</span> (p <span class="kw">for</span> p <span class="kw">in</span> paths)
+    <span class="kw">return</span> paths</code></pre>
+    </div>
+
+    <h2>C++</h2>
+    <p>CAN 프레임 체크섬. 테스트용 축소본.</p>
+    <span class="code-label">cpp</span>
+    <div class="code-block-wrap">
+      <button class="code-copy" type="button" data-copy>copy</button>
+      <pre class="code-block"><code><span class="type">uint8_t</span> <span class="fn">checksum</span>(<span class="kw">const</span> <span class="type">uint8_t</span>* data, <span class="type">size_t</span> n) {
+    <span class="type">uint16_t</span> sum = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="type">size_t</span> i = <span class="num">0</span>; i &lt; n; ++i) {
+        sum = <span class="kw">static_cast</span>&lt;<span class="type">uint16_t</span>&gt;(sum + data[i]);
+    }
+    <span class="kw">return</span> <span class="kw">static_cast</span>&lt;<span class="type">uint8_t</span>&gt;((sum + <span class="num">0x73</span>) &amp; <span class="num">0xFF</span>);
+}
+
+<span class="comment">// 880 EPAS, 921 DAS</span>
+<span class="kw">if</span> (frame.id == <span class="num">921</span> &amp;&amp; frame.dlc &gt;= <span class="num">6</span>) {
+    dasState = (frame.data[<span class="num">5</span>] &gt;&gt; <span class="num">2</span>) &amp; <span class="num">0x0F</span>;
+}</code></pre>
+    </div>
+  </div>
+  <script src="../assets/theme.js?v=4"></script>
+</body>
+</html>
