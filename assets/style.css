@@ -502,15 +502,11 @@ code {
   box-shadow: var(--shadow);
   white-space: pre;
 }
-.code-block .comment { color: #8b8b96; }
-.code-block .property,
-.code-block .type { color: #7fdbda; }
-.code-block .value,
-.code-block .num { color: #ffd23f; }
-.code-block .selector,
-.code-block .kw { color: #ff6b6b; }
-.code-block .tag,
-.code-block .fn { color: #74b9ff; }
+.code-block .comment { color: #6b7280; }
+.code-block .property { color: #7fdbda; }
+.code-block .value { color: #ffd23f; }
+.code-block .selector { color: #ff6b6b; }
+.code-block .tag { color: #74b9ff; }
 .code-block .string { color: #88d498; }
 
 .code-copy {
