@@ -66,10 +66,19 @@
     .sc { background:var(--sc); } .water { background:var(--water); }
     .stay { background:var(--stay); } .poi { background:var(--poi); }
     .note { padding:8px 12px 12px; font-size:11px; color:var(--muted); }
+    #top-sentinel { position:absolute; top:0; left:0; width:1px; height:1px; }
+    .back-to-top {
+      position:fixed; bottom:1.5rem; right:1.5rem; z-index:600;
+      width:52px; height:52px; display:flex; align-items:center; justify-content:center;
+      padding:0; border:3px solid var(--ink); background:var(--yellow); color:#000;
+      box-shadow:5px 5px 0 0 var(--ink); font:700 1.5rem/1 inherit; cursor:pointer;
+      opacity:0; visibility:hidden;
+    }
+    .back-to-top.is-visible { opacity:1; visibility:visible; }
   </style>
 </head>
 <body>
-  <header>
+  <div id="top-sentinel" aria-hidden="true"></div>
     <div class="map-top">
       <div>
         <h1>8/27-29 경로 · 충전기</h1>
@@ -226,6 +235,7 @@
     });
     render("d27");
   </script>
+  <button class="back-to-top" id="back-to-top" type="button" aria-label="맨 위로">↑</button>
   <script is:inline src="/theme.js"></script>
 </body>
 </html>

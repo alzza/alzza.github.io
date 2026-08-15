@@ -40,6 +40,21 @@
     });
   }
 
+  var topBtn = document.getElementById("back-to-top");
+  if (topBtn) {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    topBtn.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    });
+    var sentinel = document.getElementById("top-sentinel");
+    if (sentinel && "IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        var hide = entries[0] && entries[0].isIntersecting;
+        topBtn.classList.toggle("is-visible", !hide);
+      }).observe(sentinel);
+    }
+  }
+
   document.querySelectorAll("[data-copy]").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var wrap = btn.closest(".code-block-wrap");

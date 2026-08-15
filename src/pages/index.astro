@@ -1,6 +1,9 @@
 ---
 import Base from "../layouts/Base.astro";
 import Header from "../components/Header.astro";
+import { listNotes } from "../lib/notes";
+
+const notes = await listNotes();
 ---
 
 <Base title="alzza" description="공개 프로젝트 목록">
@@ -45,14 +48,14 @@ import Header from "../components/Header.astro";
     </section>
 
     <p class="sec-label">Notes</p>
-    <a class="note-bar" href="/chuncheon/">
-      <strong>춘천 일정</strong>
-      <span>8/27-29 엘리시안강촌 · 지도 · 충전</span>
-    </a>
-    <a class="note-bar" href="/notes/theme-tokens/">
-      <strong>테마 토큰</strong>
-      <span>라이트/다크와 코드 블록 쓰는 법</span>
-    </a>
+    {
+      notes.map((note) => (
+        <a class="note-bar" href={note.href}>
+          <strong>{note.title}</strong>
+          <span>{note.excerpt}</span>
+        </a>
+      ))
+    }
   </div>
 
   <footer class="site-foot band">

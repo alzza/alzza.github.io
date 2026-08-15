@@ -29,7 +29,7 @@ npm run dev
 2. 맨 위 frontmatter는 필수다.
 3. 본문은 일반 Markdown. 코드는 언어 이름 fence.
 4. `npm run dev` 로 확인한 뒤 `main`에 커밋하고 푸시한다.
-5. 목록(`/notes/`)은 자동이다. 손으로 한 줄 추가하지 않는다.
+5. 홈 Notes와 `/notes/` 목록은 같은 목록이다 (`src/lib/notes.ts`). md를 추가하면 둘 다 같이 늘어난다. 손으로 한 줄 추가하지 않는다.
 
 예시 파일 `src/content/notes/hello.md`:
 
@@ -59,7 +59,7 @@ int main() { return 0; }
 ```
 ````
 
-홈 Notes 줄(춘천, 테마 토큰)은 자동이 아니다. 홈에 새 줄을 넣으려면 `src/pages/index.astro` 를 고쳐야 한다. 노트 목록에만 뜨면 되면 md만 추가하면 된다.
+홈 Notes와 노트 게시판은 같은 데이터를 쓴다. md만 추가하면 된다. 춘천처럼 Markdown이 아닌 페이지만 `src/lib/notes.ts` 의 extra 배열에 넣는다.
 
 ## 노트 고치기 / 지우기
 

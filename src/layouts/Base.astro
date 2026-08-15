@@ -30,7 +30,9 @@ const { title, description = "" } = Astro.props;
     <meta name="theme-color" content="#FFD23F" data-light="#FFD23F" data-dark="#14131a" />
   </head>
   <body>
+    <div id="top-sentinel" aria-hidden="true"></div>
     <slot />
+    <button class="back-to-top" id="back-to-top" type="button" aria-label="맨 위로">↑</button>
     <script is:inline src="/theme.js"></script>
   </body>
 </html>

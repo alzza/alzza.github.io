@@ -174,6 +174,50 @@ button:focus-visible {
   box-shadow: none;
 }
 
+#top-sentinel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 80;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: var(--border);
+  background: var(--yellow);
+  color: var(--black);
+  box-shadow: var(--shadow);
+  font: 700 1.5rem/1 inherit;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.1s ease, visibility 0.2s;
+}
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.back-to-top:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+}
+.back-to-top:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
 .theme-switch {
   display: inline-flex;
   border: var(--border);
@@ -619,7 +663,10 @@ code {
   .btn:active,
   .note-bar:hover,
   .theme-toggle:hover,
-  .theme-toggle:active {
+  .theme-toggle:active,
+  .back-to-top:hover,
+  .back-to-top:active {
     transform: none;
   }
+  .back-to-top { transition: none; }
 }

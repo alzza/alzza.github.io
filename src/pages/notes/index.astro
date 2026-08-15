@@ -1,9 +1,9 @@
 ---
-import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import Header from "../../components/Header.astro";
+import { listNotes } from "../../lib/notes";
 
-const notes = (await getCollection("notes")).sort((a, b) => (a.data.date < b.data.date ? 1 : -1));
+const notes = await listNotes();
 ---
 
 <Base title="노트 · alzza" description="짧은 메모와 코드 노트">
@@ -16,22 +16,15 @@ const notes = (await getCollection("notes")).sort((a, b) => (a.data.date < b.dat
     <div class="board">
       {
         notes.map((note) => (
-          <a class="board-row" href={`/notes/${note.slug}/`}>
-            <span class="board-date">{note.data.date}</span>
+          <a class="board-row" href={note.href}>
+            <span class="board-date">{note.date}</span>
             <span>
-              <span class="board-title">{note.data.title}</span>
-              <span class="board-ex">{note.data.excerpt}</span>
+              <span class="board-title">{note.title}</span>
+              <span class="board-ex">{note.excerpt}</span>
             </span>
           </a>
         ))
       }
-      <a class="board-row" href="/chuncheon/">
-        <span class="board-date">2026-08-27</span>
-        <span>
-          <span class="board-title">춘천 일정</span>
-          <span class="board-ex">엘리시안강촌 · 지도 · 충전</span>
-        </span>
-      </a>
     </div>
   </div>
 </Base>

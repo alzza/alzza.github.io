@@ -17,7 +17,7 @@ http://localhost:4321
 
 | 하고 싶은 일 | 파일 |
 |---|---|
-| 노트 추가/수정 | `src/content/notes/이름.md` |
+| 노트 추가/수정 | `src/content/notes/이름.md` (홈 목록도 같이 갱신) |
 | 홈 타일 | `src/pages/index.astro` |
 | 춘천 일정 | `src/pages/chuncheon/index.astro` |
 | 지도 | `src/pages/chuncheon/map.astro` |
