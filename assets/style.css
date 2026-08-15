@@ -161,6 +161,28 @@ button:focus-visible {
   box-shadow: none;
 }
 
+.theme-switch {
+  display: inline-flex;
+  border: var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.theme-switch button {
+  appearance: none;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: 700 13px/1 var(--font-heading);
+  cursor: pointer;
+}
+.theme-switch button + button { border-left: var(--border-thin); }
+.theme-switch button.is-on {
+  background: var(--yellow);
+  color: var(--black);
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -186,6 +208,33 @@ button:focus-visible {
 .btn-accent:hover { background: var(--yellow); color: var(--black); }
 
 .hero { padding: 28px 0 24px; }
+.hero-band {
+  background: var(--yellow);
+  color: var(--black);
+  border-bottom: var(--border-thick);
+  padding: 36px 0 40px;
+}
+.hero-band h1 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5.5vw, 46px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.14;
+  padding-bottom: 4px;
+  color: var(--black);
+}
+.hero-band h1 em {
+  color: var(--black);
+  font-style: italic;
+}
+.hero-band p {
+  margin: 0;
+  max-width: 46ch;
+  color: #1a1a1a;
+  font-size: 16px;
+}
+
 .badge {
   display: inline-block;
   margin-bottom: 12px;
@@ -200,6 +249,18 @@ button:focus-visible {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+.badge-pink { background: var(--pink); }
+
+.divider-band {
+  display: block;
+  height: 16px;
+  margin: 0;
+  border: 0;
+  border-top: var(--border-thick);
+  border-bottom: var(--border-thick);
+  background: var(--pink);
+}
+
 .hero h1 {
   margin: 0 0 12px;
   font-family: var(--font-display);
@@ -226,7 +287,12 @@ button:focus-visible {
 }
 
 .sec-label {
-  margin: 8px 0 12px;
+  display: inline-block;
+  margin: 28px 0 16px;
+  padding: 0.35rem 0.75rem;
+  border: var(--border-thin);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
@@ -270,15 +336,21 @@ button:focus-visible {
 .card:hover {
   transform: translate(-2px, -2px);
   box-shadow: var(--shadow-lg);
-  background: var(--yellow);
-  color: var(--black);
 }
-.card:hover p,
-.card:hover .kicker { color: var(--black); }
-.card:nth-child(2) { background: var(--yellow-light); }
-.card:nth-child(3) { background: var(--pink-light); }
-.card:nth-child(4) { background: var(--blue-light); }
-.card.alt { background: var(--yellow-light); }
+.card.fill-paper { background: var(--surface); }
+.card.fill-yellow,
+.card.fill-pink,
+.card.fill-blue { color: var(--black); }
+.card.fill-yellow { background: var(--yellow); }
+.card.fill-pink { background: var(--pink); }
+.card.fill-blue { background: var(--blue); }
+.card.fill-yellow p,
+.card.fill-pink p,
+.card.fill-blue p,
+.card.fill-yellow .kicker,
+.card.fill-pink .kicker,
+.card.fill-blue .kicker { color: #1a1a1a; }
+.card.alt { background: var(--yellow); color: var(--black); }
 .kicker {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -300,6 +372,13 @@ button:focus-visible {
   color: var(--muted);
   font-size: 13px;
   font-family: var(--font-mono);
+}
+.site-foot.band {
+  margin-top: 8px;
+  padding: 22px 0;
+  background: var(--black);
+  color: #c9c9d1;
+  border-top: var(--border-thick);
 }
 
 .day {
