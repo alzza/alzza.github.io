@@ -13,12 +13,12 @@ export const ULSAN = { name: "울산", lat: 35.5384, lng: 129.3114 };
 export const ELY = { name: "엘리시안강촌", lat: 37.822123, lng: 127.589843 };
 
 export const spots: Spot[] = [
-  { id: "water-seonsan", name: "워터 선산휴게소 양평", lat: 36.2732, lng: 128.2478, kind: "water", stayMin: 20, note: "중부내륙 북상. 200kW NACS. 아침 국밥.", days: ["water", "d27"] },
-  { id: "water-mungyeong-n", name: "워터 문경휴게소 양평", lat: 36.62128, lng: 128.15198, kind: "water", stayMin: 35, note: "350kW 5기 + NACS. 북상 주충전.", days: ["water", "d27"] },
+  { id: "water-seonsan", name: "워터 선산휴게소 양평", lat: 36.2732, lng: 128.2478, kind: "water", stayMin: 20, note: "중부내륙 올라가는 길. 200kW NACS. 아침 국밥.", days: ["water", "d27"] },
+  { id: "water-mungyeong-n", name: "워터 문경휴게소 양평", lat: 36.62128, lng: 128.15198, kind: "water", stayMin: 35, note: "350kW 5기 + NACS. 올라가는 길 주충전.", days: ["water", "d27"] },
   { id: "water-chungju-n", name: "워터 충주휴게소 양평", lat: 37.02356, lng: 127.83906, kind: "water", stayMin: 20, note: "문경을 통과했다면 예비.", days: ["water", "d27"] },
-  { id: "water-mungyeong-s", name: "워터 문경휴게소 창원", lat: 36.61974, lng: 128.15056, kind: "water", stayMin: 25, note: "남하 전용.", days: ["d29"] },
-  { id: "water-goesan-s", name: "워터 괴산휴게소 창원", lat: 36.8155, lng: 127.8630, kind: "water", stayMin: 20, note: "남하 전용.", days: ["d29"] },
-  { id: "water-seoyeoju-s", name: "워터 서여주휴게소 창원", lat: 37.27881, lng: 127.57846, kind: "water", stayMin: 20, note: "남하 전용.", days: ["d29"] },
+  { id: "water-mungyeong-s", name: "워터 문경휴게소 창원", lat: 36.61974, lng: 128.15056, kind: "water", stayMin: 25, note: "내려올 때만.", days: ["d29"] },
+  { id: "water-goesan-s", name: "워터 괴산휴게소 창원", lat: 36.8155, lng: 127.8630, kind: "water", stayMin: 20, note: "내려올 때만.", days: ["d29"] },
+  { id: "water-seoyeoju-s", name: "워터 서여주휴게소 창원", lat: 37.27881, lng: 127.57846, kind: "water", stayMin: 20, note: "내려올 때만.", days: ["d29"] },
   { id: "sc-gimcheon", name: "SC 김천 모다아울렛", lat: 36.1556, lng: 128.3512, kind: "sc", stayMin: 25, note: "경부 IC 옆 V3.", days: ["sc", "d27"] },
   { id: "sc-jecheon", name: "SC 제천 남제천IC", lat: 37.0825, lng: 128.1912, kind: "sc", stayMin: 25, note: "중앙 이탈 V3 8기.", days: ["sc", "d27"] },
   { id: "sc-wonju", name: "SC 원주 AK플라자", lat: 37.3482, lng: 127.9295, kind: "sc", stayMin: 30, note: "시내 V3 9기.", days: ["sc", "d27"] },
@@ -43,7 +43,7 @@ export const courses = {
   water: {
     id: "water",
     title: "워터 우선 (추천)",
-    summary: "중부내륙 북상. 문경 양평 350kW에서 밥+충전. 소금산 후 가평 V4.",
+    summary: "중부내륙으로 올라감. 문경 양평 350kW에서 밥+충전. 소금산 후 가평 V4.",
     lineIds: ["water-seonsan", "water-mungyeong-n", "poi-sogeum", "sc-gap-n", "stay-ely"],
   },
   sc: {

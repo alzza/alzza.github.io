@@ -131,9 +131,9 @@ const payload = JSON.stringify({
     var views = {
       water: { title: "워터 우선", note: DATA.courses.water.summary + " 집 100%(최소 80%). 문경 양평이 주충전.", ids: DATA.courses.water.lineIds, url: DATA.waterUrl },
       sc: { title: "슈퍼차저 우선", note: DATA.courses.sc.summary, ids: DATA.courses.sc.lineIds, url: DATA.scUrl },
-      d27: { title: "8/27 북상", note: "06:00 울산. 밥+워터는 문경 양평. 관광은 소금산. 입실 15:00.", filter: "d27" },
+      d27: { title: "8/27 가는 날", note: "06:00 울산. 밥+워터는 문경 양평. 관광은 소금산. 입실 15:00.", filter: "d27" },
       d28: { title: "8/28 남이섬", note: "남이섬 필수. 제이드가든. 레일바이크 없음.", filter: "d28" },
-      d29: { title: "8/29 남하", note: "11:00 아웃. 워터는 창원 방향만. 또는 가평 서울 SC.", filter: "d29" },
+      d29: { title: "8/29 오는 날", note: "11:00 아웃. 워터는 창원 방향만. 또는 가평 서울 SC.", filter: "d29" },
       pick: { title: "추천 12곳", note: "차로 짧게. 하루 본전은 소금산 하나. 나머지는 후보.", filter: "pick" }
     };
 
@@ -236,7 +236,7 @@ const payload = JSON.stringify({
 
     initMap();
     var tabs = document.getElementById("tabs");
-    [["water", "워터 코스"], ["sc", "SC 코스"], ["d27", "27 북상"], ["d28", "28 남이섬"], ["d29", "29 남하"], ["pick", "추천 12"]].forEach(function (t) {
+    [["water", "워터 코스"], ["sc", "SC 코스"], ["d27", "27 가는 날"], ["d28", "28 남이섬"], ["d29", "29 오는 날"], ["pick", "추천 12"]].forEach(function (t) {
       var b = document.createElement("button");
       b.textContent = t[1];
       b.dataset.key = t[0];
