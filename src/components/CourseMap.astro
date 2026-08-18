@@ -22,7 +22,7 @@ const payload = JSON.stringify({
     <div class="actions" style="margin:0">
       <button type="button" class="btn" data-course="water">워터</button>
       <button type="button" class="btn" data-course="sc">슈퍼차저</button>
-      <button type="button" class="btn" data-course="pick">22곳</button>
+      <button type="button" class="btn" data-course="pick">{spots.filter((s) => s.days.includes("pick")).length}곳</button>
       <a class="btn btn-accent" id="embedKakao" href={kakaoByCar(coursePoints("water"))} target="_blank" rel="noreferrer">카카오 길찾기</a>
     </div>
   </div>
@@ -73,7 +73,7 @@ const payload = JSON.stringify({
 
     function render(key) {
       var list = items(key);
-      var title = key === "pick" ? "음식·경치 22곳" : (key === "water" ? "워터 먼저" : "슈퍼차저 먼저");
+      var title = key === "pick" ? "음식·경치 " + DATA.spots.filter(function (s) { return s.days.indexOf("pick") !== -1; }).length + "곳" : (key === "water" ? "워터 먼저" : "슈퍼차저 먼저");
       document.getElementById("embedTitle").textContent = title;
       document.getElementById("embedKakao").href = kakaoCar(
         key === "pick" ? [DATA.ulsan].concat(list.slice(0, 5)) : list

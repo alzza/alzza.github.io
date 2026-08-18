@@ -1,14 +1,27 @@
 ---
-import { ULSAN, ELY, spots, courses, kakaoByCar, kakaoPlace, coursePoints } from "../../data/chuncheon";
-
-const kakaoKey = import.meta.env.PUBLIC_KAKAO_JS_KEY ?? "";
-const payload = JSON.stringify({
-  ulsan: ULSAN,
-  ely: ELY,
+import {
+  ULSAN,
   spots,
   courses,
-  waterUrl: kakaoByCar(coursePoints("water")),
-  scUrl: kakaoByCar(coursePoints("sc")),
+  kakaoByCar,
+  coursePoints,
+  pickSpots,
+} from "../../data/chuncheon";
+
+const kakaoKey = import.meta.env.PUBLIC_KAKAO_JS_KEY ?? "";
+const picks = pickSpots();
+const payload = JSON.stringify({
+  ulsan: ULSAN,
+  spots,
+  courses,
+  pickCount: picks.length,
+  urls: {
+    water: kakaoByCar(coursePoints("water")),
+    sc: kakaoByCar(coursePoints("sc")),
+    d27: kakaoByCar(coursePoints("d27")),
+    d28: kakaoByCar(coursePoints("d28")),
+    d29: kakaoByCar(coursePoints("d29")),
+  },
 });
 ---
 <!DOCTYPE html>
@@ -26,226 +39,381 @@ const payload = JSON.stringify({
       }
     })();
   </script>
-  <title>춘천 경로 · 워터 / SC · 카카오맵</title>
+  <title>큰 지도 · 춘천</title>
   <meta name="theme-color" content="#FFD23F" data-light="#FFD23F" data-dark="#14131a" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style is:global>
     :root {
-      --ink:#000; --text:#000; --muted:#57534e; --surface:#fff; --bg:#fffdf5;
-      --sc:#cc0000; --water:#0077c8; --stay:#0f766e; --poi:#a16207; --yellow:#ffd23f;
+      --ink:#111; --text:#111; --muted:#5c564e; --surface:#fffdf8; --bg:#fff7e0;
+      --yellow:#ffd23f;
     }
     [data-theme="dark"] {
       --ink:#f3f3f6; --text:#ececed; --muted:#a6a6b0; --surface:#1f1e28; --bg:#14131a;
     }
     * { box-sizing: border-box; }
-    html, body { height:100%; margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo",sans-serif; color:var(--text); background:var(--bg); }
-    header {
-      position:absolute; top:0; left:0; right:0; z-index:500;
-      display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px;
-      padding:8px 12px; background:var(--surface); border-bottom:3px solid var(--ink);
+    html, body {
+      height:100%; margin:0; background:var(--bg); color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo",sans-serif;
     }
-    h1 { margin:0; font-size:15px; }
-    .sub { margin:0; font-size:11px; color:var(--muted); }
-    .tabs, .acts { display:flex; flex-wrap:wrap; gap:6px; }
-    button, .acts a {
-      appearance:none; border:2px solid var(--ink); background:var(--surface); color:var(--text);
-      padding:6px 10px; font:700 12px/1 inherit; cursor:pointer; text-decoration:none;
+    #map { position:absolute; inset:0; }
+    .leaflet-div-icon { background:transparent; border:0; }
+    .leaflet-control-attribution { font-size:10px !important; }
+
+    .top {
+      position:absolute; top:12px; left:12px; right:12px; z-index:500;
+      display:flex; align-items:center; gap:8px;
     }
-    button.on { background:var(--ink); color:var(--bg); }
-    .acts a.kakao { background:#FEE500; color:#191919; border-color:#111; }
-    .map-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; width:100%; }
-    .theme-toggle {
-      display:inline-flex; align-items:center; justify-content:center;
-      width:38px; height:38px; padding:0; margin-left:auto; flex-shrink:0;
+    .brand-chip {
+      display:flex; align-items:center; gap:8px; flex:0 0 auto;
+      height:44px; padding:0 12px 0 8px;
+      background:var(--surface); border:3px solid var(--ink);
+      box-shadow:4px 4px 0 var(--ink); text-decoration:none; color:inherit; font-weight:800;
     }
-    .theme-toggle svg { width:18px; height:18px; display:block; }
+    .brand-chip i {
+      width:26px; height:26px; display:grid; place-items:center;
+      background:var(--yellow); border:2px solid var(--ink); font-style:normal; font-size:13px; color:#111;
+    }
+    .tabs {
+      display:flex; gap:6px; flex:1; min-width:0;
+      overflow-x:auto; scrollbar-width:none;
+    }
+    .tabs::-webkit-scrollbar { display:none; }
+    .tabs button, .icon-btn {
+      appearance:none; height:44px; padding:0 12px; flex:0 0 auto;
+      border:3px solid var(--ink); background:var(--surface); color:var(--text);
+      box-shadow:3px 3px 0 var(--ink); font:800 13px/1 inherit; cursor:pointer;
+    }
+    .tabs button.on { background:var(--ink); color:var(--bg); }
+    .tabs button:active, .icon-btn:active { transform:translate(1px, 1px); box-shadow:2px 2px 0 var(--ink); }
+    .icon-btn { width:44px; padding:0; margin-left:auto; }
+    .theme-toggle svg { width:18px; height:18px; display:block; margin:0 auto; }
     .theme-toggle .icon-sun { display:none; }
     [data-theme="dark"] .theme-toggle .icon-moon { display:none; }
     [data-theme="dark"] .theme-toggle .icon-sun { display:block; }
-    #map { position:absolute; inset:96px 0 0; }
-    .panel {
-      position:absolute; z-index:400; top:108px; left:12px; width:min(360px, calc(100vw - 24px));
-      max-height:calc(100vh - 128px); overflow:auto; background:var(--surface); border:2px solid var(--ink);
-      box-shadow:4px 4px 0 var(--ink);
+
+    .dock {
+      position:absolute; z-index:500; top:68px; left:12px;
+      width:min(360px, calc(100vw - 24px));
+      max-height:calc(100dvh - 88px);
+      display:flex; flex-direction:column;
+      background:var(--surface); border:3px solid var(--ink);
+      box-shadow:6px 6px 0 var(--ink);
     }
-    .panel h2 { margin:0; padding:10px 12px; font-size:13px; border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
-    .list { list-style:none; margin:0; padding:0; }
-    .list a { display:block; padding:8px 12px; color:inherit; text-decoration:none; border-top:1px solid color-mix(in srgb, var(--ink) 10%, transparent); }
-    .list a:hover { background:var(--yellow); color:#000; }
-    .tag { display:inline-block; min-width:36px; margin-right:6px; padding:1px 5px; font-size:10px; font-weight:800; color:#fff; }
-    .sc { background:var(--sc); } .water { background:var(--water); }
-    .stay { background:var(--stay); } .poi { background:var(--poi); } .food { background:#c2410c; }
-    .note { padding:8px 12px 12px; font-size:11px; color:var(--muted); }
-    #top-sentinel { position:absolute; top:0; left:0; width:1px; height:1px; }
-    .back-to-top {
-      position:fixed; bottom:1.5rem; right:1.5rem; z-index:600;
-      width:52px; height:52px; display:flex; align-items:center; justify-content:center;
-      padding:0; border:3px solid var(--ink); background:var(--yellow); color:#000;
-      box-shadow:5px 5px 0 0 var(--ink); font:700 1.5rem/1 inherit; cursor:pointer;
-      opacity:0; visibility:hidden;
+    .dock header { padding:14px 14px 10px; border-bottom:3px solid var(--ink); }
+    .dock header p { margin:6px 0 0; font-size:13px; color:var(--muted); line-height:1.45; }
+    .dock h1 { margin:0; font-size:20px; letter-spacing:-0.03em; }
+    .list { list-style:none; margin:0; padding:0; overflow:auto; }
+    .list li {
+      display:grid; grid-template-columns:1fr auto; gap:8px; align-items:start;
+      border-bottom:1px solid color-mix(in srgb, var(--ink) 14%, transparent);
     }
-    .back-to-top.is-visible { opacity:1; visibility:visible; }
+    .list button {
+      display:grid; grid-template-columns:28px 1fr; gap:10px; align-items:start;
+      width:100%; text-align:left; border:0;
+      background:transparent; color:inherit; padding:11px 4px 11px 14px; font:inherit; cursor:pointer;
+    }
+    .list li:hover, .list li.is-on { background:var(--yellow); color:#111; }
+    .list li:hover .meta, .list li.is-on .meta { color:#1a1a1a; }
+    .side { display:flex; flex-direction:column; align-items:flex-end; gap:6px; padding:11px 14px 11px 0; }
+    .num {
+      width:26px; height:26px; display:grid; place-items:center;
+      border:2px solid #111; font:800 12px/1 inherit; color:#111;
+    }
+    .num.water { background:#74b9ff; }
+    .num.sc { background:#ff6b6b; }
+    .num.poi { background:#ffd23f; }
+    .num.food { background:#ffa552; }
+    .num.stay { background:#88d498; }
+    .list b { display:block; font-size:14px; }
+    .meta { display:block; margin-top:3px; font-size:12px; color:var(--muted); line-height:1.4; }
+    .mins { font-size:11px; font-weight:800; white-space:nowrap; }
+    .place {
+      font-size:11px; font-weight:800; color:#191919; background:#fee500;
+      border:2px solid #111; padding:3px 6px; text-decoration:none;
+    }
+    .legend {
+      display:flex; flex-wrap:wrap; gap:8px 10px;
+      padding:10px 14px; border-top:3px solid var(--ink); font-size:11px; font-weight:800;
+    }
+    .legend i { display:inline-block; width:10px; height:10px; border:2px solid #111; margin-right:4px; vertical-align:-1px; }
+    .links { display:flex; gap:8px; padding:10px 14px 12px; }
+    .links a {
+      flex:1; text-align:center; padding:10px 8px; border:3px solid var(--ink);
+      text-decoration:none; color:inherit; font-weight:800; font-size:13px;
+    }
+    .links a.kakao { background:#fee500; color:#191919; }
+    .links a.is-off { opacity:.4; pointer-events:none; }
+
+    .pin {
+      width:28px; height:28px; display:grid; place-items:center;
+      border:2px solid #111; font:800 12px/1 sans-serif; color:#111;
+      box-shadow:2px 2px 0 #111; cursor:pointer;
+    }
+    .pin.is-on { outline:3px solid #111; transform:scale(1.12); }
+
+    @media (max-width: 720px) {
+      .top { flex-wrap:wrap; }
+      .tabs {
+        order:3; width:100%; flex:1 0 100%;
+        display:grid; grid-template-columns:repeat(3, 1fr);
+        overflow:visible;
+      }
+      .tabs button { height:36px; font-size:12px; padding:0; width:100%; }
+      .dock {
+        top:auto; bottom:0; left:0; right:0; width:100%;
+        max-height:42dvh; box-shadow:0 -4px 0 var(--ink); border-left:0; border-right:0; border-bottom:0;
+      }
+      .leaflet-bottom.leaflet-right { bottom: calc(42dvh + 16px) !important; }
+    }
   </style>
 </head>
 <body>
-  <div id="top-sentinel" aria-hidden="true"></div>
-  <header>
-    <div class="map-top">
-      <div>
-        <h1>워터 / SC 코스 · 카카오맵</h1>
-        <p class="sub">출발 100% (최소 80%). 길찾기는 카카오 자동차. 레일바이크 없음.</p>
-      </div>
-      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false"></button>
-    </div>
-    <div class="tabs" id="tabs"></div>
-    <div class="acts">
-      <a href="/chuncheon/">일정</a>
-      <a href="/">목록</a>
-      <a class="kakao" id="kakaoOpen" target="_blank" rel="noreferrer">이 코스 카카오 길찾기</a>
-    </div>
-  </header>
-  <aside class="panel">
-    <h2 id="panelTitle">코스</h2>
-    <ul class="list" id="list"></ul>
-    <p class="note" id="note"></p>
-  </aside>
   <div id="map"></div>
+
+  <div class="top">
+    <a class="brand-chip" href="/chuncheon/"><i>A</i>일정</a>
+    <div class="tabs" id="tabs"></div>
+    <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false"></button>
+  </div>
+
+  <aside class="dock">
+    <header>
+      <h1 id="panelTitle">워터 먼저</h1>
+      <p id="note"></p>
+    </header>
+    <ul class="list" id="list"></ul>
+    <div class="legend">
+      <span><i style="background:#74b9ff"></i>워터</span>
+      <span><i style="background:#ff6b6b"></i>슈퍼차저</span>
+      <span><i style="background:#ffa552"></i>음식</span>
+      <span><i style="background:#ffd23f"></i>경치</span>
+      <span><i style="background:#88d498"></i>숙소</span>
+    </div>
+    <div class="links">
+      <a href="/chuncheon/">일정 글</a>
+      <a class="kakao" id="kakaoOpen" target="_blank" rel="noreferrer">카카오 길찾기</a>
+    </div>
+  </aside>
+
   <script is:inline id="trip-data" type="application/json" set:html={payload} />
   {kakaoKey && <script is:inline src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}`}></script>}
   <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script is:inline>
     var DATA = JSON.parse(document.getElementById("trip-data").textContent);
     var useKakao = typeof kakao !== "undefined" && kakao.maps;
-    var colors = { sc: "#cc0000", water: "#0077c8", stay: "#0f766e", poi: "#a16207", food: "#c2410c" };
-    var lab = { sc: "SC", water: "워터", stay: "숙소", poi: "관광", food: "식사" };
+    var colors = { sc:"#ff6b6b", water:"#74b9ff", stay:"#88d498", poi:"#ffd23f", food:"#ffa552" };
+    var tabOrder = [
+      ["water", "워터"],
+      ["sc", "슈퍼차저"],
+      ["d27", "가는 날"],
+      ["d28", "남이섬"],
+      ["d29", "오는 날"],
+      ["pick", DATA.pickCount + "곳"]
+    ];
+
+    function viewOf(key) {
+      if (key === "pick") {
+        return {
+          title: "음식·경치 " + DATA.pickCount + "곳",
+          note: "짧게 쉴 곳. 하루 본전은 소금산. 목록을 누르면 지도가 그쪽으로 간다.",
+          items: DATA.spots.filter(function (s) { return s.days.indexOf("pick") !== -1; }),
+          url: "",
+          line: false
+        };
+      }
+      var c = DATA.courses[key];
+      var items = c.lineIds.map(function (id) {
+        return DATA.spots.filter(function (s) { return s.id === id; })[0];
+      }).filter(Boolean);
+      if (c.start === "ulsan") {
+        items = [{ kind:"stay", name: DATA.ulsan.name, lat: DATA.ulsan.lat, lng: DATA.ulsan.lng, note:"출발", stayMin:0 }].concat(items);
+      }
+      if (c.end === "ulsan") {
+        items = items.concat([{ kind:"stay", name: DATA.ulsan.name, lat: DATA.ulsan.lat, lng: DATA.ulsan.lng, note:"도착", stayMin:0 }]);
+      }
+      var extra = "";
+      if (key === "water") extra = " 출발은 100%, 못해도 80%.";
+      return { title: c.title, note: c.summary + extra, items: items, url: DATA.urls[key] || "", line: true };
+    }
 
     function kakaoPlace(p) {
       return "https://map.kakao.com/link/map/" + encodeURIComponent(p.name) + "," + p.lat + "," + p.lng;
     }
-    function kakaoCar(pts) {
-      return "https://map.kakao.com/link/by/car/" + pts.map(function (p) {
-        return encodeURIComponent(p.name) + "," + p.lat + "," + p.lng;
-      }).join("/");
+    function pinHtml(n, kind, on) {
+      return '<div class="pin' + (on ? " is-on" : "") + '" data-i="' + n + '" style="background:' + (colors[kind] || "#fff") + '">' + n + "</div>";
     }
 
-    var views = {
-      water: { title: "워터 우선", note: DATA.courses.water.summary + " 집 100%(최소 80%). 문경 양평이 주충전.", ids: DATA.courses.water.lineIds, url: DATA.waterUrl },
-      sc: { title: "슈퍼차저 우선", note: DATA.courses.sc.summary, ids: DATA.courses.sc.lineIds, url: DATA.scUrl },
-      d27: { title: "8/27 가는 날", note: "06:00 울산. 밥+워터는 문경 양평. 관광은 소금산. 입실 15:00.", filter: "d27" },
-      d28: { title: "8/28 남이섬", note: "남이섬 필수. 제이드가든. 레일바이크 없음.", filter: "d28" },
-      d29: { title: "8/29 오는 날", note: "11:00 아웃. 워터는 창원 방향만. 또는 가평 서울 SC.", filter: "d29" },
-      pick: { title: "음식·경치", note: "2024-2026 후기. 차로 짧게. 하루 본전은 소금산 하나.", filter: "pick" }
-    };
+    var layer, lmap, kmap, koverlays = [], tileLayer, selected = -1, currentKey = "water";
 
-    function itemsOf(key) {
-      var v = views[key];
-      var start = { kind: "stay", name: DATA.ulsan.name, lat: DATA.ulsan.lat, lng: DATA.ulsan.lng, note: "출발" };
-      if (v.ids) {
-        return [start].concat(v.ids.map(function (id) {
-          return DATA.spots.filter(function (s) { return s.id === id; })[0];
-        }).filter(Boolean));
-      }
-      return DATA.spots.filter(function (s) { return s.days.indexOf(v.filter) !== -1; });
+    function isDark() {
+      return document.documentElement.getAttribute("data-theme") === "dark";
     }
-
-    var layer;
-    var kmap, koverlays = [];
-
-    function leafletIcon(color) {
-      return L.divIcon({
-        className: "",
-        html: '<div style="width:16px;height:16px;border:2px solid #111;border-radius:50%;background:' + color + ';box-shadow:1px 1px 0 #111"></div>',
-        iconSize: [16, 16], iconAnchor: [8, 8]
-      });
+    function tileUrl() {
+      return isDark()
+        ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+    }
+    function applyTiles() {
+      if (useKakao || !lmap) return;
+      if (tileLayer) lmap.removeLayer(tileLayer);
+      tileLayer = L.tileLayer(tileUrl(), { maxZoom: 19, attribution: "&copy; OSM &copy; CARTO" }).addTo(lmap);
     }
 
     function initMap() {
       if (useKakao) {
         kmap = new kakao.maps.Map(document.getElementById("map"), {
-          center: new kakao.maps.LatLng(36.7, 128.1),
+          center: new kakao.maps.LatLng(36.85, 128.05),
           level: 11
         });
       } else {
-        var map = L.map("map").setView([36.7, 128.1], 8);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          maxZoom: 18, attribution: "&copy; OpenStreetMap"
-        }).addTo(map);
-        layer = L.layerGroup().addTo(map);
-        window._lmap = map;
+        lmap = L.map("map", { zoomControl: false }).setView([36.85, 128.05], 8);
+        L.control.zoom({ position: "bottomright" }).addTo(lmap);
+        applyTiles();
+        layer = L.layerGroup().addTo(lmap);
       }
     }
 
-    function clearOverlays() {
-      if (useKakao) {
-        koverlays.forEach(function (o) { o.setMap(null); });
-        koverlays = [];
-      } else if (layer) layer.clearLayers();
+    function clear() {
+      if (useKakao) { koverlays.forEach(function (o) { o.setMap(null); }); koverlays = []; }
+      else if (layer) layer.clearLayers();
     }
+
+    function mapPad() {
+      var mobile = window.matchMedia("(max-width: 720px)").matches;
+      if (mobile) return { paddingTopLeft: [16, 150], paddingBottomRight: [16, Math.round(window.innerHeight * 0.44)] };
+      return { paddingTopLeft: [380, 80], paddingBottomRight: [48, 48] };
+    }
+
+    function fitAll(items) {
+      if (!items.length) return;
+      var pad = mapPad();
+      if (useKakao) {
+        var kb = new kakao.maps.LatLngBounds();
+        items.forEach(function (p) { kb.extend(new kakao.maps.LatLng(p.lat, p.lng)); });
+        kmap.setBounds(kb);
+      } else {
+        lmap.fitBounds(items.map(function (p) { return [p.lat, p.lng]; }), pad);
+      }
+    }
+
+    window.__focusStop = function (i, openPlace) {
+      var items = window._items || [];
+      var p = items[i];
+      if (!p) return;
+      selected = i;
+      document.querySelectorAll(".list li").forEach(function (b, j) {
+        b.classList.toggle("is-on", j === i);
+      });
+      document.querySelectorAll(".pin").forEach(function (el) {
+        el.classList.toggle("is-on", Number(el.getAttribute("data-i")) === i + 1);
+      });
+      var row = document.querySelectorAll(".list li")[i];
+      if (row) row.scrollIntoView({ block: "nearest" });
+      if (useKakao) {
+        kmap.setLevel(6);
+        kmap.panTo(new kakao.maps.LatLng(p.lat, p.lng));
+      } else {
+        lmap.setView([p.lat, p.lng], 12);
+      }
+      if (openPlace) window.open(kakaoPlace(p), "_blank", "noopener");
+    };
 
     function render(key) {
-      var v = views[key];
-      var items = itemsOf(key);
+      currentKey = key;
+      selected = -1;
+      var v = viewOf(key);
+      window._items = v.items;
       document.getElementById("panelTitle").textContent = v.title;
       document.getElementById("note").textContent = v.note;
-      var routePts = items.map(function (p) { return { name: p.name, lat: p.lat, lng: p.lng }; });
-      if (v.url) document.getElementById("kakaoOpen").href = v.url;
-      else if (routePts.length >= 2) document.getElementById("kakaoOpen").href = kakaoCar([DATA.ulsan].concat(routePts).slice(0, 7));
+      var kakaoBtn = document.getElementById("kakaoOpen");
+      if (v.url) {
+        kakaoBtn.href = v.url;
+        kakaoBtn.classList.remove("is-off");
+      } else {
+        kakaoBtn.removeAttribute("href");
+        kakaoBtn.classList.add("is-off");
+      }
       document.querySelectorAll(".tabs button").forEach(function (b) {
         b.classList.toggle("on", b.dataset.key === key);
+        if (b.dataset.key === key) b.scrollIntoView({ inline: "nearest", block: "nearest" });
       });
-      clearOverlays();
-      var bounds = [];
-      items.forEach(function (p) {
-        bounds.push([p.lat, p.lng]);
+      if (history.replaceState) history.replaceState(null, "", "#" + key);
+      clear();
+      v.items.forEach(function (p, i) {
+        var n = String(i + 1);
         if (useKakao) {
           var pos = new kakao.maps.LatLng(p.lat, p.lng);
-          var marker = new kakao.maps.Marker({ map: kmap, position: pos });
-          var info = new kakao.maps.InfoWindow({
-            content: "<div style='padding:6px 8px;font-size:12px'><b>" + p.name + "</b><br>" + (p.note || "") + "</div>"
+          var ov = new kakao.maps.CustomOverlay({
+            position: pos,
+            content: '<div onclick="window.__focusStop(' + i + ')">' + pinHtml(n, p.kind) + "</div>",
+            yAnchor: 1
           });
-          kakao.maps.event.addListener(marker, "click", function () { info.open(kmap, marker); });
-          koverlays.push(marker);
+          ov.setMap(kmap);
+          koverlays.push(ov);
         } else {
-          L.marker([p.lat, p.lng], { icon: leafletIcon(colors[p.kind] || "#333") })
-            .addTo(layer)
-            .bindPopup("<b>" + p.name + "</b><br>" + (p.note || "") + "<br><a target='_blank' href='" + kakaoPlace(p) + "'>카카오맵</a>");
+          var m = L.marker([p.lat, p.lng], {
+            icon: L.divIcon({ className: "", html: pinHtml(n, p.kind), iconSize: [28, 28], iconAnchor: [14, 28] })
+          }).addTo(layer);
+          m.on("click", function () { window.__focusStop(i); });
         }
       });
-      if (items.length >= 2) {
+      if (v.line && v.items.length >= 2) {
         if (useKakao) {
-          var path = items.map(function (p) { return new kakao.maps.LatLng(p.lat, p.lng); });
-          var line = new kakao.maps.Polyline({ path: path, strokeWeight: 4, strokeColor: "#111", strokeOpacity: 0.55 });
+          var path = v.items.map(function (p) { return new kakao.maps.LatLng(p.lat, p.lng); });
+          var line = new kakao.maps.Polyline({ path: path, strokeWeight: 6, strokeColor: isDark() ? "#f3f3f6" : "#111", strokeOpacity: 0.45, strokeStyle: "solid" });
           line.setMap(kmap);
           koverlays.push(line);
-          var kb = new kakao.maps.LatLngBounds();
-          path.forEach(function (x) { kb.extend(x); });
-          kmap.setBounds(kb);
         } else {
-          L.polyline(bounds, { color: "#111", weight: 4, opacity: 0.55 }).addTo(layer);
-          window._lmap.fitBounds(L.latLngBounds(bounds).pad(0.2));
+          L.polyline(v.items.map(function (p) { return [p.lat, p.lng]; }), {
+            color: isDark() ? "#f3f3f6" : "#111", weight: 5, opacity: 0.45
+          }).addTo(layer);
         }
       }
-      var list = document.getElementById("list");
-      list.innerHTML = "";
-      items.forEach(function (p) {
+      fitAll(v.items);
+      var ul = document.getElementById("list");
+      ul.innerHTML = "";
+      ul.scrollTop = 0;
+      v.items.forEach(function (p, i) {
         var li = document.createElement("li");
-        li.innerHTML = "<a target='_blank' href='" + kakaoPlace(p) + "'><span class='tag " + p.kind + "'>" + (lab[p.kind] || p.kind) + "</span>" + p.name + "<br><span style='color:#78716c;font-size:11px'>" + (p.note || "") + "</span></a>";
-        list.appendChild(li);
+        var mins = p.stayMin ? p.stayMin + "분" : "";
+        li.innerHTML = "<button type='button'><span class='num " + (p.kind || "") + "'>" + (i + 1) + "</span><span><b></b><span class='meta'></span></span></button><span class='side'><span class='mins'></span></span>";
+        li.querySelector("b").textContent = p.name;
+        li.querySelector(".meta").textContent = p.note || "";
+        li.querySelector(".mins").textContent = mins;
+        var open = document.createElement("a");
+        open.className = "place";
+        open.href = kakaoPlace(p);
+        open.target = "_blank";
+        open.rel = "noreferrer";
+        open.textContent = "카카오";
+        li.querySelector(".side").appendChild(open);
+        li.querySelector("button").onclick = function () { window.__focusStop(i); };
+        ul.appendChild(li);
       });
     }
 
     initMap();
     var tabs = document.getElementById("tabs");
-    [["water", "워터 먼저"], ["sc", "슈퍼차저"], ["d27", "27 가는 날"], ["d28", "28 남이섬"], ["d29", "29 오는 날"], ["pick", "음식·경치"]].forEach(function (t) {
+    tabOrder.forEach(function (t) {
       var b = document.createElement("button");
+      b.type = "button";
       b.textContent = t[1];
       b.dataset.key = t[0];
       b.onclick = function () { render(t[0]); };
       tabs.appendChild(b);
     });
-    render("water");
+    var startKey = (location.hash || "").replace("#", "");
+    if (!DATA.courses[startKey] && startKey !== "pick") startKey = "water";
+    render(startKey);
+    window.addEventListener("hashchange", function () {
+      var k = (location.hash || "").replace("#", "");
+      if (DATA.courses[k] || k === "pick") render(k);
+    });
+
+    new MutationObserver(function () {
+      applyTiles();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   </script>
-  <button class="back-to-top" id="back-to-top" type="button" aria-label="맨 위로">↑</button>
   <script is:inline src="/theme.js"></script>
 </body>
 </html>

@@ -58,14 +58,38 @@ export const courses = {
     title: "워터 먼저",
     summary: "중부내륙으로 올라가서 문경 양평에서 밥과 충전. 소금산 보고 가평 V4.",
     lineIds: ["food-seonsan", "food-mungyeong", "poi-sogeum", "food-gapyeong", "stay-ely"],
+    start: "ulsan" as const,
   },
   sc: {
     id: "sc",
     title: "슈퍼차저 먼저",
     summary: "김천 모다, 제천이나 원주 AK, 소금산, 가평 V4.",
     lineIds: ["sc-gimcheon", "sc-jecheon", "sc-wonju", "poi-sogeum", "sc-gap-n", "stay-ely"],
+    start: "ulsan" as const,
+  },
+  d27: {
+    id: "d27",
+    title: "27일 가는 날",
+    summary: "여섯 시 울산. 문경에서 밥과 충전. 소금산. 세 시 들어감.",
+    lineIds: ["food-seonsan", "food-mungyeong", "poi-saejae", "poi-sogeum", "food-gapyeong", "stay-ely"],
+    start: "ulsan" as const,
+  },
+  d28: {
+    id: "d28",
+    title: "28일 남이섬",
+    summary: "남이섬 필수. 제이드가든. 레일바이크 없음.",
+    lineIds: ["stay-ely", "poi-nami", "poi-jade", "poi-jara", "poi-soyang", "food-dakgalbi"],
+  },
+  d29: {
+    id: "d29",
+    title: "29일 오는 날",
+    summary: "열한 시 나옴. 워터는 창원 방향. 아니면 가평 서울 슈퍼차저.",
+    lineIds: ["stay-ely", "water-seoyeoju-s", "water-goesan-s", "water-mungyeong-s"],
+    end: "ulsan" as const,
   },
 };
+
+export const pickSpots = () => spots.filter((s) => s.days.includes("pick"));
 
 export function kakaoByCar(points: { name: string; lat: number; lng: number }[]): string {
   const parts = points.map((p) => `${encodeURIComponent(p.name)},${p.lat},${p.lng}`);
@@ -80,8 +104,13 @@ export function byId(id: string): Spot | undefined {
   return spots.find((s) => s.id === id);
 }
 
-export function coursePoints(id: "water" | "sc") {
-  return [ULSAN, ...courses[id].lineIds.map((x) => byId(x)!).filter(Boolean)].filter(
-    (p, i, arr) => i === 0 || p.name !== arr[i - 1].name,
-  );
+export function coursePoints(id: keyof typeof courses) {
+  const c = courses[id];
+  const mid = c.lineIds.map((x) => byId(x)!).filter(Boolean);
+  const pts = [
+    ...(c.start === "ulsan" ? [ULSAN] : []),
+    ...mid,
+    ...(c.end === "ulsan" ? [ULSAN] : []),
+  ];
+  return pts.filter((p, i, arr) => i === 0 || p.name !== arr[i - 1].name);
 }
