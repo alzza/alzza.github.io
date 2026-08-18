@@ -1,4 +1,15 @@
 ---
+import { ULSAN, ELY, spots, courses, kakaoByCar, kakaoPlace, coursePoints } from "../../data/chuncheon";
+
+const kakaoKey = import.meta.env.PUBLIC_KAKAO_JS_KEY ?? "";
+const payload = JSON.stringify({
+  ulsan: ULSAN,
+  ely: ELY,
+  spots,
+  courses,
+  waterUrl: kakaoByCar(coursePoints("water")),
+  scUrl: kakaoByCar(coursePoints("sc")),
+});
 ---
 <!DOCTYPE html>
 <html lang="ko">
@@ -15,7 +26,7 @@
       }
     })();
   </script>
-  <title>여행 경로 · 일자별 · 워터/SC</title>
+  <title>춘천 경로 · 워터 / SC · 카카오맵</title>
   <meta name="theme-color" content="#FFD23F" data-light="#FFD23F" data-dark="#14131a" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style is:global>
@@ -29,7 +40,7 @@
     * { box-sizing: border-box; }
     html, body { height:100%; margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo",sans-serif; color:var(--text); background:var(--bg); }
     header {
-      position:absolute; top:0; left:0; right:0; z-index:500; min-height:58px;
+      position:absolute; top:0; left:0; right:0; z-index:500;
       display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px;
       padding:8px 12px; background:var(--surface); border-bottom:3px solid var(--ink);
     }
@@ -41,7 +52,7 @@
       padding:6px 10px; font:700 12px/1 inherit; cursor:pointer; text-decoration:none;
     }
     button.on { background:var(--ink); color:var(--bg); }
-    .acts a.naver { background:#03c75a; color:#fff; border-color:#019c46; }
+    .acts a.kakao { background:#FEE500; color:#191919; border-color:#111; }
     .map-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; width:100%; }
     .theme-toggle {
       display:inline-flex; align-items:center; justify-content:center;
@@ -51,10 +62,10 @@
     .theme-toggle .icon-sun { display:none; }
     [data-theme="dark"] .theme-toggle .icon-moon { display:none; }
     [data-theme="dark"] .theme-toggle .icon-sun { display:block; }
-    #map { position:absolute; inset:90px 0 0; }
+    #map { position:absolute; inset:96px 0 0; }
     .panel {
-      position:absolute; z-index:400; top:102px; left:12px; width:min(340px, calc(100vw - 24px));
-      max-height:calc(100vh - 120px); overflow:auto; background:var(--surface); border:2px solid var(--ink);
+      position:absolute; z-index:400; top:108px; left:12px; width:min(360px, calc(100vw - 24px));
+      max-height:calc(100vh - 128px); overflow:auto; background:var(--surface); border:2px solid var(--ink);
       box-shadow:4px 4px 0 var(--ink);
     }
     .panel h2 { margin:0; padding:10px 12px; font-size:13px; border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
@@ -63,7 +74,7 @@
     .list a:hover { background:var(--yellow); color:#000; }
     .tag { display:inline-block; min-width:36px; margin-right:6px; padding:1px 5px; font-size:10px; font-weight:800; color:#fff; }
     .sc { background:var(--sc); } .water { background:var(--water); }
-    .stay { background:var(--stay); } .poi { background:var(--poi); }
+    .stay { background:var(--stay); } .poi { background:var(--poi); } .food { background:#c2410c; }
     .note { padding:8px 12px 12px; font-size:11px; color:var(--muted); }
     #top-sentinel { position:absolute; top:0; left:0; width:1px; height:1px; }
     .back-to-top {
@@ -78,10 +89,11 @@
 </head>
 <body>
   <div id="top-sentinel" aria-hidden="true"></div>
+  <header>
     <div class="map-top">
       <div>
-        <h1>8/27-29 경로 · 충전기</h1>
-        <p class="sub">네이버맵 URL 규격으로 길찾기. 마커는 워터·테슬라 SC 포함</p>
+        <h1>워터 / SC 코스 · 카카오맵</h1>
+        <p class="sub">출발 100% (최소 80%). 길찾기는 카카오 자동차. 레일바이크 없음.</p>
       </div>
       <button class="theme-toggle" id="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false"></button>
     </div>
@@ -89,150 +101,149 @@
     <div class="acts">
       <a href="/chuncheon/">일정</a>
       <a href="/">목록</a>
-      <a class="naver" id="naverOpen" target="_blank" rel="noreferrer">이 일정 네이버 길찾기</a>
+      <a class="kakao" id="kakaoOpen" target="_blank" rel="noreferrer">이 코스 카카오 길찾기</a>
     </div>
   </header>
   <aside class="panel">
-    <h2 id="panelTitle">전체</h2>
+    <h2 id="panelTitle">코스</h2>
     <ul class="list" id="list"></ul>
     <p class="note" id="note"></p>
   </aside>
   <div id="map"></div>
+  <script is:inline id="trip-data" type="application/json" set:html={payload} />
+  {kakaoKey && <script is:inline src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}`}></script>}
   <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script is:inline>
-    function pt(lng, lat, name, type) {
-      var t = type === "addr" ? "ADDRESS_POI" : "PLACE_POI";
-      return lng + "," + lat + "," + encodeURIComponent(name) + "," + t;
+    var DATA = JSON.parse(document.getElementById("trip-data").textContent);
+    var useKakao = typeof kakao !== "undefined" && kakao.maps;
+    var colors = { sc: "#cc0000", water: "#0077c8", stay: "#0f766e", poi: "#a16207", food: "#c2410c" };
+    var lab = { sc: "SC", water: "워터", stay: "숙소", poi: "관광", food: "식사" };
+
+    function kakaoPlace(p) {
+      return "https://map.kakao.com/link/map/" + encodeURIComponent(p.name) + "," + p.lat + "," + p.lng;
     }
-    function naverDir(start, goal, vias) {
-      var via = !vias || !vias.length ? "-" : vias.map(function (v) { return pt(v.lng, v.lat, v.name, "place"); }).join(":");
-      return "https://map.naver.com/p/directions/" + pt(start.lng, start.lat, start.name, start.type || "addr") +
-        "/" + pt(goal.lng, goal.lat, goal.name, "place") + "/" + via + "/car";
-    }
-    function naverSearch(q) {
-      return "https://map.naver.com/p/search/" + encodeURIComponent(q);
+    function kakaoCar(pts) {
+      return "https://map.kakao.com/link/by/car/" + pts.map(function (p) {
+        return encodeURIComponent(p.name) + "," + p.lat + "," + p.lng;
+      }).join("/");
     }
 
-    var ULSAN = { lat: 35.5384, lng: 129.3114, name: "울산", type: "addr" };
-    var ELY = { lat: 37.822123, lng: 127.589843, name: "엘리시안강촌" };
-    var SOGEUM = { lat: 37.3648, lng: 127.8322, name: "소금산그랜드밸리" };
-    var GAP_N = { lat: 37.7011875, lng: 127.5459242, name: "가평휴게소춘천방향 수퍼차저" };
-    var GAP_S = { lat: 37.6989, lng: 127.5431, name: "가평휴게소서울방향 수퍼차저" };
-    var NAMI = { lat: 37.7915, lng: 127.5253, name: "남이섬 선착장" };
-    var JADE = { lat: 37.8315, lng: 127.5458, name: "제이드가든" };
-
-    var chargers = [
-      { kind: "sc", name: "SC 김천 모다아울렛", dir: "경부 IC · V3 8기", lat: 36.1556, lng: 128.3512, q: "김천 모다아울렛 테슬라 슈퍼차저", days: ["d27", "d29", "all"] },
-      { kind: "water", name: "워터 선산휴게소", dir: "양평(북상)", lat: 36.2732, lng: 128.2478, q: "선산휴게소 양평방향 워터", days: ["d27", "all"] },
-      { kind: "water", name: "워터 문경휴게소", dir: "양평(북상) 350kW", lat: 36.62128, lng: 128.15198, q: "문경휴게소 양평방향 워터", days: ["d27", "all"] },
-      { kind: "water", name: "워터 문경휴게소", dir: "창원(남하)", lat: 36.61974, lng: 128.15056, q: "문경휴게소 창원방향 워터", days: ["d29", "all"] },
-      { kind: "water", name: "워터 괴산휴게소", dir: "창원(남하만)", lat: 36.8155, lng: 127.8630, q: "괴산휴게소 창원방향 워터", days: ["d29", "all"] },
-      { kind: "water", name: "워터 충주휴게소", dir: "양평(북상)", lat: 37.02356, lng: 127.83906, q: "충주휴게소 양평방향 워터", days: ["d27", "all"] },
-      { kind: "sc", name: "SC 제천 남제천IC", dir: "중앙고속 이탈 · V3 8기", lat: 37.0825, lng: 128.1912, q: "제천 테슬라 슈퍼차저 남제천", days: ["d27", "all"] },
-      { kind: "sc", name: "SC 원주 AK플라자", dir: "시내 V3 9기", lat: 37.3482, lng: 127.9295, q: "원주 AK플라자 테슬라 슈퍼차저", days: ["d27", "all"] },
-      { kind: "water", name: "워터 원주휴게소", dir: "춘천방향", lat: 37.4175, lng: 127.9065, q: "원주휴게소 춘천방향 워터", days: ["d27", "all"] },
-      { kind: "water", name: "워터 홍천강휴게소", dir: "춘천방향 350kW", lat: 37.6890, lng: 127.8880, q: "홍천강휴게소 춘천방향 워터", days: ["d27", "all"] },
-      { kind: "sc", name: "SC 가평휴게소 춘천", dir: "V4 · 입실 전", lat: 37.7011875, lng: 127.5459242, q: "가평휴게소춘천방향 수퍼차저", days: ["d27", "d28", "all"] },
-      { kind: "sc", name: "SC 가평휴게소 서울", dir: "V4 · 복귀", lat: 37.6989, lng: 127.5431, q: "가평휴게소서울방향 수퍼차저", days: ["d29", "d28", "all"] },
-      { kind: "water", name: "워터 서여주휴게소", dir: "창원(남하만)", lat: 37.27881, lng: 127.57846, q: "서여주휴게소 창원방향 워터", days: ["d29", "all"] }
-    ];
-
-    var days = {
-      all: {
-        title: "여행 전체",
-        note: "네이버 실측: 직행은 경부→상주영천→중앙 394km 4시간 5분. 소금산+가평SC 경유 시 448km 약 5시간. 전체는 일자별 길찾기를 이어 본 것.",
-        line: [ULSAN, SOGEUM, ELY, NAMI, ELY, ULSAN],
-        naver: naverDir(ULSAN, ULSAN, [SOGEUM, ELY, NAMI, GAP_S]),
-        extra: [
-          { kind: "stay", name: "출발 울산", dir: "8/27 06:00", lat: ULSAN.lat, lng: ULSAN.lng, q: "울산" },
-          { kind: "poi", name: "소금산 그랜드밸리", dir: "27일 경유", lat: SOGEUM.lat, lng: SOGEUM.lng, q: "소금산 그랜드밸리" },
-          { kind: "stay", name: "엘리시안 강촌", dir: "숙소", lat: ELY.lat, lng: ELY.lng, q: "엘리시안 강촌" },
-          { kind: "poi", name: "남이섬 선착장", dir: "28일 오전", lat: NAMI.lat, lng: NAMI.lng, q: "남이섬 선착장" }
-        ]
-      },
-      d27: {
-        title: "8/27 북상",
-        note: "네이버 길찾기(경유 소금산+가평SC춘천): 약 4시간 59분 · 448km. 기본 추천은 중앙고속. 충전기는 김천SC·제천SC·원주AK·가평SC.",
-        line: [ULSAN, SOGEUM, GAP_N, ELY],
-        naver: naverDir(ULSAN, ELY, [SOGEUM, GAP_N]),
-        extra: [
-          { kind: "stay", name: "출발 울산", dir: "06:00", lat: ULSAN.lat, lng: ULSAN.lng, q: "울산" },
-          { kind: "poi", name: "소금산 그랜드밸리", dir: "09:30~12:00", lat: SOGEUM.lat, lng: SOGEUM.lng, q: "소금산 그랜드밸리" },
-          { kind: "stay", name: "엘리시안 강촌", dir: "15:00 체크인", lat: ELY.lat, lng: ELY.lng, q: "엘리시안 강촌" }
-        ]
-      },
-      d28: {
-        title: "8/28 남이섬",
-        note: "숙소→남이섬→제이드가든→숙소. 급속은 가평휴게소 양방향. 리조트는 완속만.",
-        line: [ELY, NAMI, JADE, ELY],
-        naver: naverDir(ELY, ELY, [NAMI, JADE]),
-        extra: [
-          { kind: "stay", name: "엘리시안 강촌", dir: "출발·귀소", lat: ELY.lat, lng: ELY.lng, q: "엘리시안 강촌" },
-          { kind: "poi", name: "남이섬 선착장", dir: "오전 필수", lat: NAMI.lat, lng: NAMI.lng, q: "남이섬 선착장" },
-          { kind: "poi", name: "제이드가든", dir: "오후 선택", lat: JADE.lat, lng: JADE.lng, q: "제이드가든" }
-        ]
-      },
-      d29: {
-        title: "8/29 남하",
-        note: "11시 아웃 → 가평SC 서울방향 → 울산. 정체 시 워터 괴산·문경 창원방향.",
-        line: [ELY, GAP_S, ULSAN],
-        naver: naverDir(ELY, ULSAN, [GAP_S]),
-        extra: [
-          { kind: "stay", name: "엘리시안 강촌", dir: "11:00 아웃", lat: ELY.lat, lng: ELY.lng, q: "엘리시안 강촌" }
-        ]
-      }
+    var views = {
+      water: { title: "워터 우선", note: DATA.courses.water.summary + " 집 100%(최소 80%). 문경 양평이 주충전.", ids: DATA.courses.water.lineIds, url: DATA.waterUrl },
+      sc: { title: "슈퍼차저 우선", note: DATA.courses.sc.summary, ids: DATA.courses.sc.lineIds, url: DATA.scUrl },
+      d27: { title: "8/27 북상", note: "06:00 울산. 밥+워터는 문경 양평. 관광은 소금산. 입실 15:00.", filter: "d27" },
+      d28: { title: "8/28 남이섬", note: "남이섬 필수. 제이드가든. 레일바이크 없음.", filter: "d28" },
+      d29: { title: "8/29 남하", note: "11:00 아웃. 워터는 창원 방향만. 또는 가평 서울 SC.", filter: "d29" },
+      pick: { title: "추천 12곳", note: "차로 짧게. 하루 본전은 소금산 하나. 나머지는 후보.", filter: "pick" }
     };
 
-    var map = L.map("map").setView([36.7, 128.1], 8);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 18, attribution: "&copy; OpenStreetMap"
-    }).addTo(map);
-    var layer = L.layerGroup().addTo(map);
+    function itemsOf(key) {
+      var v = views[key];
+      var start = { kind: "stay", name: DATA.ulsan.name, lat: DATA.ulsan.lat, lng: DATA.ulsan.lng, note: "출발" };
+      if (v.ids) {
+        return [start].concat(v.ids.map(function (id) {
+          return DATA.spots.filter(function (s) { return s.id === id; })[0];
+        }).filter(Boolean));
+      }
+      return DATA.spots.filter(function (s) { return s.days.indexOf(v.filter) !== -1; });
+    }
 
-    function icon(color) {
+    var layer;
+    var kmap, koverlays = [];
+
+    function leafletIcon(color) {
       return L.divIcon({
         className: "",
         html: '<div style="width:16px;height:16px;border:2px solid #111;border-radius:50%;background:' + color + ';box-shadow:1px 1px 0 #111"></div>',
         iconSize: [16, 16], iconAnchor: [8, 8]
       });
     }
-    var colors = { sc: "#cc0000", water: "#0077c8", stay: "#0f766e", poi: "#a16207" };
+
+    function initMap() {
+      if (useKakao) {
+        kmap = new kakao.maps.Map(document.getElementById("map"), {
+          center: new kakao.maps.LatLng(36.7, 128.1),
+          level: 11
+        });
+      } else {
+        var map = L.map("map").setView([36.7, 128.1], 8);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 18, attribution: "&copy; OpenStreetMap"
+        }).addTo(map);
+        layer = L.layerGroup().addTo(map);
+        window._lmap = map;
+      }
+    }
+
+    function clearOverlays() {
+      if (useKakao) {
+        koverlays.forEach(function (o) { o.setMap(null); });
+        koverlays = [];
+      } else if (layer) layer.clearLayers();
+    }
 
     function render(key) {
-      var d = days[key];
-      document.getElementById("panelTitle").textContent = d.title;
-      document.getElementById("note").textContent = d.note;
-      document.getElementById("naverOpen").href = d.naver;
+      var v = views[key];
+      var items = itemsOf(key);
+      document.getElementById("panelTitle").textContent = v.title;
+      document.getElementById("note").textContent = v.note;
+      var routePts = items.map(function (p) { return { name: p.name, lat: p.lat, lng: p.lng }; });
+      if (v.url) document.getElementById("kakaoOpen").href = v.url;
+      else if (routePts.length >= 2) document.getElementById("kakaoOpen").href = kakaoCar([DATA.ulsan].concat(routePts).slice(0, 7));
       document.querySelectorAll(".tabs button").forEach(function (b) {
         b.classList.toggle("on", b.dataset.key === key);
       });
-      layer.clearLayers();
-      var latlngs = d.line.map(function (p) { return [p.lat, p.lng]; });
-      L.polyline(latlngs, { color: "#111", weight: 4, opacity: 0.55 }).addTo(layer);
-      var items = d.extra.concat(chargers.filter(function (c) { return c.days.indexOf(key) !== -1; }));
+      clearOverlays();
+      var bounds = [];
+      items.forEach(function (p) {
+        bounds.push([p.lat, p.lng]);
+        if (useKakao) {
+          var pos = new kakao.maps.LatLng(p.lat, p.lng);
+          var marker = new kakao.maps.Marker({ map: kmap, position: pos });
+          var info = new kakao.maps.InfoWindow({
+            content: "<div style='padding:6px 8px;font-size:12px'><b>" + p.name + "</b><br>" + (p.note || "") + "</div>"
+          });
+          kakao.maps.event.addListener(marker, "click", function () { info.open(kmap, marker); });
+          koverlays.push(marker);
+        } else {
+          L.marker([p.lat, p.lng], { icon: leafletIcon(colors[p.kind] || "#333") })
+            .addTo(layer)
+            .bindPopup("<b>" + p.name + "</b><br>" + (p.note || "") + "<br><a target='_blank' href='" + kakaoPlace(p) + "'>카카오맵</a>");
+        }
+      });
+      if (items.length >= 2) {
+        if (useKakao) {
+          var path = items.map(function (p) { return new kakao.maps.LatLng(p.lat, p.lng); });
+          var line = new kakao.maps.Polyline({ path: path, strokeWeight: 4, strokeColor: "#111", strokeOpacity: 0.55 });
+          line.setMap(kmap);
+          koverlays.push(line);
+          var kb = new kakao.maps.LatLngBounds();
+          path.forEach(function (x) { kb.extend(x); });
+          kmap.setBounds(kb);
+        } else {
+          L.polyline(bounds, { color: "#111", weight: 4, opacity: 0.55 }).addTo(layer);
+          window._lmap.fitBounds(L.latLngBounds(bounds).pad(0.2));
+        }
+      }
       var list = document.getElementById("list");
       list.innerHTML = "";
       items.forEach(function (p) {
-        L.marker([p.lat, p.lng], { icon: icon(colors[p.kind]) })
-          .addTo(layer)
-          .bindPopup("<b>" + p.name + "</b>" + p.dir + "<br><a target='_blank' href='" + naverSearch(p.q) + "'>네이버맵</a>");
         var li = document.createElement("li");
-        var lab = p.kind === "sc" ? "SC" : p.kind === "water" ? "워터" : p.kind === "stay" ? "지점" : "관광";
-        li.innerHTML = "<a target='_blank' href='" + naverSearch(p.q) + "'><span class='tag " + p.kind + "'>" + lab + "</span>" + p.name + "<br><span style='color:#78716c;font-size:11px'>" + p.dir + "</span></a>";
+        li.innerHTML = "<a target='_blank' href='" + kakaoPlace(p) + "'><span class='tag " + p.kind + "'>" + (lab[p.kind] || p.kind) + "</span>" + p.name + "<br><span style='color:#78716c;font-size:11px'>" + (p.note || "") + "</span></a>";
         list.appendChild(li);
       });
-      map.fitBounds(L.latLngBounds(latlngs).pad(0.2));
     }
 
+    initMap();
     var tabs = document.getElementById("tabs");
-    [["d27", "27 북상"], ["d28", "28 남이섬"], ["d29", "29 남하"], ["all", "전체"]].forEach(function (t) {
+    [["water", "워터 코스"], ["sc", "SC 코스"], ["d27", "27 북상"], ["d28", "28 남이섬"], ["d29", "29 남하"], ["pick", "추천 12"]].forEach(function (t) {
       var b = document.createElement("button");
       b.textContent = t[1];
       b.dataset.key = t[0];
       b.onclick = function () { render(t[0]); };
       tabs.appendChild(b);
     });
-    render("d27");
+    render("water");
   </script>
   <button class="back-to-top" id="back-to-top" type="button" aria-label="맨 위로">↑</button>
   <script is:inline src="/theme.js"></script>

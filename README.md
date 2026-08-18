@@ -20,7 +20,7 @@ http://localhost:4321
 | 노트 추가/수정 | `src/content/notes/이름.md` (홈 목록도 같이 갱신) |
 | 홈 타일 | `src/pages/index.astro` |
 | 춘천 일정 | `src/pages/chuncheon/index.astro` |
-| 지도 | `src/pages/chuncheon/map.astro` |
+| 지도·코스 좌표 | `src/pages/chuncheon/map.astro`, `src/data/chuncheon.ts` |
 | 헤더 | `src/components/Header.astro` |
 | 색·테마 | `src/styles/global.css` |
 
