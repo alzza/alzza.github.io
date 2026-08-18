@@ -645,6 +645,78 @@ code {
   .board-row { grid-template-columns: 1fr; gap: 4px; }
 }
 
+.course-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin: 0 0 28px;
+}
+@media (min-width: 720px) {
+  .course-grid { grid-template-columns: 1fr 1fr; }
+}
+.course-card {
+  padding: 20px 18px 18px;
+  background: var(--surface);
+  border: var(--border);
+  box-shadow: var(--shadow);
+}
+.course-card.featured { background: var(--yellow); color: var(--black); }
+.course-card.featured p { color: #1a1a1a; }
+.course-card h2 { margin: 0 0 8px; font-size: 22px; }
+.course-card p { margin: 0 0 14px; }
+.trip-map-wrap {
+  margin: 0 0 28px;
+  border: var(--border);
+  box-shadow: var(--shadow);
+  background: var(--surface);
+  overflow: hidden;
+}
+.trip-map-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: var(--border-thin);
+}
+.trip-map-bar strong { font-size: 14px; }
+.trip-map {
+  height: min(52vh, 440px);
+  background: #dce6d2;
+}
+.pick-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 0 0 36px;
+}
+@media (min-width: 720px) {
+  .pick-grid { grid-template-columns: 1fr 1fr; }
+}
+.pick-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 14px 12px;
+  border: var(--border);
+  background: var(--surface);
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+}
+.pick-card:hover {
+  background: var(--yellow);
+  color: var(--black);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow);
+}
+.pick-card:hover p { color: var(--black); }
+.pick-card .mins { font-size: 12px; font-weight: 800; }
+.pick-card h3 { margin: 0; font-size: 17px; }
+.pick-card p { margin: 0; color: var(--muted); font-size: 13px; }
+.pick-card small { color: var(--muted); font-size: 11px; }
+.pick-card:hover small { color: #1a1a1a; }
+
 @media (max-width: 720px) {
   :root {
     --shadow: 4px 4px 0 0 var(--ink);

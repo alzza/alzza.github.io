@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import Header from "../../components/Header.astro";
+import CourseMap from "../../components/CourseMap.astro";
 import {
   ULSAN,
   ELY,
@@ -11,112 +12,114 @@ import {
   spots,
 } from "../../data/chuncheon";
 
-const waterPts = coursePoints("water");
-const scPts = coursePoints("sc");
-const waterUrl = kakaoByCar(waterPts);
-const scUrl = kakaoByCar(scPts);
+const waterUrl = kakaoByCar(coursePoints("water"));
+const scUrl = kakaoByCar(coursePoints("sc"));
 const picks = spots.filter((s) => s.days.includes("pick"));
 ---
 
-<Base title="춘천 여행 계획" description="울산-엘리시안강촌. 워터 우선 / 슈퍼차저 코스. 카카오맵.">
+<Base title="춘천 · 엘리시안강촌" description="혼자 가는 울산-강촌. 워터 먼저, 카카오맵.">
   <Header
     links={[
       { href: "/", label: "목록" },
-      { href: "/chuncheon/map/", label: "경로 지도", accent: true },
+      { href: "/chuncheon/map/", label: "큰 지도", accent: true },
     ]}
   />
-  <div class="wrap">
-    <section class="hero">
-      <h1>춘천 · 엘리시안강촌</h1>
-      <p>2026.8.27(목) 06:00 울산 출발 - 8.29(토) 11:00 체크아웃. 혼자. 전기차. 레일바이크 없음. 남이섬은 28일 오전.</p>
-    </section>
 
-    <div class="actions">
-      <a class="btn btn-accent" href="/chuncheon/map/">카카오 경로 지도</a>
-      <a class="btn" href={waterUrl} target="_blank" rel="noreferrer">워터 코스 카카오</a>
-      <a class="btn" href={scUrl} target="_blank" rel="noreferrer">SC 코스 카카오</a>
+  <section class="hero-band">
+    <div class="wrap">
+      <span class="badge badge-pink">8/27-29</span>
+      <h1>울산에서 강촌까지, <em>혼자 운전.</em></h1>
+      <p>목 새벽 여섯 시 출발, 토 열한 시 나옴. 남이섬은 금요일 오전. 레일바이크는 안 탐.</p>
+    </div>
+  </section>
+  <hr class="divider-band" />
+
+  <div class="wrap">
+    <p class="sec-label" style="margin-top:28px">배터리</p>
+    <article class="day">
+      <p>집은 <strong>100%</strong>로 출발. 못해도 <strong>80%</strong>. 고속도로면 한 번에 끝까지 가기엔 빠듯하니, 문경에서 밥 먹으며 채우는 쪽을 기본으로 둠.</p>
+      <p>리조트엔 급속이 없고 지하 차지비 7kW만 있음. 올라가는 길은 워터 <strong>양평 방향</strong>. 괴산·서여주·문경 창원 방향은 <strong>내려올 때만</strong>.</p>
+    </article>
+
+    <p class="sec-label">두 가지 길</p>
+    <div class="course-grid">
+      <article class="course-card featured">
+        <span class="badge">추천</span>
+        <h2>{courses.water.title}</h2>
+        <p>{courses.water.summary}</p>
+        <a class="btn" href={waterUrl} target="_blank" rel="noreferrer">카카오 길찾기</a>
+      </article>
+      <article class="course-card">
+        <h2>{courses.sc.title}</h2>
+        <p>{courses.sc.summary}</p>
+        <a class="btn" href={scUrl} target="_blank" rel="noreferrer">카카오 길찾기</a>
+      </article>
     </div>
 
-    <article class="day">
-      <h2>배터리</h2>
-      <p>집 출발은 <strong>100%</strong> 기준. 못해도 <strong>80%</strong>. Model Y 고속도로면 100%에서 약 400km대. 울산-엘리시안은 중부내륙 경유 약 430-460km라 중간 충전이 안전하다.</p>
-      <p>리조트 급속 없음. 지하 차지비 완속 7kW. 올라가는 길은 워터 <strong>양평 방향만</strong>. 괴산·서여주·문경 창원 방향은 <strong>내려올 때만</strong>.</p>
-    </article>
+    <p class="sec-label">지도</p>
+    <CourseMap />
+    <p class="note-meta" style="margin-top:-16px;margin-bottom:28px">
+      길찾기는 카카오. 키를 넣으면 카카오 지도가 뜨고, 없으면 배경만 OSM이다.
+      <a href="/chuncheon/map/">크게 보기</a>
+    </p>
 
     <article class="day">
-      <h2>워터 우선 코스 (추천)</h2>
-      <p>{courses.water.summary}</p>
+      <h2>27일 목 · 가는 날</h2>
       <table>
-        <tr><th>06:00</th><td>울산 출발. SOC 100% (최소 80%)</td></tr>
-        <tr><th>경부→김천JC</th><td>중부내륙으로 올라감. 배고프면 <span class="chip water">워터</span> 선산 양평에서 국밥+20분</td></tr>
-        <tr><th>09:00</th><td><span class="chip water">워터</span> 문경휴게소 양평. 350kW·NACS. 여기서 식사+주충전. 목표 출발 SOC 70%대</td></tr>
-        <tr><th>선택</th><td>문경새재 1관문 20분. 또는 통과</td></tr>
-        <tr><th>11:00</th><td>원주 소금산 그랜드밸리. 주차 무료. 케이블카 18,000 / 트레킹 10,000. 월요일 휴장, 목요일 가능</td></tr>
-        <tr><th>13:30</th><td>필요하면 <span class="chip sc">SC</span> 가평휴게소 춘천 V4</td></tr>
-        <tr><th>15:00</th><td>엘리시안 체크인. 저녁 강촌 닭갈비 (1인 전화)</td></tr>
-      </table>
-      <p><a href={waterUrl} target="_blank" rel="noreferrer">이 코스 카카오 자동차 길찾기</a></p>
-    </article>
-
-    <article class="day">
-      <h2>슈퍼차저 우선 코스</h2>
-      <p>{courses.sc.summary}</p>
-      <table>
-        <tr><th>06:00</th><td>울산 100% (최소 80%)</td></tr>
-        <tr><th>도중</th><td><span class="chip sc">SC</span> 김천 모다아울렛 V3. 통과해도 됨</td></tr>
-        <tr><th>선택</th><td><span class="chip sc">SC</span> 제천 남제천IC 또는 원주 AK</td></tr>
-        <tr><th>11:00</th><td>소금산 그랜드밸리</td></tr>
-        <tr><th>13:30</th><td><span class="chip sc">SC</span> 가평휴게소 춘천 V4</td></tr>
-        <tr><th>15:00</th><td>엘리시안</td></tr>
-      </table>
-      <p><a href={scUrl} target="_blank" rel="noreferrer">이 코스 카카오 자동차 길찾기</a></p>
-    </article>
-
-    <article class="day">
-      <h2>8/28 금 · 남이섬</h2>
-      <table>
-        <tr><th>오전</th><td>남이섬 필수. 성인 19,000 (배 왕복). 주차 6,000 (카카오T 5,500)</td></tr>
-        <tr><th>오후</th><td>제이드가든 11,000. 혼자 걷기. 여유면 소양강 스카이워크</td></tr>
-        <tr><th>저녁</th><td>막국수 또는 닭갈비. 숙소 완속 7kW</td></tr>
+        <tr><th>06:00</th><td>울산. SOC 100% (최소 80%)</td></tr>
+        <tr><th>아침</th><td>중부내륙. 배고프면 선산휴게소 양평 국밥 + 워터</td></tr>
+        <tr><th>09:00</th><td>문경휴게소 양평. 오미자돈가스나 국밥. 워터 350kW가 이날 본충전</td></tr>
+        <tr><th>잠깐</th><td>문경새재 1관문 20분. 시간 없으면 통과</td></tr>
+        <tr><th>11:00</th><td>소금산 그랜드밸리. 주차 무료. 월 휴장, 목 가능</td></tr>
+        <tr><th>13:30</th><td>가평휴게소 춘천. 맛남샌드. 옆 V4</td></tr>
+        <tr><th>15:00</th><td>엘리시안. 저녁 닭갈비는 1인인지 전화</td></tr>
       </table>
     </article>
 
     <article class="day">
-      <h2>8/29 토 · 복귀</h2>
+      <h2>28일 금 · 남이섬</h2>
       <table>
-        <tr><th>11:00</th><td>체크아웃. 관광 추가 없음</td></tr>
-        <tr><th>충전</th><td>1순위 <span class="chip water">워터</span> 서여주·괴산·문경 <strong>창원</strong>. 2순위 <span class="chip sc">SC</span> 가평 서울 V4</td></tr>
-        <tr><th>낮</th><td>12시 전 고속도로. 울산</td></tr>
+        <tr><th>오전</th><td>남이섬. 성인 19,000 (배 왕복). 주차 6,000</td></tr>
+        <tr><th>오후</th><td>제이드가든. 여유면 자라섬 잔디, 소양강 스카이워크</td></tr>
+        <tr><th>저녁</th><td>명동 닭갈비골목 또는 강촌 막국수. 숙소 완속 7kW</td></tr>
       </table>
     </article>
 
     <article class="day">
-      <h2>가는 길 추천 12곳 (차, 짧게, 혼자)</h2>
-      <p>6시 출발·15시 입실이면 본전은 소금산 하나. 나머지는 후보. 레일바이크 없음.</p>
+      <h2>29일 토 · 오는 날</h2>
       <table>
-        {
-          picks.map((p) => (
-            <tr>
-              <th>{p.stayMin}분</th>
-              <td>
-                <a href={kakaoPlace(p)} target="_blank" rel="noreferrer">{p.name}</a>
-                {" · "}
-                {p.note}
-              </td>
-            </tr>
-          ))
-        }
+        <tr><th>11:00</th><td>나옴. 관광 더 안 함</td></tr>
+        <tr><th>충전</th><td>워터는 창원 방향 (서여주·괴산·문경). 아니면 가평 서울 V4</td></tr>
+        <tr><th>낮</th><td>열두 시 전에 고속도로. 울산</td></tr>
       </table>
     </article>
+
+    <p class="sec-label">음식 · 경치 {picks.length}곳</p>
+    <p style="margin:-4px 0 14px;max-width:52ch;color:var(--muted)">
+      2024-2026 후기 기준. 차로 내려서 20-40분 쉬는 곳 위주. 하루 본전은 소금산 하나.
+      레일바이크 없음.
+    </p>
+    <div class="pick-grid">
+      {
+        picks.map((p) => (
+          <a class="pick-card" href={kakaoPlace(p)} target="_blank" rel="noreferrer">
+            <span class="kicker">{p.tag} · {p.stayMin}분</span>
+            <h3>{p.name}</h3>
+            <p>{p.note}</p>
+            <small>{p.src}</small>
+          </a>
+        ))
+      }
+    </div>
 
     <article class="day">
       <h2>숙소</h2>
       <p>
         <a href={kakaoPlace(ELY)} target="_blank" rel="noreferrer">엘리시안 강촌</a>
-        . 인 15:00 / 아웃 11:00. 투숙객 주차 무료. 급속 없음.
+        . 들어감 15:00, 나옴 11:00. 주차 무료. 급속 없음.
       </p>
       <p>
-        출발 <a href={kakaoPlace(ULSAN)} target="_blank" rel="noreferrer">울산</a>.
+        출발은 <a href={kakaoPlace(ULSAN)} target="_blank" rel="noreferrer">울산</a>.
       </p>
     </article>
 

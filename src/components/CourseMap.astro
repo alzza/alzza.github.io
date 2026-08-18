@@ -1,0 +1,124 @@
+---
+import { ULSAN, spots, courses, kakaoByCar, coursePoints } from "../data/chuncheon";
+
+interface Props {
+  height?: string;
+}
+
+const { height = "min(52vh, 440px)" } = Astro.props;
+const kakaoKey = import.meta.env.PUBLIC_KAKAO_JS_KEY ?? "";
+const payload = JSON.stringify({
+  ulsan: ULSAN,
+  spots,
+  courses,
+  waterUrl: kakaoByCar(coursePoints("water")),
+  scUrl: kakaoByCar(coursePoints("sc")),
+});
+---
+
+<div class="trip-map-wrap">
+  <div class="trip-map-bar">
+    <strong id="embedTitle">워터 먼저</strong>
+    <div class="actions" style="margin:0">
+      <button type="button" class="btn" data-course="water">워터</button>
+      <button type="button" class="btn" data-course="sc">슈퍼차저</button>
+      <button type="button" class="btn" data-course="pick">22곳</button>
+      <a class="btn btn-accent" id="embedKakao" href={kakaoByCar(coursePoints("water"))} target="_blank" rel="noreferrer">카카오 길찾기</a>
+    </div>
+  </div>
+  <div id="embed-map" class="trip-map" style={`height:${height}`}></div>
+</div>
+<script is:inline id="embed-data" type="application/json" set:html={payload} />
+{kakaoKey && <script is:inline src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}`}></script>}
+<script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script is:inline>
+  (function () {
+    var DATA = JSON.parse(document.getElementById("embed-data").textContent);
+    var useKakao = typeof kakao !== "undefined" && kakao.maps;
+    var colors = { sc: "#cc0000", water: "#0077c8", stay: "#0f766e", poi: "#a16207", food: "#c2410c" };
+    var layer, kmap, koverlays = [], lmap;
+
+    function items(key) {
+      if (key === "pick") return DATA.spots.filter(function (s) { return s.days.indexOf("pick") !== -1; });
+      var ids = DATA.courses[key].lineIds;
+      return [{ kind: "stay", name: DATA.ulsan.name, lat: DATA.ulsan.lat, lng: DATA.ulsan.lng, note: "출발" }].concat(
+        ids.map(function (id) { return DATA.spots.filter(function (s) { return s.id === id; })[0]; }).filter(Boolean)
+      );
+    }
+    function kakaoCar(pts) {
+      return "https://map.kakao.com/link/by/car/" + pts.map(function (p) {
+        return encodeURIComponent(p.name) + "," + p.lat + "," + p.lng;
+      }).join("/");
+    }
+    function kakaoPlace(p) {
+      return "https://map.kakao.com/link/map/" + encodeURIComponent(p.name) + "," + p.lat + "," + p.lng;
+    }
+
+    if (useKakao) {
+      kmap = new kakao.maps.Map(document.getElementById("embed-map"), {
+        center: new kakao.maps.LatLng(36.85, 128.05),
+        level: 11
+      });
+    } else {
+      lmap = L.map("embed-map").setView([36.85, 128.05], 8);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "&copy; OSM" }).addTo(lmap);
+      layer = L.layerGroup().addTo(lmap);
+    }
+
+    function clear() {
+      if (useKakao) { koverlays.forEach(function (o) { o.setMap(null); }); koverlays = []; }
+      else if (layer) layer.clearLayers();
+    }
+
+    function render(key) {
+      var list = items(key);
+      var title = key === "pick" ? "음식·경치 22곳" : (key === "water" ? "워터 먼저" : "슈퍼차저 먼저");
+      document.getElementById("embedTitle").textContent = title;
+      document.getElementById("embedKakao").href = kakaoCar(
+        key === "pick" ? [DATA.ulsan].concat(list.slice(0, 5)) : list
+      );
+      clear();
+      var bounds = [];
+      list.forEach(function (p) {
+        bounds.push([p.lat, p.lng]);
+        if (useKakao) {
+          var pos = new kakao.maps.LatLng(p.lat, p.lng);
+          var mk = new kakao.maps.Marker({ map: kmap, position: pos });
+          var iw = new kakao.maps.InfoWindow({
+            content: "<div style='padding:7px 9px;max-width:200px;font:12px/1.4 sans-serif'><b>" + p.name + "</b><br>" + (p.note || "") + "<br><a target='_blank' href='" + kakaoPlace(p) + "'>카카오맵</a></div>"
+          });
+          kakao.maps.event.addListener(mk, "click", function () { iw.open(kmap, mk); });
+          koverlays.push(mk);
+        } else {
+          L.marker([p.lat, p.lng], {
+            icon: L.divIcon({
+              className: "",
+              html: '<div style="width:14px;height:14px;border:2px solid #111;background:' + (colors[p.kind] || "#333") + '"></div>',
+              iconSize: [14, 14], iconAnchor: [7, 7]
+            })
+          }).addTo(layer).bindPopup("<b>" + p.name + "</b><br>" + (p.note || "") + "<br><a target='_blank' href='" + kakaoPlace(p) + "'>카카오맵</a>");
+        }
+      });
+      if (list.length >= 2) {
+        if (useKakao) {
+          var path = list.map(function (p) { return new kakao.maps.LatLng(p.lat, p.lng); });
+          var line = new kakao.maps.Polyline({ path: path, strokeWeight: 5, strokeColor: "#111", strokeOpacity: 0.5 });
+          line.setMap(kmap);
+          koverlays.push(line);
+          var kb = new kakao.maps.LatLngBounds();
+          path.forEach(function (x) { kb.extend(x); });
+          kmap.setBounds(kb);
+        } else {
+          L.polyline(bounds, { color: "#111", weight: 4, opacity: 0.5 }).addTo(layer);
+          lmap.fitBounds(bounds, { padding: [24, 24] });
+        }
+      }
+    }
+
+    document.querySelectorAll("[data-course]").forEach(function (btn) {
+      btn.addEventListener("click", function () { render(btn.getAttribute("data-course")); });
+    });
+    render("water");
+  })();
+</script>
