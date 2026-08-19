@@ -9,15 +9,21 @@ import {
   coursePoints,
   kakaoByCar,
   kakaoPlace,
-  spots,
+  pickSpots,
 } from "../../data/chuncheon";
 
-const waterUrl = kakaoByCar(coursePoints("water"));
-const scUrl = kakaoByCar(coursePoints("sc"));
-const picks = spots.filter((s) => s.days.includes("pick"));
+const baseUrl = kakaoByCar(coursePoints("base"));
+const d27Url = kakaoByCar(coursePoints("d27"));
+const picks = pickSpots();
+const byBand = {
+  go: picks.filter((p) => p.band === "go"),
+  stay: picks.filter((p) => p.band === "stay"),
+  back: picks.filter((p) => p.band === "back"),
+};
+const bandLabel = { go: "가는 길에 얹기", stay: "숙소 근처 · 28일", back: "오는 길에 얹기" };
 ---
 
-<Base title="춘천 · 엘리시안강촌" description="혼자 가는 울산-강촌. 워터 먼저, 카카오맵.">
+<Base title="춘천 · 엘리시안강촌" description="울산에서 강촌까지 기본 동선. 들름은 그 위에.">
   <Header
     links={[
       { href: "/", label: "목록" },
@@ -35,26 +41,32 @@ const picks = spots.filter((s) => s.days.includes("pick"));
   <hr class="divider-band" />
 
   <div class="wrap">
-    <p class="sec-label" style="margin-top:28px">배터리</p>
+    <p class="sec-label" style="margin-top:28px">기본 동선</p>
     <article class="day">
-      <p>집은 <strong>100%</strong>로 출발. 못해도 <strong>80%</strong>. 고속도로면 한 번에 끝까지 가기엔 빠듯하니, 문경에서 밥 먹으며 채우는 쪽을 기본으로 둠.</p>
-      <p>리조트엔 급속이 없고 지하 차지비 7kW만 있음. 올라가는 길은 워터 <strong>양평 방향</strong>. 괴산·서여주·문경 창원 방향은 <strong>내려올 때만</strong>.</p>
+      <p>
+        집은 <strong>울산</strong>, 숙소는 <strong>엘리시안 강촌</strong>.
+        길은 경부에서 상주영천, 중앙으로 붙는 쪽을 기본으로 둠.
+        카카오 길찾기도 이 두 점만.
+      </p>
+      <p>
+        들를 곳은 이 선 위에 얹는다. 워터·슈퍼차저도 길을 새로 짜는 게 아니라, 배터리 떨어질 때 그 선에서 잠깐 빠지는 보조다.
+      </p>
+      <p style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+        <a class="btn btn-accent" href={baseUrl} target="_blank" rel="noreferrer">기본 길 카카오</a>
+        <a class="btn" href={d27Url} target="_blank" rel="noreferrer">소금산 얹은 길</a>
+      </p>
     </article>
 
-    <p class="sec-label">두 가지 길</p>
-    <div class="course-grid">
-      <article class="course-card featured">
-        <span class="badge">추천</span>
-        <h2>{courses.water.title}</h2>
-        <p>{courses.water.summary}</p>
-        <a class="btn" href={waterUrl} target="_blank" rel="noreferrer">카카오 길찾기</a>
-      </article>
-      <article class="course-card">
-        <h2>{courses.sc.title}</h2>
-        <p>{courses.sc.summary}</p>
-        <a class="btn" href={scUrl} target="_blank" rel="noreferrer">카카오 길찾기</a>
-      </article>
-    </div>
+    <p class="sec-label">배터리 (보조)</p>
+    <article class="day">
+      <p>집은 <strong>100%</strong>로 출발. 못해도 <strong>80%</strong>. 한 번에 끝까지는 빠듯하다.</p>
+      <p>
+        기본 길 위: 김천 모다, 제천 남제천IC, 원주 AK, 가평 V4.
+        중부내륙으로 밥 먹으며 빼고 싶으면 워터는 <strong>양평 방향</strong>만.
+        괴산·서여주·문경 <strong>창원 방향</strong>은 내려올 때만.
+      </p>
+      <p>리조트엔 급속이 없고 지하 차지비 7kW만 있음.</p>
+    </article>
 
     <p class="sec-label">지도</p>
     <CourseMap />
@@ -66,51 +78,55 @@ const picks = spots.filter((s) => s.days.includes("pick"));
     <article class="day">
       <h2>27일 목 · 가는 날</h2>
       <table>
-        <tr><th>06:00</th><td>울산. SOC 100% (최소 80%)</td></tr>
-        <tr><th>아침</th><td>중부내륙. 배고프면 선산휴게소 양평 국밥 + 워터</td></tr>
-        <tr><th>09:00</th><td>문경휴게소 양평. 오미자돈가스나 국밥. 워터 350kW가 이날 본충전</td></tr>
-        <tr><th>잠깐</th><td>문경새재 1관문 20분. 시간 없으면 통과</td></tr>
-        <tr><th>11:00</th><td>소금산 그랜드밸리. 주차 무료. 월 휴장, 목 가능</td></tr>
-        <tr><th>13:30</th><td>가평휴게소 춘천. 맛남샌드. 옆 V4</td></tr>
-        <tr><th>15:00</th><td>엘리시안. 저녁 닭갈비는 1인인지 전화</td></tr>
+        <tr><th>기본</th><td>06:00 울산. 경부-상주영천-중앙. 15:00 엘리시안.</td></tr>
+        <tr><th>충전</th><td>필요하면 김천 모다(경부 옆). 아니면 제천·원주.</td></tr>
+        <tr><th>더하면</th><td>소금산 그랜드밸리. 월 휴장, 목 가능. 주차 무료.</td></tr>
+        <tr><th>시간 있으면</th><td>안동 월영교, 단양 도담삼봉, 제천 의림지. 아래 30곳.</td></tr>
       </table>
     </article>
 
     <article class="day">
       <h2>28일 금 · 남이섬</h2>
       <table>
-        <tr><th>오전</th><td>남이섬. 성인 19,000 (배 왕복). 주차 6,000</td></tr>
-        <tr><th>오후</th><td>제이드가든. 여유면 자라섬 잔디, 소양강 스카이워크</td></tr>
-        <tr><th>저녁</th><td>명동 닭갈비골목 또는 강촌 막국수. 숙소 완속 7kW</td></tr>
+        <tr><th>필수</th><td>남이섬. 성인 19,000 (배 왕복). 주차는 현장.</td></tr>
+        <tr><th>더하면</th><td>제이드가든. 여유면 자라섬 잔디, 소양강 스카이워크.</td></tr>
+        <tr><th>저녁</th><td>명동 닭갈비골목. 1인인지 전화. 숙소 완속 7kW.</td></tr>
       </table>
     </article>
 
     <article class="day">
       <h2>29일 토 · 오는 날</h2>
       <table>
-        <tr><th>11:00</th><td>나옴. 관광 더 안 함</td></tr>
-        <tr><th>충전</th><td>워터는 창원 방향 (서여주·괴산·문경). 아니면 가평 서울 V4</td></tr>
-        <tr><th>낮</th><td>열두 시 전에 고속도로. 울산</td></tr>
+        <tr><th>기본</th><td>11:00 나옴. 관광 더 안 함. 고속도로 울산.</td></tr>
+        <tr><th>충전</th><td>가평 서울 V4, 아니면 창원 방향 워터.</td></tr>
       </table>
     </article>
 
-    <p class="sec-label">음식 · 경치 {picks.length}곳</p>
-    <p style="margin:-4px 0 14px;max-width:52ch;color:var(--muted)">
-      2024-2026 후기 기준. 차로 내려서 20-40분 쉬는 곳 위주. 하루 본전은 소금산 하나.
-      레일바이크 없음.
+    <p class="sec-label">기본 길에 얹는 30곳</p>
+    <p style="margin:-4px 0 14px;max-width:56ch;color:var(--muted)">
+      SNS·공식 안내에서 모은 것만. 원문을 열어 숫자와 휴무를 다시 본다.
+      하루 본전은 소금산 하나. 레일바이크 없음.
     </p>
-    <div class="pick-grid">
-      {
-        picks.map((p) => (
-          <a class="pick-card" href={kakaoPlace(p)} target="_blank" rel="noreferrer">
-            <span class="kicker">{p.tag} · {p.stayMin}분</span>
-            <h3>{p.name}</h3>
-            <p>{p.note}</p>
-            <small>{p.src}</small>
-          </a>
-        ))
-      }
-    </div>
+    {
+      (["go", "stay", "back"] as const).map((band) => (
+        <>
+          <p class="sec-label" style="margin-top:8px">{bandLabel[band]} · {byBand[band].length}</p>
+          <div class="pick-grid">
+            {byBand[band].map((p) => (
+              <article class="pick-card">
+                <span class="kicker">{p.tag} · {p.stayMin}분</span>
+                <h3>{p.name}</h3>
+                <p>{p.note}</p>
+                <div class="pick-links">
+                  <a href={kakaoPlace(p)} target="_blank" rel="noreferrer">카카오</a>
+                  <a href={p.srcUrl} target="_blank" rel="noreferrer">원문 · {p.src}</a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </>
+      ))
+    }
 
     <article class="day">
       <h2>숙소</h2>

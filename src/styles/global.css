@@ -704,18 +704,22 @@ code {
   text-decoration: none;
   box-shadow: var(--shadow-sm);
 }
-.pick-card:hover {
-  background: var(--yellow);
-  color: var(--black);
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow);
-}
-.pick-card:hover p { color: var(--black); }
-.pick-card .mins { font-size: 12px; font-weight: 800; }
 .pick-card h3 { margin: 0; font-size: 17px; }
 .pick-card p { margin: 0; color: var(--muted); font-size: 13px; }
-.pick-card small { color: var(--muted); font-size: 11px; }
-.pick-card:hover small { color: #1a1a1a; }
+.pick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.pick-links a {
+  font-size: 12px;
+  font-weight: 800;
+  color: inherit;
+  border-bottom: 2px solid var(--ink);
+  text-decoration: none;
+}
+.pick-links a:hover { background: var(--yellow); }
 
 @media (max-width: 720px) {
   :root {

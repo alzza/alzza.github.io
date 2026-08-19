@@ -7,23 +7,25 @@ interface Props {
 
 const { height = "min(52vh, 440px)" } = Astro.props;
 const kakaoKey = import.meta.env.PUBLIC_KAKAO_JS_KEY ?? "";
+const pickCount = spots.filter((s) => s.days.includes("pick")).length;
 const payload = JSON.stringify({
   ulsan: ULSAN,
   spots,
   courses,
-  waterUrl: kakaoByCar(coursePoints("water")),
-  scUrl: kakaoByCar(coursePoints("sc")),
+  pickCount,
+  baseUrl: kakaoByCar(coursePoints("base")),
+  d27Url: kakaoByCar(coursePoints("d27")),
 });
 ---
 
 <div class="trip-map-wrap">
   <div class="trip-map-bar">
-    <strong id="embedTitle">워터 먼저</strong>
+    <strong id="embedTitle">기본 동선</strong>
     <div class="actions" style="margin:0">
-      <button type="button" class="btn" data-course="water">워터</button>
-      <button type="button" class="btn" data-course="sc">슈퍼차저</button>
-      <button type="button" class="btn" data-course="pick">{spots.filter((s) => s.days.includes("pick")).length}곳</button>
-      <a class="btn btn-accent" id="embedKakao" href={kakaoByCar(coursePoints("water"))} target="_blank" rel="noreferrer">카카오 길찾기</a>
+      <button type="button" class="btn" data-course="base">기본</button>
+      <button type="button" class="btn" data-course="d27">가는 날</button>
+      <button type="button" class="btn" data-course="pick">{pickCount}곳</button>
+      <a class="btn btn-accent" id="embedKakao" href={kakaoByCar(coursePoints("base"))} target="_blank" rel="noreferrer">카카오 길찾기</a>
     </div>
   </div>
   <div id="embed-map" class="trip-map" style={`height:${height}`}></div>
@@ -42,9 +44,11 @@ const payload = JSON.stringify({
     function items(key) {
       if (key === "pick") return DATA.spots.filter(function (s) { return s.days.indexOf("pick") !== -1; });
       var ids = DATA.courses[key].lineIds;
-      return [{ kind: "stay", name: DATA.ulsan.name, lat: DATA.ulsan.lat, lng: DATA.ulsan.lng, note: "출발" }].concat(
-        ids.map(function (id) { return DATA.spots.filter(function (s) { return s.id === id; })[0]; }).filter(Boolean)
-      );
+      var list = ids.map(function (id) { return DATA.spots.filter(function (s) { return s.id === id; })[0]; }).filter(Boolean);
+      if (DATA.courses[key].start === "ulsan") {
+        list = [{ kind: "stay", name: DATA.ulsan.name, lat: DATA.ulsan.lat, lng: DATA.ulsan.lng, note: "출발" }].concat(list);
+      }
+      return list;
     }
     function kakaoCar(pts) {
       return "https://map.kakao.com/link/by/car/" + pts.map(function (p) {
@@ -73,11 +77,9 @@ const payload = JSON.stringify({
 
     function render(key) {
       var list = items(key);
-      var title = key === "pick" ? "음식·경치 " + DATA.spots.filter(function (s) { return s.days.indexOf("pick") !== -1; }).length + "곳" : (key === "water" ? "워터 먼저" : "슈퍼차저 먼저");
+      var title = key === "pick" ? "얹을 곳 " + DATA.pickCount + "곳" : (key === "d27" ? "가는 날" : "기본 동선");
       document.getElementById("embedTitle").textContent = title;
-      document.getElementById("embedKakao").href = kakaoCar(
-        key === "pick" ? [DATA.ulsan].concat(list.slice(0, 5)) : list
-      );
+      document.getElementById("embedKakao").href = key === "d27" ? DATA.d27Url : DATA.baseUrl;
       clear();
       var bounds = [];
       list.forEach(function (p) {
@@ -119,6 +121,6 @@ const payload = JSON.stringify({
     document.querySelectorAll("[data-course]").forEach(function (btn) {
       btn.addEventListener("click", function () { render(btn.getAttribute("data-course")); });
     });
-    render("water");
+    render("base");
   })();
 </script>

@@ -16,8 +16,7 @@ const payload = JSON.stringify({
   courses,
   pickCount: picks.length,
   urls: {
-    water: kakaoByCar(coursePoints("water")),
-    sc: kakaoByCar(coursePoints("sc")),
+    base: kakaoByCar(coursePoints("base")),
     d27: kakaoByCar(coursePoints("d27")),
     d28: kakaoByCar(coursePoints("d28")),
     d29: kakaoByCar(coursePoints("d29")),
@@ -178,7 +177,7 @@ const payload = JSON.stringify({
 
   <aside class="dock">
     <header>
-      <h1 id="panelTitle">워터 먼저</h1>
+      <h1 id="panelTitle">기본 동선</h1>
       <p id="note"></p>
     </header>
     <ul class="list" id="list"></ul>
@@ -203,20 +202,29 @@ const payload = JSON.stringify({
     var useKakao = typeof kakao !== "undefined" && kakao.maps;
     var colors = { sc:"#ff6b6b", water:"#74b9ff", stay:"#88d498", poi:"#ffd23f", food:"#ffa552" };
     var tabOrder = [
-      ["water", "워터"],
-      ["sc", "슈퍼차저"],
+      ["base", "기본"],
       ["d27", "가는 날"],
       ["d28", "남이섬"],
       ["d29", "오는 날"],
-      ["pick", DATA.pickCount + "곳"]
+      ["pick", DATA.pickCount + "곳"],
+      ["charge", "충전"]
     ];
 
     function viewOf(key) {
       if (key === "pick") {
         return {
-          title: "음식·경치 " + DATA.pickCount + "곳",
-          note: "짧게 쉴 곳. 하루 본전은 소금산. 목록을 누르면 지도가 그쪽으로 간다.",
+          title: "얹을 곳 " + DATA.pickCount + "곳",
+          note: "기본 선 위에 얹는 들름. 원문은 목록에서 연다. 하루 본전은 소금산.",
           items: DATA.spots.filter(function (s) { return s.days.indexOf("pick") !== -1; }),
+          url: "",
+          line: false
+        };
+      }
+      if (key === "charge") {
+        return {
+          title: "충전 보조",
+          note: "길을 새로 짜지 않는다. 기본 선에서 필요할 때만.",
+          items: DATA.spots.filter(function (s) { return s.kind === "water" || s.kind === "sc"; }),
           url: "",
           line: false
         };
@@ -231,9 +239,7 @@ const payload = JSON.stringify({
       if (c.end === "ulsan") {
         items = items.concat([{ kind:"stay", name: DATA.ulsan.name, lat: DATA.ulsan.lat, lng: DATA.ulsan.lng, note:"도착", stayMin:0 }]);
       }
-      var extra = "";
-      if (key === "water") extra = " 출발은 100%, 못해도 80%.";
-      return { title: c.title, note: c.summary + extra, items: items, url: DATA.urls[key] || "", line: true };
+      return { title: c.title, note: c.summary, items: items, url: DATA.urls[key] || "", line: true };
     }
 
     function kakaoPlace(p) {
@@ -387,6 +393,17 @@ const payload = JSON.stringify({
         open.rel = "noreferrer";
         open.textContent = "카카오";
         li.querySelector(".side").appendChild(open);
+        if (p.srcUrl) {
+          var src = document.createElement("a");
+          src.className = "place";
+          src.href = p.srcUrl;
+          src.target = "_blank";
+          src.rel = "noreferrer";
+          src.textContent = "원문";
+          src.style.background = "var(--surface)";
+          src.style.color = "inherit";
+          li.querySelector(".side").appendChild(src);
+        }
         li.querySelector("button").onclick = function () { window.__focusStop(i); };
         ul.appendChild(li);
       });
@@ -403,11 +420,11 @@ const payload = JSON.stringify({
       tabs.appendChild(b);
     });
     var startKey = (location.hash || "").replace("#", "");
-    if (!DATA.courses[startKey] && startKey !== "pick") startKey = "water";
+    if (!DATA.courses[startKey] && startKey !== "pick" && startKey !== "charge") startKey = "base";
     render(startKey);
     window.addEventListener("hashchange", function () {
       var k = (location.hash || "").replace("#", "");
-      if (DATA.courses[k] || k === "pick") render(k);
+      if (DATA.courses[k] || k === "pick" || k === "charge") render(k);
     });
 
     new MutationObserver(function () {
