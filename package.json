@@ -8,6 +8,6 @@
     "preview": "astro preview --port 4321"
   },
   "dependencies": {
-    "astro": "^5.13.2"
+    "astro": "^7.2.3"
   }
 }
