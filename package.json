@@ -2,6 +2,9 @@
   "name": "alzza-astro",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev --port 4321",
     "build": "astro build",

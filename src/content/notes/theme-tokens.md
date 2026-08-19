@@ -2,7 +2,6 @@
 title: 테마 토큰
 date: "2026-08-15"
 excerpt: 라이트/다크와 코드 블록 쓰는 법
-home: true
 ---
 
 공식 npm 패키지는 없다. [neubrutalism/neubrutalism.com](https://github.com/neubrutalism/neubrutalism.com) 의 CSS 토큰을 그대로 옮겼다. 라이트 기본, 다크는 `data-theme="dark"` 로 잉크색만 뒤집는 cyber-brutalism.

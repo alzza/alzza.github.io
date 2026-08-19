@@ -80,11 +80,11 @@ const title = "춘천";
 |---|---|
 | `src/pages/index.astro` | `/` |
 | `src/pages/notes/index.astro` | `/notes/` |
-| `src/pages/notes/[slug].astro` | `/notes/how-to-post/` 처럼 글마다 |
+| `src/pages/notes/[id].astro` | `/notes/how-to-post/` 처럼 글마다 |
 | `src/pages/chuncheon/index.astro` | `/chuncheon/` |
 | `src/pages/chuncheon/map.astro` | `/chuncheon/map/` |
 
-`[slug].astro`의 대괄호는 “이 칸이 글 이름”이다. 빌드할 때 md 수만큼 HTML을 만든다. 방문자가 들어올 때 글을 찾아 그리는 게 아니다.
+`[id].astro`의 대괄호는 “이 칸이 글 파일 이름”이다. 빌드할 때 md 수만큼 HTML을 만든다. 방문자가 들어올 때 글을 찾아 그리는 게 아니다. 이 사이트는 Astro 7.2다.
 
 `public/theme.js`는 가공 없이 `/theme.js`로 나간다. 이미지도 `public/`에 두고 `/파일명`으로 링크한다.
 
@@ -105,7 +105,7 @@ const title = "춘천";
 | `src/lib/notes.ts` | 홈 Notes와 `/notes/` 목록. 춘천처럼 md가 아닌 페이지만 `extra` |
 | `src/pages/index.astro` | 메인. 프로젝트 타일 |
 | `src/pages/notes/index.astro` | 노트 목록 |
-| `src/pages/notes/[slug].astro` | 노트 본문 틀. 보통 안 고친다 |
+| `src/pages/notes/[id].astro` | 노트 본문 틀. 보통 안 고친다 |
 | `src/pages/chuncheon/index.astro` | 춘천 일정 |
 | `src/pages/chuncheon/map.astro` | 큰 지도 |
 | `src/data/chuncheon.ts` | 장소·좌표·출처·코스 |
