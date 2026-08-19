@@ -2,10 +2,8 @@
   "use strict";
 
   var KEY = "theme";
-  var GISCUS_LIGHT =
-    "https://raw.githubusercontent.com/alzza/alzza.github.io/main/public/giscus-light.css";
-  var GISCUS_DARK =
-    "https://raw.githubusercontent.com/alzza/alzza.github.io/main/public/giscus-dark.css";
+  var GISCUS_LIGHT = "https://alzza.github.io/giscus-light.css";
+  var GISCUS_DARK = "https://alzza.github.io/giscus-dark.css";
   var ICONS =
     '<svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.5 2.8a1 1 0 0 1 1.2 1.5A8.2 8.2 0 1 0 19.7 16a1 1 0 0 1 1.7 1 10.2 10.2 0 1 1-5-14.2z"/></svg>' +
     '<svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path fill="currentColor" d="M11 1h2v3h-2zm0 19h2v3h-2zM1 11h3v2H1zm19 0h3v2h-3zM4.2 3.8l1.4-1.4 2.1 2.1-1.4 1.4zm12.1 12.1 2.1 2.1-1.4 1.4-2.1-2.1zm2.1-12.1 1.4 1.4-2.1 2.1-1.4-1.4zM6.3 17.7l1.4 1.4-2.1 2.1-1.4-1.4z"/></svg>';
