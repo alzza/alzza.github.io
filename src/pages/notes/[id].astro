@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import Header from "../../components/Header.astro";
+import Comments from "../../components/Comments.astro";
 
 export async function getStaticPaths() {
   const notes = await getCollection("notes");
@@ -24,5 +25,6 @@ const { Content } = await render(note);
       <p class="note-meta">{note.data.date}</p>
     </section>
     <Content />
+    <Comments />
   </div>
 </Base>

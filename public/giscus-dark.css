@@ -1,0 +1,121 @@
+/* Dark tokens for giscus iframe. Loaded from GitHub raw (CORS). */
+main {
+  --primary-default: 243, 243, 246;
+  --bg-default: 20, 19, 26;
+  --color-prettylights-syntax-comment: #8b949e;
+  --color-prettylights-syntax-constant: #79c0ff;
+  --color-prettylights-syntax-entity: #d2a8ff;
+  --color-prettylights-syntax-storage-modifier-import: #ececed;
+  --color-prettylights-syntax-entity-tag: #7ee787;
+  --color-prettylights-syntax-keyword: #ff7b72;
+  --color-prettylights-syntax-string: #a5d6ff;
+  --color-prettylights-syntax-variable: #ffa657;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #f85149;
+  --color-prettylights-syntax-invalid-illegal-text: #f0f6fc;
+  --color-prettylights-syntax-invalid-illegal-bg: #8e1519;
+  --color-prettylights-syntax-carriage-return-text: #f0f6fc;
+  --color-prettylights-syntax-carriage-return-bg: #b62324;
+  --color-prettylights-syntax-string-regexp: #7ee787;
+  --color-prettylights-syntax-markup-list: #f2cc60;
+  --color-prettylights-syntax-markup-heading: #ececed;
+  --color-prettylights-syntax-markup-italic: #ececed;
+  --color-prettylights-syntax-markup-bold: #ececed;
+  --color-prettylights-syntax-markup-deleted-text: #ffdcd7;
+  --color-prettylights-syntax-markup-deleted-bg: #67060c;
+  --color-prettylights-syntax-markup-inserted-text: #aff5b4;
+  --color-prettylights-syntax-markup-inserted-bg: #033a16;
+  --color-prettylights-syntax-markup-changed-text: #ffdfb6;
+  --color-prettylights-syntax-markup-changed-bg: #5a1e02;
+  --color-prettylights-syntax-markup-ignored-text: #c9d1d9;
+  --color-prettylights-syntax-markup-ignored-bg: #1158c7;
+  --color-prettylights-syntax-meta-diff-range: #d2a8ff;
+  --color-prettylights-syntax-brackethighlighter-angle: #8b949e;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: #484f58;
+  --color-prettylights-syntax-constant-other-reference-link: #a5d6ff;
+  --color-btn-text: #ececed;
+  --color-btn-bg: #1f1e28;
+  --color-btn-border: #f3f3f6;
+  --color-btn-shadow: 3px 3px 0 0 #f3f3f6;
+  --color-btn-inset-shadow: none;
+  --color-btn-hover-bg: #ffd23f;
+  --color-btn-hover-border: #f3f3f6;
+  --color-btn-active-bg: #ffd23f;
+  --color-btn-active-border: #f3f3f6;
+  --color-btn-selected-bg: #2a2512;
+  --color-btn-primary-text: #000;
+  --color-btn-primary-bg: #ffd23f;
+  --color-btn-primary-border: #f3f3f6;
+  --color-btn-primary-shadow: 3px 3px 0 0 #f3f3f6;
+  --color-btn-primary-inset-shadow: none;
+  --color-btn-primary-hover-bg: #ffd23f;
+  --color-btn-primary-hover-border: #f3f3f6;
+  --color-btn-primary-selected-bg: #ffd23f;
+  --color-btn-primary-selected-shadow: none;
+  --color-btn-primary-disabled-text: #a6a6b0;
+  --color-btn-primary-disabled-bg: #2b2a37;
+  --color-btn-primary-disabled-border: #f3f3f6;
+  --color-action-list-item-default-hover-bg: #2b2a37;
+  --color-segmented-control-bg: #2b2a37;
+  --color-segmented-control-button-bg: #1f1e28;
+  --color-segmented-control-button-selected-border: #f3f3f6;
+  --color-fg-default: #ececed;
+  --color-fg-muted: #a6a6b0;
+  --color-fg-subtle: #8a8a96;
+  --color-canvas-default: #14131a;
+  --color-canvas-overlay: #1f1e28;
+  --color-canvas-inset: #1f1e28;
+  --color-canvas-subtle: #1f1e28;
+  --color-border-default: #f3f3f6;
+  --color-border-muted: #f3f3f6;
+  --color-neutral-muted: #2b2a37;
+  --color-accent-fg: #ececed;
+  --color-accent-emphasis: #f3f3f6;
+  --color-accent-muted: #a6a6b0;
+  --color-accent-subtle: #2a2512;
+  --color-success-fg: #3fb950;
+  --color-attention-fg: #d29922;
+  --color-attention-muted: #ffd23f;
+  --color-attention-subtle: #2a2512;
+  --color-danger-fg: #ff6b6b;
+  --color-danger-muted: #ff6b6b;
+  --color-danger-subtle: #2d191e;
+  --color-primer-shadow-inset: none;
+  --color-scale-gray-7: #14131a;
+  --color-scale-blue-8: #14202f;
+  --color-social-reaction-bg-hover: #2b2a37;
+  --color-social-reaction-bg-reacted-hover: #2a2512;
+}
+
+main .pagination-loader-container {
+  background-image: url("https://github.com/images/modules/pulls/progressive-disclosure-line-dark.svg");
+}
+
+main .gsc-loading-image {
+  background-image: url("https://github.githubassets.com/images/mona-loading-dark.gif");
+}
+
+.btn,
+.btn-primary,
+textarea,
+.form-control,
+.gsc-comment,
+.gsc-reply-box,
+.gsc-comment-box,
+.gsc-reactions,
+.gsc-tl-dot,
+.Box,
+.gsc-comment-box-textarea {
+  border-radius: 0 !important;
+}
+
+.btn,
+.btn-primary {
+  border-width: 2px !important;
+  font-weight: 700 !important;
+}
+
+textarea,
+.form-control,
+.gsc-comment-box-textarea {
+  border: 2px solid #f3f3f6 !important;
+}

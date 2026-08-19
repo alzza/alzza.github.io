@@ -721,6 +721,30 @@ code {
 }
 .pick-links a:hover { background: var(--yellow); }
 
+.comments {
+  margin: 40px 0 56px;
+  padding-top: 8px;
+}
+.comments-hint {
+  margin: 0 0 14px;
+  max-width: 46ch;
+  color: var(--muted);
+  font-size: 14px;
+}
+.comments-box {
+  padding: 8px 10px 4px;
+  border: var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.giscus,
+.giscus-frame {
+  width: 100%;
+}
+.giscus-frame {
+  border: 0;
+}
+
 @media (max-width: 720px) {
   :root {
     --shadow: 4px 4px 0 0 var(--ink);

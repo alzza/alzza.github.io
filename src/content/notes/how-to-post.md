@@ -284,6 +284,8 @@ int main() { return 0; }
 
 홈에만 빼고 목록에만 넣는 필터는 없다. md를 만들면 홈과 목록에 둘 다 뜬다.
 
+노트 본문 아래에는 [Giscus](https://giscus.app/ko) 댓글이 붙는다. GitHub 로그인이 필요하고, 글은 저장소 **Discussions / Announcements**에 쌓인다. 페이지와 글은 URL 경로(`pathname`)로 맞춘다. 바깥 상자는 사이트 카드와 같고, iframe 안 색은 `public/giscus-light.css` / `giscus-dark.css`다. 해/달 토글은 댓글 테마도 같이 바꾼다. 홈·춘천·지도에는 없다.
+
 `_`로 시작하는 파일은 `glob` 패턴 때문에 컬렉션에 안 들어간다.
 
 공식 문서의 `slug:` 프런트매터로 `id`를 바꾸는 기능은 있다. 이 사이트는 **파일 이름 = 주소**로 고정한다. 헷갈리니 노트에 `slug:` 칸을 넣지 않는다.

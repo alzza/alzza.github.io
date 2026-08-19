@@ -1,0 +1,40 @@
+---
+const lightTheme =
+  "https://raw.githubusercontent.com/alzza/alzza.github.io/main/public/giscus-light.css";
+const darkTheme =
+  "https://raw.githubusercontent.com/alzza/alzza.github.io/main/public/giscus-dark.css";
+---
+
+<section class="comments" aria-label="댓글">
+  <span class="badge">댓글</span>
+  <p class="comments-hint">GitHub 계정으로 답니다. 내용은 이 저장소 Discussions에 남습니다.</p>
+  <div class="comments-box">
+    <div class="giscus"></div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ lightTheme, darkTheme }}>
+  (function () {
+    var host = document.querySelector(".comments .giscus");
+    if (!host || host.querySelector("script[data-giscus]")) return;
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    var s = document.createElement("script");
+    s.src = "https://giscus.app/client.js";
+    s.setAttribute("data-giscus", "1");
+    s.setAttribute("data-repo", "alzza/alzza.github.io");
+    s.setAttribute("data-repo-id", "R_kgDOT5OuAg");
+    s.setAttribute("data-category", "Announcements");
+    s.setAttribute("data-category-id", "DIC_kwDOT5OuAs4DDtm_");
+    s.setAttribute("data-mapping", "pathname");
+    s.setAttribute("data-strict", "1");
+    s.setAttribute("data-reactions-enabled", "1");
+    s.setAttribute("data-emit-metadata", "0");
+    s.setAttribute("data-input-position", "top");
+    s.setAttribute("data-theme", dark ? darkTheme : lightTheme);
+    s.setAttribute("data-lang", "ko");
+    s.setAttribute("data-loading", "lazy");
+    s.crossOrigin = "anonymous";
+    s.async = true;
+    host.appendChild(s);
+  })();
+</script>
