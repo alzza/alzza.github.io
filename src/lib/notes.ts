@@ -12,7 +12,7 @@ const extra: NoteItem[] = [
     href: "/chuncheon/",
     title: "춘천 일정",
     date: "2026-08-27",
-    excerpt: "워터/SC 코스 · 카카오맵",
+    excerpt: "울산-강촌 기본 동선. 30곳은 그 위에.",
   },
 ];
 
