@@ -3,10 +3,6 @@
   var KEY = "note-mods";
   var DEFAULTS = ["tag-filter", "insight-grid"];
 
-  function reduce() {
-    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  }
-
   function savedMods() {
     try {
       var raw = localStorage.getItem(KEY);
@@ -89,20 +85,4 @@
     if (hit) hit.click();
   }
 
-  if (reduce()) return;
-
-  document.querySelectorAll(".insight-card").forEach(function (card) {
-    var inner = card.querySelector(".insight-tilt");
-    if (!inner) return;
-    card.addEventListener("mousemove", function (e) {
-      var r = card.getBoundingClientRect();
-      var x = (e.clientX - r.left) / r.width - 0.5;
-      var y = (e.clientY - r.top) / r.height - 0.5;
-      inner.style.transform =
-        "rotateX(" + (-y * 8).toFixed(2) + "deg) rotateY(" + (x * 10).toFixed(2) + "deg)";
-    });
-    card.addEventListener("mouseleave", function () {
-      inner.style.transform = "";
-    });
-  });
 })();

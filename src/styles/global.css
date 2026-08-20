@@ -338,6 +338,7 @@ button:focus-visible {
   grid-template-columns: 1fr;
   gap: 18px;
   padding-bottom: 36px;
+  perspective: 900px;
 }
 @media (min-width: 720px) {
   .grid { grid-template-columns: 1fr 1fr; }
@@ -357,6 +358,17 @@ button:focus-visible {
   text-transform: uppercase;
 }
 
+.home-note-hint {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.home-note-hint a {
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .note-bar {
   display: flex;
   align-items: baseline;
@@ -368,12 +380,13 @@ button:focus-visible {
   background: var(--surface);
   text-decoration: none;
   box-shadow: var(--shadow-sm);
+  transform-style: preserve-3d;
+  transition: transform 0.16s ease-out, box-shadow 0.16s ease-out;
 }
 .note-bar:last-of-type { margin-bottom: 48px; }
 .note-bar:hover {
   background: var(--yellow);
   color: var(--black);
-  transform: translate(-2px, -2px);
   box-shadow: var(--shadow);
 }
 .note-bar:hover span { color: var(--black); }
@@ -389,9 +402,10 @@ button:focus-visible {
   border: var(--border);
   box-shadow: var(--shadow);
   text-decoration: none;
+  transform-style: preserve-3d;
+  transition: transform 0.16s ease-out, box-shadow 0.16s ease-out;
 }
 .card:hover {
-  transform: translate(-2px, -2px);
   box-shadow: var(--shadow-lg);
 }
 .card.fill-paper { background: var(--surface); }
@@ -666,11 +680,22 @@ code {
 }
 
 .mod-bar {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: var(--border);
+  background: var(--yellow-light);
+  box-shadow: var(--shadow-sm);
+}
+.mod-bar-help {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.mod-bar-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin: 0 0 18px;
 }
 .mod-bar-kicker {
   font-family: var(--font-mono);
@@ -963,7 +988,6 @@ code {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card:hover,
   .btn:hover,
   .btn:active,
   .note-bar:hover,
@@ -976,6 +1000,8 @@ code {
   .insight-card:hover .insight-read {
     transform: none;
   }
-  .insight-tilt { transition: none; }
+  .insight-tilt,
+  .card,
+  .note-bar { transition: none; }
   .back-to-top { transition: none; }
 }
