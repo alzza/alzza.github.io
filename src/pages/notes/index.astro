@@ -1,30 +1,27 @@
 ---
 import Base from "../../layouts/Base.astro";
 import Header from "../../components/Header.astro";
-import { listNotes } from "../../lib/notes";
+import ModuleBar from "../../modules/ModuleBar.astro";
+import TagFilter from "../../modules/TagFilter.astro";
+import InsightGrid from "../../modules/InsightGrid.astro";
+import BoardList from "../../modules/BoardList.astro";
+import { allTags, listNotes } from "../../lib/notes";
 
 const notes = await listNotes();
+const tags = allTags(notes);
 ---
 
-<Base title="노트 · alzza" description="짧은 메모와 코드 노트">
+<Base title="노트 · alzza" description="태그로 찾고, 카드나 게시판으로 조립하는 노트 목록">
   <Header links={[{ href: "/", label: "목록" }, { href: "/info/", label: "정보" }]} />
   <div class="wrap">
     <section class="hero">
       <h1>노트</h1>
-      <p>목록은 게시판처럼. 글은 Markdown으로 올립니다.</p>
+      <p>태그와 검색으로 고르고, 위 모듈 버튼으로 카드와 게시판을 켜고 끕니다.</p>
     </section>
-    <div class="board">
-      {
-        notes.map((note) => (
-          <a class="board-row" href={note.href}>
-            <span class="board-date">{note.date}</span>
-            <span>
-              <span class="board-title">{note.title}</span>
-              <span class="board-ex">{note.excerpt}</span>
-            </span>
-          </a>
-        ))
-      }
-    </div>
+    <ModuleBar />
+    <TagFilter tags={tags} />
+    <InsightGrid notes={notes} />
+    <BoardList notes={notes} />
   </div>
+  <script is:inline src="/notes-kit.js"></script>
 </Base>

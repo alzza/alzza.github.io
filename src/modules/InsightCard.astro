@@ -1,0 +1,38 @@
+---
+import type { NoteItem } from "../lib/notes";
+
+interface Props {
+  note: NoteItem;
+}
+const { note } = Astro.props;
+const hay = [note.title, note.excerpt, note.kicker, ...note.tags].join(" ").toLowerCase();
+---
+
+<a
+  class="insight-card"
+  href={note.href}
+  data-note-item
+  data-tags={note.tags.join(",")}
+  data-hay={hay}
+>
+  <div class="insight-tilt">
+    <div class="insight-inner">
+      <span class="insight-kicker">{note.kicker}</span>
+      <h2 class="insight-title">{note.title}</h2>
+      <p class="insight-ex">{note.excerpt}</p>
+      {
+        note.tags.length > 0 && (
+          <p class="insight-tags">
+            {note.tags.map((t) => (
+              <span>#{t}</span>
+            ))}
+          </p>
+        )
+      }
+      <p class="insight-foot">
+        <time>{note.date}</time>
+        <span class="insight-read">읽기 →</span>
+      </p>
+    </div>
+  </div>
+</a>

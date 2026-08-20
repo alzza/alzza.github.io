@@ -2,6 +2,8 @@
 title: npm이 뭔가, 어떻게 쓰나
 date: "2026-08-19"
 excerpt: Node 패키지 설치 도구. Astro 7.2 공식 CLI·업그레이드 명령을 이 저장소 기준으로 정리.
+kicker: 도구
+tags: ["npm", "Astro"]
 ---
 
 **npm**은 Node.js와 같이 오는 **패키지 설치 도구**다. 이 사이트의 Astro도 npm으로 깐다.

@@ -1,0 +1,13 @@
+---
+import type { NoteItem } from "../lib/notes";
+import InsightCard from "./InsightCard.astro";
+
+interface Props {
+  notes: NoteItem[];
+}
+const { notes } = Astro.props;
+---
+
+<section class="insight-grid mod-block" data-mod="insight-grid">
+  {notes.map((note) => <InsightCard note={note} />)}
+</section>

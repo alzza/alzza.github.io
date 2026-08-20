@@ -645,6 +645,200 @@ code {
   .board-row { grid-template-columns: 1fr; gap: 4px; }
 }
 
+[hidden],
+[data-note-item][hidden],
+.mod-block[hidden],
+.insight-card[hidden],
+.board[hidden] {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mod-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+.mod-bar-kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-right: 4px;
+}
+.mod-chip,
+.tag-chip {
+  appearance: none;
+  min-height: 32px;
+  padding: 4px 10px;
+  border: var(--border-thin);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  font: 700 13px/1 var(--font-heading);
+  cursor: pointer;
+}
+.mod-chip.is-on,
+.tag-chip.is-on {
+  background: var(--yellow);
+  color: var(--black);
+}
+.mod-chip:hover,
+.tag-chip:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow);
+}
+
+.tag-search input {
+  width: 100%;
+  min-height: 44px;
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: var(--border);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  font: 16px/1.4 var(--font-body);
+}
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 20px;
+}
+.tag-empty {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin: 0 0 36px;
+  perspective: 900px;
+}
+@media (min-width: 720px) {
+  .insight-grid { grid-template-columns: 1fr 1fr; }
+}
+.insight-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  perspective: 900px;
+}
+.insight-tilt {
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.16s ease-out;
+}
+.insight-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 18px 16px;
+  border: var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.insight-card:hover .insight-inner {
+  box-shadow: var(--shadow-lg);
+}
+.insight-kicker {
+  align-self: flex-start;
+  padding: 3px 8px;
+  border: var(--border-thin);
+  background: var(--yellow);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.insight-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+.insight-card:hover .insight-title {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.insight-ex {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  flex: 1;
+}
+.insight-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+.insight-tags span {
+  padding: 2px 7px;
+  border: var(--border-thin);
+  font-size: 12px;
+  font-weight: 700;
+}
+.insight-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin: 8px 0 0;
+  padding-top: 10px;
+  border-top: var(--border-thin);
+  font-size: 13px;
+}
+.insight-read {
+  font-weight: 800;
+  color: var(--pink);
+}
+.insight-card:hover .insight-read {
+  transform: translateX(4px);
+  display: inline-block;
+}
+
+.note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+.note-tags a {
+  padding: 2px 8px;
+  border: var(--border-thin);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.note-tags a:hover {
+  background: var(--yellow);
+  color: var(--black);
+}
+
 .info-src {
   margin: 0 0 48px;
   color: var(--muted);
@@ -776,8 +970,12 @@ code {
   .theme-toggle:hover,
   .theme-toggle:active,
   .back-to-top:hover,
-  .back-to-top:active {
+  .back-to-top:active,
+  .mod-chip:hover,
+  .tag-chip:hover,
+  .insight-card:hover .insight-read {
     transform: none;
   }
+  .insight-tilt { transition: none; }
   .back-to-top { transition: none; }
 }

@@ -1,0 +1,21 @@
+---
+/**
+ * 모듈 조립 막대. 버튼을 켜고 끄면 같은 페이지에서 검색·카드·게시판을 따로 붙이거나 뺀다.
+ */
+const modules = [
+  { id: "tag-filter", label: "검색" },
+  { id: "insight-grid", label: "카드" },
+  { id: "board-list", label: "게시판" },
+];
+---
+
+<div class="mod-bar" data-mod-bar>
+  <span class="mod-bar-kicker">모듈</span>
+  {
+    modules.map((m) => (
+      <button type="button" class="mod-chip" data-mod-toggle={m.id} aria-pressed="true">
+        {m.label}
+      </button>
+    ))
+  }
+</div>
