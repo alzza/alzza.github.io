@@ -10,12 +10,15 @@ const modules = [
 ---
 
 <div class="mod-bar" data-mod-bar>
-  <span class="mod-bar-kicker">모듈</span>
-  {
-    modules.map((m) => (
-      <button type="button" class="mod-chip" data-mod-toggle={m.id} aria-pressed="true">
-        {m.label}
-      </button>
-    ))
-  }
+  <p class="mod-bar-help">여기서 이 페이지 조각을 켜고 끕니다. 노란 칸이 켜진 상태입니다.</p>
+  <div class="mod-bar-row">
+    <span class="mod-bar-kicker">켜기</span>
+    {
+      modules.map((m) => (
+        <button type="button" class="mod-chip" data-mod-toggle={m.id} aria-pressed="true">
+          {m.label}
+        </button>
+      ))
+    }
+  </div>
 </div>

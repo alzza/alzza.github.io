@@ -21,25 +21,25 @@ const notes = await listNotes();
   <div class="wrap">
     <p class="sec-label">Public repos</p>
     <section class="grid">
-      <a class="card fill-paper" href="https://alzza.github.io/sc2-conveyor-profiler/">
+      <a class="card fill-paper" data-tilt href="https://alzza.github.io/sc2-conveyor-profiler/">
         <span class="kicker">PLC / SC2</span>
         <h2>sc2-conveyor-profiler</h2>
         <p>Sheet Conveyor 2 파라미터 오토튠. Trend CSV와 시뮬.</p>
         <span class="go">페이지 열기 →</span>
       </a>
-      <a class="card fill-yellow" href="https://github.com/alzza/t2-can-board">
+      <a class="card fill-yellow" data-tilt href="https://github.com/alzza/t2-can-board">
         <span class="kicker">Tesla / CAN</span>
         <h2>t2-can-board</h2>
         <p>LILYGO T2-CAN, Tesla HW3 듀얼 CAN 펌웨어.</p>
         <span class="go">GitHub →</span>
       </a>
-      <a class="card fill-pink" href="https://github.com/alzza/tesla-can-moniter">
+      <a class="card fill-pink" data-tilt href="https://github.com/alzza/tesla-can-moniter">
         <span class="kicker">Tesla / CAN</span>
         <h2>tesla-can-moniter</h2>
         <p>테슬라 CAN 모니터.</p>
         <span class="go">GitHub →</span>
       </a>
-      <a class="card fill-blue" href="https://orca-lime.vercel.app">
+      <a class="card fill-blue" data-tilt href="https://orca-lime.vercel.app">
         <span class="kicker">Fork</span>
         <h2>orca_mode_studio</h2>
         <p>reallygood83/orca fork. 데모는 Vercel.</p>
@@ -48,9 +48,10 @@ const notes = await listNotes();
     </section>
 
     <p class="sec-label">Notes</p>
+    <p class="home-note-hint">검색·카드·게시판을 켜고 끄는 버튼은 <a href="/notes/">노트</a> 제목 아래, 노란 칸에 있습니다.</p>
     {
       notes.map((note) => (
-        <a class="note-bar" href={note.href}>
+        <a class="note-bar" data-tilt href={note.href}>
           <strong>{note.title}</strong>
           <span>{note.excerpt}</span>
         </a>
