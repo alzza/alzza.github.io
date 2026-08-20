@@ -17,7 +17,7 @@ const { Content } = await render(note);
 ---
 
 <Base title={`${note.data.title} · alzza`} description={note.data.excerpt}>
-  <Header links={[{ href: "/notes/", label: "노트" }]} />
+  <Header links={[{ href: "/notes/", label: "노트" }, { href: "/info/", label: "정보" }]} />
   <div class="wrap prose">
     <section class="hero">
       <span class="badge">노트</span>

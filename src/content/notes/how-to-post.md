@@ -107,6 +107,7 @@ Astro 7은 **Rust 컴파일러**가 기본이다. 닫히지 않은 태그는 빌
 | `src/pages/notes/[id].astro` | `/notes/how-to-post/` 처럼 글마다 |
 | `src/pages/chuncheon/index.astro` | `/chuncheon/` |
 | `src/pages/chuncheon/map.astro` | `/chuncheon/map/` |
+| `src/pages/info/index.astro` | `/info/` 긱뉴스 RSS 20개 |
 
 `[id].astro`는 빌드할 때 md 수만큼 HTML을 만든다. 방문자가 들어올 때 글을 찾아 그리는 게 아니다.
 
@@ -165,7 +166,9 @@ Astro 7은 **Rust 컴파일러**가 기본이다. 닫히지 않은 태그는 빌
 | `astro.config.mjs` | `site`, Shiki `github-dark` |
 | `package.json` | `astro ^7.2.3`, `engines.node >=22.12.0` |
 | `.nvmrc` | `22.12.0` |
-| `.github/workflows/pages.yml` | Node 22.12, `npm ci`, `npm run build`, `dist` 업로드 |
+| `.github/workflows/pages.yml` | Node 22.12, `npm ci`, RSS 받기, `npm run build`, `dist` 업로드. 한 시간에 한 번도 돈다 |
+| `scripts/fetch-geeknews.mjs` | 긱뉴스 RSS 20개를 `src/data/geeknews.json`에 씀 |
+| `src/pages/info/index.astro` | `/info/` 정보 목록 |
 
 컬렉션 md는 `src/pages/` **밖**에 둔다. 공식 문서대로, 컬렉션만으로는 URL이 안 생긴다. `[id].astro`가 경로를 만든다.
 
