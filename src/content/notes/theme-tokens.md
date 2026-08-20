@@ -2,6 +2,8 @@
 title: 테마 토큰
 date: "2026-08-19"
 excerpt: 라이트/다크 CSS와 노트 코드 하이라이트(Shiki). Astro 테마 패키지가 아니다.
+kicker: 테마
+tags: ["CSS", "테마"]
 ---
 
 공식 npm 테마 패키지는 없다. [astro.build/themes](https://astro.build/themes/) 의 테마는 **새 프로젝트를 복사해 시작하는 템플릿**이다. 이 사이트 CSS를 그 위에 씌우거나, 숫자만 바꿔 다른 Astro 버전 스킨으로 바꾸는 기능은 없다.

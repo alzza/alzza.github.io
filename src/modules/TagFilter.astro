@@ -1,0 +1,28 @@
+---
+interface Props {
+  tags: string[];
+}
+const { tags } = Astro.props;
+---
+
+<section class="mod-block" data-mod="tag-filter">
+  <label class="tag-search">
+    <span class="visually-hidden">노트 검색</span>
+    <input type="search" data-note-q placeholder="제목, 한 줄, 태그" autocomplete="off" />
+  </label>
+  {
+    tags.length > 0 && (
+      <div class="tag-row" data-tag-row>
+        <button type="button" class="tag-chip is-on" data-tag="" aria-pressed="true">
+          전체
+        </button>
+        {tags.map((t) => (
+          <button type="button" class="tag-chip" data-tag={t} aria-pressed="false">
+            #{t}
+          </button>
+        ))}
+      </div>
+    )
+  }
+  <p class="tag-empty" data-note-empty hidden>이 태그에 맞는 글이 없습니다.</p>
+</section>

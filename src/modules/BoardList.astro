@@ -1,0 +1,31 @@
+---
+import type { NoteItem } from "../lib/notes";
+
+interface Props {
+  notes: NoteItem[];
+}
+const { notes } = Astro.props;
+---
+
+<div class="board mod-block" data-mod="board-list" hidden>
+  {
+    notes.map((note) => (
+      <a
+        class="board-row"
+        href={note.href}
+        data-note-item
+        data-tags={note.tags.join(",")}
+        data-hay={[note.title, note.excerpt, note.kicker, ...note.tags].join(" ").toLowerCase()}
+      >
+        <span class="board-date">{note.date}</span>
+        <span>
+          <span class="board-title">{note.title}</span>
+          <span class="board-ex">
+            {note.excerpt}
+            {note.tags.length > 0 ? ` #${note.tags.join(" #")}` : ""}
+          </span>
+        </span>
+      </a>
+    ))
+  }
+</div>

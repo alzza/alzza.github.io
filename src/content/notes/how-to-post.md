@@ -2,6 +2,8 @@
 title: 페이지 올리고 고치는 법
 date: "2026-08-19"
 excerpt: Astro 7.2 기준. 공식 문서 링크와 이 저장소 폴더를 맞춰 둔 운영 노트.
+kicker: 운영
+tags: ["운영", "Astro"]
 ---
 
 보이는 문장은 카톡에 쓰는 말로 쓴다. 쓰지 말 것: 북상, 남하, 북진, 남진, 기점, 종점, 상기, 금회. 대신: 가는 날, 오는 날, 올라가는 길, 내려오는 길, 출발, 도착. 휴게소 간판에 적힌 방향 이름(양평방향, 창원방향)만 예외.
@@ -256,6 +258,8 @@ const { Content } = await render(note);
 title: 첫 노트
 date: "2026-08-19"
 excerpt: 목록에 보일 한 줄
+kicker: 운영
+tags: ["운영"]
 ---
 
 본문. 인라인 코드는 `pio run` 처럼 쓴다.
@@ -351,7 +355,8 @@ int main() { return 0; }
 
 | 하고 싶은 일 | 고치는 파일 |
 |---|---|
-| 노트 글 | `src/content/notes/이름.md` |
+| 노트 글 | `src/content/notes/이름.md` (`tags` `kicker` 가능) |
+| 노트 목록 모듈 | `src/modules/` 검색·카드·게시판을 켜고 끔 |
 | 홈 프로젝트 타일 | `src/pages/index.astro` |
 | 춘천 일정 문장 | `src/pages/chuncheon/index.astro` |
 | 큰 지도 화면 | `src/pages/chuncheon/map.astro` |
