@@ -1,0 +1,52 @@
+---
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import feed from "../../data/geeknews.json";
+
+function when(iso: string) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d
+    .toLocaleString("sv-SE", { timeZone: "Asia/Seoul" })
+    .slice(5, 16);
+}
+
+const fetched = when(feed.fetchedAt);
+const items = Array.isArray(feed.items) ? feed.items.slice(0, 20) : [];
+---
+
+<Base title="정보 · alzza" description="긱뉴스 RSS 최신 20개. GitHub Actions가 다시 받아 굽습니다.">
+  <Header links={[{ href: "/notes/", label: "노트" }]} />
+  <div class="wrap">
+    <section class="hero">
+      <span class="badge">정보</span>
+      <h1>긱뉴스 최근 글</h1>
+      <p>
+        공식 RSS 최신순 20개입니다. 홈 투표 순위와는 다릅니다.
+        {fetched && <> 마지막 수신 {fetched} (서울).</>}
+      </p>
+    </section>
+    <div class="board">
+      {
+        items.map((item) => (
+          <a class="board-row" href={item.href} target="_blank" rel="noopener noreferrer">
+            <span class="board-date">{when(item.published) || `#${item.rank}`}</span>
+            <span>
+              <span class="board-title">{item.title}</span>
+              <span class="board-ex">
+                {item.excerpt}
+                {item.author ? ` · ${item.author}` : ""}
+              </span>
+            </span>
+          </a>
+        ))
+      }
+    </div>
+    <p class="info-src">
+      출처 <a href="https://news.hada.io/rss/news">news.hada.io/rss/news</a>
+      · <a href="https://news.hada.io/">긱뉴스</a>
+      · 한 시간에 한 번 GitHub Actions가 받아서 올립니다.
+    </p>
+  </div>
+</Base>
