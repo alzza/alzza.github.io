@@ -1,16 +1,10 @@
----
-layout: ../layouts/PlcDoc.astro
-title: "SC1 Robot3 깔딱 HMI Enable=1 1차 시험안"
-description: "CSM SC#1 Robot3 조기 진입 체인 깔딱. PHASE-1 현장 시험안. 메인 목록에는 올리지 않음."
-revision: "2026-08-22 / Revision 2"
-status: "PHASE-1 HMI_ENABLE=1 TEST / FIELD-VALIDATION REQUIRED"
----
+CSM SC#1 - Robot3 조기 진입에 의한 체인 깔딱 현상 HMI Enable=1 시험안
+재검토본: 2026-08-22 / Revision 2
+문서 상태: PHASE-1 HMI_ENABLE=1 TEST / FIELD-VALIDATION REQUIRED
 
-CSM SC#1 Robot3 조기 진입에 의한 체인 깔딱 현상의 HMI Enable=1 시험안이다.
-
-
-## 0. 최종 결론
-
+======================================================================
+0. 최종 결론
+======================================================================
 
 1차 시험 방향은 다음과 같이 확정한다.
 
@@ -38,9 +32,9 @@ CSM SC#1 Robot3 조기 진입에 의한 체인 깔딱 현상의 HMI Enable=1 시
 그러나 Studio 5000 Verify/Compile, 실제 Controller Online Trend,
 저속 현장 시험은 아직 수행하지 않았으므로 생산 적용 완료본으로 표시하면 안 된다.
 
-
-## 1. 검토한 원본과 무결성
-
+======================================================================
+1. 검토한 원본과 무결성
+======================================================================
 
 [PLC 기본 베이스]
 파일: sc1-improvement-project/reference/Cathode1(260714).L5X
@@ -67,19 +61,16 @@ SC1_Trend_C_Robot3.CSV SHA-256:
 
 원본 L5X, Robot LS, CSV 파일은 읽기만 했으며 수정하지 않았다.
 
-
-## 2. L5X에서 확인된 실제 신호 체인
-
+======================================================================
+2. L5X에서 확인된 실제 신호 체인
+======================================================================
 
 2.1 SM1 또는 SM2 Sheet Drop 신호
 
 Sheet_Conveyor_1 / Permits / Rung 2:
 
 XIO(z_mode_off)
-
-```text
 [XIC(z_signal_sm1_sc1_start),XIC(z_signal_sm2_sc1_start)]
-```
 ONS(sheet_dropped_ons)
 [OTL(sheet_dropped),OTL(sc1_start_req_pending)];
 
@@ -126,10 +117,7 @@ active 상태와 관계없이 기존 Robot 허가 조건을 사용한다.
 
 Cathode1(260714).L5X의 Sheet_Conveyor_1 / Permits / Rung 6 원본:
 
-
-```text
 [XIC(interlock_stopped),XIC(z_System_Running.X)XIC(permit_sc1_r3_slowdown)]XIO(i_sheet_not_at_transfer)OTE(z_permit_sc1_r3_unload);
-```
 
 주의:
 - i_sheet_not_at_transfer는 부정 명칭의 입력이다.
@@ -150,9 +138,9 @@ XIO(f_sheet_at_transfer_timeout)XIC(z_permit_r3_sc1_start)OTE(permit_run_forward
 즉 Robot3가 진입하여 i_clear_of_infeed가 꺼지면
 SC1의 permit_run_forward도 꺼질 수 있다.
 
-
-## 3. Robot3 프로그램 재검토
-
+======================================================================
+3. Robot3 프로그램 재검토
+======================================================================
 
 3.1 CSM1 실제 호출 흐름
 
@@ -187,9 +175,9 @@ Robot 메인에서 DI[1]이 ON인 순간 Unload 서브프로그램이 호출된�
 
 이 목적에는 Robot 좌표/티칭/LS 프로그램 수정이 필요하지 않다.
 
-
-## 4. CSV Trend 교차 검토 결과
-
+======================================================================
+4. CSV Trend 교차 검토 결과
+======================================================================
 
 공통 조건:
 - 2026-07-29 약 1시간
@@ -241,9 +229,9 @@ Robot Clear가 SC1 완료보다 572 ms 먼저 꺼졌다.
   보수적으로 오래 막는다. 이때 active를 강제로 해제하지 말고 SC1 미완료 원인을 확인한다.
 - MANUAL/OFF 전환 시에는 추가 Gate를 우회하므로 기존 복구 동작은 유지된다.
 
-
-## 5. 채택/폐기한 수정안과 이유
-
+======================================================================
+5. 채택/폐기한 수정안과 이유
+======================================================================
 
 5.1 sc1_hmi_enable=0에서 원본을 그대로 우회시키는 안
 
@@ -280,17 +268,14 @@ Robot Clear가 SC1 완료보다 572 ms 먼저 꺼졌다.
 - PLC 허가가 SC1 완료보다 먼저 나오는 것이 먼저 확인되었으므로
   PLC의 신규 진입 허가 시점부터 바로잡는 것이 최소 수정이다.
 
-
-## 6. 현재 사진 로직 - 사진 판독 Neutral Text
-
+======================================================================
+6. 현재 사진 로직 - 사진 판독 Neutral Text
+======================================================================
 
 아래는 2026-08-22 사진에서 판독한 현재 Rung이다.
 사진 기반 전사이므로 적용 전 Online Rung과 문자 단위로 대조한다.
 
-
-```text
 [XIC(interlock_stopped),XIC(z_System_Running.X)XIC(permit_sc1_r3_slowdown)[XIO(sc1_hmi_enable),XIC(sc1_hmi_enable)XIC(State_Stop.X)]]XIO(i_sheet_not_at_transfer)OTE(z_permit_sc1_r3_unload);
-```
 
 이 로직을 다시 시험안으로 교체하는 이유:
 
@@ -300,9 +285,9 @@ Robot Clear가 SC1 완료보다 572 ms 먼저 꺼졌다.
 4) 새 시험안은 원본 두 경로가 합쳐진 뒤 HMI/AUTO/active Gate를 배치하여
    enable=1 AUTO active 구간에는 어느 원본 경로도 Robot 허가를 우회하지 못하게 한다.
 
-
-## 7. 1차 HMI Enable 시험용 Neutral Text - 복사/붙여넣기용
-
+======================================================================
+7. 1차 HMI Enable 시험용 Neutral Text - 복사/붙여넣기용
+======================================================================
 
 수정 위치:
 Program: Sheet_Conveyor_1
@@ -311,10 +296,7 @@ Rung: 6
 
 7.1 최종 1차 시험본
 
-
-```text
 [XIC(interlock_stopped),XIC(z_System_Running.X)XIC(permit_sc1_r3_slowdown)]XIO(i_sheet_not_at_transfer)[XIO(sc1_hmi_enable),XIO(z_mode_automatic),XIO(sc1_start_req_active)]OTE(z_permit_sc1_r3_unload);
-```
 
 논리식으로 표현하면:
 
@@ -327,34 +309,28 @@ AND
 
 7.2 즉시 원복용 - Cathode1(260714).L5X 원본
 
-
-```text
 [XIC(interlock_stopped),XIC(z_System_Running.X)XIC(permit_sc1_r3_slowdown)]XIO(i_sheet_not_at_transfer)OTE(z_permit_sc1_r3_unload);
-```
 
 7.3 현재 사진 상태로 되돌릴 때 사용하는 전사본
 
-
-```text
 [XIC(interlock_stopped),XIC(z_System_Running.X)XIC(permit_sc1_r3_slowdown)[XIO(sc1_hmi_enable),XIC(sc1_hmi_enable)XIC(State_Stop.X)]]XIO(i_sheet_not_at_transfer)OTE(z_permit_sc1_r3_unload);
-```
 
 주의:
 - 가장 신뢰할 수 있는 원복 기준은 7.2의 L5X 원본이다.
 - 7.3은 사진에서 판독한 것이므로 Online 원본 백업을 먼저 Export한다.
 - 어떤 경우에도 L5X 전체 파일을 직접 덮어쓰지 않는다.
 
+======================================================================
+8. 모드별 동작 검토
+======================================================================
 
-## 8. 모드별 동작 검토
-
-
-| HMI Enable | MODE | active | 추가 Gate 결과 | Robot3 동작 |
-| --- | --- | --- | --- | --- |
-| 0 | ALL | 0/1 | 통과 | 원본 Rung 6과 동일 |
-| 1 | AUTO | 0 | 통과 | 기존 Rung 6 조건대로 진입 가능 |
-| 1 | AUTO | 1 | 차단 | SC1 정상 완료까지 신규 Unload 진입 차단 |
-| 1 | MANUAL | 0/1 | 통과 | 기존 Rung 6과 동일 |
-| 1 | OFF | 0/1 | 통과 | 기존 Rung 6과 동일 |
+HMI Enable  MODE     active  추가 Gate 결과   Robot3 동작
+----------  -------  ------  ---------------  --------------------------------------
+0           ALL      0/1     통과             원본 Rung 6과 동일
+1           AUTO     0       통과             기존 Rung 6 조건대로 진입 가능
+1           AUTO     1       차단             SC1 정상 완료까지 신규 Unload 진입 차단
+1           MANUAL   0/1     통과             기존 Rung 6과 동일
+1           OFF      0/1     통과             기존 Rung 6과 동일
 
 sc1_hmi_enable=0:
 - XIO(sc1_hmi_enable) 경로가 참이므로 추가 Gate를 완전히 우회한다.
@@ -373,9 +349,9 @@ AUTO 도중 MANUAL/OFF로 전환한 경우:
   i_sheet_not_at_transfer 조건은 그대로 남아 있다.
 - 즉 추가 Gate만 해제되며 기존 허가 조건을 제거하지 않는다.
 
-
-## 8A. pending / active / permit_run_forward 상세 해설
-
+======================================================================
+8A. pending / active / permit_run_forward 상세 해설
+======================================================================
 
 8A.1 세 신호의 역할
 
@@ -580,15 +556,15 @@ SC1 전진 시작
 
 8A.6 전체 시간 순서
 
-| 순서 | SC1 상태 | pending | active | Robot 신규 진입 |
-| --- | --- | --- | --- | --- |
-| 1 | Idle 대기 | 0 | 0 | 기존 조건대로 가능 |
-| 2 | SM Drop 요청 접수 | 1 | 0 | 기존 조건대로 가능 |
-| 3 | 시작 조건 대기 | 1 | 0 | 기존 Sheet Pick을 위해 가능 |
-| 4 | Forward Step 실제 진입 | 1 | 1 | enable=1 AUTO에서 차단 |
-| 5 | 고속/저속/감속/정지 접근 | 1 | 1 | 계속 차단 |
-| 6 | 목표 Count 도달 및 State_Stop | 1→0 | 1→0 | 추가 차단 해제 |
-| 7 | 이동 완료 후 Robot Pick | 0 | 0 | 기존 조건대로 가능 |
+순서  SC1 상태                         pending  active  Robot 신규 진입
+----  -------------------------------  -------  ------  -----------------------------
+1     Idle 대기                        0        0       기존 조건대로 가능
+2     SM Drop 요청 접수                1        0       기존 조건대로 가능
+3     시작 조건 대기                   1        0       기존 Sheet Pick을 위해 가능
+4     Forward Step 실제 진입           1        1       enable=1 AUTO에서 차단
+5     고속/저속/감속/정지 접근         1        1       계속 차단
+6     목표 Count 도달 및 State_Stop    1->0     1->0    추가 차단 해제
+7     이동 완료 후 Robot Pick          0        0       기존 조건대로 가능
 
 8A.7 중요한 주의점
 
@@ -611,16 +587,13 @@ SC1 전진 시작
    State_Forward_Slow_To_Stop 등 더 이른 안전 허가 시점으로 당길 수 있는지
    별도 Trend와 현장 안전 확인을 거쳐 후속 계획을 세운다.
 
-
-## 8B. XIO 병렬 OR Gate 상세 설명
-
+======================================================================
+8B. XIO 병렬 OR Gate 상세 설명
+======================================================================
 
 8B.1 설명 대상 Neutral Text
 
-
-```text
 [XIC(interlock_stopped),XIC(z_System_Running.X)XIC(permit_sc1_r3_slowdown)]XIO(i_sheet_not_at_transfer)[XIO(sc1_hmi_enable),XIO(z_mode_automatic),XIO(sc1_start_req_active)]OTE(z_permit_sc1_r3_unload);
-```
 
 이 Rung의 마지막 병렬 조건은 다음 세 XIO 접점이다.
 
@@ -639,10 +612,10 @@ SC1 전진 시작
 
 XIO(tag)는 tag가 0일 때 참이고, tag가 1일 때 거짓이다.
 
-| Tag 값 | XIO 접점 상태 | Rung 통과 |
-| --- | --- | --- |
-| 0 | TRUE / 닫힘 | 통과 |
-| 1 | FALSE / 열림 | 차단 |
+Tag 값   XIO 접점 상태   Rung 통과
+-------  --------------  ---------
+0        TRUE / 닫힘     통과
+1        FALSE / 열림    차단
 
 따라서 “Tag 하나가 켜지면 OR 경로가 통과한다”가 아니다.
 정확한 표현은 다음과 같다.
@@ -697,16 +670,16 @@ AND sc1_start_req_active = 1
 
 아래 표는 Rung 앞부분의 기존 조건이 이미 모두 참이라고 가정한 것이다.
 
-| HMI | AUTO | active | XIO HMI | XIO AUTO | XIO active | 추가 Gate | 결과 |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| 0 | 0 | 0 | 1 | 1 | 1 | 통과 | 기존 Robot 조건 적용 |
-| 0 | 0 | 1 | 1 | 1 | 0 | 통과 | 기존 Robot 조건 적용 |
-| 0 | 1 | 0 | 1 | 0 | 1 | 통과 | 기존 Robot 조건 적용 |
-| 0 | 1 | 1 | 1 | 0 | 0 | 통과 | 기존 Robot 조건 적용 |
-| 1 | 0 | 0 | 0 | 1 | 1 | 통과 | 기존 Robot 조건 적용 |
-| 1 | 0 | 1 | 0 | 1 | 0 | 통과 | 기존 Robot 조건 적용 |
-| 1 | 1 | 0 | 0 | 0 | 1 | 통과 | 기존 Robot 조건 적용 |
-| 1 | 1 | 1 | 0 | 0 | 0 | 차단 | Robot 신규 진입 차단 |
+HMI  AUTO  active  XIO HMI  XIO AUTO  XIO active  추가 Gate  결과
+---  ----  ------  -------  --------  ----------  ---------  -------------------------
+0    0     0       1        1         1           통과       기존 Robot 조건 적용
+0    0     1       1        1         0           통과       기존 Robot 조건 적용
+0    1     0       1        0         1           통과       기존 Robot 조건 적용
+0    1     1       1        0         0           통과       기존 Robot 조건 적용
+1    0     0       0        1         1           통과       기존 Robot 조건 적용
+1    0     1       0        1         0           통과       기존 Robot 조건 적용
+1    1     0       0        0         1           통과       기존 Robot 조건 적용
+1    1     1       0        0         0           차단       Robot 신규 진입 차단
 
 8B.5 주요 상태별 설명
 
@@ -804,9 +777,9 @@ z_permit_sc1_r3_unload =
 - “세 Tag 중 하나라도 0이면 추가 Gate는 통과한다.”
 - “추가 Gate 통과는 Robot 강제 진입이 아니라 기존 허가 조건 복원이다.”
 
-
-## 9. 파라미터 처리
-
+======================================================================
+9. 파라미터 처리
+======================================================================
 
 Cathode1(260714).L5X의 현재 값:
 
@@ -825,9 +798,9 @@ param_volts_forward_homing= 3.0
 - Logic과 Parameter를 동시에 바꾸면 깔딱 제거 원인을 분리할 수 없다.
 - 최종 Gate를 검증한 후에도 Cycle Time 개선이 필요할 때만 별도 Trend로 조정한다.
 
-
-## 10. Studio 5000 적용 전 절차
-
+======================================================================
+10. Studio 5000 적용 전 절차
+======================================================================
 
 1) Online Controller에서 현재 Permits Rung 6을 L5X 또는 Routine으로 Export한다.
 2) Controller Project 전체 백업을 별도 이름으로 저장한다.
@@ -839,9 +812,9 @@ param_volts_forward_homing= 3.0
 8) Force가 걸린 관련 Tag가 없는지 확인한다.
 9) Robot/Conveyor 안전구역을 비우고 저속 또는 승인된 시험 모드로 시작한다.
 
-
-## 11. Trend 구성 - 창당 최대 8 Tag
-
+======================================================================
+11. Trend 구성 - 창당 최대 8 Tag
+======================================================================
 
 [Trend Window A - 핵심 원인 검증]
 
@@ -867,9 +840,9 @@ param_volts_forward_homing= 3.0
 
 권장 Sample Period: 10 ms
 
-
-## 12. 필수 시험 시나리오
-
+======================================================================
+12. 필수 시험 시나리오
+======================================================================
 
 시험 1: sc1_hmi_enable=0 / 원본 회귀시험
 - AUTO, MANUAL, OFF에서 Rung 6 동작이 원본과 같은지 확인한다.
@@ -913,9 +886,9 @@ param_volts_forward_homing= 3.0
 - 깔딱이 계속되면 enable=0 적용으로 확대하지 않는다.
   Robot Clear 외 다른 차단 조건과 실제 Output/Position을 다시 추적한다.
 
-
-## 13. 합격 기준
-
+======================================================================
+13. 합격 기준
+======================================================================
 
 필수 합격:
 
@@ -937,9 +910,9 @@ param_volts_forward_homing= 3.0
 5) MANUAL/OFF/Reset/Home Recovery가 기존과 달라진다.
 6) Sheet/Grade/Tracking Data가 어긋나거나 안전거리가 불확실하다.
 
-
-## 14. 최종 적용 판단
-
+======================================================================
+14. 최종 적용 판단
+======================================================================
 
 [1차 시험안으로 확정]
 - 원인 방향: Robot3 Unload 허가가 SC1 active 완료보다 먼저 발생한다.

@@ -1,0 +1,1314 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="CSM SC1 Robot3 조기 진입에 의한 체인 깔딱 현상 HMI Enable 1 시험안">
+  <meta name="robots" content="noindex, nofollow">
+  <title>SC1 Robot3 HMI Enable=1 시험안</title>
+  <style>
+    :root {
+      --bg: #f4f7f7;
+      --surface: #fbfdfd;
+      --surface-2: #eef4f3;
+      --text: #172221;
+      --muted: #5e6c69;
+      --line: #cbd8d5;
+      --accent: #087f73;
+      --accent-strong: #05655c;
+      --accent-soft: #d9efeb;
+      --warning: #8a5a13;
+      --warning-soft: #f6ead4;
+      --danger: #9d3030;
+      --danger-soft: #f7e1e1;
+      --ok: #1f6b47;
+      --ok-soft: #dceee4;
+      --code-bg: #162321;
+      --code-text: #e8f4f1;
+      --shadow: 0 18px 48px rgba(23, 58, 52, 0.08);
+      --radius: 14px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #101716;
+      --surface: #17211f;
+      --surface-2: #1d2a27;
+      --text: #edf5f3;
+      --muted: #acbbb7;
+      --line: #33433f;
+      --accent: #51b8aa;
+      --accent-strong: #78cabf;
+      --accent-soft: #183c37;
+      --warning: #efbe70;
+      --warning-soft: #3d2f18;
+      --danger: #ee9090;
+      --danger-soft: #422424;
+      --ok: #8bd0aa;
+      --ok-soft: #1d3b2b;
+      --code-bg: #0b1110;
+      --code-text: #e8f4f1;
+      --shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html:not([data-theme="light"]) {
+        --bg: #101716;
+        --surface: #17211f;
+        --surface-2: #1d2a27;
+        --text: #edf5f3;
+        --muted: #acbbb7;
+        --line: #33433f;
+        --accent: #51b8aa;
+        --accent-strong: #78cabf;
+        --accent-soft: #183c37;
+        --warning: #efbe70;
+        --warning-soft: #3d2f18;
+        --danger: #ee9090;
+        --danger-soft: #422424;
+        --ok: #8bd0aa;
+        --ok-soft: #1d3b2b;
+        --code-bg: #0b1110;
+        --code-text: #e8f4f1;
+        --shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 84px;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.7;
+      text-rendering: optimizeLegibility;
+    }
+
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    a {
+      color: var(--accent-strong);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    a:hover { color: var(--accent); }
+
+    button {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 13px;
+      color: var(--text);
+      background: var(--surface);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    }
+
+    button:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    button:active { transform: translateY(1px); }
+
+    button:focus-visible, a:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent);
+      outline-offset: 3px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      min-height: 64px;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar-inner {
+      width: min(1480px, calc(100% - 32px));
+      min-height: 64px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand strong {
+      white-space: nowrap;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand span {
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .top-actions a {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 13px;
+      color: var(--text);
+      background: var(--surface);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .top-actions a:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+
+    .layout {
+      width: min(1480px, calc(100% - 32px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 88px;
+      max-height: calc(100dvh - 112px);
+      overflow: auto;
+      padding: 24px 0 48px;
+    }
+
+    .toc h2 {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .toc nav {
+      display: grid;
+      gap: 3px;
+    }
+
+    .toc a {
+      border-left: 2px solid transparent;
+      padding: 7px 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      border-left-color: var(--accent);
+      color: var(--text);
+      background: var(--accent-soft);
+    }
+
+    main {
+      min-width: 0;
+      padding: 50px 0 100px;
+    }
+
+    .hero {
+      min-height: min(560px, calc(100dvh - 96px));
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+      gap: 42px;
+      align-items: center;
+      padding: 28px 0 56px;
+    }
+
+    .hero h1 {
+      max-width: 880px;
+      margin: 0;
+      font-size: clamp(38px, 5vw, 68px);
+      font-weight: 820;
+      letter-spacing: -0.045em;
+      line-height: 1.08;
+    }
+
+    .hero p {
+      max-width: 65ch;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-meta {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-meta dl {
+      margin: 0;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-meta div {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .hero-meta dt {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hero-meta dd {
+      margin: 0;
+      font-weight: 750;
+      line-height: 1.45;
+    }
+
+    .status {
+      color: var(--warning);
+    }
+
+    section {
+      margin: 0 0 72px;
+      scroll-margin-top: 84px;
+    }
+
+    section > h2 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 3vw, 40px);
+      letter-spacing: -0.035em;
+      line-height: 1.2;
+    }
+
+    section > .lead {
+      max-width: 72ch;
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    h3 {
+      margin: 32px 0 12px;
+      font-size: 20px;
+      letter-spacing: -0.015em;
+    }
+
+    h4 {
+      margin: 22px 0 8px;
+      font-size: 16px;
+    }
+
+    p { max-width: 78ch; }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .panel h3:first-child { margin-top: 0; }
+
+    .panel-accent { border-top: 4px solid var(--accent); }
+    .panel-warning { border-top: 4px solid var(--warning); }
+    .panel-danger { border-top: 4px solid var(--danger); }
+
+    .compact-list {
+      margin: 12px 0 0;
+      padding-left: 22px;
+    }
+
+    .compact-list li + li { margin-top: 7px; }
+
+    .logic-box {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--code-bg);
+      color: var(--code-text);
+      box-shadow: var(--shadow);
+    }
+
+    .logic-head {
+      min-height: 48px;
+      padding: 9px 12px 9px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid rgba(232, 244, 241, 0.16);
+    }
+
+    .logic-head strong {
+      font-size: 13px;
+      letter-spacing: 0.02em;
+    }
+
+    .logic-head button {
+      min-height: 34px;
+      border-color: rgba(232, 244, 241, 0.3);
+      padding: 5px 10px;
+      color: var(--code-text);
+      background: transparent;
+      font-size: 12px;
+    }
+
+    .logic-head button:hover {
+      border-color: var(--accent);
+      background: rgba(81, 184, 170, 0.16);
+    }
+
+    pre {
+      margin: 0;
+      overflow: auto;
+      padding: 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      tab-size: 2;
+      white-space: pre;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.92em;
+    }
+
+    :not(pre) > code {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 2px 6px;
+      color: var(--accent-strong);
+      background: var(--surface-2);
+    }
+
+    .formula {
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      background: var(--surface-2);
+      font-family: var(--font-mono);
+      font-weight: 800;
+      line-height: 1.8;
+    }
+
+    .callout {
+      margin: 20px 0;
+      border-left: 5px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 16px 20px;
+      background: var(--accent-soft);
+    }
+
+    .callout.warning {
+      border-left-color: var(--warning);
+      background: var(--warning-soft);
+    }
+
+    .callout.danger {
+      border-left-color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .callout strong { display: block; margin-bottom: 4px; }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    caption {
+      padding: 16px 18px 10px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--text);
+      background: var(--surface-2);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: color-mix(in srgb, var(--accent-soft) 58%, transparent); }
+
+    .truth-table th,
+    .truth-table td {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .truth-table .pass {
+      color: var(--ok);
+      font-weight: 850;
+      background: var(--ok-soft);
+    }
+
+    .truth-table .block {
+      color: var(--danger);
+      font-weight: 850;
+      background: var(--danger-soft);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(132px, 1fr));
+      gap: 10px;
+      overflow-x: auto;
+      padding: 4px 2px 10px;
+    }
+
+    .flow-step {
+      position: relative;
+      min-height: 150px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: var(--surface);
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: ">";
+      position: absolute;
+      top: 50%;
+      right: -9px;
+      z-index: 2;
+      width: 16px;
+      color: var(--accent);
+      background: var(--bg);
+      font-family: var(--font-mono);
+      font-weight: 900;
+      text-align: center;
+      transform: translateY(-50%);
+    }
+
+    .flow-step strong {
+      display: block;
+      margin-bottom: 12px;
+      line-height: 1.35;
+    }
+
+    .bits {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .state-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .state {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      background: var(--surface);
+    }
+
+    .state h3 { margin: 0 0 8px; }
+
+    .state .state-bits {
+      margin: 12px 0;
+      border-radius: 9px;
+      padding: 10px 12px;
+      text-align: center;
+      color: var(--code-text);
+      background: var(--code-bg);
+      font-family: var(--font-mono);
+      font-weight: 800;
+    }
+
+    .sequence {
+      display: grid;
+      gap: 0;
+      max-width: 900px;
+      margin: 24px auto 0;
+    }
+
+    .sequence-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: 32px 220px 1fr;
+      gap: 16px;
+      padding: 0 0 22px;
+    }
+
+    .sequence-row:not(:last-child)::before {
+      content: "";
+      position: absolute;
+      top: 24px;
+      bottom: 0;
+      left: 15px;
+      width: 2px;
+      background: var(--line);
+    }
+
+    .sequence-index {
+      position: relative;
+      z-index: 1;
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      color: var(--accent-strong);
+      background: var(--surface);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .sequence-title {
+      padding-top: 3px;
+      font-weight: 850;
+      line-height: 1.45;
+    }
+
+    .sequence-copy {
+      padding-top: 3px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: var(--surface);
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--accent-strong);
+      font-family: var(--font-mono);
+      font-size: 26px;
+      letter-spacing: -0.03em;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .check-block {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      background: var(--surface);
+    }
+
+    .check-block h3 { margin: 0 0 12px; }
+
+    .check-list {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    .check-list li + li { margin-top: 8px; }
+
+    .source-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .source-row {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr);
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 0 12px;
+    }
+
+    .source-row:last-child { border-bottom: 0; }
+    .source-row strong { line-height: 1.45; }
+    .source-row code { overflow-wrap: anywhere; }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    summary {
+      padding: 16px 18px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    details[open] summary { border-bottom: 1px solid var(--line); }
+    details .details-body { padding: 18px; }
+
+    .document-footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .toc { display: none; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-meta { max-width: 720px; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner, .layout { width: min(100% - 24px, 1480px); }
+      .brand span { display: none; }
+      .top-actions button:first-child { display: none; }
+      main { padding-top: 24px; }
+      .hero { gap: 24px; padding: 18px 0 42px; }
+      .hero h1 { font-size: clamp(34px, 11vw, 48px); }
+      .hero p { font-size: 16px; }
+      section { margin-bottom: 54px; }
+      .summary-grid, .state-grid, .check-grid, .metrics { grid-template-columns: 1fr; }
+      .panel, .state, .check-block { padding: 18px; }
+      .sequence-row { grid-template-columns: 32px 1fr; gap: 12px; }
+      .sequence-copy { grid-column: 2; padding-top: 0; }
+      .source-row { grid-template-columns: 1fr; gap: 4px; }
+      th, td { padding: 11px 10px; }
+    }
+
+    @media print {
+      :root {
+        --bg: #f7f9f9;
+        --surface: #ffffff;
+        --surface-2: #eef4f3;
+        --text: #172221;
+        --muted: #53625f;
+        --line: #cbd8d5;
+        --accent: #087f73;
+        --accent-strong: #05655c;
+        --accent-soft: #e3f2ef;
+        --code-bg: #172321;
+        --code-text: #ffffff;
+        --shadow: none;
+      }
+      body { background: #ffffff; font-size: 11pt; }
+      .topbar, .toc, .copy-btn { display: none !important; }
+      .layout { width: 100%; display: block; }
+      main { padding: 0; }
+      .hero { min-height: 0; grid-template-columns: 1.4fr 0.6fr; padding: 0 0 24px; }
+      .hero h1 { font-size: 30pt; }
+      section { break-inside: avoid; margin-bottom: 34px; }
+      .table-wrap, .panel, .state, .check-block, .metric { box-shadow: none; }
+      a { color: inherit; text-decoration: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <strong>CSM SC#1</strong>
+        <span>Robot3 HMI Enable=1 Phase 1 Test</span>
+      </div>
+      <div class="top-actions">
+        <a href="/notes/">노트</a>
+        <button type="button" onclick="window.print()">인쇄</button>
+        <button type="button" id="themeButton" aria-label="화면 테마 전환">테마 전환</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="toc" aria-label="문서 목차">
+      <h2>문서 목차</h2>
+      <nav>
+        <a href="#summary">시험안 결론</a>
+        <a href="#logic">최종 Neutral Text</a>
+        <a href="#signals">pending과 active</a>
+        <a href="#lifecycle">SC1 동작 순서</a>
+        <a href="#or-gate">XIO 병렬 OR</a>
+        <a href="#truth-table">전체 진리표</a>
+        <a href="#auto-resume">자동 재전진 원리</a>
+        <a href="#comparison">원본과 수정본</a>
+        <a href="#evidence">CSV 근거</a>
+        <a href="#robot">Robot3 프로그램</a>
+        <a href="#parameters">파라미터</a>
+        <a href="#trends">Trend 구성</a>
+        <a href="#tests">시험 절차</a>
+        <a href="#criteria">합격과 원복</a>
+        <a href="#sources">검토 자료</a>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="hero">
+        <div>
+          <h1>Robot3 조기 진입에 의한 SC1 체인 깔딱 현상 시험안</h1>
+          <p>HMI Enable=1에서만 신규 Robot 진입 Gate를 시험하고, Enable=0에서는 기존 Rung 6을 그대로 유지한다.</p>
+        </div>
+        <div class="hero-meta" aria-label="문서 상태">
+          <dl>
+            <div><dt>검토일</dt><dd>2026-08-22</dd></div>
+            <div><dt>적용 위치</dt><dd>Sheet_Conveyor_1<br>Permits Rung 6</dd></div>
+            <div><dt>시험 범위</dt><dd>HMI Enable=1</dd></div>
+            <div><dt>상태</dt><dd class="status">현장 검증 필요</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <section id="summary">
+        <h2>시험안 결론</h2>
+        <p class="lead">Robot3와 SC1 파라미터는 건드리지 않고, SC1 이동이 시작된 뒤 완료되기 전까지 신규 Robot Unload 허가만 제한한다.</p>
+        <div class="summary-grid">
+          <div class="panel panel-accent">
+            <h3>1차 시험에서 변경하는 것</h3>
+            <ul class="compact-list">
+              <li>Sheet_Conveyor_1 / Permits / Rung 6 한 곳</li>
+              <li>HMI Enable=1, AUTO, active=1일 때만 신규 Robot 진입 차단</li>
+              <li>active=0이면 추가 Gate 해제</li>
+              <li>Manual과 Off에서는 기존 조건 유지</li>
+            </ul>
+          </div>
+          <div class="panel panel-warning">
+            <h3>1차 시험에서 변경하지 않는 것</h3>
+            <ul class="compact-list">
+              <li>HMI Enable=0의 기존 운전</li>
+              <li>Robot3 LS 프로그램과 티칭 좌표</li>
+              <li>SC1 속도와 거리 파라미터</li>
+              <li>Tracking, MES, Reject 구조</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout warning">
+          <strong>적용 상태</strong>
+          이 문서는 소스 교차검토가 끝난 1차 시험안이다. Studio 5000 Verify, Online Trend, 저속 현장시험 전에는 생산 확정본으로 취급하지 않는다.
+        </div>
+      </section>
+
+      <section id="logic">
+        <h2>최종 시험용 Neutral Text</h2>
+        <p class="lead">기존 허가 조건 뒤에 HMI, 운전 모드, SC1 active 상태를 이용한 병렬 XIO Gate를 추가한다.</p>
+        <div class="logic-box">
+          <div class="logic-head">
+            <strong>HMI Enable=1 Phase 1 Test</strong>
+            <button class="copy-btn" type="button" data-copy="testLogic">복사</button>
+          </div>
+          <pre id="testLogic"><code>[XIC(interlock_stopped),XIC(z_System_Running.X)XIC(permit_sc1_r3_slowdown)]XIO(i_sheet_not_at_transfer)[XIO(sc1_hmi_enable),XIO(z_mode_automatic),XIO(sc1_start_req_active)]OTE(z_permit_sc1_r3_unload);</code></pre>
+        </div>
+        <div class="formula">
+          기존 Rung 6 허가<br>
+          AND<br>
+          NOT(sc1_hmi_enable AND z_mode_automatic AND sc1_start_req_active)
+        </div>
+        <div class="callout">
+          <strong>정확한 표현</strong>
+          Enable, AUTO, active가 모두 1일 때만 Robot3 신규 진입을 차단한다. 세 Tag 중 하나라도 0이면 추가 Gate는 통과한다.
+        </div>
+      </section>
+
+      <section id="signals">
+        <h2>pending, active, permit_run_forward</h2>
+        <p class="lead">세 신호는 서로 다른 일을 한다. active는 모터 출력이 아니라 미완료 SC1 전진 사이클의 상태 표시이다.</p>
+        <div class="state-grid">
+          <article class="state">
+            <h3>sc1_start_req_pending</h3>
+            <div class="state-bits">요청 기억</div>
+            <p>SM1 또는 SM2에서 전진 요청이 들어왔다는 사실을 래치한다. 아직 SC1이 출발하지 못한 대기 상태에서도 1일 수 있다.</p>
+          </article>
+          <article class="state">
+            <h3>sc1_start_req_active</h3>
+            <div class="state-bits">출발 완료 전</div>
+            <p>SC1이 Forward Step에 들어간 뒤 1이 되고, 목표 Count와 State_Stop 완료가 확인될 때까지 유지된다.</p>
+          </article>
+          <article class="state">
+            <h3>permit_run_forward</h3>
+            <div class="state-bits">실시간 모터 허가</div>
+            <p>Robot3 Clear 상태에 따라 SC1 전진 전압을 허가한다. 이 신호가 끊기면 일부 전진 속도 모드에서 전압이 0이 될 수 있다.</p>
+          </article>
+          <article class="state">
+            <h3>쉽게 구분하기</h3>
+            <div class="state-bits">pending / active / permit</div>
+            <p>pending은 주문 기억, active는 출발 후 도착 전, permit_run_forward는 지금 실제로 움직여도 되는지에 해당한다.</p>
+          </article>
+        </div>
+
+        <h3>active=0인 주요 경우</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>상태</th><th>pending</th><th>active</th><th>SC1와 Robot 의미</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>정상 Idle</td><td>0</td><td>0</td><td>이동 요청 없음. 기존 조건이 맞으면 Robot 진입 가능</td></tr>
+              <tr><td>요청 대기</td><td>1</td><td>0</td><td>요청은 기억했지만 아직 출발 전. 기존 Sheet Pick이 필요할 수 있음</td></tr>
+              <tr><td>정상 완료</td><td>0</td><td>0</td><td>State_Stop과 목표 Count 도달 확인 후 추가 Gate 해제</td></tr>
+              <tr><td>Manual, Off, Reset</td><td>해제 경로</td><td>해제 경로</td><td>추가 Gate를 우회하고 기존 복구 조건 사용</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>active 생성과 해제 조건</h3>
+        <div class="summary-grid">
+          <div class="logic-box">
+            <div class="logic-head"><strong>active SET / Permits Rung 14</strong></div>
+            <pre><code>XIC(sc1_start_req_pending)
+XIC(State_Forward_Fast_To_Flag.X)
+OTL(sc1_start_req_active);</code></pre>
+          </div>
+          <div class="logic-box">
+            <div class="logic-head"><strong>active CLEAR / Permits Rung 15</strong></div>
+            <pre><code>XIC(sc1_start_req_active)
+XIC(State_Stop.X)
+GRT(var_counts_target,0)
+GEQ(var_counts_accum_32,var_counts_target)
+[OTU(sc1_start_req_pending),
+ OTU(sc1_start_req_active)];</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="lifecycle">
+        <h2>SC1 한 사이클의 시간 순서</h2>
+        <p class="lead">active는 출발 직후 1이 되고 목표 도달과 정지 완료 후 0으로 돌아간다.</p>
+        <div class="flow" aria-label="SC1 동작 순서">
+          <div class="flow-step"><strong>Idle 대기</strong><div class="bits"><span>pending=0</span><span>active=0</span><span>Robot: 기존 조건</span></div></div>
+          <div class="flow-step"><strong>SM Drop 요청</strong><div class="bits"><span>pending=1</span><span>active=0</span><span>요청 기억</span></div></div>
+          <div class="flow-step"><strong>시작 조건 대기</strong><div class="bits"><span>pending=1</span><span>active=0</span><span>기존 Sheet Pick 가능</span></div></div>
+          <div class="flow-step"><strong>Forward Step 진입</strong><div class="bits"><span>pending=1</span><span>active=1</span><span>신규 Robot 차단</span></div></div>
+          <div class="flow-step"><strong>한 Pitch 전진</strong><div class="bits"><span>pending=1</span><span>active=1</span><span>Gate 유지</span></div></div>
+          <div class="flow-step"><strong>목표와 Stop 확인</strong><div class="bits"><span>pending: 1→0</span><span>active: 1→0</span><span>추가 Gate 해제</span></div></div>
+          <div class="flow-step"><strong>Robot Pick</strong><div class="bits"><span>pending=0</span><span>active=0</span><span>기존 조건 적용</span></div></div>
+        </div>
+        <div class="callout">
+          <strong>active=0에서 Robot 진입 복원의 의미</strong>
+          Robot을 강제로 작동시키는 것이 아니다. active로 추가한 차단만 해제되고, 기존 interlock, System Running, slowdown, Sheet 존재, Robot Clear와 Gripper 조건은 그대로 남는다.
+        </div>
+      </section>
+
+      <section id="or-gate">
+        <h2>XIO 병렬 OR Gate 읽는 방법</h2>
+        <p class="lead">병렬이므로 OR 조건이 맞지만, XIO는 Tag가 0일 때 참이다. Tag 값과 접점 통과 상태를 반대로 읽지 않아야 한다.</p>
+        <div class="summary-grid">
+          <div class="panel panel-accent">
+            <h3>XIO 기본 동작</h3>
+            <div class="table-wrap">
+              <table class="truth-table">
+                <thead><tr><th>Tag 값</th><th>XIO 접점</th><th>결과</th></tr></thead>
+                <tbody>
+                  <tr><td>0</td><td>TRUE / 닫힘</td><td class="pass">통과</td></tr>
+                  <tr><td>1</td><td>FALSE / 열림</td><td class="block">차단</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>병렬 Gate 논리</h3>
+            <div class="formula">
+              NOT HMI<br>OR NOT AUTO<br>OR NOT active
+            </div>
+            <p>드모르간 법칙으로 정리하면 <code>NOT(HMI AND AUTO AND active)</code>이다.</p>
+          </div>
+        </div>
+
+        <h3 id="truth-table">전체 진리표</h3>
+        <div class="table-wrap">
+          <table class="truth-table">
+            <caption>Rung 앞부분의 기존 조건이 이미 모두 참이라고 가정한 추가 Gate 결과</caption>
+            <thead>
+              <tr>
+                <th>HMI</th><th>AUTO</th><th>active</th>
+                <th>XIO HMI</th><th>XIO AUTO</th><th>XIO active</th>
+                <th>추가 Gate</th><th>Robot 결과</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td class="pass">통과</td><td>기존 조건 적용</td></tr>
+              <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td class="pass">통과</td><td>기존 조건 적용</td></tr>
+              <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td class="pass">통과</td><td>기존 조건 적용</td></tr>
+              <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td class="pass">통과</td><td>기존 조건 적용</td></tr>
+              <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td class="pass">통과</td><td>기존 조건 적용</td></tr>
+              <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td class="pass">통과</td><td>기존 조건 적용</td></tr>
+              <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td class="pass">통과</td><td>기존 조건 적용</td></tr>
+              <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td class="block">차단</td><td class="block">신규 진입 차단</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout danger">
+          <strong>혼동 금지</strong>
+          “세 조건이 모두 성립해야 Robot이 진입한다”가 아니다. “세 조건이 모두 1일 때만 Robot 신규 진입을 차단한다”가 정확하다.
+        </div>
+      </section>
+
+      <section id="auto-resume">
+        <h2>깔딱 후 자동 재전진 원리</h2>
+        <p class="lead">active가 모터를 직접 돌리지는 않는다. SFC와 요청 상태가 미완료 사이클을 기억하고, Robot Clear 복구 후 permit_run_forward가 다시 전압을 허가한다.</p>
+        <div class="sequence">
+          <div class="sequence-row"><div class="sequence-index">1</div><div class="sequence-title">SC1 전진 중</div><div class="sequence-copy">SFC Step, var_cmd_speed, pending, active가 미완료 사이클을 유지한다.</div></div>
+          <div class="sequence-row"><div class="sequence-index">2</div><div class="sequence-title">Robot3 조기 진입</div><div class="sequence-copy">Robot3가 Infeed 영역으로 들어가면 i_clear_of_infeed가 0이 될 수 있다.</div></div>
+          <div class="sequence-row"><div class="sequence-index">3</div><div class="sequence-title">전진 허가 상실</div><div class="sequence-copy">z_permit_r3_sc1_start와 permit_run_forward가 0으로 바뀔 수 있다.</div></div>
+          <div class="sequence-row"><div class="sequence-index">4</div><div class="sequence-title">모터 전압 0</div><div class="sequence-copy">var_cmd_speed 2, 1, 3 조건에서 permit_run_forward가 없으면 BasicControl은 0 V 경로로 갈 수 있다.</div></div>
+          <div class="sequence-row"><div class="sequence-index">5</div><div class="sequence-title">Robot Clear 복구</div><div class="sequence-copy">Robot이 빠져나가 Clear가 1이 되면 permit_run_forward가 다시 1이 된다.</div></div>
+          <div class="sequence-row"><div class="sequence-index">6</div><div class="sequence-title">자동 재전진</div><div class="sequence-copy">유지된 SFC와 var_cmd_speed에 따라 전압이 다시 출력되고 SC1이 계속 전진할 수 있다.</div></div>
+        </div>
+        <div class="callout warning">
+          <strong>근거 상태</strong>
+          위 피드백 경로는 L5X에서 확인된다. 실제 깔딱 순간마다 같은 순서가 발생했는지는 i_clear_of_infeed, permit_run_forward, var_cmd_speed, var_volts_velocity와 SFC State를 같은 10 ms Trend로 기록해야 최종 확정할 수 있다.
+        </div>
+      </section>
+
+      <section id="comparison">
+        <h2>원본, 사진 로직, 시험안</h2>
+        <p class="lead">가장 신뢰할 수 있는 원복 기준은 Cathode1(260714).L5X의 원본 Rung 6이다.</p>
+        <h3>원본 Rung 6</h3>
+        <div class="logic-box">
+          <div class="logic-head"><strong>Cathode1(260714).L5X</strong><button class="copy-btn" type="button" data-copy="baseLogic">복사</button></div>
+          <pre id="baseLogic"><code>[XIC(interlock_stopped),XIC(z_System_Running.X)XIC(permit_sc1_r3_slowdown)]XIO(i_sheet_not_at_transfer)OTE(z_permit_sc1_r3_unload);</code></pre>
+        </div>
+
+        <h3>2026-08-22 사진 전사본</h3>
+        <div class="logic-box">
+          <div class="logic-head"><strong>사진 기반 전사, Online 대조 필요</strong><button class="copy-btn" type="button" data-copy="photoLogic">복사</button></div>
+          <pre id="photoLogic"><code>[XIC(interlock_stopped),XIC(z_System_Running.X)XIC(permit_sc1_r3_slowdown)[XIO(sc1_hmi_enable),XIC(sc1_hmi_enable)XIC(State_Stop.X)]]XIO(i_sheet_not_at_transfer)OTE(z_permit_sc1_r3_unload);</code></pre>
+        </div>
+
+        <h3>최종 1차 시험본</h3>
+        <div class="logic-box">
+          <div class="logic-head"><strong>HMI Enable=1 전용</strong><button class="copy-btn" type="button" data-copy="testLogic2">복사</button></div>
+          <pre id="testLogic2"><code>[XIC(interlock_stopped),XIC(z_System_Running.X)XIC(permit_sc1_r3_slowdown)]XIO(i_sheet_not_at_transfer)[XIO(sc1_hmi_enable),XIO(z_mode_automatic),XIO(sc1_start_req_active)]OTE(z_permit_sc1_r3_unload);</code></pre>
+        </div>
+      </section>
+
+      <section id="evidence">
+        <h2>CSV Trend 근거</h2>
+        <p class="lead">2026-07-29의 10 ms Trend 세 개를 시간 정렬하여 Robot Unload 허가와 SC1 active의 겹침을 확인했다.</p>
+        <div class="metrics">
+          <div class="metric"><strong>360,000</strong><span>각 Trend의 Sample 수</span></div>
+          <div class="metric"><strong>356 / 366</strong><span>Unload 허가 상승 중 active=1인 횟수</span></div>
+          <div class="metric"><strong>30 ms</strong><span>permit_start에서 active 상승까지</span></div>
+          <div class="metric"><strong>672 ms</strong><span>Unload 허가 상승에서 active 해제까지 중앙값</span></div>
+        </div>
+        <div class="table-wrap" style="margin-top:18px">
+          <table class="truth-table">
+            <caption>대표 사이클</caption>
+            <thead><tr><th>시간</th><th>신호</th><th>값</th><th>의미</th></tr></thead>
+            <tbody>
+              <tr><td>03:38:46.260</td><td>sc1_start_req_active</td><td>1</td><td>SC1 실제 전진 시작</td></tr>
+              <tr><td>03:38:48.458</td><td>z_permit_sc1_r3_unload</td><td>1</td><td>Robot Unload 허가</td></tr>
+              <tr><td>03:38:48.598</td><td>i_clear_of_infeed</td><td>0</td><td>Robot Infeed 진입</td></tr>
+              <tr><td>03:38:49.170</td><td>sc1_start_req_active</td><td>0</td><td>SC1 완료 확인</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warning">
+          <strong>제한 사항</strong>
+          제공 CSV의 HMI Enable은 전체 구간에서 1이며 z_mode_automatic과 var_volts_velocity는 포함되지 않았다. 따라서 물리적 깔딱의 최종 원인은 수정 후 동일 Tag 구성의 Online Trend로 확인한다.
+        </div>
+      </section>
+
+      <section id="robot">
+        <h2>Robot3 프로그램 확인</h2>
+        <p class="lead">PLC Gate의 목적은 이미 진입한 Robot을 중간 정지시키는 것이 아니라, SC1 완료 전 신규 Unload 호출을 시작하지 않게 하는 것이다.</p>
+        <div class="summary-grid">
+          <div class="panel">
+            <h3>CSM1 호출 흐름</h3>
+            <pre style="padding:0; white-space:pre-wrap"><code>RSR0001 /MN 24
+IF DI[1:Unload Infeed]=ON,CALL ULOD_INF;
+
+ULOD_INF /MN 14
+DO[1:Clear of Infeed]=OFF;
+
+ULOD_INF /MN 16
+J PR[2:Infeed Perch] 100% CNT100 ACC150;</code></pre>
+          </div>
+          <div class="panel">
+            <h3>판단</h3>
+            <ul class="compact-list">
+              <li>DI[1]이 ON이면 Robot 메인에서 Unload 서브프로그램을 호출한다.</li>
+              <li>호출 후 서브프로그램은 DI[1]을 매 Step 다시 확인하지 않는다.</li>
+              <li>PLC 출력이 뒤늦게 OFF되어도 이미 들어간 Robot을 취소하지 않는다.</li>
+              <li>따라서 신규 호출 이전에 Gate해야 한다.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="parameters">
+        <h2>SC1 파라미터</h2>
+        <p class="lead">1차 시험에서는 Logic과 Parameter를 동시에 바꾸지 않는다. 아래 L5X 저장값을 유지한다.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tag</th><th style="text-align:center">현재 값</th><th>처리</th></tr></thead>
+            <tbody>
+              <tr><td><code>param_offset</code></td><td style="text-align:center">9450</td><td>유지</td></tr>
+              <tr><td><code>param_offset_creep</code></td><td style="text-align:center">8200</td><td>유지</td></tr>
+              <tr><td><code>param_offset_highspd</code></td><td style="text-align:center">6700</td><td>유지</td></tr>
+              <tr><td><code>param_volts_fwd_highspd</code></td><td style="text-align:center">5.6</td><td>유지</td></tr>
+              <tr><td><code>param_volts_fwd_lowspd</code></td><td style="text-align:center">2.87</td><td>유지</td></tr>
+              <tr><td><code>param_volts_fwd_creep</code></td><td style="text-align:center">3.2</td><td>유지</td></tr>
+              <tr><td><code>param_volts_forward_homing</code></td><td style="text-align:center">3.0</td><td>유지</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="trends">
+        <h2>Trend 구성</h2>
+        <p class="lead">Trend 창당 8개 제한을 기준으로 두 창을 동시에 사용한다. 권장 Sample Period는 10 ms이다.</p>
+        <div class="check-grid">
+          <div class="check-block">
+            <h3>핵심 원인 검증</h3>
+            <ol class="check-list">
+              <li>sc1_hmi_enable</li>
+              <li>z_mode_automatic</li>
+              <li>sc1_start_req_active</li>
+              <li>z_permit_sc1_r3_unload</li>
+              <li>i_clear_of_infeed</li>
+              <li>permit_run_forward</li>
+              <li>var_cmd_speed</li>
+              <li>var_volts_velocity</li>
+            </ol>
+          </div>
+          <div class="check-block">
+            <h3>시작과 완료 검증</h3>
+            <ol class="check-list">
+              <li>z_signal_sm1_sc1_start</li>
+              <li>z_signal_sm2_sc1_start</li>
+              <li>sc1_start_req_pending</li>
+              <li>permit_start</li>
+              <li>State_Forward_Fast_To_Flag.X</li>
+              <li>State_Forward_Slow_To_Stop.X</li>
+              <li>var_counts_accum_32</li>
+              <li>var_counts_target</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="tests">
+        <h2>필수 시험 절차</h2>
+        <p class="lead">Enable=0은 원본 등가성만 확인하고, 개선 효과는 Enable=1에서 SM1과 SM2를 각각 시험한다.</p>
+        <div class="check-grid">
+          <div class="check-block">
+            <h3>원본 회귀</h3>
+            <ul class="check-list">
+              <li>HMI Enable=0에서 AUTO, MANUAL, OFF 동작이 원본과 동일한지 확인</li>
+              <li>active=1이어도 추가 Gate 때문에 Robot 허가가 차단되지 않는지 확인</li>
+              <li>Enable=0에서는 깔딱 제거 효과를 판정하지 않음</li>
+            </ul>
+          </div>
+          <div class="check-block">
+            <h3>Enable=1 AUTO</h3>
+            <ul class="check-list">
+              <li>SM1 Drop 최소 10 Cycle</li>
+              <li>SM2 Drop 최소 10 Cycle</li>
+              <li>active=1 동안 z_permit_sc1_r3_unload=0 확인</li>
+              <li>active=0 이후 기존 Robot 허가 복원 확인</li>
+            </ul>
+          </div>
+          <div class="check-block">
+            <h3>기존 Sheet 대기</h3>
+            <ul class="check-list">
+              <li>pending=1, active=0에서 기존 Sheet를 Robot이 먼저 Pick하는지 확인</li>
+              <li>전송 위치가 비워진 후 SC1이 정상 시작하는지 확인</li>
+              <li>Robot과 SC1의 상호 대기가 없는지 확인</li>
+            </ul>
+          </div>
+          <div class="check-block">
+            <h3>복구와 모드 전환</h3>
+            <ul class="check-list">
+              <li>Enable=1 MANUAL과 OFF 기존 동작</li>
+              <li>AUTO 이동 중 MANUAL 또는 OFF 전환</li>
+              <li>Single Cycle, Reset, Home Recovery</li>
+              <li>Sheet, Grade, Tracking Data 정합성</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="criteria">
+        <h2>합격 및 즉시 원복 기준</h2>
+        <div class="summary-grid">
+          <div class="panel panel-accent">
+            <h3>필수 합격</h3>
+            <ol class="compact-list">
+              <li>Enable=0에서 원본과 동일</li>
+              <li>Enable=1 AUTO active=1 동안 Robot Unload 허가 0</li>
+              <li>active=0 이후 기존 Robot 진입 정상 복원</li>
+              <li>SM1과 SM2 각각 10 Cycle 이상 깔딱 없음</li>
+              <li>Sheet, Grade, Tracking Data 일치</li>
+              <li>새 Fault, Alarm, 물리 간섭 없음</li>
+            </ol>
+          </div>
+          <div class="panel panel-danger">
+            <h3>즉시 중단 및 원복</h3>
+            <ol class="compact-list">
+              <li>Enable=0 동작이 원본과 다름</li>
+              <li>Enable=1 active=1인데 Robot 허가가 1</li>
+              <li>active=0 이후 Robot 허가가 복원되지 않음</li>
+              <li>전송 위치 기존 Sheet에서 상호 대기 발생</li>
+              <li>Manual, Off, Reset, Home Recovery 이상</li>
+              <li>Sheet와 Data가 한 칸이라도 어긋남</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="sources">
+        <h2>검토 자료</h2>
+        <p class="lead">PLC, Robot, Trend 원본은 읽기만 했으며 직접 수정하지 않았다.</p>
+        <div class="panel source-list">
+          <div class="source-row"><strong>PLC 기본 베이스</strong><code>reference/Cathode1(260714).L5X<br>SHA-256 c98ac2a646e9ba7fdc6f6563e61f7e21ef61532db136cb50c4ca587015e624bb</code></div>
+          <div class="source-row"><strong>CSM1 Robot3</strong><code>/Volumes/ZEMOS_ADMIN/ROBOT_3/CSM1/rsr0001.ls<br>/Volumes/ZEMOS_ADMIN/ROBOT_3/CSM1/ulod_inf.ls</code></div>
+          <div class="source-row"><strong>CSV Trend A</strong><code>/Volumes/ZEMOS_ADMIN/trend_log/SC1_trend_A_pending.CSV</code></div>
+          <div class="source-row"><strong>CSV Trend B</strong><code>/Volumes/ZEMOS_ADMIN/trend_log/SC1_trend_B_RGrade_600ms.CSV</code></div>
+          <div class="source-row"><strong>CSV Trend C</strong><code>/Volumes/ZEMOS_ADMIN/trend_log/SC1_Trend_C_Robot3.CSV</code></div>
+          <div class="source-row"><strong>상세 TXT</strong><a href="./SC1_Robot3_Jerk_HMI_ENABLE1_PHASE1_TEST_20260822.txt">SC1_Robot3_Jerk_HMI_ENABLE1_PHASE1_TEST_20260822.txt</a></div>
+        </div>
+        <details style="margin-top:18px">
+          <summary>생산 적용 전 필수 절차</summary>
+          <div class="details-body">
+            <ol class="compact-list">
+              <li>현재 Online Rung 6과 Controller Project 전체 백업</li>
+              <li>사진 전사본과 실제 Online Neutral Text 문자 단위 대조</li>
+              <li>Rung 6 한 곳만 반영</li>
+              <li>Verify Routine과 Verify Program</li>
+              <li>Cross Reference와 Force 상태 확인</li>
+              <li>안전구역 확보 후 승인된 저속 시험</li>
+              <li>Trend 저장과 OFF 회귀시험</li>
+            </ol>
+          </div>
+        </details>
+      </section>
+
+      <footer class="document-footer">
+        <p>문서 상태: HMI Enable=1 Phase 1 Test. 현장 검증 전 생산 적용 금지.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.documentElement;
+      const button = document.getElementById('themeButton');
+      const stored = localStorage.getItem('sc1-theme');
+      if (stored === 'light' || stored === 'dark') root.dataset.theme = stored;
+
+      button.addEventListener('click', function () {
+        const current = root.dataset.theme;
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const next = current ? (current === 'dark' ? 'light' : 'dark') : (systemDark ? 'light' : 'dark');
+        root.dataset.theme = next;
+        localStorage.setItem('sc1-theme', next);
+      });
+
+      document.querySelectorAll('[data-copy]').forEach(function (copyButton) {
+        copyButton.addEventListener('click', async function () {
+          const target = document.getElementById(copyButton.dataset.copy);
+          if (!target) return;
+          const value = target.innerText.trim();
+          const original = copyButton.textContent;
+          try {
+            await navigator.clipboard.writeText(value);
+            copyButton.textContent = '복사됨';
+          } catch (error) {
+            const area = document.createElement('textarea');
+            area.value = value;
+            area.style.position = 'fixed';
+            area.style.opacity = '0';
+            document.body.appendChild(area);
+            area.select();
+            document.execCommand('copy');
+            area.remove();
+            copyButton.textContent = '복사됨';
+          }
+          window.setTimeout(function () { copyButton.textContent = original; }, 1200);
+        });
+      });
+    }());
+  </script>
+</body>
+</html>
