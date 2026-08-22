@@ -18,6 +18,14 @@ const extra: NoteItem[] = [
     kicker: "일정",
     tags: ["일정", "지도"],
   },
+  {
+    href: "/plc/",
+    title: "SC1 Robot3 깔딱 HMI Enable=1 1차 시험안",
+    date: "2026-08-22",
+    excerpt: "Sheet_Conveyor_1 Permits Rung 6만 고치는 PHASE-1 현장 시험안.",
+    kicker: "PLC",
+    tags: ["PLC", "SC1"],
+  },
 ];
 
 export async function listNotes(): Promise<NoteItem[]> {
