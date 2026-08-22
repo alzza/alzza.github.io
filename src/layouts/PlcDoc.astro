@@ -1,0 +1,28 @@
+---
+import Base from "./Base.astro";
+import Header from "../components/Header.astro";
+
+const { frontmatter } = Astro.props;
+const title = frontmatter.title ?? "PLC";
+const description = frontmatter.description ?? "";
+const revision = frontmatter.revision ?? "";
+const status = frontmatter.status ?? "";
+---
+
+<Base title={`${title} · alzza`} description={description} noindex>
+  <Header links={[{ href: "/", label: "목록" }]} />
+  <div class="wrap prose prose-plc">
+    <section class="hero">
+      <span class="badge">PLC</span>
+      <h1>{title}</h1>
+      {(revision || status) && (
+        <p class="note-meta">
+          {revision}
+          {revision && status ? " · " : ""}
+          {status}
+        </p>
+      )}
+    </section>
+    <slot />
+  </div>
+</Base>
