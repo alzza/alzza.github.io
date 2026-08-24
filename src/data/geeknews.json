@@ -1,166 +1,166 @@
 {
-  "fetchedAt": "2026-08-20T14:42:09.771Z",
+  "fetchedAt": "2026-08-24T13:01:12.455Z",
   "source": "https://news.hada.io/rss/news",
   "items": [
     {
       "rank": 1,
-      "title": "실제 FlyWire 커넥톰으로 구동되는 macOS 데스크톱의 3D 초파리",
-      "href": "https://news.hada.io/topic?id=32705",
-      "published": "2026-08-20T23:31:48+09:00",
+      "title": "Andreessen Horowitz가 수십억 달러를 투자하는 암울한 미래",
+      "href": "https://news.hada.io/topic?id=32844",
+      "published": "2026-08-24T21:35:04+09:00",
       "author": "neo",
-      "excerpt": "DesktopFly는 macOS 데스크톱 위를 걷고 날고 손질하며 잠드는 3D 초파리로, FlyWire v783 커넥톰 의 실제 뉴런 연결망을 실시간 스파이킹 시뮬레이션에 사용함 668개 뉴런과 약 19,000개 실"
+      "excerpt": "Andreessen Horowitz( a16z )의 논란 많은 투자사 18곳을 조사한 결과, 가짜 계정·AI 부정행위·유해한 AI 동반자·규제 우회 도박·소비자 금융 및 법률 위반이 반복됐으며 조사 대상 투자만 수억"
     },
     {
       "rank": 2,
-      "title": "터미널을 되찾는 법",
-      "href": "https://news.hada.io/topic?id=32704",
-      "published": "2026-08-20T23:07:18+09:00",
+      "title": "17만 곳 넘는 비영리단체가 데이터를 잃었다… Microsoft 책임인가?",
+      "href": "https://news.hada.io/topic?id=32843",
+      "published": "2026-08-24T20:32:22+09:00",
       "author": "neo",
-      "excerpt": "less 와 fzf 는 파일이나 후보 목록을 stdin 파이프 로 받으면서, 제어 터미널인 /dev/tty 를 별도 파일 디스크립터로 열어 키보드 입력을 읽음 각 프로세스는 fd 0과 fd 1이 터미널인지 검사해 첫"
+      "excerpt": "Microsoft가 무료 Microsoft 365 비영리 라이선스 를 단계적으로 종료하면서 일부 소규모 단체의 OneDrive 데이터가 대비할 틈 없이 삭제됐고, 한 Microsoft 담당자는 약 17만1,000개 "
     },
     {
       "rank": 3,
-      "title": "모든 것을 위한 SQLite",
-      "href": "https://news.hada.io/topic?id=32703",
-      "published": "2026-08-20T23:04:18+09:00",
-      "author": "neo",
-      "excerpt": "SQLite는 내장형 데이터베이스를 넘어 관계형 DB와 전문 검색 , 문서 저장소·캐시·벡터 인덱스·파일 형식까지 하나의 라이브러리와 파일로 통합할 수 있음 2000년 처음 출시된 뒤 MC/DC 100% 분기 커버리"
+      "title": "AI 코드 리뷰는 몇 번 돌려야 할까.. 약 400번 돌려보고 알게 된 것",
+      "href": "https://news.hada.io/topic?id=32842",
+      "published": "2026-08-24T20:01:28+09:00",
+      "author": "0xecro1",
+      "excerpt": "AI 코드 리뷰는 몇 번 돌려야 할까? 약 400번의 LLM 호출로 직접 측정해봤습니다 AI로 코드를 작성하고 리뷰까지 맡기다 보면 생각보다 자주 이런 상황을 만납니다. 코드 작성 → 리뷰 → 수정 → 다시 리뷰 →"
     },
     {
       "rank": 4,
-      "title": "모든 것을 위한 PostgreSQL",
-      "href": "https://news.hada.io/topic?id=32702",
-      "published": "2026-08-20T22:32:58+09:00",
-      "author": "neo",
-      "excerpt": "관계형 데이터베이스를 넘어 전문 검색·문서 저장·큐·시계열·벡터 검색·캐시 까지 처리해 별도 시스템 도입과 데이터 동기화, 운영 부담을 줄일 수 있음 1996년 첫 출시 이후 오랜 기간 버그를 다듬었으며, 기존 기능"
+      "title": "Show GN: Apolu - 175개 국가의 App Store 순위 변화 추적 및 알림 앱",
+      "href": "https://news.hada.io/topic?id=32841",
+      "published": "2026-08-24T19:33:29+09:00",
+      "author": "chen2he",
+      "excerpt": "App Store는 개발자에게 자기 나라 스토어 하나만 보여줍니다. 그런데 스토어는 175개가 있습니다. 제 앱이 한 번도 마케팅한 적 없는 나라의 카테고리 차트에 올라 있었다는 걸 한참 뒤에 알았습니다. 작은 스토"
     },
     {
       "rank": 5,
-      "title": "Casio F-B100W-1A 모델",
-      "href": "https://news.hada.io/topic?id=32700",
-      "published": "2026-08-20T20:36:05+09:00",
-      "author": "neo",
-      "excerpt": "Casio F-B100W-1A 모델"
+      "title": "Show GN: Preflight - 바이브코딩 앱을 위한 배포 전 보안 점검 도구",
+      "href": "https://news.hada.io/topic?id=32840",
+      "published": "2026-08-24T17:21:24+09:00",
+      "author": "andtomorrow",
+      "excerpt": "AI 교육과정에서 가르치는 일을 하면서 배포 직전에 돌려보는 바이브코딩 보안 점검 도구를 만들고 있습니다. 만드는 동안 배운 것 세 가지를 공유합니다. 몰라서 안 하는 경우는 드물다 보안에 신경 써야 한다는 건 대부"
     },
     {
       "rank": 6,
-      "title": "AI 답변을 그대로 붙여넣지 마세요",
-      "href": "https://news.hada.io/topic?id=32699",
-      "published": "2026-08-20T20:33:05+09:00",
+      "title": "Linux에서 Adobe Acrobat을 대체할 만한 괜찮은 PDF 보기·편집 프로그램이 있나요?",
+      "href": "https://news.hada.io/topic?id=32839",
+      "published": "2026-08-24T17:04:50+09:00",
       "author": "neo",
-      "excerpt": "질문한 사람은 일반적인 챗봇 답변이 아니라 상대방의 맥락·취향·판단 이 담긴 답을 원함 상대방도 같은 AI 도구를 쓸 수 있어, 편집하지 않은 ChatGPT 출력을 전달하는 방식은 대개 도움이 되지 않음 AI는 초안"
+      "excerpt": "PDF 뷰어나 페이지 편집 프로그램은 많지만, 이미지 편집 과 개요 생성 까지 함께 지원하는 도구는 찾기 어려움 PDF4QT 가 일부 기능을 제공하지만 이상적인 대안은 아님 ..."
     },
     {
       "rank": 7,
-      "title": "Show GN: 브라우저에서도 사용 가능한 3D 슬라이서 three-slicer — 0.2.0에서 SLA(레진) 지원 추가",
-      "href": "https://news.hada.io/topic?id=32698",
-      "published": "2026-08-20T19:31:26+09:00",
-      "author": "kimgh06",
-      "excerpt": "OrcaSlicer를 브라우저/WASM으로 리버스 엔지니어링해 만든 슬라이서 three-slicer의 0.2.0 소식입니다. 이전에 필라멘트 G-code 슬라이싱으로 한 번 소개드렸는데, 이번 버전에서 SLA(레진)"
+      "title": "내가 좋아하는 컴퓨터 과학 책과 그 이유",
+      "href": "https://news.hada.io/topic?id=32838",
+      "published": "2026-08-24T17:01:50+09:00",
+      "author": "neo",
+      "excerpt": "알고리듬을 깊이 탐구하는 The Art of Computer Programming 과 명확한 설명·예제를 앞세운 Algorithms, 4th Edition 은 서로 다른 방식으로 학습의 토대를 제공함 The Prac"
     },
     {
       "rank": 8,
-      "title": "Show GN: 오마이한글 rhwp기반 안드로이드용 한글문서 편집앱",
-      "href": "https://news.hada.io/topic?id=32697",
-      "published": "2026-08-20T19:08:34+09:00",
-      "author": "tomlee",
-      "excerpt": "평소 rhwp 프로젝트를 관심있게 지켜보고 있었습니다. rhwp를 만든 edward kim님께 이 자리를 빌어 감사드립니다. rhwp를 제가 사용하는 안드로이드폰에서 인터넷연결 없어도 사용가능하게 만든 것을 스토어에"
+      "title": "Google Workspace가 내 도메인을 이메일 제공업체로 오인함(2025)",
+      "href": "https://news.hada.io/topic?id=32837",
+      "published": "2026-08-24T16:31:32+09:00",
+      "author": "neo",
+      "excerpt": "정상적인 회사 도메인이 이메일 제공업체로 오인 돼 Google Workspace 등록이 차단됐으며, 2026년 8월에도 문제가 남아 있음 가입 페이지의 로컬 검증 함수가 도메인을 정규식 목록과 비교하며, web\\\\."
     },
     {
       "rank": 9,
-      "title": "TypeGPU로 실시간 깊이 인식 조명 주입 구현",
-      "href": "https://news.hada.io/topic?id=32695",
-      "published": "2026-08-20T15:33:40+09:00",
-      "author": "mdisprgm",
-      "excerpt": "Typescript용 WebGPU 라이브러리인 TypeGPU로 실시간 깊이 인식 조명 인젝션(Depth-aware light injection)을 구현함. GPU 내부에서 독립적으로 연산해 오버헤드를 줄임. (참고로"
+      "title": "Show GN: 내 GPU로 어떤 LLM을 돌릴 수 있는지 계산해주는 오픈소스 도구 만들었습니다",
+      "href": "https://news.hada.io/topic?id=32834",
+      "published": "2026-08-24T14:39:01+09:00",
+      "author": "jaeseok614",
+      "excerpt": "AI 인프라 견적/자문 일을 하면서 \"이 GPU로 이 모델 돌아가요?\"라는 질문에 매번 VRAM을 손으로 계산해서 답하는 게 반복돼서, 이걸 자동화하는 계산기를 만들어 오픈소스로 공개했습니다. 무엇을 하는지: GPU"
     },
     {
       "rank": 10,
-      "title": "Show GN: PDF 번역에서 텍스트보다 레이아웃이 더 어려워서 문서 단위 번역 도구를 만들었습니다",
-      "href": "https://news.hada.io/topic?id=32694",
-      "published": "2026-08-20T15:13:33+09:00",
-      "author": "ethanfeng",
-      "excerpt": "안녕하세요. PDF를 번역하다 보면 번역 품질 자체보다 의외로 문서 구조가 깨지는 문제가 더 불편한 경우가 많았습니다. 일반 번역기에 PDF의 텍스트를 넣으면 문장 자체는 번역되지만, 표의 행과 열이 뒤섞이거나 제목"
+      "title": "agent.md로 LLM 생성 코드의 품질 높이기",
+      "href": "https://news.hada.io/topic?id=32833",
+      "published": "2026-08-24T14:32:20+09:00",
+      "author": "neo",
+      "excerpt": "2025년에는 컴파일조차 못 하던 LLM이 2026년에는 복잡한 구현과 버그 분석까지 해냈지만, 스파게티 코드 와 부족한 주석·구조 탓에 프로덕션에 바로 쓰기 어려웠음 세션마다 반복하던 코드 리뷰 지침을 agent."
     },
     {
       "rank": 11,
-      "title": "Ask GN: 서비스 개발 시 회계 시스템과 어떻게 연동하시나요?",
-      "href": "https://news.hada.io/topic?id=32693",
-      "published": "2026-08-20T15:01:40+09:00",
-      "author": "geeep",
-      "excerpt": "안녕하세요. 현재 스타트업에서 서비스 개발을 하고 있습니다. 서비스 기획에도 함께 참여하고 있는데, 서비스 내에서 금전 거래가 발생하다 보니 회계 처리를 시스템에 어떤 방식으로 반영해야 할지 고민이 생겨 질문드립니다"
+      "title": "Show GN: 매일 하나의 질문에 투표하고, 주제에 대해 토론하는 앱",
+      "href": "https://news.hada.io/topic?id=32832",
+      "published": "2026-08-24T14:10:13+09:00",
+      "author": "windbug99",
+      "excerpt": "매일 하나 주제에 대해 2가지 선택지 중 하나를 선택하고 토론하는 서비스 입니다. [어떻게 쓰나요] 매일 아침 9시에 새로운 주제에 대한 질문이 하나씩 올라오고 선택지에서 본인의 의견에 가까운 선택을 합니다. 투표 "
     },
     {
       "rank": 12,
-      "title": "Google, 일부 소스 코드의 Git 태그 배포를 Google Drive 요청 방식으로 대체",
-      "href": "https://news.hada.io/topic?id=32692",
-      "published": "2026-08-20T14:32:00+09:00",
-      "author": "neo",
-      "excerpt": "Google은 일부 소스를 Git 태그 로 공개하는 대신 Google Forms 신청 후 Google Drive의 tarball 접근 권한을 부여하며, GrapheneOS에 따르면 최근 처리 기간이 수 시간에서 수 "
+      "title": "Show GN: 카카오톡 테마 제작 툴을 만들었습니다",
+      "href": "https://news.hada.io/topic?id=32831",
+      "published": "2026-08-24T13:52:32+09:00",
+      "author": "moonhr153",
+      "excerpt": "원래는 카카오톡에서 제공하는 가이드를 보고 테마를 만들고 있었는데 어떤 이미지 소스가 필요한지 헷갈려서 claude한테 가이드 보여주고 테마가 제작 툴을 만들라고 시켜봤습니다. ios는 웹에서 바로 다운받아서 카카오"
     },
     {
       "rank": 13,
-      "title": "코드는 다 읽을 수 없고, 코드 리뷰가 맡아온 책임은 사라지지 않는다",
-      "href": "https://news.hada.io/article/code-outruns-review",
-      "published": "2026-08-20T14:26:11+09:00",
-      "author": "GeekNews",
-      "excerpt": "AI 가 소프트웨어 개발에 만든 가장 큰 변화는 코드를 더 잘 쓰게 된 것만이 아님 사람이 코드를 읽고 검토할 수 있는 속도보다, 코드가 만들어지는 속도가 빨라진 것 이 더 근본적인 변화 그 격차가 가장 먼저 드러나"
+      "title": "SonicMoE로 보는 GPU 커널 최적화",
+      "href": "https://news.hada.io/topic?id=32830",
+      "published": "2026-08-24T13:39:22+09:00",
+      "author": "trillionlabs",
+      "excerpt": "SonicMoE를 예시로 효율적인 GPU 커널을 설계한다는 것이 무엇을 의미하는지 이야기합니다."
     },
     {
       "rank": 14,
-      "title": "Show GN: 웹 canvas에 HTML DOM을 그려보자 (크롬 HTML-in-Canvas)",
-      "href": "https://news.hada.io/topic?id=32690",
-      "published": "2026-08-20T14:06:32+09:00",
-      "author": "greekr4",
-      "excerpt": "안녕하세요. 지금까지 여러가지 캔버스 에디터로 만든 프로젝트를 운영하고 있습니다. 네이티브 canvas부터 konva, fabric도 사용해보고 최근엔 skia기반 canvasKit도 사용해보고 있습니다. canva"
+      "title": "GNU Emacs Canvas 입문: 픽셀 버퍼를 직접 다루는 새 이미지 기능",
+      "href": "https://news.hada.io/topic?id=32827",
+      "published": "2026-08-24T13:02:33+09:00",
+      "author": "neo",
+      "excerpt": "약 8개월간 개발한 Canvas 기능 이 GNU Emacs 코어에 병합돼, Emacs 32부터 이미지 데이터를 문자열로 전달하지 않고 픽셀 버퍼를 직접 조작할 수 있음 Canvas는 기존 이미지 API와 호환되는 새"
     },
     {
       "rank": 15,
-      "title": "아직도 커밋 메시지를 직접 작성하는 이유",
-      "href": "https://news.hada.io/topic?id=32689",
-      "published": "2026-08-20T14:02:14+09:00",
+      "title": "Anthropic의 최고 AI 모델, 저렴한 도구의 성장 속에서 사용자 확보에 고전",
+      "href": "https://news.hada.io/topic?id=32826",
+      "published": "2026-08-24T11:31:40+09:00",
       "author": "neo",
-      "excerpt": "LLM이 커밋 메시지를 대신 쓸 수 있어도, 직접 작성하는 과정은 변경의 이유와 맥락 을 기록하고 개발자가 내용을 제대로 이해했는지 확인하는 데 가치가 있음 diff에서 대체로 확인할 수 있는 ‘무엇’보다 선행 작업"
+      "excerpt": "미국 기업들의 Anthropic 지출에서 최고급 모델 Fable 5가 차지하는 비중은 출시 두 달이 지나도록 약 11%에 머물렀으며 , 이전처럼 기업 고객이 가장 강력한 모델을 기본 선택하던 패턴이 깨지고 있음 주된"
     },
     {
       "rank": 16,
-      "title": "[팟캐스트] 개발자라면 알아야 할 암호학",
-      "href": "https://news.hada.io/topic?id=32688",
-      "published": "2026-08-20T10:49:12+09:00",
-      "author": "bungae",
-      "excerpt": "이 에피소드는 개발자가 라이브러리에만 의존하지 않고 암호학 알고리즘과 설정을 올바르게 선택·운용해야 하는 이유를 실제 보안 사고 사례(링크드인, 어도비, Heartbleed)를 통해 짚어봅니다. 이어서 단방향 암호화"
+      "title": "내가 가진 모든 것, 모두 장악당하다",
+      "href": "https://news.hada.io/topic?id=32825",
+      "published": "2026-08-24T10:33:10+09:00",
+      "author": "neo",
+      "excerpt": "Claude Opus 5로 주변기기 5종의 펌웨어를 역공학해 마이크 명령 셸 , 녹화 중 끌 수 있는 웹캠 LED, Wi-Fi를 통한 비인증 메모리 쓰기를 찾아냄 제조사 펌웨어와 업데이트 도구를 역공학 환경에 넣어 "
     },
     {
       "rank": 17,
-      "title": "fx - Unix 셸처럼 가볍게 쓰고 임베드할 수 있는 코딩 에이전트",
-      "href": "https://news.hada.io/topic?id=32686",
-      "published": "2026-08-20T09:45:01+09:00",
-      "author": "xguru",
-      "excerpt": "Vercel Labs가 만든 작고 빠른 오픈소스 코딩 에이전트 하네스/CLI 로, Zig로 작성됐으며 바이너리 크기는 약 7.8MiB Claude Code 같은 무거운 터미널 IDE 형태보다 Unix 셸에 가까운 단"
+      "title": "AI가 인간의 실행력을 확장하려면 무엇이 필요한가",
+      "href": "https://news.hada.io/topic?id=32824",
+      "published": "2026-08-24T10:30:02+09:00",
+      "author": "neo",
+      "excerpt": "Forerunner Ventures의 The Human Bet 과 후속 글 The Supply Side 는 AI의 가치를 인간의 실행력 확장 에서 ..."
     },
     {
       "rank": 18,
-      "title": "OpenSandbox - AI 에이전트를 위한 샌드박스 런타임",
-      "href": "https://news.hada.io/topic?id=32685",
-      "published": "2026-08-20T09:30:02+09:00",
-      "author": "xguru",
-      "excerpt": "AI앱을 위한 안전하고 빠르며 확장 가능한 범용 샌드박스 플랫폼 코딩 에이전트/GUI 에이전트/에이전트 평가 등을 위한 도커/쿠버네티스 런타임을 제공, 로컬 실행과 대규모 분산 스케줄링 모두 대응 다중 언어 SDK "
+      "title": "스태프 엔지니어로서 해결할 문제를 찾는 방법",
+      "href": "https://news.hada.io/topic?id=32821",
+      "published": "2026-08-24T09:33:10+09:00",
+      "author": "neo",
+      "excerpt": "스태프 엔지니어는 주어진 어려운 과제를 푸는 데 그치지 않고, 일상 업무에서 흘러나오는 마찰을 흡수해 조직이 아직 인식하지 못한 중요한 문제 를 찾아야 함 사용자의 요청을 그대로 구현하기보다 실제 목표와 기존 제품이"
     },
     {
       "rank": 19,
-      "title": "일반 텍스트 회계가 꽤 멋진 이유",
-      "href": "https://news.hada.io/topic?id=32684",
-      "published": "2026-08-20T09:16:53+09:00",
-      "author": "neo",
-      "excerpt": "계좌 연결이 불안정한 금융 서비스에서 벗어나 hledger 기반 복식부기 로 거래를 직접 관리하고, 순자산·지출·저축률 보고서를 생성함 회계 데이터를 일반 텍스트로 보관하면 편집기·Git·자체 도구·Claude Co"
+      "title": "srelens - 엔지니어와 AI 에이전트 모두를 위한 쿠버네티스 컨트롤룸",
+      "href": "https://news.hada.io/topic?id=32820",
+      "published": "2026-08-24T09:30:02+09:00",
+      "author": "xguru",
+      "excerpt": "여러 터미널/대시보드/로그/클러스터 컨텍스트를 오가야 했던 쿠버네티스 트러블슈팅을 하나의 로컬 우선 데스크톱 워크스페이스 로 통합 리소스 탐색, 이벤트/YAML 확인, 로그 추적, 터미널, 포트 포워드 관리, 클러스"
     },
     {
       "rank": 20,
-      "title": "Kimi Code CLI - 터미널에서 사용하는 오픈소스 코딩 에이전트",
-      "href": "https://news.hada.io/topic?id=32683",
-      "published": "2026-08-20T09:15:01+09:00",
-      "author": "xguru",
-      "excerpt": "Moonshot AI가 공개한 터미널 기반 AI 코딩 에이전트 로, 코드 읽기/수정, Shell 명령 실행, 파일 검색, 웹페이지 조회를 수행하고 결과 피드백에 따라 다음 작업을 스스로 선택함 Kimi 모델을 바로 "
+      "title": "Hister - 직접 통제하는 비공개 전체 콘텐츠 검색 인덱스",
+      "href": "https://news.hada.io/topic?id=32819",
+      "published": "2026-08-24T09:01:49+09:00",
+      "author": "neo",
+      "excerpt": "Hister 는 선택한 웹페이지와 파일의 전체 내용을 자체 서버에 저장하고, 검색 결과에서 읽기 쉬운 미리보기까지 제공함 브라우저 확장, 로컬 폴더 감시, 방문 기록 가져오기, 웹사이트 크롤링으로 자료를 모아 웹·터"
     }
   ]
 }
