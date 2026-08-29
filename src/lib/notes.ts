@@ -11,14 +11,6 @@ export type NoteItem = {
 
 const extra: NoteItem[] = [
   {
-    href: "/chuncheon/",
-    title: "춘천 일정",
-    date: "2026-08-27",
-    excerpt: "울산-강촌 기본 동선. 30곳은 그 위에.",
-    kicker: "일정",
-    tags: ["일정", "지도"],
-  },
-  {
     href: "/plc/",
     title: "SC1 Robot3 깔딱 HMI Enable=1 1차 시험안",
     date: "2026-08-22",
