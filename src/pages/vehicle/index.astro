@@ -1,0 +1,40 @@
+---
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import { listVehicleReports, riskLabel } from "../../lib/vehicle";
+
+const reports = await listVehicleReports();
+const number = (value: number | null, suffix: string) => value === null ? "데이터 부족" : `${value}${suffix}`;
+---
+
+<Base title="차량관리 · alzza" description="TeslaMate 기반 주간 차량 건강 리포트">
+  <Header links={[{ href: "/notes/", label: "노트" }, { href: "/info/", label: "정보" }]} />
+  <div class="wrap">
+    <section class="hero">
+      <span class="badge">TeslaMate</span>
+      <h1>차량관리</h1>
+      <p>매주 월요일, 지난주 주행·충전·배터리 추세를 정리합니다. 숫자는 충전 세션 기반 추정값이라 한 번의 값만으로 상태를 확정하지 않습니다.</p>
+    </section>
+    {
+      reports.length === 0 ? (
+        <section class="vehicle-empty">
+          <h2>첫 주간 리포트를 준비하고 있습니다.</h2>
+          <p>리포트가 생성되면 이곳에 목록으로 쌓이고, 각 항목을 누르면 상세 내용을 볼 수 있습니다.</p>
+        </section>
+      ) : (
+        <section class="vehicle-list" aria-label="주간 차량 리포트">
+          {reports.map((report) => (
+            <a class="vehicle-row" href={report.href}>
+              <span class:list={["vehicle-risk", `risk-${report.riskLevel}`]}>{riskLabel(report.riskLevel)}</span>
+              <span class="vehicle-copy">
+                <strong>{report.title}</strong>
+                <small>{report.weekStart} ~ {report.weekEnd} · {report.excerpt}</small>
+              </span>
+              <span class="vehicle-stats">{number(report.distanceKm, " km")} · {number(report.chargingKwh, " kWh")}</span>
+            </a>
+          ))}
+        </section>
+      )
+    }
+  </div>
+</Base>
