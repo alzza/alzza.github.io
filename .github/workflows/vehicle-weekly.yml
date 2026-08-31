@@ -1,0 +1,52 @@
+name: Weekly vehicle health report
+
+on:
+  schedule:
+    - cron: "30 23 * * 0"
+  workflow_dispatch:
+    inputs:
+      force_overwrite:
+        description: "Overwrite the report for that week_end if it already exists"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.12"
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          PUBLIC_KAKAO_JS_KEY: ${{ secrets.PUBLIC_KAKAO_JS_KEY }}
+          WEEKLY_VEHICLE_REPORT: "1"
+          TESLAMATE_MCP_URL: ${{ secrets.TESLAMATE_MCP_URL }}
+          TESLAMATE_MCP_TOKEN: ${{ secrets.TESLAMATE_MCP_TOKEN }}
+          TESLAMATE_CAR_NAME: ${{ secrets.TESLAMATE_CAR_NAME }}
+          FORCE_OVERWRITE: ${{ github.event.inputs.force_overwrite }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: report
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

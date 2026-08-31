@@ -8,10 +8,13 @@
   "scripts": {
     "dev": "astro dev --port 4321",
     "fetch-news": "node scripts/fetch-geeknews.mjs",
-    "build": "node scripts/fetch-geeknews.mjs && astro build",
-    "preview": "astro preview --port 4321"
+    "build": "node scripts/maybe-vehicle-weekly.mjs && node scripts/fetch-geeknews.mjs && astro build",
+    "preview": "astro preview --port 4321",
+    "test": "node --test test/vehicle-weekly/*.test.mjs",
+    "vehicle-weekly": "node scripts/vehicle-weekly/generate.mjs"
   },
   "dependencies": {
-    "astro": "^7.2.3"
+    "astro": "^7.2.3",
+    "@modelcontextprotocol/sdk": "^1.30.0"
   }
 }
