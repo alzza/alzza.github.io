@@ -10,17 +10,46 @@ interface CapacityPoint {
   capacityKwh: number | null;
 }
 
+interface AccelerationWeek {
+  thresholdKw: number | null;
+  secondaryThresholdKw: number | null;
+  eventCount: number | null;
+  secondaryEventCount: number | null;
+  maxDischargePowerKw: number | null;
+  avgPeakPowerSpeedKmh: number | null;
+  maxPeakPowerSpeedKmh: number | null;
+  coveredDistanceKm: number | null;
+  eventsPer1000Km: number | null;
+  dataQuality: "available" | "insufficient" | "sign_unverified";
+}
+
+interface AccelerationPoint {
+  month: string;
+  events180Kw: number | null;
+  events200Kw: number | null;
+  avgPeakPowerSpeedKmh: number | null;
+  maxPeakPowerSpeedKmh: number | null;
+  coveredDistanceKm: number | null;
+  eventsPer1000Km: number | null;
+}
+
 interface Props {
   dailyMetrics?: DailyMetric[];
   capacityTrend?: CapacityPoint[];
+  accelerationWeek?: AccelerationWeek;
+  accelerationTrend?: AccelerationPoint[];
 }
 
-const { dailyMetrics = [], capacityTrend = [] } = Astro.props;
+const { dailyMetrics = [], capacityTrend = [], accelerationWeek, accelerationTrend = [] } = Astro.props;
 const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
 const dayLabel = (date: string) => weekDays[new Date(`${date}T00:00:00Z`).getUTCDay()] ?? date;
 const number = (value: number | null, suffix = "") => value === null ? "—" : `${value}${suffix}`;
 const hasDaily = dailyMetrics.some((item) => item.distanceKm !== null || item.chargingKwh !== null);
 const hasCapacity = capacityTrend.some((item) => item.capacityKwh !== null);
+const hasAcceleration = accelerationWeek?.dataQuality === "available" && accelerationWeek.eventCount !== null;
+const capacityByMonth = new Map(capacityTrend.map((item) => [item.month, item.capacityKwh]));
+const correlationPoints = accelerationTrend.map((item) => ({ ...item, capacityKwh: capacityByMonth.get(item.month) ?? null }));
+const hasCorrelation = correlationPoints.some((item) => item.eventsPer1000Km !== null) && correlationPoints.some((item) => item.capacityKwh !== null);
 const chartWidth = 720;
 const chartHeight = 250;
 const left = 52;
@@ -46,6 +75,22 @@ const capacityPath = capacityTrend.map((item, index) => {
   capacityStarted = true;
   return `${command}${capacityX(index)} ${capacityY(item.capacityKwh)}`;
 }).filter(Boolean).join(" ");
+const correlationRateMax = Math.max(...correlationPoints.map((item) => item.eventsPer1000Km ?? 0), 1);
+const correlationSlot = correlationPoints.length ? plotWidth / correlationPoints.length : plotWidth;
+const correlationBarWidth = Math.max(8, Math.min(34, correlationSlot * 0.58));
+const correlationCapacityValues = correlationPoints.map((item) => item.capacityKwh).filter((value): value is number => value !== null);
+const correlationCapacityMin = correlationCapacityValues.length ? Math.floor((Math.min(...correlationCapacityValues) - 0.5) * 2) / 2 : 0;
+const correlationCapacityMax = correlationCapacityValues.length ? Math.ceil((Math.max(...correlationCapacityValues) + 0.5) * 2) / 2 : 1;
+const correlationCapacityRange = Math.max(correlationCapacityMax - correlationCapacityMin, 1);
+const correlationX = (index: number) => correlationPoints.length <= 1 ? left + plotWidth / 2 : left + (plotWidth * index) / (correlationPoints.length - 1);
+const correlationCapacityY = (value: number) => top + plotHeight - ((value - correlationCapacityMin) / correlationCapacityRange) * plotHeight;
+let correlationStarted = false;
+const correlationCapacityPath = correlationPoints.map((item, index) => {
+  if (item.capacityKwh === null) return "";
+  const command = correlationStarted ? "L" : "M";
+  correlationStarted = true;
+  return `${command}${correlationX(index)} ${correlationCapacityY(item.capacityKwh)}`;
+}).filter(Boolean).join(" ");
 ---
 
 <section class="vehicle-charts" aria-label="주간 차량 그래프">
@@ -57,8 +102,15 @@ const capacityPath = capacityTrend.map((item, index) => {
     <p>공개 가능한 일별·월별 집계값만 표시합니다.</p>
   </div>
 
+  <fieldset class="chart-data-toggle" aria-label="그래프 데이터 유형 선택">
+    <legend>표시할 데이터</legend>
+    <label><input type="checkbox" data-chart-toggle="actual" checked /> 기록 데이터</label>
+    <label><input type="checkbox" data-chart-toggle="estimated" checked /> 추정 데이터</label>
+    <small>기록 데이터는 TeslaMate 표본 집계, 추정 데이터는 충전 세션 기반 가용용량 추정치입니다.</small>
+  </fieldset>
+
   <div class="vehicle-chart-grid">
-    <figure class="vehicle-chart-card">
+    <figure class="vehicle-chart-card" data-chart-kind="actual">
       <figcaption>
         <strong>주간 주행·충전</strong>
         <span>막대 높이는 각각의 단위 안에서 비교합니다.</span>
@@ -95,7 +147,24 @@ const capacityPath = capacityTrend.map((item, index) => {
       }
     </figure>
 
-    <figure class="vehicle-chart-card">
+    <section class="vehicle-chart-card acceleration-week" data-chart-kind="actual" aria-labelledby="acceleration-week-title">
+      <h3 id="acceleration-week-title">이번 주 고출력 가속</h3>
+      {
+        hasAcceleration ? (
+          <div class="acceleration-metrics">
+            <div><small>{accelerationWeek?.thresholdKw} kW 이상</small><strong>{number(accelerationWeek?.eventCount ?? null, "회")}</strong></div>
+            <div><small>{accelerationWeek?.secondaryThresholdKw} kW 이상</small><strong>{number(accelerationWeek?.secondaryEventCount ?? null, "회")}</strong></div>
+            <div><small>1,000 km당 이벤트</small><strong>{number(accelerationWeek?.eventsPer1000Km ?? null, "회")}</strong></div>
+            <div><small>최대 방전출력</small><strong>{number(accelerationWeek?.maxDischargePowerKw ?? null, " kW")}</strong></div>
+            <div><small>이벤트 시 평균속도</small><strong>{number(accelerationWeek?.avgPeakPowerSpeedKmh ?? null, " km/h")}</strong></div>
+            <div><small>이벤트 시 최고속도</small><strong>{number(accelerationWeek?.maxPeakPowerSpeedKmh ?? null, " km/h")}</strong></div>
+          </div>
+        ) : <p class="vehicle-chart-empty">고출력 가속 집계가 아직 없거나 power 부호 검증이 완료되지 않았습니다.</p>
+      }
+      <p class="chart-method-note">연속된 임계값 초과 기록은 1개 이벤트로 집계합니다. 이 수치는 열화 원인이나 배터리 진단이 아닙니다.</p>
+    </section>
+
+    <figure class="vehicle-chart-card" data-chart-kind="estimated">
       <figcaption>
         <strong>배터리 추정 가용용량</strong>
         <span>최대 12개월의 충전 세션 기반 추정 추세입니다.</span>
@@ -119,5 +188,51 @@ const capacityPath = capacityTrend.map((item, index) => {
         hasCapacity && <details class="vehicle-chart-table"><summary>월별 수치 보기</summary><table><thead><tr><th>월</th><th>추정 가용용량</th></tr></thead><tbody>{capacityTrend.map((item) => <tr><td>{item.month}</td><td>{number(item.capacityKwh, " kWh")}</td></tr>)}</tbody></table></details>
       }
     </figure>
+
+    <figure class="vehicle-chart-card" data-chart-kind="comparison">
+      <figcaption>
+        <strong>고출력 가속과 추정 가용용량</strong>
+        <span>막대는 기록 데이터(1,000 km당 180 kW 이상 이벤트), 선은 추정 데이터(kWh)입니다.</span>
+      </figcaption>
+      {
+        hasCorrelation ? (
+          <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} role="img" aria-labelledby="correlation-chart-title correlation-chart-desc">
+            <title id="correlation-chart-title">월별 고출력 가속 이벤트율과 배터리 추정 가용용량</title>
+            <desc id="correlation-chart-desc">파란 막대는 천 킬로미터당 180킬로와트 이상 고출력 가속 이벤트 수, 초록 선은 충전 세션 기반 추정 가용용량입니다. 두 값의 동시 변화는 인과관계를 뜻하지 않습니다.</desc>
+            {[0, 1, 2, 3].map((step) => {
+              const y = top + (plotHeight * step) / 3;
+              const rate = correlationRateMax - (correlationRateMax * step) / 3;
+              const capacity = correlationCapacityMax - (correlationCapacityRange * step) / 3;
+              return <g><line x1={left} x2={chartWidth - right} y1={y} y2={y} class="chart-grid-line" /><text x={left - 8} y={y + 4} text-anchor="end" class="chart-axis-label">{rate.toFixed(1)}</text><text x={chartWidth - right + 8} y={y + 4} class="chart-axis-label">{capacity.toFixed(1)}</text></g>;
+            })}
+            {correlationPoints.map((item, index) => {
+              const rate = item.eventsPer1000Km;
+              const height = rate === null ? 0 : (rate / correlationRateMax) * plotHeight;
+              return <g>{rate !== null && <rect class="chart-bar-distance" x={correlationX(index) - correlationBarWidth / 2} y={top + plotHeight - height} width={correlationBarWidth} height={height} rx="2" />}<text x={correlationX(index)} y={chartHeight - 14} text-anchor="middle" class="chart-axis-label">{item.month.slice(5)}</text></g>;
+            })}
+            <path d={correlationCapacityPath} class="chart-capacity-line" />
+            {correlationPoints.map((item, index) => item.capacityKwh !== null && <circle cx={correlationX(index)} cy={correlationCapacityY(item.capacityKwh)} r="4" class="chart-capacity-point" />)}
+            <text x={left} y={16} class="chart-axis-label">이벤트/1,000 km</text><text x={chartWidth - right} y={16} text-anchor="end" class="chart-axis-label">추정 kWh</text>
+          </svg>
+        ) : <p class="vehicle-chart-empty">월별 고출력 가속률과 추정 가용용량이 함께 쌓이면 비교 그래프를 표시합니다.</p>
+      }
+      <div class="chart-legend"><span><i class="legend-distance"></i>기록: 180 kW 이상 이벤트/1,000 km</span><span><i class="legend-capacity"></i>추정: 가용용량 (kWh)</span></div>
+      {hasCorrelation && <details class="vehicle-chart-table"><summary>월별 비교 수치 보기</summary><table><thead><tr><th>월</th><th>180 kW 이상</th><th>200 kW 이상</th><th>1,000 km당</th><th>이벤트 평균속도</th><th>이벤트 최고속도</th><th>추정 가용용량</th></tr></thead><tbody>{correlationPoints.map((item) => <tr><td>{item.month}</td><td>{number(item.events180Kw, "회")}</td><td>{number(item.events200Kw, "회")}</td><td>{number(item.eventsPer1000Km, "회")}</td><td>{number(item.avgPeakPowerSpeedKmh, " km/h")}</td><td>{number(item.maxPeakPowerSpeedKmh, " km/h")}</td><td>{number(item.capacityKwh, " kWh")}</td></tr>)}</tbody></table></details>}
+      <p class="chart-method-note">두 축의 동시 변화는 상관관계 관찰용이며, 열화의 원인 또는 기여도를 뜻하지 않습니다.</p>
+    </figure>
   </div>
 </section>
+
+<script>
+  const applyChartToggles = () => {
+    const section = document.querySelector(".vehicle-charts");
+    if (!section) return;
+    const actual = section.querySelector<HTMLInputElement>('[data-chart-toggle="actual"]')?.checked ?? true;
+    const estimated = section.querySelector<HTMLInputElement>('[data-chart-toggle="estimated"]')?.checked ?? true;
+    section.querySelectorAll<HTMLElement>('[data-chart-kind="actual"]').forEach((item) => { item.hidden = !actual; });
+    section.querySelectorAll<HTMLElement>('[data-chart-kind="estimated"]').forEach((item) => { item.hidden = !estimated; });
+    section.querySelectorAll<HTMLElement>('[data-chart-kind="comparison"]').forEach((item) => { item.hidden = !actual || !estimated; });
+  };
+  document.querySelectorAll<HTMLInputElement>("[data-chart-toggle]").forEach((toggle) => toggle.addEventListener("change", applyChartToggles));
+  applyChartToggles();
+</script>

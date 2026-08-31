@@ -33,6 +33,8 @@ const number = (value: number | null, suffix: string) => value === null ? "데�
     <VehicleCharts
       dailyMetrics={report.data.daily_metrics.map((item) => ({ date: item.date, distanceKm: item.distance_km, chargingKwh: item.charging_kwh }))}
       capacityTrend={report.data.capacity_trend.map((item) => ({ month: item.month, capacityKwh: item.capacity_kwh }))}
+      accelerationWeek={{ thresholdKw: report.data.acceleration_week.threshold_kw, secondaryThresholdKw: report.data.acceleration_week.secondary_threshold_kw, eventCount: report.data.acceleration_week.event_count, secondaryEventCount: report.data.acceleration_week.secondary_event_count, maxDischargePowerKw: report.data.acceleration_week.max_discharge_power_kw, avgPeakPowerSpeedKmh: report.data.acceleration_week.avg_peak_power_speed_kmh, maxPeakPowerSpeedKmh: report.data.acceleration_week.max_peak_power_speed_kmh, coveredDistanceKm: report.data.acceleration_week.covered_distance_km, eventsPer1000Km: report.data.acceleration_week.events_per_1000km, dataQuality: report.data.acceleration_week.data_quality }}
+      accelerationTrend={report.data.acceleration_trend.map((item) => ({ month: item.month, events180Kw: item.events_180kw, events200Kw: item.events_200kw, avgPeakPowerSpeedKmh: item.avg_peak_power_speed_kmh, maxPeakPowerSpeedKmh: item.max_peak_power_speed_kmh, coveredDistanceKm: item.covered_distance_km, eventsPer1000Km: item.events_per_1000km }))}
     />
     <Content />
     <p class="vehicle-caveat">가용용량은 충전 세션 기반 추정치이며 온도·충전 조건·표본 수에 따라 달라질 수 있습니다. 이 리포트만으로 배터리 교체 필요 여부를 확정하지 않습니다.</p>
