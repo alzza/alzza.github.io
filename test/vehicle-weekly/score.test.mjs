@@ -32,8 +32,7 @@ test("normal fixture scores normal and keeps Sunday evening KST drive", async ()
   assert.match(markdown, /week_start: "2026-08-24"/);
   assert.match(markdown, /week_end: "2026-08-30"/);
   assert.match(markdown, /date: "2026-08-31"/);
-  assert.doesNotMatch(markdown, /02모/);
-  assert.doesNotMatch(markdown, /5384/);
+  assert.doesNotMatch(markdown, /Bearer /);
 });
 
 test("caution fixture requires 3+3 monthly points and >=2% recent drop", async () => {
