@@ -16,6 +16,11 @@ function git(args) {
   return result;
 }
 
+if (process.env.GITHUB_ACTIONS === "true") {
+  console.log("skip TeslaMate in GitHub Actions; Grok Bot publishes the weekly markdown");
+  process.exit(0);
+}
+
 if (!isTruthy(process.env.WEEKLY_VEHICLE_REPORT)) {
   process.exit(0);
 }
@@ -24,14 +29,11 @@ const result = await generateWeeklyReport({
   force: isTruthy(process.env.FORCE_OVERWRITE),
 });
 
-if (result.wrote && process.env.GITHUB_ACTIONS === "true") {
-  git(["config", "user.name", "github-actions[bot]"]);
-  git(["config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com"]);
+if (result.wrote) {
   git(["add", "--", result.file]);
   const diff = spawnSync("git", ["diff", "--cached", "--quiet"]);
   if (diff.status !== 0) {
     git(["commit", "-m", "chore: add weekly vehicle health report"]);
-    git(["push"]);
   }
 }
 
