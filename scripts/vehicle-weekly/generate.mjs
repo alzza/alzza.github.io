@@ -8,10 +8,16 @@ import { scoreWeeklyReport } from "./score.mjs";
 import { previousCompletedWeek, seoulYmd, teslamateQueryDates } from "./week.mjs";
 import { DEFAULT_TIMEOUT_MS } from "./timeout.mjs";
 
-const DEFAULT_CAR_NAME = "[redacted]";
+function log(message, carName) {
+  console.log(redactPublicText(message, carName));
+}
 
-function log(message) {
-  console.log(redactPublicText(message));
+function resolveCarName(options, env) {
+  const name = String(options.carName ?? env.TESLAMATE_CAR_NAME ?? "").trim();
+  if (name) return name;
+  const err = new Error("MCP_CONFIG");
+  err.code = "MCP_CONFIG";
+  throw err;
 }
 
 function isTruthy(value) {
@@ -62,11 +68,12 @@ export async function generateWeeklyReport(options = {}) {
   }
 
   const query = teslamateQueryDates(week.weekStart, week.weekEnd);
-  const carName = options.carName ?? env.TESLAMATE_CAR_NAME ?? DEFAULT_CAR_NAME;
   let client = options.client;
   let report;
+  let carName;
 
   try {
+    carName = resolveCarName(options, env);
     if (!client) {
       client = await createTeslaMateMcpClient({
         url: env.TESLAMATE_MCP_URL,
