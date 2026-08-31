@@ -1,0 +1,123 @@
+---
+interface DailyMetric {
+  date: string;
+  distanceKm: number | null;
+  chargingKwh: number | null;
+}
+
+interface CapacityPoint {
+  month: string;
+  capacityKwh: number | null;
+}
+
+interface Props {
+  dailyMetrics?: DailyMetric[];
+  capacityTrend?: CapacityPoint[];
+}
+
+const { dailyMetrics = [], capacityTrend = [] } = Astro.props;
+const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
+const dayLabel = (date: string) => weekDays[new Date(`${date}T00:00:00Z`).getUTCDay()] ?? date;
+const number = (value: number | null, suffix = "") => value === null ? "—" : `${value}${suffix}`;
+const hasDaily = dailyMetrics.some((item) => item.distanceKm !== null || item.chargingKwh !== null);
+const hasCapacity = capacityTrend.some((item) => item.capacityKwh !== null);
+const chartWidth = 720;
+const chartHeight = 250;
+const left = 52;
+const right = 18;
+const top = 24;
+const bottom = 40;
+const plotWidth = chartWidth - left - right;
+const plotHeight = chartHeight - top - bottom;
+const dailyDistanceMax = Math.max(...dailyMetrics.map((item) => item.distanceKm ?? 0), 1);
+const dailyChargeMax = Math.max(...dailyMetrics.map((item) => item.chargingKwh ?? 0), 1);
+const barSlot = dailyMetrics.length ? plotWidth / dailyMetrics.length : plotWidth;
+const barWidth = Math.max(8, Math.min(38, barSlot * 0.32));
+const capacityValues = capacityTrend.map((item) => item.capacityKwh).filter((value): value is number => value !== null);
+const capacityMin = capacityValues.length ? Math.floor((Math.min(...capacityValues) - 0.5) * 2) / 2 : 0;
+const capacityMax = capacityValues.length ? Math.ceil((Math.max(...capacityValues) + 0.5) * 2) / 2 : 1;
+const capacityRange = Math.max(capacityMax - capacityMin, 1);
+const capacityX = (index: number) => capacityTrend.length <= 1 ? left + plotWidth / 2 : left + (plotWidth * index) / (capacityTrend.length - 1);
+const capacityY = (value: number) => top + plotHeight - ((value - capacityMin) / capacityRange) * plotHeight;
+let capacityStarted = false;
+const capacityPath = capacityTrend.map((item, index) => {
+  if (item.capacityKwh === null) return "";
+  const command = capacityStarted ? "L" : "M";
+  capacityStarted = true;
+  return `${command}${capacityX(index)} ${capacityY(item.capacityKwh)}`;
+}).filter(Boolean).join(" ");
+---
+
+<section class="vehicle-charts" aria-label="주간 차량 그래프">
+  <div class="vehicle-chart-head">
+    <div>
+      <span class="badge badge-pink">그래프</span>
+      <h2>한눈에 보는 변화</h2>
+    </div>
+    <p>공개 가능한 일별·월별 집계값만 표시합니다.</p>
+  </div>
+
+  <div class="vehicle-chart-grid">
+    <figure class="vehicle-chart-card">
+      <figcaption>
+        <strong>주간 주행·충전</strong>
+        <span>막대 높이는 각각의 단위 안에서 비교합니다.</span>
+      </figcaption>
+      {
+        hasDaily ? (
+          <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} role="img" aria-labelledby="daily-chart-title daily-chart-desc">
+            <title id="daily-chart-title">주간 일별 주행거리와 충전량</title>
+            <desc id="daily-chart-desc">파란 막대는 주행거리 킬로미터, 노란 막대는 종료된 충전 세션의 충전량 킬로와트시입니다.</desc>
+            {[0, 1, 2, 3].map((step) => {
+              const y = top + (plotHeight * step) / 3;
+              return <line x1={left} x2={chartWidth - right} y1={y} y2={y} class="chart-grid-line" />;
+            })}
+            {dailyMetrics.map((item, index) => {
+              const center = left + barSlot * index + barSlot / 2;
+              const distanceHeight = item.distanceKm === null ? 0 : (item.distanceKm / dailyDistanceMax) * plotHeight;
+              const chargeHeight = item.chargingKwh === null ? 0 : (item.chargingKwh / dailyChargeMax) * plotHeight;
+              return (
+                <g>
+                  {item.distanceKm !== null && <rect class="chart-bar-distance" x={center - barWidth - 2} y={top + plotHeight - distanceHeight} width={barWidth} height={distanceHeight} rx="2" />}
+                  {item.chargingKwh !== null && <rect class="chart-bar-charge" x={center + 2} y={top + plotHeight - chargeHeight} width={barWidth} height={chargeHeight} rx="2" />}
+                  <text x={center} y={chartHeight - 14} text-anchor="middle" class="chart-axis-label">{dayLabel(item.date)}</text>
+                </g>
+              );
+            })}
+            <text x={left} y={16} class="chart-axis-label">주행 최대 {dailyDistanceMax} km</text>
+            <text x={chartWidth - right} y={16} text-anchor="end" class="chart-axis-label">충전 최대 {dailyChargeMax} kWh</text>
+          </svg>
+        ) : <p class="vehicle-chart-empty">일별 주행·충전 집계가 없어 그래프를 표시하지 않습니다.</p>
+      }
+      <div class="chart-legend"><span><i class="legend-distance"></i>주행거리 (km)</span><span><i class="legend-charge"></i>충전량 (kWh)</span></div>
+      {
+        hasDaily && <details class="vehicle-chart-table"><summary>일별 수치 보기</summary><table><thead><tr><th>날짜</th><th>주행</th><th>충전</th></tr></thead><tbody>{dailyMetrics.map((item) => <tr><td>{item.date}</td><td>{number(item.distanceKm, " km")}</td><td>{number(item.chargingKwh, " kWh")}</td></tr>)}</tbody></table></details>
+      }
+    </figure>
+
+    <figure class="vehicle-chart-card">
+      <figcaption>
+        <strong>배터리 추정 가용용량</strong>
+        <span>최대 12개월의 충전 세션 기반 추정 추세입니다.</span>
+      </figcaption>
+      {
+        hasCapacity ? (
+          <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} role="img" aria-labelledby="capacity-chart-title capacity-chart-desc">
+            <title id="capacity-chart-title">월별 배터리 추정 가용용량</title>
+            <desc id="capacity-chart-desc">초록 선은 최근 월별 추정 가용용량 킬로와트시입니다.</desc>
+            {[0, 1, 2, 3].map((step) => {
+              const y = top + (plotHeight * step) / 3;
+              const value = capacityMax - (capacityRange * step) / 3;
+              return <g><line x1={left} x2={chartWidth - right} y1={y} y2={y} class="chart-grid-line" /><text x={left - 8} y={y + 4} text-anchor="end" class="chart-axis-label">{value.toFixed(1)}</text></g>;
+            })}
+            <path d={capacityPath} class="chart-capacity-line" />
+            {capacityTrend.map((item, index) => item.capacityKwh !== null && <g><circle cx={capacityX(index)} cy={capacityY(item.capacityKwh)} r="4" class="chart-capacity-point" /><text x={capacityX(index)} y={chartHeight - 14} text-anchor="middle" class="chart-axis-label">{item.month.slice(5)}</text></g>)}
+          </svg>
+        ) : <p class="vehicle-chart-empty">월별 용량 추세가 없어 그래프를 표시하지 않습니다.</p>
+      }
+      {
+        hasCapacity && <details class="vehicle-chart-table"><summary>월별 수치 보기</summary><table><thead><tr><th>월</th><th>추정 가용용량</th></tr></thead><tbody>{capacityTrend.map((item) => <tr><td>{item.month}</td><td>{number(item.capacityKwh, " kWh")}</td></tr>)}</tbody></table></details>
+      }
+    </figure>
+  </div>
+</section>

@@ -26,6 +26,15 @@ const vehicleReports = defineCollection({
     charging_kwh: z.number().nullable().default(null),
     capacity_kwh: z.number().nullable().default(null),
     degradation_percent: z.number().nullable().default(null),
+    daily_metrics: z.array(z.object({
+      date: z.string(),
+      distance_km: z.number().nullable().default(null),
+      charging_kwh: z.number().nullable().default(null),
+    })).default([]),
+    capacity_trend: z.array(z.object({
+      month: z.string(),
+      capacity_kwh: z.number().nullable().default(null),
+    })).default([]),
     tags: z.array(z.string()).default([]),
   }),
 });

@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import Header from "../../components/Header.astro";
 import Comments from "../../components/Comments.astro";
+import VehicleCharts from "../../components/VehicleCharts.astro";
 import { riskLabel } from "../../lib/vehicle";
 
 export async function getStaticPaths() {
@@ -29,6 +30,10 @@ const number = (value: number | null, suffix: string) => value === null ? "데�
         <div><small>최초 대비</small><strong>{number(report.data.degradation_percent, "%")}</strong></div>
       </div>
     </section>
+    <VehicleCharts
+      dailyMetrics={report.data.daily_metrics.map((item) => ({ date: item.date, distanceKm: item.distance_km, chargingKwh: item.charging_kwh }))}
+      capacityTrend={report.data.capacity_trend.map((item) => ({ month: item.month, capacityKwh: item.capacity_kwh }))}
+    />
     <Content />
     <p class="vehicle-caveat">가용용량은 충전 세션 기반 추정치이며 온도·충전 조건·표본 수에 따라 달라질 수 있습니다. 이 리포트만으로 배터리 교체 필요 여부를 확정하지 않습니다.</p>
     <Comments />

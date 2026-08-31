@@ -9,6 +9,27 @@ distance_km: 1054.3
 charging_kwh: 166.5
 capacity_kwh: 56.1
 degradation_percent: -2.4
+daily_metrics:
+  - { date: "2026-08-24", distance_km: 65.2, charging_kwh: 0 }
+  - { date: "2026-08-25", distance_km: 312.7, charging_kwh: 0 }
+  - { date: "2026-08-26", distance_km: 104.6, charging_kwh: 39.1 }
+  - { date: "2026-08-27", distance_km: 45.1, charging_kwh: 46.78 }
+  - { date: "2026-08-28", distance_km: 430.9, charging_kwh: 28 }
+  - { date: "2026-08-29", distance_km: 95.8, charging_kwh: 45.1 }
+  - { date: "2026-08-30", distance_km: 0, charging_kwh: 7.52 }
+capacity_trend:
+  - { month: "2025-09", capacity_kwh: 59.4 }
+  - { month: "2025-10", capacity_kwh: 58.7 }
+  - { month: "2025-11", capacity_kwh: 57.6 }
+  - { month: "2025-12", capacity_kwh: 58.8 }
+  - { month: "2026-01", capacity_kwh: 58.6 }
+  - { month: "2026-02", capacity_kwh: 57.6 }
+  - { month: "2026-03", capacity_kwh: 57.6 }
+  - { month: "2026-04", capacity_kwh: 57.3 }
+  - { month: "2026-05", capacity_kwh: 57.5 }
+  - { month: "2026-06", capacity_kwh: 57.1 }
+  - { month: "2026-07", capacity_kwh: 54.1 }
+  - { month: "2026-08", capacity_kwh: 56.1 }
 tags: [TeslaMate, 차량관리, 주간리포트]
 ---
 

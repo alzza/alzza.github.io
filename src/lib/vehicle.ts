@@ -12,6 +12,8 @@ export type VehicleReportItem = {
   chargingKwh: number | null;
   capacityKwh: number | null;
   degradationPercent: number | null;
+  dailyMetrics: { date: string; distanceKm: number | null; chargingKwh: number | null }[];
+  capacityTrend: { month: string; capacityKwh: number | null }[];
   tags: string[];
 };
 
@@ -37,6 +39,8 @@ export async function listVehicleReports(): Promise<VehicleReportItem[]> {
     chargingKwh: report.data.charging_kwh,
     capacityKwh: report.data.capacity_kwh,
     degradationPercent: report.data.degradation_percent,
+    dailyMetrics: report.data.daily_metrics.map((item) => ({ date: item.date, distanceKm: item.distance_km, chargingKwh: item.charging_kwh })),
+    capacityTrend: report.data.capacity_trend.map((item) => ({ month: item.month, capacityKwh: item.capacity_kwh })),
     tags: report.data.tags,
   })).sort((a, b) => (a.weekStart < b.weekStart ? 1 : -1));
 }
