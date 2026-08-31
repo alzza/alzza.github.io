@@ -16,7 +16,7 @@ const number = (value: number | null, suffix: string) => value === null ? "데�
 ---
 
 <Base title={`${report.data.title} · 차량관리 · alzza`} description={report.data.excerpt}>
-  <Header links={[{ href: "/vehicle/", label: "차량관리" }, { href: "/notes/", label: "노트" }, { href: "/info/", label: "정보" }]} />
+  <Header links={[{ href: "/notes/", label: "노트" }, { href: "/info/", label: "정보" }]} />
   <div class="wrap prose">
     <section class="hero">
       <span class:list={["badge", `risk-${report.data.risk_level}`]}>{riskLabel(report.data.risk_level)}</span>

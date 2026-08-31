@@ -53,7 +53,7 @@ test("delayed MCP fixture writes data_insufficient markdown without waiting 60s"
     maxAttempts: 3,
     backoffMs: [0, 0, 0],
     sleep: async () => {},
-    env: { TESLAMATE_CAR_NAME: "TEST CAR 0000" },
+    env: { TESLAMATE_CAR_NAME: "test vehicle" },
   });
   const elapsed = Date.now() - started;
 
@@ -85,7 +85,7 @@ test("existing week_end markdown is skipped unless force", async () => {
     now: new Date("2026-08-30T23:30:00Z"),
     outDir,
     force: true,
-    env: { TESLAMATE_CAR_NAME: "TEST CAR 0000" },
+    env: { TESLAMATE_CAR_NAME: "test vehicle" },
   });
   assert.equal(first.wrote, true);
   const second = await generateWeeklyReport({
@@ -93,7 +93,7 @@ test("existing week_end markdown is skipped unless force", async () => {
     now: new Date("2026-08-30T23:30:00Z"),
     outDir,
     force: false,
-    env: { TESLAMATE_CAR_NAME: "TEST CAR 0000" },
+    env: { TESLAMATE_CAR_NAME: "test vehicle" },
   });
   assert.equal(second.skipped, true);
   assert.equal(second.wrote, false);

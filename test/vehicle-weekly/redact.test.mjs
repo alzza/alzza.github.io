@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { redactPublicText } from "../../scripts/vehicle-weekly/redact.mjs";
 
 test("redacts the configured vehicle name from public text", () => {
-  const sampleName = "TEST CAR 0000";
+  const sampleName = "test vehicle";
   const previous = process.env.TESLAMATE_CAR_NAME;
   process.env.TESLAMATE_CAR_NAME = sampleName;
   try {
