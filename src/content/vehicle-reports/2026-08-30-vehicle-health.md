@@ -30,6 +30,19 @@ capacity_trend:
   - { month: "2026-06", capacity_kwh: 57.1 }
   - { month: "2026-07", capacity_kwh: 54.1 }
   - { month: "2026-08", capacity_kwh: 56.1 }
+acceleration_week:
+  threshold_kw: 180
+  secondary_threshold_kw: 200
+  event_count: 14
+  secondary_event_count: 4
+  max_discharge_power_kw: 217
+  avg_peak_power_speed_kmh: 125.1
+  max_peak_power_speed_kmh: 138
+  covered_distance_km: 1054.3
+  events_per_1000km: 13.3
+  data_quality: available
+acceleration_trend:
+  - { month: "2026-08", events_180kw: 16, events_200kw: 5, avg_peak_power_speed_kmh: 120.2, max_peak_power_speed_kmh: 138, covered_distance_km: 1828.5, events_per_1000km: 8.8 }
 tags: [TeslaMate, 차량관리, 주간리포트]
 ---
 
@@ -40,6 +53,10 @@ tags: [TeslaMate, 차량관리, 주간리포트]
 ## 충전
 
 종료된 세션의 충전량 합계는 166.5 kWh입니다. 완료 6회, 불완전 1회입니다.
+
+## 고출력 가속
+
+180 kW 이상 고출력 가속은 14회, 200 kW 이상은 4회였습니다. 최대 방전출력은 217 kW였고, 각 이벤트의 최대출력 시점 속도는 평균 125.1 km/h, 최고 138 km/h였습니다. 이 값은 TeslaMate 기록 표본을 연속 구간으로 묶은 집계이며, 배터리 열화의 원인이나 기여도를 뜻하지 않습니다.
 
 ## 배터리 추세
 
