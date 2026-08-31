@@ -8,15 +8,15 @@ risk_level: caution
 distance_km: 1054.3
 charging_kwh: 166.5
 capacity_kwh: 56.1
-degradation_percent: -2.4
+degradation_percent: -5.6
 daily_metrics:
-  - { date: "2026-08-24", distance_km: 65.2, charging_kwh: 0 }
-  - { date: "2026-08-25", distance_km: 312.7, charging_kwh: 0 }
-  - { date: "2026-08-26", distance_km: 104.6, charging_kwh: 39.1 }
-  - { date: "2026-08-27", distance_km: 45.1, charging_kwh: 46.78 }
-  - { date: "2026-08-28", distance_km: 430.9, charging_kwh: 28 }
-  - { date: "2026-08-29", distance_km: 95.8, charging_kwh: 45.1 }
-  - { date: "2026-08-30", distance_km: 0, charging_kwh: 7.52 }
+  - { date: "2026-08-24", distance_km: 45.4, charging_kwh: 0 }
+  - { date: "2026-08-25", distance_km: 46.3, charging_kwh: 0 }
+  - { date: "2026-08-26", distance_km: 45.7, charging_kwh: 39.1 }
+  - { date: "2026-08-27", distance_km: 408.9, charging_kwh: 46.78 }
+  - { date: "2026-08-28", distance_km: 76.7, charging_kwh: 28 }
+  - { date: "2026-08-29", distance_km: 430.9, charging_kwh: 52.66 }
+  - { date: "2026-08-30", distance_km: 0.3, charging_kwh: 0 }
 capacity_trend:
   - { month: "2025-09", capacity_kwh: 59.4 }
   - { month: "2025-10", capacity_kwh: 58.7 }
@@ -42,7 +42,18 @@ acceleration_week:
   events_per_1000km: 13.3
   data_quality: available
 acceleration_trend:
-  - { month: "2026-08", events_180kw: 16, events_200kw: 5, avg_peak_power_speed_kmh: 120.2, max_peak_power_speed_kmh: 138, covered_distance_km: 1828.5, events_per_1000km: 8.8 }
+  - { month: "2025-09", events_180kw: 12, events_200kw: 5, avg_peak_power_speed_kmh: 99.3, max_peak_power_speed_kmh: 117, covered_distance_km: 1268.8, events_per_1000km: 9.5 }
+  - { month: "2025-10", events_180kw: 12, events_200kw: 5, avg_peak_power_speed_kmh: 101.8, max_peak_power_speed_kmh: 117, covered_distance_km: 2366.6, events_per_1000km: 5.1 }
+  - { month: "2025-11", events_180kw: 13, events_200kw: 2, avg_peak_power_speed_kmh: 94.3, max_peak_power_speed_kmh: 142, covered_distance_km: 1715.6, events_per_1000km: 7.6 }
+  - { month: "2025-12", events_180kw: 14, events_200kw: 3, avg_peak_power_speed_kmh: 88.6, max_peak_power_speed_kmh: 106, covered_distance_km: 2360.5, events_per_1000km: 5.9 }
+  - { month: "2026-01", events_180kw: 3, events_200kw: 1, avg_peak_power_speed_kmh: 90.3, max_peak_power_speed_kmh: 92, covered_distance_km: 1710.4, events_per_1000km: 1.8 }
+  - { month: "2026-02", events_180kw: 13, events_200kw: 3, avg_peak_power_speed_kmh: 95.7, max_peak_power_speed_kmh: 161, covered_distance_km: 1372.4, events_per_1000km: 9.5 }
+  - { month: "2026-03", events_180kw: 15, events_200kw: 3, avg_peak_power_speed_kmh: 93.1, max_peak_power_speed_kmh: 106, covered_distance_km: 2078.0, events_per_1000km: 7.2 }
+  - { month: "2026-04", events_180kw: 5, events_200kw: 2, avg_peak_power_speed_kmh: 86.4, max_peak_power_speed_kmh: 95, covered_distance_km: 1273.7, events_per_1000km: 3.9 }
+  - { month: "2026-05", events_180kw: 21, events_200kw: 4, avg_peak_power_speed_kmh: 98.9, max_peak_power_speed_kmh: 137, covered_distance_km: 3016.5, events_per_1000km: 7.0 }
+  - { month: "2026-06", events_180kw: 22, events_200kw: 10, avg_peak_power_speed_kmh: 94.3, max_peak_power_speed_kmh: 113, covered_distance_km: 901.6, events_per_1000km: 24.4 }
+  - { month: "2026-07", events_180kw: 9, events_200kw: 0, avg_peak_power_speed_kmh: 91.8, max_peak_power_speed_kmh: 105, covered_distance_km: 1036.5, events_per_1000km: 8.7 }
+  - { month: "2026-08", events_180kw: 15, events_200kw: 5, avg_peak_power_speed_kmh: 122.1, max_peak_power_speed_kmh: 138, covered_distance_km: 1851.8, events_per_1000km: 8.1 }
 tags: [TeslaMate, 차량관리, 주간리포트]
 ---
 
@@ -60,7 +71,7 @@ tags: [TeslaMate, 차량관리, 주간리포트]
 
 ## 배터리 추세
 
-최신 월 추정 가용용량은 56.1 kWh이고, 최초 기록 대비 -2.4%입니다. 최근 3개월 평균 55.8 kWh, 이전 3개월 평균 57.5 kWh입니다.
+최신 월 추정 가용용량은 56.1 kWh이고, 최초 기록 대비 -5.6%입니다. 최근 3개월 평균 55.8 kWh, 이전 3개월 평균 57.5 kWh입니다.
 이 수치는 충전 세션 기반 추정치와 추세이며, 배터리 상태를 진단한 결과가 아닙니다.
 
 ## 판정
