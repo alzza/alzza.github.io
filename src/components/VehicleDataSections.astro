@@ -1,0 +1,72 @@
+---
+interface MonthlyPoint { month: string; maxDischargePowerKw: number | null; maxPeakPowerSpeedKmh: number | null; capacityKwh: number | null; dataQuality: string }
+interface PowerEvent { eventNo: number; thresholdKw: number; maxDischargePowerKw: number | null; speedAtPeakPowerKmh: number | null; batteryLevelAtPeakPct: number | null; dataQuality: string }
+interface Props { monthlySummary?: MonthlyPoint[]; weeklyPowerEvents?: PowerEvent[] }
+const { monthlySummary = [], weeklyPowerEvents = [] } = Astro.props;
+const fmt = (v: number | null, unit = "") => v === null ? "데이터 부족" : `${v}${unit}`;
+const max = (values: (number | null)[]) => Math.max(...values.map((v) => v ?? 0), 1);
+const chartW = 720; const chartH = 210; const left = 58; const right = 18; const top = 28; const bottom = 38;
+const plotW = chartW - left - right; const plotH = chartH - top - bottom;
+const x = (i: number, count: number) => count <= 1 ? left + plotW / 2 : left + plotW * i / (count - 1);
+const powerMax = max(monthlySummary.map((p) => p.maxDischargePowerKw));
+const speedMax = max(monthlySummary.map((p) => p.maxPeakPowerSpeedKmh));
+const capacityValues = monthlySummary.map((p) => p.capacityKwh).filter((v): v is number => v !== null);
+const capMin = capacityValues.length ? Math.floor(Math.min(...capacityValues) - 1) : 0;
+const capMax = capacityValues.length ? Math.ceil(Math.max(...capacityValues) + 1) : 1;
+const capRange = Math.max(capMax - capMin, 1);
+const y = (v: number | null, kind: "power" | "speed" | "capacity") => {
+  if (v === null) return top + plotH;
+  const range = kind === "power" ? powerMax : kind === "speed" ? speedMax : capRange;
+  const base = kind === "capacity" ? v - capMin : v;
+  return top + plotH - (base / range) * plotH;
+};
+const linePath = (kind: "power" | "speed" | "capacity") => monthlySummary.map((p, i) => {
+  const value = kind === "power" ? p.maxDischargePowerKw : kind === "speed" ? p.maxPeakPowerSpeedKmh : p.capacityKwh;
+  return value === null ? "" : `${i && monthlySummary.slice(0, i).some((q) => (kind === "power" ? q.maxDischargePowerKw : kind === "speed" ? q.maxPeakPowerSpeedKmh : q.capacityKwh) !== null) ? "L" : "M"}${x(i, monthlySummary.length)} ${y(value, kind)}`;
+}).filter(Boolean).join(" ");
+const hasMonthly = monthlySummary.some((p) => p.maxDischargePowerKw !== null || p.maxPeakPowerSpeedKmh !== null || p.capacityKwh !== null);
+const hasEvents = weeklyPowerEvents.length > 0;
+---
+
+<section class="vehicle-data-sections" aria-label="상세 차량 분석">
+  <div class="vehicle-chart-head">
+    <div><span class="badge badge-pink">상세 분석</span><h2>월간 추세와 주간 이벤트</h2></div>
+    <p>마우스를 올리거나 키보드로 선택하면 정확한 값이 표시됩니다.</p>
+  </div>
+  <div class="vehicle-chart-grid">
+    <figure class="vehicle-chart-card">
+      <figcaption><strong>지난 1년 월별 종합</strong><span>단위가 다른 값은 3개 패널로 분리해 비교합니다.</span></figcaption>
+      {hasMonthly ? <div class="trend-panels">
+        {[
+          { key: "power", title: "최대 방전출력", unit: "kW", cls: "chart-bar-distance" },
+          { key: "speed", title: "최대출력 시 속도", unit: "km/h", cls: "chart-bar-charge" },
+          { key: "capacity", title: "추정 가용용량", unit: "kWh", cls: "chart-capacity-line" },
+        ].map((panel) => <div class="trend-panel"><h3>{panel.title} <small>({panel.unit})</small></h3><svg viewBox={`0 0 ${chartW} ${chartH}`} role="img" aria-label={`월별 ${panel.title}`}>
+          {[0, 1, 2, 3].map((step) => <line x1={left} x2={chartW - right} y1={top + plotH * step / 3} y2={top + plotH * step / 3} class="chart-grid-line" />)}
+          <path d={linePath(panel.key as "power" | "speed" | "capacity")} class={panel.cls === "chart-capacity-line" ? panel.cls : "trend-line"} />
+          {monthlySummary.map((point, i) => { const value = panel.key === "power" ? point.maxDischargePowerKw : panel.key === "speed" ? point.maxPeakPowerSpeedKmh : point.capacityKwh; return value !== null && <circle class={`chart-capacity-point ${panel.cls}`} cx={x(i, monthlySummary.length)} cy={y(value, panel.key as "power" | "speed" | "capacity")} r="5" tabindex="0" focusable="true" data-chart-tooltip={`${point.month} · ${panel.title}: ${fmt(value, ` ${panel.unit}`)}`} aria-label={`${point.month} ${panel.title} ${fmt(value, ` ${panel.unit}`)}`} />; })}
+          {monthlySummary.map((point, i) => <text x={x(i, monthlySummary.length)} y={chartH - 12} text-anchor="middle" class="chart-axis-label">{point.month.slice(5)}</text>)}
+        </svg></div>)}
+      </div> : <p class="vehicle-chart-empty">월별 종합 데이터가 아직 없습니다.</p>}
+      {hasMonthly && <details class="vehicle-chart-table" open><summary>월별 상세 수치</summary><table><thead><tr><th>월</th><th>최대출력</th><th>출력 시 속도</th><th>추정 용량</th></tr></thead><tbody>{monthlySummary.map((p) => <tr><td>{p.month}</td><td>{fmt(p.maxDischargePowerKw, " kW")}</td><td>{fmt(p.maxPeakPowerSpeedKmh, " km/h")}</td><td>{fmt(p.capacityKwh, " kWh")}</td></tr>)}</tbody></table></details>}
+    </figure>
+    <figure class="vehicle-chart-card">
+      <figcaption><strong>이번 주 임계값 초과 이벤트</strong><span>각 이벤트의 최대 출력·당시 속도·배터리 잔량을 기록합니다.</span></figcaption>
+      {hasEvents ? <svg viewBox={`0 0 ${chartW} ${chartH}`} role="img" aria-label="주간 고출력 이벤트"><line x1={left} x2={chartW - right} y1={top + plotH} y2={top + plotH} class="chart-grid-line" />{weeklyPowerEvents.map((event, i) => event.maxDischargePowerKw !== null && <g><rect class="chart-bar-distance" x={x(i, weeklyPowerEvents.length) - 18} y={y(event.maxDischargePowerKw, "power")} width="36" height={top + plotH - y(event.maxDischargePowerKw, "power")} rx="2" tabindex="0" focusable="true" data-chart-tooltip={`이벤트 ${event.eventNo} · ${fmt(event.maxDischargePowerKw, " kW")} · 속도 ${fmt(event.speedAtPeakPowerKmh, " km/h")} · SOC ${fmt(event.batteryLevelAtPeakPct, "%")}`} aria-label={`이벤트 ${event.eventNo} ${fmt(event.maxDischargePowerKw, " kW")}`} /><text x={x(i, weeklyPowerEvents.length)} y={chartH - 12} text-anchor="middle" class="chart-axis-label">#{event.eventNo}</text></g>)}</svg> : <p class="vehicle-chart-empty">이번 주 임계값 초과 이벤트가 없습니다.</p>}
+      {hasEvents && <details class="vehicle-chart-table" open><summary>이벤트 상세 수치</summary><table><thead><tr><th>이벤트</th><th>기준</th><th>최대출력</th><th>당시 속도</th><th>당시 SOC</th></tr></thead><tbody>{weeklyPowerEvents.map((e) => <tr><td>#{e.eventNo}</td><td>{e.thresholdKw} kW</td><td>{fmt(e.maxDischargePowerKw, " kW")}</td><td>{fmt(e.speedAtPeakPowerKmh, " km/h")}</td><td>{fmt(e.batteryLevelAtPeakPct, "%")}</td></tr>)}</tbody></table></details>}
+      <p class="chart-method-note">임계값 초과는 배터리 부담을 관찰하기 위한 지표이며, 이것만으로 열화의 원인이나 기여도를 확정하지 않습니다.</p>
+    </figure>
+  </div>
+</section>
+
+<div class="chart-tooltip" data-chart-tooltip role="status" aria-live="polite" hidden></div>
+<script>
+  const scope = document.querySelector<HTMLElement>(".vehicle-data-sections")?.parentElement;
+  const tooltip = scope?.querySelector<HTMLElement>("[data-chart-tooltip]");
+  scope?.querySelectorAll<SVGElement>("[data-chart-tooltip]").forEach((mark) => {
+    if (mark === tooltip) return;
+    const show = (event?: Event) => { if (!tooltip) return; tooltip.textContent = mark.dataset.chartTooltip ?? ""; tooltip.hidden = false; const pointer = event as PointerEvent | undefined; if (pointer) { tooltip.style.left = `${pointer.clientX + 12}px`; tooltip.style.top = `${pointer.clientY + 12}px`; } };
+    const hide = () => { if (tooltip) tooltip.hidden = true; };
+    mark.addEventListener("pointerenter", show); mark.addEventListener("pointermove", show); mark.addEventListener("focus", () => show()); mark.addEventListener("pointerleave", hide); mark.addEventListener("blur", hide);
+  });
+</script>

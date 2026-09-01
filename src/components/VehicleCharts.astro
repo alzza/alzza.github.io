@@ -130,8 +130,8 @@ const correlationCapacityPath = correlationPoints.map((item, index) => {
               const chargeHeight = item.chargingKwh === null ? 0 : (item.chargingKwh / dailyChargeMax) * plotHeight;
               return (
                 <g>
-                  {item.distanceKm !== null && <rect class="chart-bar-distance" x={center - barWidth - 2} y={top + plotHeight - distanceHeight} width={barWidth} height={distanceHeight} rx="2" />}
-                  {item.chargingKwh !== null && <rect class="chart-bar-charge" x={center + 2} y={top + plotHeight - chargeHeight} width={barWidth} height={chargeHeight} rx="2" />}
+                  {item.distanceKm !== null && <rect class="chart-bar-distance" x={center - barWidth - 2} y={top + plotHeight - distanceHeight} width={barWidth} height={distanceHeight} rx="2" tabindex="0" focusable="true" data-chart-tooltip={`${item.date} · 주행거리: ${item.distanceKm} km`} aria-label={`${item.date} 주행거리 ${item.distanceKm} km`} />}
+                  {item.chargingKwh !== null && <rect class="chart-bar-charge" x={center + 2} y={top + plotHeight - chargeHeight} width={barWidth} height={chargeHeight} rx="2" tabindex="0" focusable="true" data-chart-tooltip={`${item.date} · 충전량: ${item.chargingKwh} kWh`} aria-label={`${item.date} 충전량 ${item.chargingKwh} kWh`} />}
                   <text x={center} y={chartHeight - 14} text-anchor="middle" class="chart-axis-label">{dayLabel(item.date)}</text>
                 </g>
               );
@@ -180,7 +180,7 @@ const correlationCapacityPath = correlationPoints.map((item, index) => {
               return <g><line x1={left} x2={chartWidth - right} y1={y} y2={y} class="chart-grid-line" /><text x={left - 8} y={y + 4} text-anchor="end" class="chart-axis-label">{value.toFixed(1)}</text></g>;
             })}
             <path d={capacityPath} class="chart-capacity-line" />
-            {capacityTrend.map((item, index) => item.capacityKwh !== null && <g><circle cx={capacityX(index)} cy={capacityY(item.capacityKwh)} r="4" class="chart-capacity-point" /><text x={capacityX(index)} y={chartHeight - 14} text-anchor="middle" class="chart-axis-label">{item.month.slice(5)}</text></g>)}
+            {capacityTrend.map((item, index) => item.capacityKwh !== null && <g><circle cx={capacityX(index)} cy={capacityY(item.capacityKwh)} r="4" class="chart-capacity-point" tabindex="0" focusable="true" data-chart-tooltip={`${item.month} · 추정 가용용량: ${item.capacityKwh} kWh`} aria-label={`${item.month} 추정 가용용량 ${item.capacityKwh} kWh`} /><text x={capacityX(index)} y={chartHeight - 14} text-anchor="middle" class="chart-axis-label">{item.month.slice(5)}</text></g>)}
           </svg>
         ) : <p class="vehicle-chart-empty">월별 용량 추세가 없어 그래프를 표시하지 않습니다.</p>
       }
@@ -208,10 +208,10 @@ const correlationCapacityPath = correlationPoints.map((item, index) => {
             {correlationPoints.map((item, index) => {
               const rate = item.eventsPer1000Km;
               const height = rate === null ? 0 : (rate / correlationRateMax) * plotHeight;
-              return <g>{rate !== null && <rect class="chart-bar-distance" x={correlationX(index) - correlationBarWidth / 2} y={top + plotHeight - height} width={correlationBarWidth} height={height} rx="2" />}<text x={correlationX(index)} y={chartHeight - 14} text-anchor="middle" class="chart-axis-label">{item.month.slice(5)}</text></g>;
+              return <g>{rate !== null && <rect class="chart-bar-distance" x={correlationX(index) - correlationBarWidth / 2} y={top + plotHeight - height} width={correlationBarWidth} height={height} rx="2" tabindex="0" focusable="true" data-chart-tooltip={`${item.month} · 이벤트율: ${rate}회/1,000 km`} aria-label={`${item.month} 이벤트율 ${rate}회/1,000 km`} />}<text x={correlationX(index)} y={chartHeight - 14} text-anchor="middle" class="chart-axis-label">{item.month.slice(5)}</text></g>;
             })}
             <path d={correlationCapacityPath} class="chart-capacity-line" />
-            {correlationPoints.map((item, index) => item.capacityKwh !== null && <circle cx={correlationX(index)} cy={correlationCapacityY(item.capacityKwh)} r="4" class="chart-capacity-point" />)}
+            {correlationPoints.map((item, index) => item.capacityKwh !== null && <circle cx={correlationX(index)} cy={correlationCapacityY(item.capacityKwh)} r="4" class="chart-capacity-point" tabindex="0" focusable="true" data-chart-tooltip={`${item.month} · 추정 가용용량: ${item.capacityKwh} kWh`} aria-label={`${item.month} 추정 가용용량 ${item.capacityKwh} kWh`} />)}
             <text x={left} y={16} class="chart-axis-label">이벤트/1,000 km</text><text x={chartWidth - right} y={16} text-anchor="end" class="chart-axis-label">추정 kWh</text>
           </svg>
         ) : <p class="vehicle-chart-empty">월별 고출력 가속률과 추정 가용용량이 함께 쌓이면 비교 그래프를 표시합니다.</p>
@@ -224,6 +224,18 @@ const correlationCapacityPath = correlationPoints.map((item, index) => {
 </section>
 
 <script>
+  const chartRoot = document.querySelector<HTMLElement>(".vehicle-charts");
+  const chartTooltip = document.createElement("div");
+  chartTooltip.className = "chart-tooltip";
+  chartTooltip.setAttribute("role", "status");
+  chartTooltip.setAttribute("aria-live", "polite");
+  chartTooltip.hidden = true;
+  document.body.append(chartTooltip);
+  chartRoot?.querySelectorAll<SVGElement>("[data-chart-tooltip]").forEach((mark) => {
+    const show = (event?: Event) => { chartTooltip.textContent = mark.dataset.chartTooltip ?? ""; chartTooltip.hidden = false; const pointer = event as PointerEvent | undefined; if (pointer) { chartTooltip.style.left = `${pointer.clientX + 12}px`; chartTooltip.style.top = `${pointer.clientY + 12}px`; } };
+    const hide = () => { chartTooltip.hidden = true; };
+    mark.addEventListener("pointerenter", show); mark.addEventListener("pointermove", show); mark.addEventListener("focus", () => show()); mark.addEventListener("pointerleave", hide); mark.addEventListener("blur", hide);
+  });
   const applyChartToggles = () => {
     const section = document.querySelector(".vehicle-charts");
     if (!section) return;

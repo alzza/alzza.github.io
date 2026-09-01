@@ -1,0 +1,19 @@
+{
+  "title": "주간 차량 건강 리포트",
+  "date": "2026-09-07",
+  "excerpt": "Grok Bot이 주간 집계값만 교체하는 데이터 예시입니다.",
+  "week_start": "2026-08-31",
+  "week_end": "2026-09-06",
+  "risk_level": "data_insufficient",
+  "distance_km": null,
+  "charging_kwh": null,
+  "capacity_kwh": null,
+  "degradation_percent": null,
+  "monthly_summary": [],
+  "weekly_power_events": [],
+  "daily_metrics": [],
+  "capacity_trend": [],
+  "acceleration_week": { "data_quality": "insufficient" },
+  "acceleration_trend": [],
+  "tags": ["template"]
+}

@@ -4,39 +4,46 @@ import Base from "../../layouts/Base.astro";
 import Header from "../../components/Header.astro";
 import Comments from "../../components/Comments.astro";
 import VehicleCharts from "../../components/VehicleCharts.astro";
+import VehicleDataSections from "../../components/VehicleDataSections.astro";
 import { riskLabel } from "../../lib/vehicle";
 
 export async function getStaticPaths() {
   const reports = await getCollection("vehicleReports");
-  return reports.map((report) => ({ params: { id: report.id }, props: { report } }));
+  const dataReports = await getCollection("vehicleData");
+  const paths = new Map(reports.map((report) => [report.id, { params: { id: report.id }, props: { report, dataReport: null } }]));
+  dataReports.forEach((dataReport) => paths.set(dataReport.id, { params: { id: dataReport.id }, props: { report: null, dataReport } }));
+  return [...paths.values()];
 }
 
-const { report } = Astro.props;
-const { Content } = await render(report);
+const { report, dataReport } = Astro.props;
+const source = report ?? dataReport;
+const data = source.data;
+const { Content } = report ? await render(report) : { Content: null };
 const number = (value: number | null, suffix: string) => value === null ? "데이터 부족" : `${value}${suffix}`;
 ---
 
-<Base title={`${report.data.title} · 차량관리 · alzza`} description={report.data.excerpt}>
+<Base title={`${data.title} · 차량관리 · alzza`} description={data.excerpt}>
   <Header links={[{ href: "/notes/", label: "노트" }, { href: "/info/", label: "정보" }]} />
   <div class="wrap prose">
     <section class="hero">
-      <span class:list={["badge", `risk-${report.data.risk_level}`]}>{riskLabel(report.data.risk_level)}</span>
-      <h1>{report.data.title}</h1>
-      <p class="note-meta">분석 기간: {report.data.week_start} ~ {report.data.week_end} · 작성: {report.data.date}</p>
+      <span class:list={["badge", `risk-${data.risk_level}`]}>{riskLabel(data.risk_level)}</span>
+      <h1>{data.title}</h1>
+      <p class="note-meta">분석 기간: {data.week_start} ~ {data.week_end} · 작성: {data.date}</p>
       <div class="vehicle-metrics">
-        <div><small>주행거리</small><strong>{number(report.data.distance_km, " km")}</strong></div>
-        <div><small>충전량</small><strong>{number(report.data.charging_kwh, " kWh")}</strong></div>
-        <div><small>추정 가용용량</small><strong>{number(report.data.capacity_kwh, " kWh")}</strong></div>
-        <div><small>최초 대비</small><strong>{number(report.data.degradation_percent, "%")}</strong></div>
+        <div><small>주행거리</small><strong>{number(data.distance_km, " km")}</strong></div>
+        <div><small>충전량</small><strong>{number(data.charging_kwh, " kWh")}</strong></div>
+        <div><small>추정 가용용량</small><strong>{number(data.capacity_kwh, " kWh")}</strong></div>
+        <div><small>최초 대비</small><strong>{number(data.degradation_percent, "%")}</strong></div>
       </div>
     </section>
     <VehicleCharts
-      dailyMetrics={report.data.daily_metrics.map((item) => ({ date: item.date, distanceKm: item.distance_km, chargingKwh: item.charging_kwh }))}
-      capacityTrend={report.data.capacity_trend.map((item) => ({ month: item.month, capacityKwh: item.capacity_kwh }))}
-      accelerationWeek={{ thresholdKw: report.data.acceleration_week.threshold_kw, secondaryThresholdKw: report.data.acceleration_week.secondary_threshold_kw, eventCount: report.data.acceleration_week.event_count, secondaryEventCount: report.data.acceleration_week.secondary_event_count, maxDischargePowerKw: report.data.acceleration_week.max_discharge_power_kw, avgPeakPowerSpeedKmh: report.data.acceleration_week.avg_peak_power_speed_kmh, maxPeakPowerSpeedKmh: report.data.acceleration_week.max_peak_power_speed_kmh, coveredDistanceKm: report.data.acceleration_week.covered_distance_km, eventsPer1000Km: report.data.acceleration_week.events_per_1000km, dataQuality: report.data.acceleration_week.data_quality }}
-      accelerationTrend={report.data.acceleration_trend.map((item) => ({ month: item.month, events180Kw: item.events_180kw, events200Kw: item.events_200kw, avgPeakPowerSpeedKmh: item.avg_peak_power_speed_kmh, maxPeakPowerSpeedKmh: item.max_peak_power_speed_kmh, coveredDistanceKm: item.covered_distance_km, eventsPer1000Km: item.events_per_1000km }))}
+      dailyMetrics={data.daily_metrics.map((item) => ({ date: item.date, distanceKm: item.distance_km, chargingKwh: item.charging_kwh }))}
+      capacityTrend={data.capacity_trend.map((item) => ({ month: item.month, capacityKwh: item.capacity_kwh }))}
+      accelerationWeek={{ thresholdKw: data.acceleration_week.threshold_kw, secondaryThresholdKw: data.acceleration_week.secondary_threshold_kw, eventCount: data.acceleration_week.event_count, secondaryEventCount: data.acceleration_week.secondary_event_count, maxDischargePowerKw: data.acceleration_week.max_discharge_power_kw, avgPeakPowerSpeedKmh: data.acceleration_week.avg_peak_power_speed_kmh, maxPeakPowerSpeedKmh: data.acceleration_week.max_peak_power_speed_kmh, coveredDistanceKm: data.acceleration_week.covered_distance_km, eventsPer1000Km: data.acceleration_week.events_per_1000km, dataQuality: data.acceleration_week.data_quality }}
+      accelerationTrend={data.acceleration_trend.map((item) => ({ month: item.month, events180Kw: item.events_180kw, events200Kw: item.events_200kw, avgPeakPowerSpeedKmh: item.avg_peak_power_speed_kmh, maxPeakPowerSpeedKmh: item.max_peak_power_speed_kmh, coveredDistanceKm: item.covered_distance_km, eventsPer1000Km: item.events_per_1000km }))}
     />
-    <Content />
+    {dataReport && <VehicleDataSections monthlySummary={dataReport.data.monthly_summary.map((item) => ({ month: item.month, maxDischargePowerKw: item.max_discharge_power_kw, maxPeakPowerSpeedKmh: item.max_peak_power_speed_kmh, capacityKwh: item.capacity_kwh, dataQuality: item.data_quality }))} weeklyPowerEvents={dataReport.data.weekly_power_events.map((item) => ({ eventNo: item.event_no, thresholdKw: item.threshold_kw, maxDischargePowerKw: item.max_discharge_power_kw, speedAtPeakPowerKmh: item.speed_at_peak_power_kmh, batteryLevelAtPeakPct: item.battery_level_at_peak_pct, dataQuality: item.data_quality }))} />}
+    {Content && <Content />}
     <p class="vehicle-caveat">가용용량은 충전 세션 기반 추정치이며 온도·충전 조건·표본 수에 따라 달라질 수 있습니다. 이 리포트만으로 배터리 교체 필요 여부를 확정하지 않습니다.</p>
     <Comments />
   </div>

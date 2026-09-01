@@ -186,6 +186,13 @@ button:focus-visible {
 .chart-bar-charge { fill:var(--yellow); stroke:var(--ink); stroke-width:1.25; }
 .chart-capacity-line { fill:none; stroke:var(--green); stroke-width:4; stroke-linejoin:round; stroke-linecap:round; }
 .chart-capacity-point { fill:var(--green); stroke:var(--ink); stroke-width:1.5; }
+.trend-line { fill:none; stroke:var(--pink); stroke-width:4; stroke-linejoin:round; stroke-linecap:round; }
+.trend-panels { display:grid; gap:14px; }
+.trend-panel { border:2px solid color-mix(in srgb,var(--ink) 22%,transparent); padding:10px; background:var(--surface-2); }
+.trend-panel h3 { margin:0 0 4px; font-size:.95rem; }.trend-panel h3 small { color:var(--muted); font-weight:600; }
+.trend-panel [tabindex] { cursor:crosshair; outline:none; }.trend-panel [tabindex]:hover,.trend-panel [tabindex]:focus { stroke:var(--pink); stroke-width:3; }
+.chart-tooltip { position:fixed; z-index:80; max-width:min(320px,calc(100vw - 24px)); padding:8px 10px; border:2px solid var(--ink); background:var(--yellow); color:var(--black); box-shadow:var(--shadow-sm); font:700 .82rem var(--font-mono); pointer-events:none; }
+.chart-tooltip[hidden] { display:none; }
 .chart-legend { display:flex; flex-wrap:wrap; gap:14px; margin-top:8px; font-size:.88rem; }
 .chart-legend span { display:inline-flex; align-items:center; gap:6px; }
 .chart-legend i { width:14px; height:14px; border:2px solid var(--ink); display:inline-block; }
@@ -193,6 +200,7 @@ button:focus-visible {
 .legend-capacity { background:var(--green); }
 .acceleration-week h3 { margin:0 0 14px; }.acceleration-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }.acceleration-metrics div { border:2px solid var(--ink); padding:10px; }.acceleration-metrics small { display:block; color:var(--muted); }.acceleration-metrics strong { display:block; margin-top:4px; font-size:1.12rem; }.chart-method-note { margin:14px 0 0; color:var(--muted); font-size:.88rem; }
 .vehicle-chart-empty { padding:34px 8px; color:var(--muted); text-align:center; border:2px dashed var(--muted); }
+.vehicle-data-sections { margin-top:30px; }
 .vehicle-chart-table { margin-top:14px; font-size:.9rem; }.vehicle-chart-table summary { cursor:pointer; font-weight:700; }.vehicle-chart-table table { width:100%; margin-top:8px; border-collapse:collapse; }.vehicle-chart-table th,.vehicle-chart-table td { padding:7px 4px; border-bottom:1px solid color-mix(in srgb,var(--ink) 18%,transparent); text-align:left; }
 @media (max-width: 640px) {
   .vehicle-row { grid-template-columns: auto minmax(0, 1fr); }
