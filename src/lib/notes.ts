@@ -11,6 +11,14 @@ export type NoteItem = {
 
 const extra: NoteItem[] = [
   {
+    href: "/plc/timing/",
+    title: "SC1 Robot3 불완전 피치 · Unload · 등급 통합 설명",
+    date: "2026-08-30",
+    excerpt: "체인이 픽 자리에 선 뒤에만 Unload. Permits Unload 한 줄. 로봇 프로그램은 그대로.",
+    kicker: "PLC",
+    tags: ["PLC", "SC1"],
+  },
+  {
     href: "/plc/",
     title: "SC1 Robot3 깔딱 HMI Enable=1 1차 시험안",
     date: "2026-08-22",
