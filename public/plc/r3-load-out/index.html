@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="color-scheme" content="light dark"/>
+<meta name="description" content="CSM1 Robot3 LOAD_OUT 대기 위치 변경. R[141] 스위치. 펜던트 수정안."/>
+<title>SC1 · Robot3 LOAD_OUT 대기, 펜던트 수정</title>
+<style>
+:root {
+  --bg: #f4f7f7; --surface: #fbfdfd; --surface-2: #eef4f3; --text: #172221;
+  --muted: #5e6c69; --line: #cbd8d5; --accent: #087f73; --accent-strong: #05655c;
+  --accent-soft: #d9efeb; --warning: #8a5a13; --warning-soft: #f6ead4;
+  --danger: #9d3030; --danger-soft: #f7e1e1; --ok: #1f6b47; --ok-soft: #dceee4;
+  --code-bg: #162321; --code-text: #e8f4f1; --shadow: 0 18px 48px rgba(23,58,52,.08);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, Menlo, monospace;
+}
+html[data-theme="dark"] {
+  --bg: #101716; --surface: #17211f; --surface-2: #1d2a27; --text: #edf5f3;
+  --muted: #acbbb7; --line: #33433f; --accent: #51b8aa; --accent-strong: #78cabf;
+  --accent-soft: #183c37; --warning: #efbe70; --warning-soft: #3d2f18;
+  --danger: #ee9090; --danger-soft: #422424; --ok: #8bd0aa; --ok-soft: #1d3b2b;
+  --code-bg: #0b1110; --shadow: 0 18px 48px rgba(0,0,0,.24);
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --bg: #101716; --surface: #17211f; --surface-2: #1d2a27; --text: #edf5f3;
+    --muted: #acbbb7; --line: #33433f; --accent: #51b8aa; --accent-strong: #78cabf;
+    --accent-soft: #183c37; --warning: #efbe70; --warning-soft: #3d2f18;
+    --danger: #ee9090; --danger-soft: #422424; --ok: #8bd0aa; --ok-soft: #1d3b2b;
+    --code-bg: #0b1110; --shadow: 0 18px 48px rgba(0,0,0,.24);
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body { margin: 0; color: var(--text); background: var(--bg); font-family: var(--font-sans); font-size: 16px; line-height: 1.7; }
+a { color: var(--accent-strong); text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+button {
+  min-height: 40px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 13px;
+  color: var(--text); background: var(--surface); font: inherit; font-weight: 700; cursor: pointer;
+}
+button:hover { border-color: var(--accent); background: var(--accent-soft); }
+.topbar {
+  position: sticky; top: 0; z-index: 20; border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(14px);
+}
+.topbar-inner, .wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+.topbar-inner { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+.brand strong { white-space: nowrap; font-size: 15px; }
+.brand span { color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.top-actions a {
+  min-height: 40px; display: inline-flex; align-items: center; border: 1px solid var(--line);
+  border-radius: 10px; padding: 8px 13px; color: var(--text); background: var(--surface);
+  font-weight: 700; text-decoration: none;
+}
+.hero { padding: 36px 0 12px; }
+.hero h1 { margin: 0 0 10px; font-size: clamp(26px, 4vw, 38px); letter-spacing: -0.03em; line-height: 1.2; }
+.hero p { margin: 0 0 12px; color: var(--muted); max-width: 68ch; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; }
+.chip { border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 700; font-family: var(--font-mono); }
+.chip-ok { background: var(--ok-soft); color: var(--ok); }
+.chip-warn { background: var(--warning-soft); color: var(--warning); }
+.chip-danger { background: var(--danger-soft); color: var(--danger); }
+.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 28px; }
+.toc a { font-size: 13px; font-weight: 700; }
+h2 { margin: 36px 0 12px; font-size: 22px; }
+h3 { margin: 22px 0 8px; font-size: 17px; }
+p { margin: 0 0 12px; }
+table { width: 100%; border-collapse: collapse; margin: 0 0 18px; font-size: 14px; }
+th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+th { background: var(--surface-2); font-size: 13px; }
+code { font-family: var(--font-mono); font-size: 0.88em; background: var(--surface-2); padding: 0.1em 0.35em; border-radius: 4px; }
+pre {
+  margin: 0 0 16px; padding: 14px 16px; overflow: auto; background: var(--code-bg); color: var(--code-text);
+  border-radius: 12px; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.55;
+}
+.grid-2 { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 0 0 18px; }
+@media (min-width: 860px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; box-shadow: var(--shadow); }
+.card h3 { margin-top: 0; }
+.callout { border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 12px 14px; margin: 0 0 16px; }
+.callout.warn { border-left-color: var(--warning); background: var(--warning-soft); }
+.callout.danger { border-left-color: var(--danger); background: var(--danger-soft); }
+.stage-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin: 0 0 18px; }
+.stage-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.stage-bar span { color: var(--muted); font-size: 13px; margin-left: auto; }
+.space-svg { display: block; width: 100%; height: auto; background: #1c2c2a; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 16px; padding: 10px 14px; font-size: 13px; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.foot { padding: 28px 0 48px; color: var(--muted); font-size: 13px; font-family: var(--font-mono); }
+.old { color: #f0b4b4; }
+.new { color: #8bd0aa; }
+.rem { color: #9aa8a4; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <strong>Robot3 LOAD_OUT 대기</strong>
+      <span>1호기 · 펜던트 수정 · R[141]</span>
+    </div>
+    <div class="top-actions">
+      <a href="/notes/">노트</a>
+      <a href="/plc/timing/">통합 설명</a>
+      <button id="themeButton" type="button">테마</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>S/E/G는 SC#2 위에서 기다렸다가 내린다. R은 그대로 둔다.</h1>
+    <p>체인이 24번에서 잡고 올라온 뒤, 예전에는 그 자리에서 <code>DI[4]</code>를 기다렸다. 바꾸면 먼저 SC#2 위 퍼치까지 가고, 완료 신호가 온 뒤에만 수직으로 내린다. 대상은 CSM1(1호기)만이다. 이 페이지의 LS는 복사해서 펜던트에 넣는다. 저장소의 <code>ROBOT_3/</code> 파일은 고치지 않는다.</p>
+    <div class="chips">
+      <span class="chip chip-ok">R[141]=0 기존</span>
+      <span class="chip chip-warn">R[141]=1 변경</span>
+      <span class="chip chip-danger">R급은 LOAD_OUT 대기에 넣지 않음</span>
+    </div>
+  </section>
+
+  <nav class="toc">
+    <a href="#switch">스위치</a>
+    <a href="#programs">프로그램 목록</a>
+    <a href="#space">좌표와 펀치</a>
+    <a href="#rsr0001">RSR0001</a>
+    <a href="#load_out">LOAD_OUT</a>
+    <a href="#dropnorm">DROPNORM</a>
+    <a href="#drop_rev">DROP_REV</a>
+  </nav>
+
+  <h2 id="switch">R[141] 스위치</h2>
+  <table>
+    <thead><tr><th>값</th><th>동작</th></tr></thead>
+    <tbody>
+      <tr><td><code>R[141]=0</code></td><td>지금과 같다. 체인24 위에서 <code>DI[4]</code>를 기다린 다음 <code>LOAD_OUT</code>이 시작된다.</td></tr>
+      <tr><td><code>R[141]=1</code></td><td>S/E/G는 퍼치까지 먼저 가고, 거기서 <code>DI[4]</code>를 기다린 다음 내린다. R은 <code>REJECT</code>로 보낸다.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <p>기존 줄을 지워서 <code>!</code>만 남기면, 스위치를 0으로 되돌려도 예전 동작이 없다. 기존 지시는 실행 가능한 채로 두고, <code>R[141]=0</code>일 때만 타게 한다. 그 앞에 리마크 <code>! R[141]=0 기존</code>만 넣는다.</p>
+    <p><code>R[141]</code>은 INIT에서 0으로 만들지 않는다. 전원을 넣어도 값이 남는다. 처음 시험 전에 레지스터가 0인지 확인하고, 변경을 켤 때만 1로 둔다. 코멘트는 <code>WAIT AT SC2</code>로 적는다.</p>
+  </div>
+
+  <h2 id="programs">고칠 프로그램</h2>
+  <table>
+    <thead><tr><th>프로그램</th><th>기존</th><th>R[141]=1일 때</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>RSR0001</code></td>
+        <td>LBL[11]에서 <code>DI[4]</code>가 켜질 때까지 돌다가 <code>LOAD_OUT</code>을 부른다.</td>
+        <td><code>DI[103]</code>이면 <code>REJECT</code>. 그립이 닫혀 있으면 <code>DI[4]</code>를 기다리지 않고 <code>LOAD_OUT</code>을 바로 부른다.</td>
+      </tr>
+      <tr>
+        <td><code>LOAD_OUT</code></td>
+        <td>시작하자마자 <code>DO[4]</code>를 끄고, <code>J PR[4] CNT100</code> 다음 <code>L PR[5]</code>로 내린다.</td>
+        <td><code>DO[4]</code>는 켠 채로 <code>J PR[4] FINE</code>까지 간다. <code>WAIT DI[4]</code> 다음에 <code>DO[4]</code>를 끄고 <code>L PR[5]</code>로 내린다.</td>
+      </tr>
+      <tr>
+        <td><code>DROPNORM</code></td>
+        <td>펀치 뒤 오프셋 드롭. <code>J PR[15] CNT50</code> 다음 <code>L PR[18]</code>.</td>
+        <td>같은 핸드셰이크. <code>J PR[15] FINE</code>에서 <code>WAIT DI[4]</code>, 그다음 <code>DO[4]</code> OFF, <code>L PR[18]</code>.</td>
+      </tr>
+      <tr>
+        <td><code>DROP_REV</code></td>
+        <td>그립 180도 픽 뒤 드롭. <code>J PR[16] FINE</code> 다음 <code>L PR[19]</code>.</td>
+        <td>같은 대기. 지금 <code>CALCULT</code>가 X=167, Y=883으로 고정되어 있어서 이 경로는 타지 않는다. 그래도 같은 스위치를 넣는다.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p><code>ULOD_INF</code>, <code>OFSTZERO</code>, <code>PUNCH</code>, <code>REJECT</code>, <code>INIT</code>는 건드리지 않는다. CSM2도 건드리지 않는다.</p>
+
+  <div class="callout danger">
+    <p><code>DO[4:Clear of Outfeed]</code>를 <code>LOAD_OUT</code> 시작에서 끄면 안 된다. PLC는 이 비트가 켜져 있어야 SC#2를 돌리고, 완료 뒤에 <code>DI[4]</code>를 준다. 대기 중에 끄면 <code>WAIT DI[4]</code>가 끝나지 않는다. 끄는 시점은 <code>DI[4]</code>를 확인한 다음, 수직 하강 직전이다.</p>
+  </div>
+
+  <h2 id="space">좌표로 본 펀치 경로</h2>
+  <p>LS에 들어 있는 것은 프로그램 안의 <code>P[]</code>뿐이다. <code>PR[2]</code>, <code>PR[3]</code>, <code>PR[4]</code>, <code>PR[5]</code>, <code>PR[15]</code>, <code>PR[18]</code>은 로봇 레지스터라 파일에 XYZ가 없다. 아래 공간에는 가르친 <code>P[]</code>만 넣었고, 퍼치 레지스터는 빈 상자로만 표시한다.</p>
+  <div class="stage-wrap">
+    <div class="stage-bar">
+      <button type="button" id="btnSeg" aria-pressed="true">S/E/G 기본</button>
+      <button type="button" id="btnPunch">펀치(샘플)</button>
+      <button type="button" id="btnPlay">재생</button>
+      <span>위가 펀치(+X), 왼쪽이 체인24(Y−), 오른쪽이 리젝트(Y+)</span>
+    </div>
+    <svg class="space-svg" id="space" viewBox="0 0 1080 460" role="img" aria-label="Robot3 가르친 좌표 평면도">
+      <rect width="1080" height="460" fill="#1c2c2a"/>
+      <text x="24" y="448" fill="#9aa8a4" font-size="12" font-family="ui-monospace,monospace">Y− 체인24</text>
+      <text x="1056" y="448" fill="#9aa8a4" font-size="12" font-family="ui-monospace,monospace" text-anchor="end">Y+ 리젝트</text>
+      <text x="837" y="18" fill="#9aa8a4" font-size="12" font-family="ui-monospace,monospace" text-anchor="middle">X+ 펀치</text>
+      <path id="pathSeg" d="M86 408 L686 198" fill="none" stroke="#5ee0c8" stroke-width="3"/>
+      <path id="pathPunch" d="M40 410 L837 30 L686 198" fill="none" stroke="#74b9ff" stroke-width="3" stroke-dasharray="8 6"/>
+      <circle cx="86" cy="408" r="7" fill="#5ee0c8"/>
+      <text x="98" y="402" fill="#d7ece8" font-size="13">체인24 CLEAR (−7, −2344, 255)</text>
+      <circle cx="40" cy="410" r="6" fill="#7ad1ff"/>
+      <text x="18" y="388" fill="#d7ece8" font-size="12">오프셋 CLEAR</text>
+      <circle cx="837" cy="30" r="7" fill="#74b9ff"/>
+      <text x="700" y="48" fill="#d7ece8" font-size="13">PUNCH APPR (1624, 842)</text>
+      <circle cx="1040" cy="409" r="7" fill="#ffb86b"/>
+      <text x="860" y="400" fill="#ffb86b" font-size="13">REJECT (Y=1700)</text>
+      <rect x="662" y="174" width="48" height="48" fill="none" stroke="#f07178" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="716" y="192" fill="#f07178" font-size="13">퍼치 대기</text>
+      <text x="716" y="210" fill="#f07178" font-size="12">PR[4] 기본 · PR[15] 펀치</text>
+      <text x="716" y="226" fill="#9aa8a4" font-size="11">XYZ는 LS에 없음</text>
+      <circle id="bot" cx="86" cy="408" r="8" fill="#fff"/>
+    </svg>
+    <div class="legend">
+      <span><i class="dot" style="background:#5ee0c8"></i>체인24 픽업</span>
+      <span><i class="dot" style="background:#74b9ff"></i>펀치</span>
+      <span><i class="dot" style="background:#ffb86b"></i>리젝트</span>
+      <span><i class="dot" style="background:#f07178"></i>하강 대기(추론)</span>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>파일에 있는 XYZ (UF0, mm)</h3>
+      <table>
+        <thead><tr><th>점</th><th>X</th><th>Y</th><th>Z</th></tr></thead>
+        <tbody>
+          <tr><td>OFSTZERO APPR</td><td>-7</td><td>-2344</td><td>-466</td></tr>
+          <tr><td>OFSTZERO DEPART</td><td>-7</td><td>-2344</td><td>-300</td></tr>
+          <tr><td>OFSTZERO CLEAR</td><td>-7</td><td>-2344</td><td>255</td></tr>
+          <tr><td>OFSTNORM APPR</td><td>-15</td><td>-2537</td><td>-500</td></tr>
+          <tr><td>OFSTNORM DEPART</td><td>-15</td><td>-2537</td><td>-670</td></tr>
+          <tr><td>OFSTNORM CLEAR</td><td>-15</td><td>-2537</td><td>250</td></tr>
+          <tr><td>PUNCH APPR</td><td>1624</td><td>842</td><td>100</td></tr>
+          <tr><td>REJECT POUNCE.03</td><td>-10</td><td>1700</td><td>351</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>움직이고 나서 나온 결론</h3>
+      <p>체인24는 Y가 약 −2344인 한 줄이다. 펀치는 X 1624, Y 842로, 픽업에서 약 3.6 m 떨어져 있다. 리젝트는 Y +1700 쪽이다.</p>
+      <p>기본 하강은 <code>J PR[4]</code> 다음 <code>L PR[5]</code>다. Z가 내려가기 시작하는 점이 <code>PR[4]</code>다. 여기서 멈추려면 <code>CNT100</code>을 <code>FINE</code>으로 바꿔야 한다.</p>
+      <p>펀치는 지금 <code>CALCULT</code>가 X=167, Y=883으로 고정이라 <code>R[55]=1</code>, 레인 3이다. 픽은 <code>OFSTNORM</code>, 드롭은 <code>DROPNORM</code>이다. 기본 <code>PR[4]</code>가 아니라 <code>J PR[15]</code> 다음 <code>L PR[18]</code>에서 Z가 내려간다. 샘플도 SC#2 완료를 기다리려면 대기는 <code>PR[15]</code>다.</p>
+      <p>펀치를 하고 나서 기본 자리로 내려놓는 현장 상태라면, 펜던트에서 <code>R[55]</code>가 0인지 먼저 보면 된다. 0이면 <code>LOAD_OUT</code>의 <code>PR[4]</code>만 고치면 된다. 1이면 <code>DROPNORM</code>도 같이 고친다.</p>
+    </div>
+  </div>
+
+  <h2 id="rsr0001">1. RSR0001</h2>
+  <p>LBL[11]만 고친다. 기존 44·46번은 <code>R[141]=0</code> 분기에 그대로 둔다. 그립이 닫힌 채로 LBL[11]에 다시 들어오면 <code>DI[103]</code>을 건너뛰므로, 변경 분기에서 리젝트를 한 번 더 본다.</p>
+  <div class="grid-2">
+    <div>
+      <h3>기존</h3>
+<pre><span class="old">LBL[11] ;
+IF DI[4:Load Outfeed]=ON,CALL LOAD_OUT ;
+IF DO[8:Gripper Closed]=ON,JMP LBL[11] ;
+JMP LBL[1] ;</span></pre>
+    </div>
+    <div>
+      <h3>수정</h3>
+<pre><span class="rem">LBL[11] ;
+IF R[141:WAIT AT SC2]=0,JMP LBL[12] ;
+IF DI[103:Reject ENBL]=ON AND R[45:PUNCH_WORK_1]=0,CALL REJECT ;
+IF DO[7:Gripper Open]=ON,JMP LBL[1] ;
+IF DO[8:Gripper Closed]=ON,CALL LOAD_OUT ;
+JMP LBL[1] ;
+LBL[12] ;
+! R[141]=0 기존</span>
+<span class="old">IF DI[4:Load Outfeed]=ON,CALL LOAD_OUT ;
+IF DO[8:Gripper Closed]=ON,JMP LBL[11] ;
+JMP LBL[1] ;</span></pre>
+    </div>
+  </div>
+
+  <h2 id="load_out">2. LOAD_OUT</h2>
+  <p>12번 <code>DO[4]=OFF</code> 앞에 분기를 넣는다. <code>R[141]=1</code>이면 기존 12번부터 LBL[1] 하강은 타지 않고, 파일 끝에 붙인 LBL[20]으로 간다. 기존 줄은 지우지 않는다.</p>
+  <div class="grid-2">
+    <div>
+      <h3>기존 (12번 근처와 LBL[1])</h3>
+<pre><span class="old">DO[4:Clear of Outfeed]=OFF ;
+IF R[55:OFFSET PICK]=0 AND R[56:REVERSE PICK]=0,JMP LBL[1] ;
+IF R[55:OFFSET PICK]=1,CALL DROPNORM ;
+...
+LBL[1] ;
+J PR[4:Outfeed Perch] 70% CNT100 ;
+L PR[5:Outfeed Drop] 2300mm/sec CNT10 TB    .50sec,CALL RETRACT ACC100 ;</span></pre>
+    </div>
+    <div>
+      <h3>추가</h3>
+<pre><span class="rem">! 12번 앞에 삽입
+IF R[141:WAIT AT SC2]=1,JMP LBL[20] ;
+! 아래는 기존 그대로 (R[141]=0)</span>
+
+<span class="new">! 프로그램 끝에 추가
+LBL[20] ;
+IF R[55:OFFSET PICK]=0 AND R[56:REVERSE PICK]=0,JMP LBL[21] ;
+IF R[55:OFFSET PICK]=1,CALL DROPNORM ;
+IF DO[7:Gripper Open]=ON,JMP LBL[29] ;
+IF R[56:REVERSE PICK]=1,CALL DROP_REV ;
+JMP LBL[29] ;
+LBL[21] ;
+J PR[4:Outfeed Perch] 70% FINE ;
+WAIT DI[4:Load Outfeed]=ON ;
+DO[4:Clear of Outfeed]=OFF ;
+L PR[5:Outfeed Drop] 2300mm/sec CNT10 TB    .50sec,CALL RETRACT ACC100 ;
+COL DETECT OFF ;
+CALL OPENDROP ;
+COL DETECT ON ;
+PAYLOAD[1:Empty] ;
+L PR[4:Outfeed Perch] 2000mm/sec CNT75 ACC100 ;
+DO[8:Gripper Closed]=OFF ;
+DO[7:Gripper Open]=ON ;
+DO[4:Clear of Outfeed]=ON ;
+J PR[2:Infeed Perch] 80% CNT100 ACC100 ;
+LBL[29] ;
+TIMER[1]=STOP ;
+R[181:T1 LOAD]=TIMER[1] ;</span></pre>
+    </div>
+  </div>
+  <p><code>PR[4]</code>를 <code>FINE</code>으로 바꾸는 것이 이 수정의 핵심이다. <code>CNT100</code>이면 그 점에서 서지 않고 <code>PR[5]</code> 쪽으로 이어진다.</p>
+
+  <h2 id="dropnorm">3. DROPNORM (펀치 샘플)</h2>
+  <p>첫 줄에 분기를 넣고, 기존 9~20번은 그대로 둔다. 변경 경로는 파일 끝에 붙인다.</p>
+  <div class="grid-2">
+    <div>
+      <h3>기존</h3>
+<pre><span class="old">J PR[15:Ofset Norm Perch] 50% CNT50 ;
+L PR[18:Ofst Norm Drop] 1500mm/sec FINE TB    .10sec,CALL RETRACT ;</span></pre>
+    </div>
+    <div>
+      <h3>추가</h3>
+<pre><span class="rem">! 맨 앞
+IF R[141:WAIT AT SC2]=1,JMP LBL[1] ;
+! 아래 기존 그대로</span>
+
+<span class="new">! 끝에 추가
+LBL[1] ;
+J PR[15:Ofset Norm Perch] 50% FINE ;
+WAIT DI[4:Load Outfeed]=ON ;
+DO[4:Clear of Outfeed]=OFF ;
+L PR[18:Ofst Norm Drop] 1500mm/sec FINE TB    .10sec,CALL RETRACT ;
+COL DETECT OFF ;
+CALL OPEN ;
+COL DETECT ON ;
+WAIT    .50(sec) ;
+PAYLOAD[1:Empty] ;
+L PR[15:Ofset Norm Perch] 1500mm/sec CNT100 ;
+DO[4:Clear of Outfeed]=ON ;
+J PR[2:Infeed Perch] 100% CNT25 ACC150 ;
+END ;</span></pre>
+    </div>
+  </div>
+
+  <h2 id="drop_rev">4. DROP_REV</h2>
+  <p>지금 샘플 계산은 이 프로그램을 부르지 않는다. 스위치를 같이 넣어 두면, 나중에 랜덤 오프셋이 다시 들어와도 하강 대기가 빠지지 않는다. <code>PR[16]</code>은 원래 <code>FINE</code>이다.</p>
+  <div class="grid-2">
+    <div>
+      <h3>기존</h3>
+<pre><span class="old">J PR[16:Ofst Rev Perch] 50% FINE ;
+L PR[19:Ofst Rev Drop] 1500mm/sec FINE TB   1.00sec,CALL RETRACT ;</span></pre>
+    </div>
+    <div>
+      <h3>추가</h3>
+<pre><span class="rem">IF R[141:WAIT AT SC2]=1,JMP LBL[1] ;</span>
+<span class="new">LBL[1] ;
+J PR[16:Ofst Rev Perch] 50% FINE ;
+WAIT DI[4:Load Outfeed]=ON ;
+DO[4:Clear of Outfeed]=OFF ;
+L PR[19:Ofst Rev Drop] 1500mm/sec FINE TB   1.00sec,CALL RETRACT ;
+COL DETECT OFF ;
+CALL OPEN ;
+COL DETECT ON ;
+PAYLOAD[1:Empty] ;
+L PR[16:Ofst Rev Perch] 1500mm/sec CNT100 ;
+DO[4:Clear of Outfeed]=ON ;
+J PR[2:Infeed Perch] 100% CNT10 ACC150 ;</span></pre>
+    </div>
+  </div>
+
+  <h2>펜던트에서 확인</h2>
+  <table>
+    <thead><tr><th>순서</th><th>할 일</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>DATA에서 <code>R[141]</code> 코멘트를 <code>WAIT AT SC2</code>로 두고 값은 0인지 본다.</td></tr>
+      <tr><td>2</td><td>네 프로그램을 위 순서대로 고친다. 기존 줄은 삭제하지 않는다.</td></tr>
+      <tr><td>3</td><td><code>R[141]=1</code>로 두고, S/E/G 한 장이 체인24에서 올라온 뒤 <code>PR[4]</code>에서 서는지를 저속으로 본다.</td></tr>
+      <tr><td>4</td><td>그 자리에서 <code>DO[4]</code>가 아직 ON인지, SC#2가 끝난 뒤에 <code>DI[4]</code>가 들어오고 그다음에 <code>DO[4]</code>가 꺼지는지 본다.</td></tr>
+      <tr><td>5</td><td>R 한 장은 체인24에서 <code>REJECT</code>로 가는지 본다. SC#2 퍼치에서 기다리면 안 된다.</td></tr>
+      <tr><td>6</td><td>샘플이 있으면 <code>R[55]</code>를 본다. 1이면 <code>PR[15]</code>에서 서는지 확인한다.</td></tr>
+      <tr><td>7</td><td>문제가 있으면 <code>R[141]=0</code>으로 되돌린다.</td></tr>
+    </tbody>
+  </table>
+</main>
+<footer class="foot"><div class="wrap">1호기 CSM1만. 저장소 LS는 수정하지 않음. 2026-09-04</div></footer>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const btn = document.getElementById("themeButton");
+  const saved = localStorage.getItem("theme");
+  if (saved === "light" || saved === "dark") root.setAttribute("data-theme", saved);
+  btn.addEventListener("click", function () {
+    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    localStorage.setItem("theme", next);
+  });
+
+  const bot = document.getElementById("bot");
+  const pathSeg = document.getElementById("pathSeg");
+  const pathPunch = document.getElementById("pathPunch");
+  let mode = "seg", playing = false, t = 0, last = 0;
+
+  function activePath() { return mode === "punch" ? pathPunch : pathSeg; }
+  function place(u) {
+    const len = activePath().getTotalLength();
+    const p = activePath().getPointAtLength(len * u);
+    bot.setAttribute("cx", p.x);
+    bot.setAttribute("cy", p.y);
+  }
+  place(0);
+
+  function frame(ts) {
+    if (playing) {
+      t += ((ts - last) || 16) / 2600;
+      if (t > 1) t = 0;
+      place(t);
+    }
+    last = ts;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  const btnSeg = document.getElementById("btnSeg");
+  const btnPunch = document.getElementById("btnPunch");
+  const btnPlay = document.getElementById("btnPlay");
+  function setMode(m) {
+    mode = m; t = 0; place(0);
+    btnSeg.setAttribute("aria-pressed", m === "seg" ? "true" : "false");
+    btnPunch.setAttribute("aria-pressed", m === "punch" ? "true" : "false");
+    pathSeg.setAttribute("stroke-opacity", m === "seg" ? "1" : "0.35");
+    pathPunch.setAttribute("stroke-opacity", m === "punch" ? "1" : "0.35");
+  }
+  btnSeg.addEventListener("click", function () { setMode("seg"); });
+  btnPunch.addEventListener("click", function () { setMode("punch"); });
+  btnPlay.addEventListener("click", function () {
+    playing = !playing;
+    btnPlay.textContent = playing ? "정지" : "재생";
+  });
+  setMode("seg");
+})();
+</script>
+</body>
+</html>

@@ -11,6 +11,14 @@ export type NoteItem = {
 
 const extra: NoteItem[] = [
   {
+    href: "/plc/r3-load-out/",
+    title: "SC1 Robot3 LOAD_OUT 대기, 펜던트 수정",
+    date: "2026-09-04",
+    excerpt: "S/E/G는 SC#2 퍼치에서 DI[4]를 기다렸다가 내린다. R[141]=0이면 기존, 1이면 변경. 1호기만. R은 REJECT로 둔다.",
+    kicker: "PLC",
+    tags: ["PLC", "SC1", "Robot3"],
+  },
+  {
     href: "/plc/timing/",
     title: "SC1 Robot3 불완전 피치 · Unload · 등급 통합 설명",
     date: "2026-08-30",
