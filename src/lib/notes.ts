@@ -14,7 +14,7 @@ const extra: NoteItem[] = [
     href: "/plc/r3-load-out/",
     title: "SC1 Robot3 LOAD_OUT 대기, 펜던트 수정",
     date: "2026-09-04",
-    excerpt: "S/E/G는 SC#2 퍼치에서 DI[4]를 기다렸다가 내린다. R[141]=0이면 기존, 1이면 변경. 1호기만. R은 REJECT로 둔다.",
+    excerpt: "R은 RSR0001 30번 DI[103]에서 REJECT로 빠지고 LOAD_OUT은 등급을 보지 않는다. LBL[11]은 DI[4] 조건만 빼면 된다.",
     kicker: "PLC",
     tags: ["PLC", "SC1", "Robot3"],
   },

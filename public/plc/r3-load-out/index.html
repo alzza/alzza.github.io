@@ -115,31 +115,50 @@ pre {
 
 <main class="wrap">
   <section class="hero">
-    <h1>S/E/G는 SC#2 위에서 기다렸다가 내린다. R은 그대로 둔다.</h1>
-    <p>체인이 24번에서 잡고 올라온 뒤, 예전에는 그 자리에서 <code>DI[4]</code>를 기다렸다. 바꾸면 먼저 SC#2 위 퍼치까지 가고, 완료 신호가 온 뒤에만 수직으로 내린다. 대상은 CSM1(1호기)만이다. 이 페이지의 LS는 복사해서 펜던트에 넣는다. 저장소의 <code>ROBOT_3/</code> 파일은 고치지 않는다.</p>
+    <h1>S/E/G는 SC#2 위에서 기다렸다가 내린다. R은 30번에서 이미 빠진다.</h1>
+    <p>R급은 <code>LOAD_OUT</code>이 다시 판단하지 않는다. PLC가 픽업 전에 <code>DI[103:Reject ENBL]</code>을 켜 두고, <code>RSR0001</code> 30번이 <code>REJECT</code>를 부른다. LBL[11]에는 리젝트 콜을 넣지 않는다. 바꿀 것은 LBL[11]의 <code>DI[4]</code> 조건뿐이다. 대상은 CSM1(1호기)만이다. 저장소의 <code>ROBOT_3/</code> 파일은 고치지 않는다.</p>
     <div class="chips">
       <span class="chip chip-ok">R[141]=0 기존</span>
       <span class="chip chip-warn">R[141]=1 변경</span>
-      <span class="chip chip-danger">R급은 LOAD_OUT 대기에 넣지 않음</span>
+      <span class="chip chip-danger">R은 30번 REJECT, LBL[11]에 콜 없음</span>
     </div>
   </section>
 
   <nav class="toc">
+    <a href="#rgrade">R급 루틴</a>
     <a href="#switch">스위치</a>
     <a href="#programs">프로그램 목록</a>
-    <a href="#space">좌표와 펀치</a>
+    <a href="#space">현장 배치</a>
     <a href="#rsr0001">RSR0001</a>
     <a href="#load_out">LOAD_OUT</a>
     <a href="#dropnorm">DROPNORM</a>
     <a href="#drop_rev">DROP_REV</a>
   </nav>
 
+  <h2 id="rgrade">R급은 어디서 갈리는가</h2>
+  <p><code>LOAD_OUT</code>에는 등급 분기가 없다. 오프셋 픽인지(<code>R[55]</code>, <code>R[56]</code>)만 보고 SC#2로 내린다. R을 여기서 다시 보면 안 된다.</p>
+  <p>R은 PLC가 먼저 정하고, 로봇은 픽업이 끝나는 그 패스에서 <code>REJECT</code>로 보낸다.</p>
+  <table>
+    <thead><tr><th>단계</th><th>누가</th><th>신호·프로그램</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>PLC</td><td><code>Reject_Start_Cmd</code>가 래치된다. 체인24 비전 R, 리젝트 카운터, 막대 끝 R 등이 들어간다.</td></tr>
+      <tr><td>2</td><td>PLC</td><td>그립이 열려 있고 SC#1 Unload 허가가 있으면 <code>permit_Reject_start</code>가 선다. 그다음 <code>o_Reject_Enable</code>(로봇 <code>DI[103]</code>)과 <code>o_unload_infeed</code>(<code>DI[1]</code>)을 같이 켠다.</td></tr>
+      <tr><td>3</td><td>로봇</td><td><code>DI[1]</code>로 <code>ULOD_INF</code>가 왼쪽 SC#1에서 집는다. 그립이 닫힌 채로 돌아온다.</td></tr>
+      <tr><td>4</td><td>로봇 <code>RSR0001</code> 30번</td><td><code>DI[103]</code>이 켜져 있고 <code>R[45]=0</code>(펀치 아님)이면 <code>CALL REJECT</code>. 여기서 리젝트 컨베이어로 간다.</td></tr>
+      <tr><td>5</td><td>로봇 <code>REJECT</code></td><td>놓고 그립을 연다. <code>DO[102:REJECT END]</code>를 펄스한다. LBL[11]과 <code>LOAD_OUT</code>은 타지 않는다.</td></tr>
+    </tbody>
+  </table>
+  <p>S/E/G는 30번에서 <code>DI[103]</code>이 꺼져 있어서 <code>REJECT</code>를 건너뛴다. 펀치가 아니면 바로 LBL[11]이다. LBL[11]은 “이미 집어서 SC#2에 놓을 장”만 기다린다.</p>
+  <div class="callout warn">
+    <p>22번은 그립이 닫혀 있으면 LBL[11]로 점프해서 30번을 다시 보지 않는다. 그래서 R은 픽업이 끝나는 그 순간에 <code>DI[103]</code>이 이미 켜져 있어야 한다. PLC가 Unload와 Reject ENBL을 같이 주므로, 지금 운전은 그렇게 맞춰져 있다. LBL[11]에 <code>REJECT</code>를 한 번 더 넣을 필요는 없다.</p>
+  </div>
+
   <h2 id="switch">R[141] 스위치</h2>
   <table>
     <thead><tr><th>값</th><th>동작</th></tr></thead>
     <tbody>
       <tr><td><code>R[141]=0</code></td><td>지금과 같다. 체인24 위에서 <code>DI[4]</code>를 기다린 다음 <code>LOAD_OUT</code>이 시작된다.</td></tr>
-      <tr><td><code>R[141]=1</code></td><td>S/E/G는 퍼치까지 먼저 가고, 거기서 <code>DI[4]</code>를 기다린 다음 내린다. R은 <code>REJECT</code>로 보낸다.</td></tr>
+      <tr><td><code>R[141]=1</code></td><td>LBL[11]이 <code>DI[4]</code>를 기다리지 않고 <code>LOAD_OUT</code>을 부른다. 대기는 <code>LOAD_OUT</code> 안, 오른쪽 SC#2 위다. R은 30번이 그대로 <code>REJECT</code>한다.</td></tr>
     </tbody>
   </table>
   <div class="callout">
@@ -153,8 +172,8 @@ pre {
     <tbody>
       <tr>
         <td><code>RSR0001</code></td>
-        <td>LBL[11]에서 <code>DI[4]</code>가 켜질 때까지 돌다가 <code>LOAD_OUT</code>을 부른다.</td>
-        <td><code>DI[103]</code>이면 <code>REJECT</code>. 그립이 닫혀 있으면 <code>DI[4]</code>를 기다리지 않고 <code>LOAD_OUT</code>을 바로 부른다.</td>
+        <td>LBL[11] 44번: <code>DI[4]</code>가 켜져야 <code>LOAD_OUT</code>. 30번 <code>REJECT</code>는 그대로.</td>
+        <td>44번만 <code>R[141]=1 OR DI[4]</code>로 바꾼다. 30번에 리젝트 콜을 추가하지 않는다.</td>
       </tr>
       <tr>
         <td><code>LOAD_OUT</code></td>
@@ -250,30 +269,19 @@ pre {
   </div>
 
   <h2 id="rsr0001">1. RSR0001</h2>
-  <p>LBL[11]만 고친다. 기존 44·46번은 <code>R[141]=0</code> 분기에 그대로 둔다. 그립이 닫힌 채로 LBL[11]에 다시 들어오면 <code>DI[103]</code>을 건너뛰므로, 변경 분기에서 리젝트를 한 번 더 본다.</p>
+  <p>30번 <code>REJECT</code>는 그대로 둔다. LBL[11]에 리젝트 콜을 넣지 않는다. 고칠 줄은 44번 하나다. <code>R[141]=1</code>이면 <code>DI[4]</code>를 기다리지 않고 <code>LOAD_OUT</code>을 부른다.</p>
   <div class="grid-2">
     <div>
-      <h3>기존</h3>
-<pre><span class="old">LBL[11] ;
-IF DI[4:Load Outfeed]=ON,CALL LOAD_OUT ;
-IF DO[8:Gripper Closed]=ON,JMP LBL[11] ;
-JMP LBL[1] ;</span></pre>
+      <h3>기존 44번</h3>
+<pre><span class="old">IF DI[4:Load Outfeed]=ON,CALL LOAD_OUT ;</span></pre>
     </div>
     <div>
       <h3>수정</h3>
-<pre><span class="rem">LBL[11] ;
-IF R[141:WAIT AT SC2]=0,JMP LBL[12] ;
-IF DI[103:Reject ENBL]=ON AND R[45:PUNCH_WORK_1]=0,CALL REJECT ;
-IF DO[7:Gripper Open]=ON,JMP LBL[1] ;
-IF DO[8:Gripper Closed]=ON,CALL LOAD_OUT ;
-JMP LBL[1] ;
-LBL[12] ;
-! R[141]=0 기존</span>
-<span class="old">IF DI[4:Load Outfeed]=ON,CALL LOAD_OUT ;
-IF DO[8:Gripper Closed]=ON,JMP LBL[11] ;
-JMP LBL[1] ;</span></pre>
+<pre><span class="rem">! IF DI[4:Load Outfeed]=ON,CALL LOAD_OUT ;</span>
+<span class="new">IF R[141:WAIT AT SC2]=1 OR DI[4:Load Outfeed]=ON,CALL LOAD_OUT ;</span></pre>
     </div>
   </div>
+  <p>30번·46번은 손대지 않는다. R은 픽업 직후 30번에서 빠지고, S/E/G만 LBL[11]으로 와서 <code>LOAD_OUT</code>을 탄다.</p>
 
   <h2 id="load_out">2. LOAD_OUT</h2>
   <p>12번 <code>DO[4]=OFF</code> 앞에 분기를 넣는다. <code>R[141]=1</code>이면 기존 12번부터 LBL[1] 하강은 타지 않고, 파일 끝에 붙인 LBL[20]으로 간다. 기존 줄은 지우지 않는다.</p>
@@ -385,8 +393,8 @@ J PR[2:Infeed Perch] 100% CNT10 ACC150 ;</span></pre>
     <thead><tr><th>순서</th><th>할 일</th></tr></thead>
     <tbody>
       <tr><td>1</td><td>DATA에서 <code>R[141]</code> 코멘트를 <code>WAIT AT SC2</code>로 두고 값은 0인지 본다.</td></tr>
-      <tr><td>2</td><td>네 프로그램을 위 순서대로 고친다. 기존 줄은 삭제하지 않는다.</td></tr>
-      <tr><td>3</td><td><code>R[141]=1</code>로 두고, S/E/G 한 장이 체인24에서 올라온 뒤 <code>PR[4]</code>에서 서는지를 저속으로 본다.</td></tr>
+      <tr><td>2</td><td><code>RSR0001</code>은 44번만 바꾼다. 30번 <code>REJECT</code>는 그대로 둔다. <code>LOAD_OUT</code>과 <code>DROPNORM</code>에 대기를 넣는다.</td></tr>
+      <tr><td>3</td><td><code>R[141]=1</code>로 두고, S/E/G 한 장이 왼쪽에서 올라온 뒤 오른쪽으로 가서 <code>PR[4]</code>에서 서는지를 저속으로 본다.</td></tr>
       <tr><td>4</td><td>그 자리에서 <code>DO[4]</code>가 아직 ON인지, SC#2가 끝난 뒤에 <code>DI[4]</code>가 들어오고 그다음에 <code>DO[4]</code>가 꺼지는지 본다.</td></tr>
       <tr><td>5</td><td>R 한 장은 체인24에서 <code>REJECT</code>로 가는지 본다. SC#2 퍼치에서 기다리면 안 된다.</td></tr>
       <tr><td>6</td><td>샘플이 있으면 <code>R[55]</code>를 본다. 1이면 <code>PR[15]</code>에서 서는지 확인한다.</td></tr>
