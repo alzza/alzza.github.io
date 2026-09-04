@@ -89,7 +89,21 @@ pre {
 .stage-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--line); }
 .stage-bar span { color: var(--muted); font-size: 13px; margin-left: auto; }
 .space-svg { display: block; width: 100%; height: auto; background: #1c2c2a; }
-.plant { width: 100%; display: block; max-height: 520px; object-fit: contain; background: #111; }
+.plant-fig { position: relative; background: #111; }
+.plant-fig img {
+  display: block;
+  width: 100%;
+  max-height: 640px;
+  margin: 0 auto;
+  object-fit: contain;
+}
+.plant-fig svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
 .legend { display: flex; flex-wrap: wrap; gap: 10px 16px; padding: 10px 14px; font-size: 13px; }
 .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
 .foot { padding: 28px 0 48px; color: var(--muted); font-size: 13px; font-family: var(--font-mono); }
@@ -198,49 +212,71 @@ pre {
     <p><code>DO[4:Clear of Outfeed]</code>를 <code>LOAD_OUT</code> 시작에서 끄면 안 된다. PLC는 이 비트가 켜져 있어야 SC#2를 돌리고, 완료 뒤에 <code>DI[4]</code>를 준다. 대기 중에 끄면 <code>WAIT DI[4]</code>가 끝나지 않는다. 끄는 시점은 <code>DI[4]</code>를 확인한 다음, 수직 하강 직전이다.</p>
   </div>
 
-  <h2 id="space">현장 배치. 왼쪽 SC#1, 오른쪽 SC#2</h2>
-  <p>유리창에서 본 모습이다. 왼쪽 체인이 SC#1, 오른쪽 체인이 SC#2다. 노란 로봇이 둘 사이에 있다. TOOL은 전기동을 집는 그립이다. 로봇 왼쪽의 회색 프레임이 펀치(샘플) 쪽이다.</p>
+  <h2 id="space">현장 배치. 왼쪽 SC#1, 오른쪽 SC#2, 뒤가 R, 오른쪽이 샘플</h2>
+  <p>유리창에서 본 모습이다. 왼쪽 체인이 SC#1, 오른쪽 체인이 SC#2다. 로봇은 둘 사이 가운데다. S/E/G는 왼쪽에서 집어 오른쪽으로 넘긴다. R은 SC#2로 가지 않고 로봇 뒤(사진에서 위) 리젝트로 빠진다. 샘플(펀치)은 왼쪽 회색 프레임이 아니라 오른쪽이다.</p>
   <div class="stage-wrap">
-    <img class="plant" src="plant.jpg" alt="왼쪽 SC1 체인, 가운데 Robot3, 오른쪽 SC2 체인"/>
+    <div class="plant-fig">
+      <img src="plant.jpg" width="665" height="1182" alt="왼쪽 SC1, 오른쪽 SC2, 뒤 R, 오른쪽 샘플"/>
+      <svg viewBox="0 0 665 1182" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <text x="145" y="640" fill="#ff4d4d" font-size="42" font-weight="800" stroke="#fff" stroke-width="6" paint-order="stroke">SC1</text>
+        <text x="455" y="680" fill="#ff4d4d" font-size="42" font-weight="800" stroke="#fff" stroke-width="6" paint-order="stroke">SC2</text>
+        <path d="M210 600 C 280 520, 340 480, 400 430" fill="none" stroke="#ff4d4d" stroke-width="8" stroke-linecap="round"/>
+        <path d="M400 430 C 430 500, 460 560, 500 620" fill="none" stroke="#ff4d4d" stroke-width="8" stroke-linecap="round" marker-end="url(#arr)"/>
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="#ff4d4d"/>
+          </marker>
+        </defs>
+        <text x="390" y="300" fill="#ff4d4d" font-size="48" font-weight="800" stroke="#fff" stroke-width="6" paint-order="stroke">R</text>
+        <path d="M410 320 L410 230" fill="none" stroke="#ff4d4d" stroke-width="8" marker-end="url(#arr)"/>
+        <circle cx="575" cy="470" r="55" fill="none" stroke="#ff4d4d" stroke-width="8"/>
+        <text x="575" y="560" fill="#ff4d4d" font-size="32" font-weight="800" text-anchor="middle" stroke="#fff" stroke-width="6" paint-order="stroke">샘플</text>
+      </svg>
+    </div>
     <div class="legend">
       <span><i class="dot" style="background:#5ee0c8"></i>왼쪽 SC#1 픽업</span>
-      <span><i class="dot" style="background:#fff"></i>가운데 Robot3</span>
-      <span><i class="dot" style="background:#74b9ff"></i>펀치</span>
-      <span><i class="dot" style="background:#f07178"></i>오른쪽 SC#2 위 대기 후 하강</span>
+      <span><i class="dot" style="background:#f07178"></i>오른쪽 SC#2 드롭</span>
+      <span><i class="dot" style="background:#ffb86b"></i>뒤쪽 R 리젝트</span>
+      <span><i class="dot" style="background:#74b9ff"></i>오른쪽 샘플</span>
     </div>
   </div>
-  <p>지금 S/E/G는 왼쪽 SC#1 체인24에서 잡고 올라간 뒤, 그 왼쪽 위에서 <code>DI[4]</code>를 기다린다. 바꾸면 전기동을 든 채로 오른쪽 SC#2 위 <code>PR[4]</code>까지 먼저 가고, SC#2가 끝난 뒤에만 수직으로 내린다. R은 오른쪽 SC#2로 가지 않고 리젝트로 보낸다.</p>
+  <p>지금 S/E/G는 왼쪽 SC#1에서 잡고 올라간 뒤, 그 왼쪽 위에서 <code>DI[4]</code>를 기다린다. 바꾸면 전기동을 든 채로 오른쪽 SC#2 위 <code>PR[4]</code>까지 먼저 가고, SC#2가 끝난 뒤에만 수직으로 내린다. R은 30번에서 뒤쪽 리젝트로 빠지므로 LBL[11]에 리젝트 콜을 넣지 않는다.</p>
   <div class="stage-wrap">
     <div class="stage-bar">
       <button type="button" id="btnSeg" aria-pressed="true">S/E/G 기본</button>
       <button type="button" id="btnPunch">펀치(샘플)</button>
       <button type="button" id="btnPlay">재생</button>
-      <span>사진과 같은 방향. 왼쪽 SC#1, 오른쪽 SC#2</span>
+      <span>사진과 같은 방향. 왼쪽 SC#1, 오른쪽 SC#2, 위가 뒤(R)</span>
     </div>
     <svg class="space-svg" id="space" viewBox="0 0 1080 420" role="img" aria-label="사진 방향의 Robot3 배치">
       <rect width="1080" height="420" fill="#1c2c2a"/>
       <rect x="40" y="250" width="280" height="110" rx="8" fill="#14352f" stroke="#5ee0c8" stroke-width="2"/>
       <text x="180" y="300" fill="#5ee0c8" font-size="16" font-weight="700" text-anchor="middle">SC#1</text>
-      <text x="180" y="322" fill="#d7ece8" font-size="12" text-anchor="middle">체인24 픽업</text>
+      <text x="180" y="322" fill="#d7ece8" font-size="12" text-anchor="middle">왼쪽 픽업</text>
       <rect x="760" y="250" width="280" height="110" rx="8" fill="#3a1c1c" stroke="#f07178" stroke-width="2"/>
       <text x="900" y="300" fill="#f07178" font-size="16" font-weight="700" text-anchor="middle">SC#2</text>
-      <text x="900" y="322" fill="#d7ece8" font-size="12" text-anchor="middle">LOAD_OUT 드롭</text>
-      <rect x="200" y="70" width="160" height="90" rx="8" fill="#1a2f44" stroke="#74b9ff" stroke-width="2"/>
-      <text x="280" y="122" fill="#74b9ff" font-size="14" font-weight="700" text-anchor="middle">펀치</text>
+      <text x="900" y="322" fill="#d7ece8" font-size="12" text-anchor="middle">오른쪽 드롭</text>
+      <rect x="820" y="40" width="200" height="80" rx="8" fill="#1a2f44" stroke="#74b9ff" stroke-width="2"/>
+      <text x="920" y="86" fill="#74b9ff" font-size="16" font-weight="700" text-anchor="middle">샘플</text>
+      <rect x="430" y="28" width="180" height="70" rx="8" fill="#3d2f18" stroke="#ffb86b" stroke-width="2"/>
+      <text x="520" y="70" fill="#ffb86b" font-size="16" font-weight="700" text-anchor="middle">R 리젝트</text>
       <circle cx="540" cy="200" r="36" fill="#2a2a32" stroke="#fff" stroke-width="3"/>
       <text x="540" y="206" fill="#fff" font-size="13" font-weight="700" text-anchor="middle">R3</text>
       <rect x="820" y="150" width="160" height="56" fill="none" stroke="#f07178" stroke-width="2" stroke-dasharray="6 5"/>
       <text x="900" y="174" fill="#f07178" font-size="13" text-anchor="middle">PR[4] 대기</text>
       <text x="900" y="194" fill="#f07178" font-size="12" text-anchor="middle">그다음 L PR[5]</text>
       <path id="pathSeg" d="M180 250 L180 200 L540 200 L900 178" fill="none" stroke="#5ee0c8" stroke-width="3"/>
-      <path id="pathPunch" d="M180 250 L280 160 L280 115 L900 178" fill="none" stroke="#74b9ff" stroke-width="3" stroke-dasharray="8 6"/>
+      <path id="pathPunch" d="M180 250 L540 200 L920 120 L900 178" fill="none" stroke="#74b9ff" stroke-width="3" stroke-dasharray="8 6"/>
+      <path d="M540 164 L520 98" fill="none" stroke="#ffb86b" stroke-width="3"/>
       <text x="60" y="400" fill="#9aa8a4" font-size="12">왼쪽</text>
       <text x="1020" y="400" fill="#9aa8a4" font-size="12" text-anchor="end">오른쪽</text>
+      <text x="540" y="18" fill="#9aa8a4" font-size="12" text-anchor="middle">뒤</text>
       <circle id="bot" cx="180" cy="250" r="8" fill="#fff"/>
     </svg>
     <div class="legend">
-      <span><i class="dot" style="background:#5ee0c8"></i>S/E/G: 왼쪽 픽업 → 오른쪽 SC#2 위에서 대기</span>
-      <span><i class="dot" style="background:#74b9ff"></i>펀치: 왼쪽 픽업 → 펀치 → 오른쪽 SC#2 위 대기</span>
+      <span><i class="dot" style="background:#5ee0c8"></i>S/E/G: 왼쪽 → 오른쪽 SC#2 위 대기</span>
+      <span><i class="dot" style="background:#74b9ff"></i>샘플: 왼쪽 → 오른쪽 샘플 → SC#2</span>
+      <span><i class="dot" style="background:#ffb86b"></i>R: 왼쪽 픽업 후 뒤로 REJECT</span>
     </div>
   </div>
   <div class="grid-2">
@@ -262,7 +298,7 @@ pre {
     </div>
     <div class="card">
       <h3>사진으로 맞춘 결론</h3>
-      <p>로봇은 SC#1과 SC#2 사이에 있다. 왼쪽 SC#1 체인24에서 집고, 오른쪽 SC#2에 내려놓는다. 펀치는 로봇과 SC#1 사이 회색 프레임이다.</p>
+      <p>로봇은 SC#1과 SC#2 사이에 있다. 왼쪽 SC#1에서 집고, 오른쪽 SC#2에 내려놓는다. R은 로봇 뒤 리젝트로 빠진다. 샘플은 오른쪽에 있다.</p>
       <p>기본 하강은 오른쪽 SC#2 위 <code>J PR[4]</code> 다음, 그 자리에서 <code>L PR[5]</code>로 Z가 내려간다. 지금 <code>CNT100</code>이라 서지 않으니, 대기하려면 <code>FINE</code>이 필요하다.</p>
       <p>펀치 샘플은 왼쪽에서 집고 펀치를 거친 뒤, 역시 오른쪽 SC#2로 간다. 그때 Z 하강은 <code>PR[4]</code>가 아니라 <code>PR[15]</code>에서 시작한다. 펜던트에서 <code>R[55]</code>가 0이면 <code>PR[4]</code>만, 1이면 <code>DROPNORM</code>의 <code>PR[15]</code>도 고친다.</p>
     </div>
