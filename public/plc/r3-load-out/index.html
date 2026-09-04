@@ -121,6 +121,7 @@ pre {
     <a href="#rgrade">R급 루틴</a>
     <a href="#switch">스위치</a>
     <a href="#programs">프로그램 목록</a>
+    <a href="#cell">셀 배치</a>
     <a href="#rsr0001">RSR0001</a>
     <a href="#load_out">LOAD_OUT</a>
     <a href="#dropnorm">DROPNORM</a>
@@ -190,7 +191,13 @@ pre {
     <p><code>DO[4:Clear of Outfeed]</code>를 <code>LOAD_OUT</code> 시작에서 끄면 안 된다. PLC는 이 비트가 켜져 있어야 SC#2를 돌리고, 완료 뒤에 <code>DI[4]</code>를 준다. 대기 중에 끄면 <code>WAIT DI[4]</code>가 끝나지 않는다. 끄는 시점은 <code>DI[4]</code>를 확인한 다음, 수직 하강 직전이다.</p>
   </div>
 
-  <p>왼쪽이 SC#1, 오른쪽이 SC#2다. 로봇은 가운데다. 샘플(펀치)은 오른쪽 체인 위 전기동 바로 옆에 있다. R은 뒤쪽 리젝트로 빠진다. S/E/G는 왼쪽에서 집어 오른쪽 SC#2 위에서 기다렸다가 내린다.</p>
+  <h2 id="cell">셀 배치. 글로만</h2>
+  <p>유리창에서 보면 셀은 이렇게 나뉜다. 그림과 사진은 넣지 않는다.</p>
+  <p><strong>가운데</strong>는 노란 Robot3뿐이다. 샘플(펀치) 기계는 가운데가 아니다. 로봇 받침대, 왼쪽 회색 프레임도 펀치가 아니다.</p>
+  <p><strong>왼쪽</strong>은 SC#1이다. 체인 위에 전기동이 놓여 있고, 체인24 픽업이 여기다. <code>ULOD_INF</code>가 여기서 집는다. 지금 S/E/G는 집고 올라온 뒤 이 왼쪽 위에서 <code>DI[4]</code>를 기다린다.</p>
+  <p><strong>오른쪽</strong>은 SC#2다. 체인 위에 전기동이 놓여 있다. <code>LOAD_OUT</code>이 여기로 내린다. 바꿀 대기는 오른쪽 SC#2 체인 위, <code>PR[4]</code>에서 <code>PR[5]</code>로 Z가 내려가기 직전이다.</p>
+  <p><strong>샘플(펀치)</strong>은 오른쪽 SC#2 체인 위 그 전기동 바로 옆에 붙어 있는 기계다. 로봇과 SC#1 사이가 아니고, 셀 한가운데도 아니다. 샘플 경로는 왼쪽에서 집고 그 오른쪽 옆 펀치를 거친 다음, 다시 오른쪽 SC#2 체인에 놓는다. 그때 하강 시작점은 <code>DROPNORM</code>의 <code>PR[15]</code>다.</p>
+  <p><strong>뒤</strong>는 R 리젝트다. 집고 나서 SC#2로 가지 않고 로봇 뒤 리젝트 컨베이어로 빠진다. 이 분기는 <code>RSR0001</code> 30번 <code>DI[103]</code>이다. LBL[11]과 <code>LOAD_OUT</code>을 타지 않는다.</p>
 
   <h2 id="rsr0001">1. RSR0001</h2>
   <p>30번 <code>REJECT</code>는 그대로 둔다. LBL[11]에 리젝트 콜을 넣지 않는다. 고칠 줄은 44번 하나다. <code>R[141]=1</code>이면 <code>DI[4]</code>를 기다리지 않고 <code>LOAD_OUT</code>을 부른다.</p>
