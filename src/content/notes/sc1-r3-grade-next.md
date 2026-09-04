@@ -102,6 +102,84 @@ Studio 5000 Trend는 한 창에 태그를 최대 8개까지만 넣을 수 있다
 
 Open_Gate 명령 비트의 태그 이름이 현장 프로젝트에서 다르면, 창 3의 드롭 허가 네 개 자리에 그 명령 비트를 넣는다. 한 창이 여덟 개를 넘기면 안 된다.
 
+## 현장 피드백: 등급이 전부 비고, 체인 홈위치가 세 번 안 된 경우
+
+한 장만 비는 경우와 다르다. 등급 배열이 한 번에 비었는지, 홈 시퀀스가 인덱스 센서를 못 넘겼는지를 같이 본다. Studio 5000 Trend는 창마다 태그 8개다. 아래 네 창을 같은 시각, 10 ms로 연다.
+
+프로그램 스코프 태그는 Trend에서 `Sheet_Conveyor_1.태그이름`처럼 프로그램 이름을 앞에 붙인다. `Robot3.i_clear_of_infeed`와 `Robot1.i_Sheet1_Speed_Ref`도 같다. 컨트롤러 태그는 프로그램 이름 없이 넣는다.
+
+홈은 `Sheet_Conveyor_1`의 `DoHoming`이다. 인덱스 `i_conveyor_index`가 켜져 있으면 속도 3으로 찾고, 인덱스가 꺼지면 `ui_o_conveyor_homed`를 1로 만든다. `timer_homing.DN`이 1이 되면 홈 진행이 끊긴다. `z_alarm_sc1_not_homed`는 홈이 아닌 동안 계속 1이라, 세 번을 세려면 `ui_o_homing_in_progress`가 1로 올라간 횟수를 본다.
+
+홈 중에 속도가 2000을 넘기면 `z_sc1_data_move_signal`이 `Track[11]`을 걸 수 있다. 시프트는 체인16번을 0으로 만들며 한 칸씩 민다. 홈이 세 번이면 시프트도 여러 번 나가 등급이 전부 0으로 보일 수 있다. 창 2와 창 4로 그 시각을 맞춘다.
+
+### 창 A. 체인 홈이 세 번 실패했는지
+
+디지털만 여덟 개다.
+
+| 번호 | 프로그램 | 태그 | Digital / Analog |
+|---|---|---|---|
+| 1 | Sheet_Conveyor_1 | `ui_o_homing_in_progress` | Digital |
+| 2 | Sheet_Conveyor_1 | `ui_o_conveyor_homed` | Digital |
+| 3 | Sheet_Conveyor_1 | `Home_Stop.X` | Digital |
+| 4 | Sheet_Conveyor_1 | `Home_Search_Position_Zero.X` | Digital |
+| 5 | Sheet_Conveyor_1 | `i_conveyor_index` | Digital |
+| 6 | Sheet_Conveyor_1 | `timer_homing.DN` | Digital |
+| 7 | Sheet_Conveyor_1 | `ui_i_start_homing` | Digital |
+| 8 | 컨트롤러 | `z_ui_i_home_all` | Digital |
+
+`ui_o_homing_in_progress`가 1로 올라간 횟수가 3이면 홈을 세 번 시도한 것이다. 그 구간에서 `i_conveyor_index`가 1로 갔다가 0으로 안 떨어지면, 인덱스를 못 넘긴 것이다. `timer_homing.DN`이 1이면 시간 초과로 홈이 끝난 것이다.
+
+### 창 B. 홈 중에 Track이 나갔는지
+
+아날로그 네 개, 디지털 네 개다. 등급이 전부 빈 시각과 홈 시도를 겹쳐 본다.
+
+| 번호 | 프로그램 | 태그 | Digital / Analog |
+|---|---|---|---|
+| 1 | Sheet_Conveyor_1 | `var_volts_velocity` | Analog |
+| 2 | Sheet_Conveyor_1 | `ic_conveyor_position` | Analog |
+| 3 | Sheet_Conveyor_1 | `var_cmd_speed` | Analog |
+| 4 | Robot1 | `i_Sheet1_Speed_Ref` | Analog |
+| 5 | 컨트롤러 | `z_sc1_data_move_signal` | Digital |
+| 6 | 컨트롤러 | `z_Tracking_Commands[11]` | Digital |
+| 7 | 컨트롤러 | `z_sc1_moving` | Digital |
+| 8 | Sheet_Conveyor_1 | `ui_o_homing_in_progress` | Digital |
+
+`i_Sheet1_Speed_Ref`가 2000을 넘긴 뒤에 `z_sc1_data_move_signal`과 `Track[11]`이 1이면, 홈 이동이 시프트를 걸었다.
+
+### 창 C. Clear와 Unload가 전진·홈을 끊었는지
+
+디지털만 여덟 개다.
+
+| 번호 | 프로그램 | 태그 | Digital / Analog |
+|---|---|---|---|
+| 1 | Robot3 | `i_clear_of_infeed` | Digital |
+| 2 | 컨트롤러 | `z_permit_r3_sc1_start` | Digital |
+| 3 | 컨트롤러 | `z_permit_sc1_r3_unload` | Digital |
+| 4 | Sheet_Conveyor_1 | `permit_run_forward` | Digital |
+| 5 | Sheet_Conveyor_1 | `permit_start` | Digital |
+| 6 | Sheet_Conveyor_1 | `sc1_hmi_enable` | Digital |
+| 7 | Sheet_Conveyor_1 | `State_Stop.X` | Digital |
+| 8 | Sheet_Conveyor_1 | `interlock_home` | Digital |
+
+`i_clear_of_infeed`가 0이면 `permit_run_forward`도 끊긴다. 홈이나 인덱스 도중에 Clear가 꺼졌는지 본다.
+
+### 창 D. 등급이 한 번에 전부 0이 됐는지
+
+아날로그 네 개, 디지털 네 개다.
+
+| 번호 | 프로그램 | 태그 | Digital / Analog |
+|---|---|---|---|
+| 1 | Cathode_Tracking | `a_cathode[16].Weight` | Analog |
+| 2 | Cathode_Tracking | `a_cathode[20].Weight` | Analog |
+| 3 | Cathode_Tracking | `a_cathode[24].Weight` | Analog |
+| 4 | 컨트롤러 | `z_sc1_R3_Grade` | Analog |
+| 5 | 컨트롤러 | `z_Tracking_Commands[11]` | Digital |
+| 6 | 컨트롤러 | `z_sc1_data_move_signal` | Digital |
+| 7 | Sheet_Conveyor_1 | `sc1_start_req_pending` | Digital |
+| 8 | 컨트롤러 | `z_sc1_moving` | Digital |
+
+체인16·20·24번 Weight가 Track 펄스와 같이 연속으로 0이 되면, 한 장 복사가 아니라 시프트가 배열을 비운 것이다. 창 A의 홈 시도 시각과 맞으면 홈이 원인 후보가 된다.
+
 ## 원인별 다음에 고칠 방법
 
 | 확인된 원인 | 고치는 방법 | 참고 |
