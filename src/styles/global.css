@@ -598,6 +598,19 @@ button:focus-visible {
   color: var(--black);
   font-weight: 700;
 }
+.prose-plc {
+  overflow-x: auto;
+}
+.prose-plc table {
+  font-size: 0.84rem;
+}
+.prose-plc td:first-child,
+.prose-plc th:first-child {
+  white-space: nowrap;
+}
+.prose-plc td code {
+  white-space: nowrap;
+}
 .note-meta {
   margin: 0 0 1.25rem;
   color: var(--muted);
