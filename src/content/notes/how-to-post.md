@@ -8,6 +8,8 @@ tags: ["운영", "Astro"]
 
 보이는 문장은 카톡에 쓰는 말로 쓴다. 쓰지 말 것: 북상, 남하, 북진, 남진, 기점, 종점, 상기, 금회. 대신: 가는 날, 오는 날, 올라가는 길, 내려오는 길, 출발, 도착. 휴게소 간판에 적힌 방향 이름(양평방향, 창원방향)만 예외.
 
+노트와 Pages에 올리는 한국어는 [fluent-korean](https://github.com/snflkd/fluent-korean/)을 따른다. 조사와 어미를 빼고 명사만 나열하지 않는다. 자세한 항목은 저장소 `AGENTS.md`에 있다.
+
 작업 폴더: `/Users/akanus/orca/workspaces/design-page/alzza.github.io`
 
 라이브: https://alzza.github.io/
