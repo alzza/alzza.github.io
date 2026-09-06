@@ -1,0 +1,330 @@
+{
+  "title": "차량 건강 주간 리포트 · 2026-09-06",
+  "date": "2026-09-07",
+  "excerpt": "지난주 주행 188.4 km, 충전 41.5 kWh, 추정용량 56.8 kWh",
+  "week_start": "2026-08-31",
+  "week_end": "2026-09-06",
+  "risk_level": "caution",
+  "distance_km": 188.4,
+  "charging_kwh": 41.5,
+  "capacity_kwh": 56.8,
+  "degradation_percent": -3.2,
+  "monthly_summary": [
+    {
+      "month": "2025-10",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 117,
+      "capacity_kwh": 58.7,
+      "data_quality": "available"
+    },
+    {
+      "month": "2025-11",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 142,
+      "capacity_kwh": 57.6,
+      "data_quality": "available"
+    },
+    {
+      "month": "2025-12",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 106,
+      "capacity_kwh": 58.8,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-01",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 92,
+      "capacity_kwh": 58.6,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-02",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 161,
+      "capacity_kwh": 57.6,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-03",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 106,
+      "capacity_kwh": 57.6,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-04",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 95,
+      "capacity_kwh": 57.3,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-05",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 137,
+      "capacity_kwh": 57.5,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-06",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 113,
+      "capacity_kwh": 57.1,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-07",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 105,
+      "capacity_kwh": 54.1,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-08",
+      "max_discharge_power_kw": 217,
+      "max_peak_power_speed_kmh": 138,
+      "capacity_kwh": 56.1,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-09",
+      "max_discharge_power_kw": 183,
+      "max_peak_power_speed_kmh": 121,
+      "capacity_kwh": 56.8,
+      "data_quality": "available"
+    }
+  ],
+  "weekly_power_events": [
+    {
+      "event_no": 1,
+      "threshold_kw": 180,
+      "max_discharge_power_kw": 183,
+      "speed_at_peak_power_kmh": 114,
+      "battery_level_at_peak_pct": 97,
+      "data_quality": "available"
+    },
+    {
+      "event_no": 2,
+      "threshold_kw": 180,
+      "max_discharge_power_kw": 182,
+      "speed_at_peak_power_kmh": 121,
+      "battery_level_at_peak_pct": 83,
+      "data_quality": "available"
+    }
+  ],
+  "daily_metrics": [
+    {
+      "date": "2026-08-31",
+      "distance_km": 25.4,
+      "charging_kwh": 0.0
+    },
+    {
+      "date": "2026-09-01",
+      "distance_km": 1.9,
+      "charging_kwh": 0.0
+    },
+    {
+      "date": "2026-09-02",
+      "distance_km": 48.5,
+      "charging_kwh": 0.0
+    },
+    {
+      "date": "2026-09-03",
+      "distance_km": 45.9,
+      "charging_kwh": 0.0
+    },
+    {
+      "date": "2026-09-04",
+      "distance_km": 2.0,
+      "charging_kwh": 0.0
+    },
+    {
+      "date": "2026-09-05",
+      "distance_km": 19.0,
+      "charging_kwh": 41.5
+    },
+    {
+      "date": "2026-09-06",
+      "distance_km": 45.7,
+      "charging_kwh": 0.0
+    }
+  ],
+  "capacity_trend": [
+    {
+      "month": "2025-10",
+      "capacity_kwh": 58.7
+    },
+    {
+      "month": "2025-11",
+      "capacity_kwh": 57.6
+    },
+    {
+      "month": "2025-12",
+      "capacity_kwh": 58.8
+    },
+    {
+      "month": "2026-01",
+      "capacity_kwh": 58.6
+    },
+    {
+      "month": "2026-02",
+      "capacity_kwh": 57.6
+    },
+    {
+      "month": "2026-03",
+      "capacity_kwh": 57.6
+    },
+    {
+      "month": "2026-04",
+      "capacity_kwh": 57.3
+    },
+    {
+      "month": "2026-05",
+      "capacity_kwh": 57.5
+    },
+    {
+      "month": "2026-06",
+      "capacity_kwh": 57.1
+    },
+    {
+      "month": "2026-07",
+      "capacity_kwh": 54.1
+    },
+    {
+      "month": "2026-08",
+      "capacity_kwh": 56.1
+    },
+    {
+      "month": "2026-09",
+      "capacity_kwh": 56.8
+    }
+  ],
+  "acceleration_week": {
+    "threshold_kw": 180,
+    "secondary_threshold_kw": 200,
+    "event_count": 2,
+    "secondary_event_count": 0,
+    "max_discharge_power_kw": 183,
+    "avg_peak_power_speed_kmh": 117.5,
+    "max_peak_power_speed_kmh": 121,
+    "covered_distance_km": 188.4,
+    "events_per_1000km": 10.6,
+    "data_quality": "available"
+  },
+  "acceleration_trend": [
+    {
+      "month": "2025-10",
+      "events_180kw": 12,
+      "events_200kw": 5,
+      "avg_peak_power_speed_kmh": 101.8,
+      "max_peak_power_speed_kmh": 117,
+      "covered_distance_km": 2366.6,
+      "events_per_1000km": 5.1
+    },
+    {
+      "month": "2025-11",
+      "events_180kw": 13,
+      "events_200kw": 2,
+      "avg_peak_power_speed_kmh": 94.3,
+      "max_peak_power_speed_kmh": 142,
+      "covered_distance_km": 1715.6,
+      "events_per_1000km": 7.6
+    },
+    {
+      "month": "2025-12",
+      "events_180kw": 14,
+      "events_200kw": 3,
+      "avg_peak_power_speed_kmh": 88.6,
+      "max_peak_power_speed_kmh": 106,
+      "covered_distance_km": 2360.5,
+      "events_per_1000km": 5.9
+    },
+    {
+      "month": "2026-01",
+      "events_180kw": 3,
+      "events_200kw": 1,
+      "avg_peak_power_speed_kmh": 90.3,
+      "max_peak_power_speed_kmh": 92,
+      "covered_distance_km": 1710.4,
+      "events_per_1000km": 1.8
+    },
+    {
+      "month": "2026-02",
+      "events_180kw": 13,
+      "events_200kw": 3,
+      "avg_peak_power_speed_kmh": 95.7,
+      "max_peak_power_speed_kmh": 161,
+      "covered_distance_km": 1372.4,
+      "events_per_1000km": 9.5
+    },
+    {
+      "month": "2026-03",
+      "events_180kw": 15,
+      "events_200kw": 3,
+      "avg_peak_power_speed_kmh": 93.1,
+      "max_peak_power_speed_kmh": 106,
+      "covered_distance_km": 2078.0,
+      "events_per_1000km": 7.2
+    },
+    {
+      "month": "2026-04",
+      "events_180kw": 5,
+      "events_200kw": 2,
+      "avg_peak_power_speed_kmh": 86.4,
+      "max_peak_power_speed_kmh": 95,
+      "covered_distance_km": 1273.7,
+      "events_per_1000km": 3.9
+    },
+    {
+      "month": "2026-05",
+      "events_180kw": 21,
+      "events_200kw": 4,
+      "avg_peak_power_speed_kmh": 98.9,
+      "max_peak_power_speed_kmh": 137,
+      "covered_distance_km": 3016.5,
+      "events_per_1000km": 7.0
+    },
+    {
+      "month": "2026-06",
+      "events_180kw": 22,
+      "events_200kw": 10,
+      "avg_peak_power_speed_kmh": 94.3,
+      "max_peak_power_speed_kmh": 113,
+      "covered_distance_km": 901.6,
+      "events_per_1000km": 24.4
+    },
+    {
+      "month": "2026-07",
+      "events_180kw": 9,
+      "events_200kw": 0,
+      "avg_peak_power_speed_kmh": 91.8,
+      "max_peak_power_speed_kmh": 105,
+      "covered_distance_km": 1036.5,
+      "events_per_1000km": 8.7
+    },
+    {
+      "month": "2026-08",
+      "events_180kw": 15,
+      "events_200kw": 5,
+      "avg_peak_power_speed_kmh": 122.1,
+      "max_peak_power_speed_kmh": 138,
+      "covered_distance_km": 1851.8,
+      "events_per_1000km": 8.1
+    },
+    {
+      "month": "2026-09",
+      "events_180kw": 2,
+      "events_200kw": 0,
+      "avg_peak_power_speed_kmh": 117.5,
+      "max_peak_power_speed_kmh": 121,
+      "covered_distance_km": 163.0,
+      "events_per_1000km": 12.3
+    }
+  ],
+  "tags": [
+    "TeslaMate",
+    "차량관리",
+    "주간리포트"
+  ]
+}
