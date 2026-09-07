@@ -35,6 +35,25 @@ const number = (value: number | null, suffix: string) => value === null ? "데�
         <div><small>추정 가용용량</small><strong>{number(data.capacity_kwh, " kWh")}</strong></div>
         <div><small>최초 대비</small><strong>{number(data.degradation_percent, "%")}</strong></div>
       </div>
+      {"observation_note" in data && data.observation_note && (
+        <div class="vehicle-observation">
+          <strong>관찰 포인트</strong>
+          <p>{data.observation_note}</p>
+        </div>
+      )}
+      {"week_compare" in data && data.week_compare && (
+        <div class="vehicle-week-compare">
+          <strong>전주 대비</strong>
+          <ul>
+            <li>주행 {number(data.week_compare.distance_km_delta, " km")}</li>
+            <li>충전 {number(data.week_compare.charging_kwh_delta, " kWh")}</li>
+            <li>추정용량 {number(data.week_compare.capacity_kwh_delta, " kWh")}</li>
+            <li>180 kW+ 이벤트 {number(data.week_compare.events_180_delta, "회")}</li>
+            <li>1,000 km당 이벤트 {number(data.week_compare.events_per_1000km_delta, "회")}</li>
+            <li>최대 방전출력 {number(data.week_compare.max_discharge_power_kw_delta, " kW")}</li>
+          </ul>
+        </div>
+      )}
     </section>
     <VehicleCharts
       dailyMetrics={data.daily_metrics.map((item) => ({ date: item.date, distanceKm: item.distance_km, chargingKwh: item.charging_kwh }))}
