@@ -64,6 +64,24 @@
     }
   }
 
+  document.querySelectorAll("table").forEach(function (table) {
+    if (table.closest(".table-scroll, .table-wrap, .vehicle-chart-table, .map-frame")) return;
+    var wrap = document.createElement("div");
+    wrap.className = "table-scroll";
+    var headerCells = table.querySelectorAll("thead th");
+    if (!headerCells.length) headerCells = table.querySelectorAll("tr:first-child th");
+    var headers = Array.prototype.map.call(headerCells, function (th) {
+      return (th.textContent || "").trim();
+    });
+    wrap.classList.add("is-stack");
+    table.querySelectorAll("td").forEach(function (td) {
+      var i = Array.prototype.indexOf.call(td.parentNode.children, td);
+      if (headers[i]) td.setAttribute("data-label", headers[i]);
+    });
+    table.parentNode.insertBefore(wrap, table);
+    wrap.appendChild(table);
+  });
+
   document.querySelectorAll("[data-copy]").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var wrap = btn.closest(".code-block-wrap");
