@@ -1,7 +1,7 @@
 {
   "title": "차량 건강 주간 리포트 · 2026-09-06",
   "date": "2026-09-07",
-  "excerpt": "지난주 주행 188.4 km, 충전 41.5 kWh, 추정용량 56.8 kWh",
+  "excerpt": "고출력–추정용량 상관 관찰 2주차. 전주 대비 주행 -865.9 km, 180kW+ 이벤트 14→2회, 추정용량 56.1→56.8 kWh. 인과 단정 없음.",
   "week_start": "2026-08-31",
   "week_end": "2026-09-06",
   "risk_level": "caution",
@@ -12,21 +12,21 @@
   "monthly_summary": [
     {
       "month": "2025-10",
-      "max_discharge_power_kw": null,
+      "max_discharge_power_kw": 223,
       "max_peak_power_speed_kmh": 117,
       "capacity_kwh": 58.7,
       "data_quality": "available"
     },
     {
       "month": "2025-11",
-      "max_discharge_power_kw": null,
+      "max_discharge_power_kw": 219,
       "max_peak_power_speed_kmh": 142,
       "capacity_kwh": 57.6,
       "data_quality": "available"
     },
     {
       "month": "2025-12",
-      "max_discharge_power_kw": null,
+      "max_discharge_power_kw": 211,
       "max_peak_power_speed_kmh": 106,
       "capacity_kwh": 58.8,
       "data_quality": "available"
@@ -325,6 +325,18 @@
   "tags": [
     "TeslaMate",
     "차량관리",
-    "주간리포트"
-  ]
+    "주간리포트",
+    "고출력관찰",
+    "추정용량"
+  ],
+  "observation_note": "목적: 고출력 습관과 추정 가용용량(SOH 대용) 추세를 주간으로 대조한다. 추정용량은 충전 세션 기반이며 실측 SOH가 아니다. 동시 변화는 관찰용이며 원인 확정이 아니다. 전주 대비: 주행·고출력 이벤트 밀도가 크게 줄었고(14회→2회, 13.3→10.6/1000km), 추정용량은 56.1→56.8 kWh로 소폭 반등했다. 이번 주 볼 점: 이벤트는 180kW대 2회뿐(200kW+ 0), 장거리·고밀도 고출력 주는 아니다.",
+  "week_compare": {
+    "prior_week_end": "2026-08-30",
+    "distance_km_delta": -865.9,
+    "charging_kwh_delta": -125.0,
+    "capacity_kwh_delta": 0.7,
+    "events_180_delta": -12,
+    "events_per_1000km_delta": -2.7,
+    "max_discharge_power_kw_delta": -34
+  }
 }
