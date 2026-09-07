@@ -99,7 +99,7 @@ const correlationCapacityPath = correlationPoints.map((item, index) => {
       <span class="badge badge-pink">그래프</span>
       <h2>한눈에 보는 변화</h2>
     </div>
-    <p>공개 가능한 일별·월별 집계값만 표시합니다.</p>
+    <p>이번 주 일별 주행·충전과 고출력 이벤트가 중심입니다. 월간 값은 참고용입니다.</p>
   </div>
 
   <fieldset class="chart-data-toggle" aria-label="그래프 데이터 유형 선택">
@@ -143,7 +143,7 @@ const correlationCapacityPath = correlationPoints.map((item, index) => {
       }
       <div class="chart-legend"><span><i class="legend-distance"></i>주행거리 (km)</span><span><i class="legend-charge"></i>충전량 (kWh)</span></div>
       {
-        hasDaily && <details class="vehicle-chart-table"><summary>일별 수치 보기</summary><table><thead><tr><th>날짜</th><th>주행</th><th>충전</th></tr></thead><tbody>{dailyMetrics.map((item) => <tr><td>{item.date}</td><td>{number(item.distanceKm, " km")}</td><td>{number(item.chargingKwh, " kWh")}</td></tr>)}</tbody></table></details>
+        hasDaily && <details class="vehicle-chart-table" open><summary>일별 수치 보기</summary><table><thead><tr><th>날짜</th><th>주행</th><th>충전</th></tr></thead><tbody>{dailyMetrics.map((item) => <tr><td>{item.date}</td><td>{number(item.distanceKm, " km")}</td><td>{number(item.chargingKwh, " kWh")}</td></tr>)}</tbody></table></details>
       }
     </figure>
 
@@ -166,7 +166,7 @@ const correlationCapacityPath = correlationPoints.map((item, index) => {
 
     <figure class="vehicle-chart-card" data-chart-kind="estimated">
       <figcaption>
-        <strong>배터리 추정 가용용량</strong>
+        <strong>월간 참고 · 배터리 추정 가용용량</strong>
         <span>최대 12개월의 충전 세션 기반 추정 추세입니다.</span>
       </figcaption>
       {
@@ -191,7 +191,7 @@ const correlationCapacityPath = correlationPoints.map((item, index) => {
 
     <figure class="vehicle-chart-card" data-chart-kind="comparison">
       <figcaption>
-        <strong>고출력 가속과 추정 가용용량</strong>
+        <strong>월간 참고 · 고출력 가속과 추정 가용용량</strong>
         <span>막대는 기록 데이터(1,000 km당 180 kW 이상 이벤트), 선은 추정 데이터(kWh)입니다.</span>
       </figcaption>
       {
