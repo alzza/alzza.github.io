@@ -98,6 +98,16 @@ const vehicleData = defineCollection({
       events_per_1000km: z.number().nullable().default(null), data_quality: z.enum(["available", "insufficient", "sign_unverified"]).default("insufficient"),
     }).default({ data_quality: "insufficient" }),
     acceleration_trend: z.array(z.object({ month: z.string(), events_180kw: z.number().nullable().default(null), events_200kw: z.number().nullable().default(null), avg_peak_power_speed_kmh: z.number().nullable().default(null), max_peak_power_speed_kmh: z.number().nullable().default(null), covered_distance_km: z.number().nullable().default(null), events_per_1000km: z.number().nullable().default(null) })).default([]),
+    observation_note: z.string().optional(),
+    week_compare: z.object({
+      prior_week_end: z.string().nullable().default(null),
+      distance_km_delta: z.number().nullable().default(null),
+      charging_kwh_delta: z.number().nullable().default(null),
+      capacity_kwh_delta: z.number().nullable().default(null),
+      events_180_delta: z.number().nullable().default(null),
+      events_per_1000km_delta: z.number().nullable().default(null),
+      max_discharge_power_kw_delta: z.number().nullable().default(null),
+    }).nullable().optional(),
     tags: z.array(z.string()).default([]),
   }),
 });
