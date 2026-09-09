@@ -354,9 +354,12 @@ button:focus-visible {
   font-size: clamp(28px, 5.5vw, 46px);
   font-weight: 800;
   letter-spacing: -0.04em;
-  line-height: 1.14;
+  line-height: 1.2;
   padding-bottom: 4px;
   color: var(--black);
+  text-wrap: pretty;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 .hero-band h1 em {
   color: var(--black);
@@ -364,9 +367,13 @@ button:focus-visible {
 }
 .hero-band p {
   margin: 0;
-  max-width: 46ch;
+  max-width: 100%;
   color: #1a1a1a;
   font-size: 16px;
+  line-height: 1.55;
+  text-wrap: pretty;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .badge {
