@@ -208,7 +208,8 @@ button:focus-visible {
 .acceleration-week h3 { margin:0 0 14px; }.acceleration-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }.acceleration-metrics div { border:2px solid var(--ink); padding:10px; }.acceleration-metrics small { display:block; color:var(--muted); }.acceleration-metrics strong { display:block; margin-top:4px; font-size:1.12rem; }.chart-method-note { margin:14px 0 0; color:var(--muted); font-size:.88rem; }
 .vehicle-chart-empty { padding:34px 8px; color:var(--muted); text-align:center; border:2px dashed var(--muted); }
 .vehicle-data-sections { margin-top:30px; }
-.vehicle-chart-table { margin-top:14px; font-size:.9rem; }.vehicle-chart-table summary { cursor:pointer; font-weight:700; }.vehicle-chart-table table { width:100%; margin-top:8px; border-collapse:collapse; }.vehicle-chart-table th,.vehicle-chart-table td { padding:7px 4px; border-bottom:1px solid color-mix(in srgb,var(--ink) 18%,transparent); text-align:left; }
+.vehicle-chart-table { margin-top:14px; font-size:.9rem; }
+.vehicle-chart-table summary { cursor:pointer; font-weight:700; }
 @media (max-width: 640px) {
   .vehicle-row { grid-template-columns: auto minmax(0, 1fr); }
   .vehicle-stats { grid-column: 2; }
@@ -541,15 +542,7 @@ button:focus-visible {
   font-family: var(--font-heading);
   font-size: 24px;
 }
-.day table { width: 100%; border-collapse: collapse; }
-.day th, .day td {
-  text-align: left;
-  padding: 8px 6px;
-  border-bottom: var(--border-thin);
-  vertical-align: top;
-  overflow-wrap: anywhere;
-}
-.day th { width: 7.5rem; font-size: 13px; font-family: var(--font-mono); }
+.day th { font-size: 13px; font-family: var(--font-mono); }
 .chip {
   display: inline-block;
   margin-right: 4px;
@@ -572,8 +565,7 @@ button:focus-visible {
 .map-frame iframe { width: 100%; height: 100%; border: 0; }
 
 /* blog / notes */
-.prose { max-width: 68ch; padding-bottom: 56px; overflow-wrap: anywhere; }
-.prose-plc { max-width: 82ch; }
+.prose { padding-bottom: 56px; overflow-wrap: anywhere; }
 .prose h2 {
   margin: 2rem 0 0.75rem;
   font-family: var(--font-heading);
@@ -586,48 +578,51 @@ button:focus-visible {
   font-size: 1.08rem;
   overflow-wrap: anywhere;
 }
-.prose p { margin: 0 0 1rem; }
+.prose p { margin: 0 0 1rem; max-width: 68ch; }
 .prose p + p { margin-top: 0; }
-.prose ul, .prose ol { margin: 0 0 1rem; padding-left: 1.25rem; }
+.prose ul, .prose ol { margin: 0 0 1rem; padding-left: 1.25rem; max-width: 68ch; }
 .prose li { margin: 0.2rem 0; }
-.table-scroll {
-  max-width: 100%;
-  margin: 0 0 1.25rem;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
-}
 .prose table,
 .day table,
 .vehicle-chart-table table {
   width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   margin: 0 0 1.25rem;
-  font-size: 0.88rem;
-  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  font-family: var(--font-body);
+  background: var(--surface);
 }
-.table-scroll > table {
-  margin: 0;
-  min-width: 100%;
-  width: max-content;
-}
+.vehicle-chart-table table { margin-top: 8px; }
 .prose th,
-.prose td {
+.prose td,
+.day th,
+.day td,
+.vehicle-chart-table th,
+.vehicle-chart-table td {
   border: var(--border-thin);
-  padding: 0.45rem 0.55rem;
-  text-align: left;
-  vertical-align: top;
+  padding: 0.5rem 0.45rem;
+  text-align: center;
+  vertical-align: middle;
   overflow-wrap: anywhere;
   word-break: break-word;
   white-space: normal;
+  line-height: 1.45;
 }
-.prose th {
+.prose th,
+.day th,
+.vehicle-chart-table th {
   background: var(--yellow);
   color: var(--black);
   font-weight: 700;
 }
-.prose-plc table {
-  font-size: 0.84rem;
+.prose td code,
+.day td code,
+.vehicle-chart-table td code {
+  white-space: normal;
+  word-break: break-word;
+  font-size: 0.84em;
 }
 .note-meta {
   margin: 0 0 1.25rem;
@@ -1150,81 +1145,19 @@ code {
     align-items: flex-start;
     gap: 6px;
   }
-  .day th { width: auto; }
-
   .prose table,
   .day table,
-  .table-scroll table {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
-  .prose thead,
-  .day thead,
-  .table-scroll thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-  }
-  .prose tbody,
-  .day tbody,
-  .table-scroll tbody,
-  .prose tr,
-  .day tr,
-  .table-scroll tr {
-    display: block;
-    width: 100%;
-  }
-  .prose tr,
-  .day tr,
-  .table-scroll tr {
-    margin: 0 0 12px;
-    border: var(--border);
-    background: var(--surface);
-    box-shadow: var(--shadow-sm);
+  .vehicle-chart-table table {
+    font-size: 0.72rem;
   }
   .prose th,
   .prose td,
   .day th,
   .day td,
-  .table-scroll th,
-  .table-scroll td {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    border: 0;
-    border-bottom: var(--border-thin);
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
+  .vehicle-chart-table th,
+  .vehicle-chart-table td {
+    padding: 0.38rem 0.28rem;
   }
-  .prose td:last-child,
-  .day td:last-child,
-  .table-scroll td:last-child { border-bottom: 0; }
-  .prose td:first-child,
-  .prose th:first-child,
-  .day th,
-  .table-scroll td:first-child,
-  .table-scroll th:first-child {
-    background: var(--yellow);
-    color: var(--black);
-    font-weight: 700;
-  }
-  .prose td::before,
-  .table-scroll td::before {
-    content: attr(data-label);
-    display: block;
-    margin: 0 0 6px;
-    font-size: 12px;
-    font-weight: 800;
-    color: var(--black);
-  }
-  .prose td:first-child::before,
-  .table-scroll td:first-child::before { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
