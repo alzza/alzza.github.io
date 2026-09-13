@@ -33,7 +33,7 @@ Retry를 여는 원본 판정은 `f_strip_failed`이다. 실제 Retry 스텝은 
 
 ### 변경 전
 
-![변경 전 Finger 완료 Rung](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_03.svg)
+![변경 전 Finger 완료 Rung](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_03.svg?v=2ec1a60)
 
 ```text
 XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
@@ -41,13 +41,13 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 
 ### 변경 후
 
-![변경 후 SM1 Finger 완료 Rung](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_05.svg)
+![변경 후 SM1 Finger 완료 Rung](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_05.svg?v=2ec1a60)
 
 ```text
 XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger1_separated);
 ```
 
-![변경 후 SM2 Finger 완료 Rung](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_11.svg)
+![변경 후 SM2 Finger 완료 Rung](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_11.svg?v=2ec1a60)
 
 ```text
 XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger1_separated);
