@@ -12,9 +12,17 @@ SC1 Robot#3는 A8 Reject에 전기동을 한 장씩 내려놓는다. Robot에서
 
 ## Rung 14 래더 비교
 
-아래는 Studio 5000의 `Robot3 → Reject → Rung 14`에서 첫 장 등급 비교만 바뀌는 부분을 래더 형태로 나타낸 것이다. 초록색 블록이 수정되는 `EQU` 조건이다.
+아래에 **기존 RLL 원문**과 그 원문을 LD로 변환한 **수정 후 래더**를 함께 표시한다. LD의 초록색 블록은 이번에 바뀌는 첫 장 등급 비교다.
 
-![Robot3 Reject Rung 14 변경 전·후 래더 비교](/images/notes/sc1-robot3-first-sheet-reject-grade/ld_rung_14_compare.svg)
+### 기존 RLL 원문
+
+```text
+[XIC(Reject_Counter_1[0].0),XIC(Reject_Counter_2[0].0),XIC(z_reject_enable_at_bar)XIC(z_Sheet1_CV_Last_Reject),XIC(z_reject_enable_at_last_sc1)XIC(z_Vision_reject_R3),EQU(ToTal_Reject.ACC,0)[EQU(z_sc1_R3_Grade,3),EQU(z_sc1_R3_Grade,4)],XIC(Reject_Start_Cmd)]XIO(i_Reject_End)OTE(Reject_Start_Cmd);
+```
+
+### 수정 후 LD
+
+![Robot3 Reject Rung 14 수정 후 LD](/images/notes/sc1-robot3-first-sheet-reject-grade/ld_rung_14.svg)
 
 | 등급 | 현재 첫 장 처리 | 수정 후 첫 장 처리 |
 |---|---|---|
