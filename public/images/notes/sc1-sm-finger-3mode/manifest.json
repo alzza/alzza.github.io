@@ -1,0 +1,74 @@
+[
+  {
+    "file": "ld_rung_00.svg",
+    "title": "변경 전: 실제 No Copper 센서만 사용",
+    "number": "BEFORE",
+    "text": "XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);",
+    "warnings": [],
+    "w": 1000,
+    "h": 141
+  },
+  {
+    "file": "ld_rung_01.svg",
+    "title": "변경 후: SM#1은 실제 센서 또는 해당 장비 우회를 사용",
+    "number": "AFTER-SM1",
+    "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_bypass_active)]OTE(f_finger1_separated);",
+    "warnings": [],
+    "w": 1000,
+    "h": 224
+  },
+  {
+    "file": "ld_rung_02.svg",
+    "title": "변경 후: SM#2은 자신의 우회 태그만 사용",
+    "number": "AFTER-SM2",
+    "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_bypass_active)]OTE(f_finger1_separated);",
+    "warnings": [],
+    "w": 1000,
+    "h": 224
+  },
+  {
+    "file": "ld_rung_03.svg",
+    "title": "60초 전용 버튼: 모드 1 선택과 타이머 창 시작",
+    "number": "MODE-SELECT",
+    "text": "XIC(ui_sm1_finger_60s_req)ONS(ons_sm1_finger_60s_req)[MOV(1,z_sm1_finger_bypass_mode),OTL(z_sm1_finger_60s_window),OTU(z_sm1_finger_retry_seen)];",
+    "warnings": [],
+    "w": 1000,
+    "h": 308
+  },
+  {
+    "file": "ld_rung_04.svg",
+    "title": "모드 1: 60초를 PLC TON으로 계산",
+    "number": "MODE-1-TIMER",
+    "text": "XIC(z_sm1_finger_60s_window)TON(tm_sm1_finger_bypass,?,?);",
+    "warnings": [],
+    "w": 1000,
+    "h": 178
+  },
+  {
+    "file": "ld_rung_05.svg",
+    "title": "모드 1: 60초 완료 후 모드 0으로 자동 복귀",
+    "number": "MODE-1-RETURN",
+    "text": "XIC(tm_sm1_finger_bypass.DN)[MOV(0,z_sm1_finger_bypass_mode),OTU(z_sm1_finger_60s_window)];",
+    "warnings": [],
+    "w": 1000,
+    "h": 224
+  },
+  {
+    "file": "ld_rung_06.svg",
+    "title": "모드 2: 실제 Retry 시작을 기억",
+    "number": "MODE-2",
+    "text": "EQU(z_sm1_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)OTL(z_sm1_finger_retry_seen);",
+    "warnings": [],
+    "w": 1000,
+    "h": 164
+  },
+  {
+    "file": "ld_rung_07.svg",
+    "title": "최종 우회 Active: 모드 1 창 또는 실제 Retry에서만 참",
+    "number": "ACTIVE",
+    "text": "[EQU(z_sm1_finger_bypass_mode,1)XIC(z_sm1_finger_60s_window),EQU(z_sm1_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)]OTE(z_sm1_finger_bypass_active);",
+    "warnings": [],
+    "w": 1000,
+    "h": 272
+  }
+]

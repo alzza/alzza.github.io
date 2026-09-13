@@ -1,0 +1,49 @@
+SC1 SM#1 / SM#2 Finger No Copper 3-mode Neutral Text
+Baseline: Cathode1(260714).L5X
+SHA-256: c98ac2a646e9ba7fdc6f6563e61f7e21ef61532db136cb50c4ca587015e624bb
+Date: 2026-09-13
+
+IMPORTANT
+- Create Controller Scope tags before entering the rungs.
+- Set tm_sm1_finger_bypass.PRE and tm_sm2_finger_bypass.PRE to 60000.
+- Add the 11 control rungs immediately after f_copper_in_gate in each BasicControl.
+- Enter one Neutral Text line per rung, in the listed order.
+- Do not modify SFC, DoAutomatic, DoSeparation, DoAutoModeManualControls, or z_mode_manual.
+
+[SM1] Stripping_Machine_1 > BasicControl
+Insert after original Rung 46: XIO(i_copper_not_in_gate_right)XIO(i_copper_not_in_gate_left)OTE(f_copper_in_gate);
+
+XIC(ui_sm1_finger_60s_req)ONS(ons_sm1_finger_60s_req)[MOV(1,z_sm1_finger_bypass_mode),OTL(z_sm1_finger_60s_window),OTU(z_sm1_finger_retry_seen)];
+XIC(ui_sm1_finger_retry_req)ONS(ons_sm1_finger_retry_req)[MOV(2,z_sm1_finger_bypass_mode),OTU(z_sm1_finger_60s_window),OTU(z_sm1_finger_retry_seen)];
+XIC(ui_sm1_finger_mode0_req)ONS(ons_sm1_finger_mode0_req)[MOV(0,z_sm1_finger_bypass_mode),OTU(z_sm1_finger_60s_window),OTU(z_sm1_finger_retry_seen)];
+XIC(S:FS)[MOV(0,z_sm1_finger_bypass_mode),OTU(z_sm1_finger_60s_window),OTU(z_sm1_finger_retry_seen)];
+[LES(z_sm1_finger_bypass_mode,0),GRT(z_sm1_finger_bypass_mode,2)][MOV(0,z_sm1_finger_bypass_mode),OTU(z_sm1_finger_60s_window),OTU(z_sm1_finger_retry_seen)];
+NEQ(z_sm1_finger_bypass_mode,1)OTU(z_sm1_finger_60s_window);
+XIC(z_sm1_finger_60s_window)TON(tm_sm1_finger_bypass,?,?);
+XIC(tm_sm1_finger_bypass.DN)[MOV(0,z_sm1_finger_bypass_mode),OTU(z_sm1_finger_60s_window)];
+EQU(z_sm1_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)OTL(z_sm1_finger_retry_seen);
+EQU(z_sm1_finger_bypass_mode,2)XIC(z_sm1_finger_retry_seen)[XIC(f_copper_in_gate),XIC(f_reject_cathode),XIO(f_auto_mode_manual_retry)][MOV(0,z_sm1_finger_bypass_mode),OTU(z_sm1_finger_retry_seen)];
+[EQU(z_sm1_finger_bypass_mode,1)XIC(z_sm1_finger_60s_window),EQU(z_sm1_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)]OTE(z_sm1_finger_bypass_active);
+
+Replace original Rungs 52 and 53:
+XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_bypass_active)]OTE(f_finger1_separated);
+XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm1_finger_bypass_active)]OTE(f_finger2_separated);
+
+[SM2] Stripping_Machine_2 > BasicControl
+Insert after original Rung 45: XIO(i_copper_not_in_gate_left)XIO(i_copper_not_in_gate_right)OTE(f_copper_in_gate);
+
+XIC(ui_sm2_finger_60s_req)ONS(ons_sm2_finger_60s_req)[MOV(1,z_sm2_finger_bypass_mode),OTL(z_sm2_finger_60s_window),OTU(z_sm2_finger_retry_seen)];
+XIC(ui_sm2_finger_retry_req)ONS(ons_sm2_finger_retry_req)[MOV(2,z_sm2_finger_bypass_mode),OTU(z_sm2_finger_60s_window),OTU(z_sm2_finger_retry_seen)];
+XIC(ui_sm2_finger_mode0_req)ONS(ons_sm2_finger_mode0_req)[MOV(0,z_sm2_finger_bypass_mode),OTU(z_sm2_finger_60s_window),OTU(z_sm2_finger_retry_seen)];
+XIC(S:FS)[MOV(0,z_sm2_finger_bypass_mode),OTU(z_sm2_finger_60s_window),OTU(z_sm2_finger_retry_seen)];
+[LES(z_sm2_finger_bypass_mode,0),GRT(z_sm2_finger_bypass_mode,2)][MOV(0,z_sm2_finger_bypass_mode),OTU(z_sm2_finger_60s_window),OTU(z_sm2_finger_retry_seen)];
+NEQ(z_sm2_finger_bypass_mode,1)OTU(z_sm2_finger_60s_window);
+XIC(z_sm2_finger_60s_window)TON(tm_sm2_finger_bypass,?,?);
+XIC(tm_sm2_finger_bypass.DN)[MOV(0,z_sm2_finger_bypass_mode),OTU(z_sm2_finger_60s_window)];
+EQU(z_sm2_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)OTL(z_sm2_finger_retry_seen);
+EQU(z_sm2_finger_bypass_mode,2)XIC(z_sm2_finger_retry_seen)[XIC(f_copper_in_gate),XIC(f_reject_cathode),XIO(f_auto_mode_manual_retry)][MOV(0,z_sm2_finger_bypass_mode),OTU(z_sm2_finger_retry_seen)];
+[EQU(z_sm2_finger_bypass_mode,1)XIC(z_sm2_finger_60s_window),EQU(z_sm2_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)]OTE(z_sm2_finger_bypass_active);
+
+Replace original Rungs 51 and 52:
+XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_bypass_active)]OTE(f_finger1_separated);
+XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm2_finger_bypass_active)]OTE(f_finger2_separated);
