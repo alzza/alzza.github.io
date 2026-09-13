@@ -17,7 +17,7 @@ SC1 Robot#3는 A8 Reject에 전기동을 한 장씩 내려놓는다. Robot에서
 ### 기존 RLL 원문
 
 ```text
-[XIC(Reject_Counter_1[0].0),XIC(Reject_Counter_2[0].0),XIC(z_reject_enable_at_bar)XIC(z_Sheet1_CV_Last_Reject),XIC(z_reject_enable_at_last_sc1)XIC(z_Vision_reject_R3),EQU(ToTal_Reject.ACC,0)[EQU(z_sc1_R3_Grade,3),EQU(z_sc1_R3_Grade,4)],XIC(Reject_Start_Cmd)]XIO(i_Reject_End)OTE(Reject_Start_Cmd);
+[XIC(Reject_Counter_1[0].0),XIC(Reject_Counter_2[0].0),XIC(z_reject_enable_at_bar)XIC(z_Sheet1_CV_Last_Reject),XIC(z_reject_enable_at_last_sc1)XIC(z_Vision_reject_R3),EQU(ToTal_Reject.ACC,0)[EQU(z_sc1_R3_Grade,2),EQU(z_sc1_R3_Grade,3)],XIC(Reject_Start_Cmd)]XIO(i_Reject_End)OTE(Reject_Start_Cmd);
 ```
 
 ### 수정 후 LD
