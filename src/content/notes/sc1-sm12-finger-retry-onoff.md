@@ -62,29 +62,73 @@ Retry를 여는 원본 판정은 `f_strip_failed`이다. 실제 Retry 스텝은 
 
 기존 STRIP 버튼 `ui_i_auto_separate`와 `DoSeparation`은 바꾸지 않는다. SFC도 바꾸지 않는다. `Finger Down` 입력도 그대로 유지한다.
 
-## 변경 전과 변경 후 LD
+## 원본 로직과 변경 로직 — SM#1
 
-아래 LD는 입력할 Neutral Text를 변환한 보기용 예시다. 이미지 안의 Rung 번호는 변환 묶음의 순번이며, 실제 L5X에 삽입할 때는 위의 프로그램명·Routine명·원본 Rung 내용으로 위치를 찾는다.
+대상: `Programs → Stripping_Machine_1 → Routines → BasicControl`의 원본 Finger 완료 Rung 52/53.
 
-### 변경 전
-
-![변경 전 Finger 완료 Rung](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_00.svg?v=l5x-cathode1-20260913)
+### Finger 1 — 원본
 
 ```text
 XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 ```
 
-### 변경 후
+![SM#1 Finger 1 원본 LD](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_00.svg?v=l5x-cathode1-20260913)
 
-![변경 후 SM1 Finger 완료 Rung](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_05.svg?v=full-tags-20260913)
+### Finger 1 — 변경
 
 ```text
 XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger1_separated);
 ```
 
-![변경 후 SM2 Finger 완료 Rung](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_11.svg?v=full-tags-20260913)
+![SM#1 Finger 1 변경 LD](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_05.svg?v=full-tags-20260913)
 
-SM#1과 SM#2의 Finger 완료 Rung 구조는 동일하고 프로그램 로컬 태그로 분리된다. 따라서 SM#2에서는 반드시 `Stripping_Machine_2 > BasicControl` 안에서 작업하고, SM#1의 `z_sm1_*`와 SM#2의 `z_sm2_*`를 서로 바꾸지 않는다.
+### Finger 2 — 원본과 변경
+
+```text
+// 원본 Rung 53
+XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);
+
+// 변경 Rung
+XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger2_separated);
+```
+
+![SM#1 Finger 2 원본 LD](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_original_finger2.svg?v=l5x-cathode1-20260913)
+![SM#1 Finger 2 변경 LD](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_06.svg?v=full-tags-20260913)
+
+## 원본 로직과 변경 로직 — SM#2
+
+대상: `Programs → Stripping_Machine_2 → Routines → BasicControl`의 원본 Finger 완료 Rung 51/52.
+
+### Finger 1 — 원본
+
+```text
+XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
+```
+
+![SM#2 Finger 1 원본 LD](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_00.svg?v=l5x-cathode1-20260913)
+
+### Finger 1 — 변경
+
+```text
+XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger1_separated);
+```
+
+![SM#2 Finger 1 변경 LD](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_11.svg?v=full-tags-20260913)
+
+### Finger 2 — 원본과 변경
+
+```text
+// 원본 Rung 52
+XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);
+
+// 변경 Rung
+XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger2_separated);
+```
+
+![SM#2 Finger 2 원본 LD](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_original_finger2.svg?v=l5x-cathode1-20260913)
+![SM#2 Finger 2 변경 LD](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_12.svg?v=full-tags-20260913)
+
+SM#1과 SM#2의 접점 구조는 같지만 프로그램 로컬 태그로 분리된다. SM#2 작업에서는 반드시 `z_sm2_finger_retry_bypass_active`를 사용한다.
 
 ### 추가 Rung 4개의 LD 보기
 
@@ -107,10 +151,6 @@ SM#1과 SM#2의 Finger 완료 Rung 구조는 동일하고 프로그램 로컬 �
 ![SM#2 Retry Active LD](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_10.svg?v=full-tags-20260913)
 
 </details>
-
-```text
-XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger1_separated);
-```
 
 ## Controller Scope 태그
 
