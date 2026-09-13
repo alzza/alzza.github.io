@@ -586,6 +586,8 @@ button:focus-visible {
   overflow-wrap: anywhere;
 }
 .prose p { margin: 0 0 1rem; max-width: 68ch; }
+.prose p:has(> img[src^="/images/notes/sc1-sm-finger-3mode/"]) { max-width: 100%; }
+.prose p > img[src^="/images/notes/sc1-sm-finger-3mode/"] { display: block; width: 100%; }
 .prose p + p { margin-top: 0; }
 .prose ul, .prose ol { margin: 0 0 1rem; padding-left: 1.25rem; max-width: 68ch; }
 .prose li { margin: 0.2rem 0; }
