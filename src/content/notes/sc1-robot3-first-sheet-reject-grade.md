@@ -10,6 +10,12 @@ SC1 Robot#3는 A8 Reject에 전기동을 한 장씩 내려놓는다. Robot에서
 
 현재 첫 장 조건은 E급과 G급을 리젝트한다. 이번 작업안은 E급을 빼고 G급과 R급을 넣는다.
 
+## Rung 14 래더 비교
+
+아래는 Studio 5000의 `Robot3 → Reject → Rung 14`에서 첫 장 등급 비교만 바뀌는 부분을 래더 형태로 나타낸 것이다. 초록색 블록이 수정되는 `EQU` 조건이다.
+
+![Robot3 Reject Rung 14 변경 전·후 래더 비교](/images/notes/sc1-robot3-first-sheet-reject-grade/ld_rung_14_compare.svg)
+
 | 등급 | 현재 첫 장 처리 | 수정 후 첫 장 처리 |
 |---|---|---|
 | S급 | 첫 장 조건으로 리젝트하지 않는다. | 기존과 같다. |
