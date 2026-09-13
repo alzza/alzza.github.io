@@ -22,7 +22,7 @@ SC1 Robot#3는 A8 Reject에 전기동을 한 장씩 내려놓는다. Robot에서
 
 ### 수정 후 LD
 
-![Robot3 Reject Rung 14 수정 후 LD](/images/notes/sc1-robot3-first-sheet-reject-grade/ld_rung_14.svg)
+![Robot3 Reject Rung 14 수정 후 LD](/images/notes/sc1-robot3-first-sheet-reject-grade/ld_rung_14.svg?v=fdd28ae)
 
 | 등급 | 현재 첫 장 처리 | 수정 후 첫 장 처리 |
 |---|---|---|
