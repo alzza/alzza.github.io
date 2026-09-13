@@ -596,15 +596,12 @@ button:focus-visible {
 .vehicle-chart-table table {
   width: 100%;
   max-width: 100%;
-  table-layout: fixed;
+  table-layout: auto;
   border-collapse: collapse;
   margin: 0 0 1.25rem;
   font-size: 0.86rem;
   font-family: var(--font-body);
   background: var(--surface);
-}
-.prose table:has(> thead > tr > th:nth-child(2):last-child) {
-  table-layout: auto;
 }
 .prose table:has(> thead > tr > th:nth-child(2):last-child) th:first-child,
 .prose table:has(> thead > tr > th:nth-child(2):last-child) td:first-child {

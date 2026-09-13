@@ -1,0 +1,119 @@
+[
+  {
+    "file": "ld_rung_00.svg",
+    "title": "Neutral Text validation 1",
+    "number": 0,
+    "text": "XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);",
+    "warnings": [],
+    "w": 1000,
+    "h": 141
+  },
+  {
+    "file": "ld_rung_01.svg",
+    "title": "Neutral Text validation 2",
+    "number": 1,
+    "text": "XIC(ui_sm1_finger_retry_bypass_on_req)ONS(ons_sm1_finger_retry_bypass_on_req)OTL(z_sm1_finger_retry_bypass_enable);",
+    "warnings": [],
+    "w": 1000,
+    "h": 141
+  },
+  {
+    "file": "ld_rung_02.svg",
+    "title": "Neutral Text validation 3",
+    "number": 2,
+    "text": "XIC(ui_sm1_finger_retry_bypass_off_req)ONS(ons_sm1_finger_retry_bypass_off_req)OTU(z_sm1_finger_retry_bypass_enable);",
+    "warnings": [],
+    "w": 1000,
+    "h": 141
+  },
+  {
+    "file": "ld_rung_03.svg",
+    "title": "Neutral Text validation 4",
+    "number": 3,
+    "text": "XIC(S:FS)OTU(z_sm1_finger_retry_bypass_enable);",
+    "warnings": [],
+    "w": 1000,
+    "h": 141
+  },
+  {
+    "file": "ld_rung_04.svg",
+    "title": "Neutral Text validation 5",
+    "number": 4,
+    "text": "XIC(z_sm1_finger_retry_bypass_enable)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm1_finger_retry_bypass_active);",
+    "warnings": [],
+    "w": 1000,
+    "h": 141
+  },
+  {
+    "file": "ld_rung_05.svg",
+    "title": "Neutral Text validation 6",
+    "number": 5,
+    "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger1_separated);",
+    "warnings": [],
+    "w": 1000,
+    "h": 224
+  },
+  {
+    "file": "ld_rung_06.svg",
+    "title": "Neutral Text validation 7",
+    "number": 6,
+    "text": "XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger2_separated);",
+    "warnings": [],
+    "w": 1000,
+    "h": 224
+  },
+  {
+    "file": "ld_rung_07.svg",
+    "title": "Neutral Text validation 8",
+    "number": 7,
+    "text": "XIC(ui_sm2_finger_retry_bypass_on_req)ONS(ons_sm2_finger_retry_bypass_on_req)OTL(z_sm2_finger_retry_bypass_enable);",
+    "warnings": [],
+    "w": 1000,
+    "h": 141
+  },
+  {
+    "file": "ld_rung_08.svg",
+    "title": "Neutral Text validation 9",
+    "number": 8,
+    "text": "XIC(ui_sm2_finger_retry_bypass_off_req)ONS(ons_sm2_finger_retry_bypass_off_req)OTU(z_sm2_finger_retry_bypass_enable);",
+    "warnings": [],
+    "w": 1000,
+    "h": 141
+  },
+  {
+    "file": "ld_rung_09.svg",
+    "title": "Neutral Text validation 10",
+    "number": 9,
+    "text": "XIC(S:FS)OTU(z_sm2_finger_retry_bypass_enable);",
+    "warnings": [],
+    "w": 1000,
+    "h": 141
+  },
+  {
+    "file": "ld_rung_10.svg",
+    "title": "Neutral Text validation 11",
+    "number": 10,
+    "text": "XIC(z_sm2_finger_retry_bypass_enable)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm2_finger_retry_bypass_active);",
+    "warnings": [],
+    "w": 1000,
+    "h": 141
+  },
+  {
+    "file": "ld_rung_11.svg",
+    "title": "Neutral Text validation 12",
+    "number": 11,
+    "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger1_separated);",
+    "warnings": [],
+    "w": 1000,
+    "h": 224
+  },
+  {
+    "file": "ld_rung_12.svg",
+    "title": "Neutral Text validation 13",
+    "number": 12,
+    "text": "XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger2_separated);",
+    "warnings": [],
+    "w": 1000,
+    "h": 224
+  }
+]

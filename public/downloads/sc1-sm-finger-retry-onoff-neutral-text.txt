@@ -1,0 +1,25 @@
+SC1 SM#1 / SM#2 Finger No Copper Retry-only ON/OFF Neutral Text
+This version has no 60-second timer and no TON instruction.
+Baseline: Cathode1(260714).L5X
+
+XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
+
+[SM1] Stripping_Machine_1 > BasicControl
+Insert after the existing f_copper_in_gate rung:
+XIC(ui_sm1_finger_retry_bypass_on_req)ONS(ons_sm1_finger_retry_bypass_on_req)OTL(z_sm1_finger_retry_bypass_enable);
+XIC(ui_sm1_finger_retry_bypass_off_req)ONS(ons_sm1_finger_retry_bypass_off_req)OTU(z_sm1_finger_retry_bypass_enable);
+XIC(S:FS)OTU(z_sm1_finger_retry_bypass_enable);
+XIC(z_sm1_finger_retry_bypass_enable)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm1_finger_retry_bypass_active);
+Replace the two Finger completion rungs:
+XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger1_separated);
+XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger2_separated);
+
+[SM2] Stripping_Machine_2 > BasicControl
+Insert after the existing f_copper_in_gate rung:
+XIC(ui_sm2_finger_retry_bypass_on_req)ONS(ons_sm2_finger_retry_bypass_on_req)OTL(z_sm2_finger_retry_bypass_enable);
+XIC(ui_sm2_finger_retry_bypass_off_req)ONS(ons_sm2_finger_retry_bypass_off_req)OTU(z_sm2_finger_retry_bypass_enable);
+XIC(S:FS)OTU(z_sm2_finger_retry_bypass_enable);
+XIC(z_sm2_finger_retry_bypass_enable)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm2_finger_retry_bypass_active);
+Replace the two Finger completion rungs:
+XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger1_separated);
+XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger2_separated);
