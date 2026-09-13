@@ -8,6 +8,8 @@ tags: ["PLC", "InTouch", "SC1", "SM1", "SM2", "Retry"]
 
 이 문서는 60초 타이머를 사용하지 않는 별도 방식이다. 작업자가 SM#1 또는 SM#2의 기능을 ON으로 선택하면 PLC가 그 상태를 기억하지만, 실제 우회 출력은 Retry 중에만 켠다. Retry가 아닐 때는 ON 상태여도 기존 Finger No Copper 센서를 그대로 사용한다.
 
+최신 확인 기준은 `Cathode1.L5X`(Controller `Cathode1`, SoftwareRevision 31.00, ExportDate 2026-06-20)이다. 아래 RLL과 LD는 이 파일의 현재 원본을 기준으로 다시 대조했다. L5X 자체는 수정하지 않았다.
+
 | 기능 상태 | 실제 조건 | Finger 완료 판정 |
 |---|---|---|
 | OFF | 항상 일반 운전이다. | 실제 `i_finger_*_no_copper` 입력만 사용한다. |
@@ -27,13 +29,26 @@ tags: ["PLC", "InTouch", "SC1", "SM1", "SM2", "Retry"]
 
 Retry를 여는 원본 판정은 `f_strip_failed`이다. 실제 Retry 스텝은 SM#1의 `State_Manual_Retry_001`, SM#2의 `State_Manual_Retry_003`이며, 두 스텝의 Action이 `f_auto_mode_manual_retry := 1`을 만든다. 새 로직은 `f_secsep_failed`, `State_Manual_Retry.X`, `z_mode_manual`을 사용하지 않는다.
 
+### 최신 L5X 대조 결과
+
+| 확인 항목 | SM#1 | SM#2 |
+|---|---|---|
+| `f_copper_in_gate` 원본 Rung | 46 | 45 |
+| Finger 1 완료 원본 Rung | 52 | 51 |
+| Finger 2 완료 원본 Rung | 53 | 52 |
+| Retry Step | `State_Manual_Retry_001` | `State_Manual_Retry_003` |
+| Retry Action | `f_auto_mode_manual_retry := 1` | `f_auto_mode_manual_retry := 1` |
+| No Copper 입력 Alias | `N4:1:I.5`, `N4:1:I.6` | `N6:1:I.5`, `N6:1:I.6` |
+
+따라서 `ld_rung_00.svg`가 현재 원본 Finger 1 완료 Rung이고, `ld_rung_03.svg`는 이 문서의 원본 Rung이 아니다. `ld_rung_03.svg`는 이전 검증 묶음의 `S:FS` 초기화 Rung이어서 변경 전 그림으로 사용하면 안 된다.
+
 기존 STRIP 버튼 `ui_i_auto_separate`와 `DoSeparation`은 바꾸지 않는다. SFC도 바꾸지 않는다. `Finger Down` 입력도 그대로 유지한다.
 
 ## 변경 전과 변경 후 LD
 
 ### 변경 전
 
-![변경 전 Finger 완료 Rung](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_03.svg?v=full-tags-20260913)
+![변경 전 Finger 완료 Rung](/images/notes/sc1-sm-finger-retry-onoff/ld_rung_00.svg?v=l5x-cathode1-20260913)
 
 ```text
 XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
