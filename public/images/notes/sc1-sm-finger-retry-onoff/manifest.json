@@ -41,7 +41,7 @@
     "number": 4,
     "text": "XIC(z_sm1_finger_retry_bypass_enable)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm1_finger_retry_bypass_active);",
     "warnings": [],
-    "w": 1320,
+    "w": 1322,
     "h": 126.0
   },
   {
@@ -95,7 +95,7 @@
     "number": 10,
     "text": "XIC(z_sm2_finger_retry_bypass_enable)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm2_finger_retry_bypass_active);",
     "warnings": [],
-    "w": 1320,
+    "w": 1322,
     "h": 126.0
   },
   {

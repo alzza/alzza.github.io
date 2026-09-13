@@ -56,7 +56,7 @@ Rung을 추가하면 뒤 번호는 자동으로 바뀐다. 따라서 변경할 �
 
 ### 변경 전
 
-![변경 전 Finger 완료 Rung](/images/notes/sc1-sm-finger-3mode/ld_rung_00.svg?v=a0a9d68)
+![변경 전 Finger 완료 Rung](/images/notes/sc1-sm-finger-3mode/ld_rung_00.svg?v=full-tags-20260913)
 
 ```text
 XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
@@ -64,7 +64,7 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 
 ### 변경 후 SM#1
 
-![변경 후 SM1 Finger 완료 Rung](/images/notes/sc1-sm-finger-3mode/ld_rung_01.svg?v=a0a9d68)
+![변경 후 SM1 Finger 완료 Rung](/images/notes/sc1-sm-finger-3mode/ld_rung_01.svg?v=full-tags-20260913)
 
 ```text
 XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_bypass_active)]OTE(f_finger1_separated);
@@ -72,7 +72,7 @@ XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_bypass_active)]O
 
 ### 변경 후 SM#2
 
-![변경 후 SM2 Finger 완료 Rung](/images/notes/sc1-sm-finger-3mode/ld_rung_02.svg?v=a0a9d68)
+![변경 후 SM2 Finger 완료 Rung](/images/notes/sc1-sm-finger-3mode/ld_rung_02.svg?v=full-tags-20260913)
 
 ```text
 XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_bypass_active)]OTE(f_finger1_separated);
@@ -156,17 +156,17 @@ XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm2_finger_bypass_active)]O
 
 60초 전용 버튼은 모드 1을 선택하면서 타이머 창을 한 번만 연다. 우회 중 버튼을 다시 눌러도 비유지형 TON Rung이 계속 참이므로 ACC가 0으로 다시 시작되지 않는다.
 
-![60초 전용 버튼 LD](/images/notes/sc1-sm-finger-3mode/ld_rung_03.svg?v=a0a9d68)
+![60초 전용 버튼 LD](/images/notes/sc1-sm-finger-3mode/ld_rung_03.svg?v=full-tags-20260913)
 
-![60초 타이머 LD](/images/notes/sc1-sm-finger-3mode/ld_rung_04.svg?v=a0a9d68)
+![60초 타이머 LD](/images/notes/sc1-sm-finger-3mode/ld_rung_04.svg?v=full-tags-20260913)
 
-![60초 뒤 모드 0 복귀 LD](/images/notes/sc1-sm-finger-3mode/ld_rung_05.svg?v=a0a9d68)
+![60초 뒤 모드 0 복귀 LD](/images/notes/sc1-sm-finger-3mode/ld_rung_05.svg?v=full-tags-20260913)
 
 모드 2는 `f_strip_failed`가 켜졌다는 이유만으로 우회하지 않는다. 실제 Retry 스텝이 실행되어 `f_auto_mode_manual_retry=1`이 된 순간부터 우회한다.
 
-![실제 Retry 시작 기억 LD](/images/notes/sc1-sm-finger-3mode/ld_rung_06.svg?v=a0a9d68)
+![실제 Retry 시작 기억 LD](/images/notes/sc1-sm-finger-3mode/ld_rung_06.svg?v=full-tags-20260913)
 
-![최종 우회 Active LD](/images/notes/sc1-sm-finger-3mode/ld_rung_07.svg?v=a0a9d68)
+![최종 우회 Active LD](/images/notes/sc1-sm-finger-3mode/ld_rung_07.svg?v=full-tags-20260913)
 
 ## 모드별 작동 순서
 
