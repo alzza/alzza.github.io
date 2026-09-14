@@ -639,6 +639,12 @@ button:focus-visible {
 .prose .ld-rung {
   margin: 0 0 1.25rem;
 }
+.prose .ld-rung img[hidden] { display: none !important; }
+.prose .ld-rung-live svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 .prose .ld-rung .rung-meta {
   display: flex;
   align-items: center;

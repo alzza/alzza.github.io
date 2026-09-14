@@ -52,11 +52,11 @@ Rung을 추가하면 뒤 번호는 자동으로 바뀐다. 따라서 변경할 �
 
 ## 변경 전과 변경 후 LD
 
-다음 그림은 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/?v=f4b0f98)의 **최소 가로 유지 · 노트용** 배율로 넣었다. 짧은 렁도 Studio 5000처럼 같은 레일 폭을 쓰고, 그보다 넓은 렁만 한 화면에 맞게 줄어든다. 웹에서는 Rung 번호와 파서 상태를 그림 위에 두고, SVG 안에는 번호를 넣지 않았다. 모든 그림의 파서 경고는 0건이었다.
+다음 그림은 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/?v=9838c91)와 같은 렌더러가 브라우저 본문 폭에 맞춰 다시 그린다. 짧은 렁도 Studio 5000처럼 레일이 가로를 채우고, 그보다 넓은 렁만 한 화면에 맞게 줄어든다. 웹에서는 Rung 번호와 파서 상태를 그림 위에 두고, SVG 안에는 번호를 넣지 않았다. 모든 그림의 파서 경고는 0건이었다.
 
 ### 변경 전
 
-<figure class="ld-rung">
+<figure class="ld-rung" data-rung="52" data-rll="XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 52</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-3mode/ld_rung_00.svg?v=f4b0f98" alt="변경 전 Finger 완료 Rung" width="920" height="126">
 </figure>
@@ -67,7 +67,7 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 
 ### 변경 후 SM#1
 
-<figure class="ld-rung">
+<figure class="ld-rung" data-rung="52" data-rll="XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_bypass_active)]OTE(f_finger1_separated);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 52</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-3mode/ld_rung_01.svg?v=f4b0f98" alt="변경 후 SM1 Finger 완료 Rung" width="920" height="286">
 </figure>
@@ -78,7 +78,7 @@ XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_bypass_active)]O
 
 ### 변경 후 SM#2
 
-<figure class="ld-rung">
+<figure class="ld-rung" data-rung="51" data-rll="XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_bypass_active)]OTE(f_finger1_separated);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 51</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-3mode/ld_rung_02.svg?v=f4b0f98" alt="변경 후 SM2 Finger 완료 Rung" width="920" height="286">
 </figure>
@@ -165,29 +165,29 @@ XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm2_finger_bypass_active)]O
 
 60초 전용 버튼은 모드 1을 선택하면서 타이머 창을 한 번만 연다. 우회 중 버튼을 다시 눌러도 비유지형 TON Rung이 계속 참이므로 ACC가 0으로 다시 시작되지 않는다.
 
-<figure class="ld-rung">
+<figure class="ld-rung" data-rung="60초 전용 버튼" data-rll="XIC(ui_sm1_finger_60s_req)ONS(ons_sm1_finger_60s_req)[MOV(1,z_sm1_finger_bypass_mode),OTL(z_sm1_finger_60s_window),OTU(z_sm1_finger_retry_seen)];">
 <div class="rung-meta"><span class="rung-meta-number">60초 전용 버튼</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-3mode/ld_rung_03.svg?v=f4b0f98" alt="60초 전용 버튼 LD" width="920" height="446">
 </figure>
 
-<figure class="ld-rung">
+<figure class="ld-rung" data-rung="60초 타이머" data-rll="XIC(z_sm1_finger_60s_window)TON(tm_sm1_finger_bypass,?,?);">
 <div class="rung-meta"><span class="rung-meta-number">60초 타이머</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-3mode/ld_rung_04.svg?v=f4b0f98" alt="60초 타이머 LD" width="920" height="166">
 </figure>
 
-<figure class="ld-rung">
+<figure class="ld-rung" data-rung="60초 뒤 모드 0 복귀" data-rll="XIC(tm_sm1_finger_bypass.DN)[MOV(0,z_sm1_finger_bypass_mode),OTU(z_sm1_finger_60s_window)];">
 <div class="rung-meta"><span class="rung-meta-number">60초 뒤 모드 0 복귀</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-3mode/ld_rung_05.svg?v=f4b0f98" alt="60초 뒤 모드 0 복귀 LD" width="920" height="286">
 </figure>
 
 모드 2는 `f_strip_failed`가 켜졌다는 이유만으로 우회하지 않는다. 실제 Retry 스텝이 실행되어 `f_auto_mode_manual_retry=1`이 된 순간부터 우회한다.
 
-<figure class="ld-rung">
+<figure class="ld-rung" data-rung="실제 Retry 시작 기억" data-rll="EQU(z_sm1_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)OTL(z_sm1_finger_retry_seen);">
 <div class="rung-meta"><span class="rung-meta-number">실제 Retry 시작 기억</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-3mode/ld_rung_06.svg?v=f4b0f98" alt="실제 Retry 시작 기억 LD" width="920" height="146">
 </figure>
 
-<figure class="ld-rung">
+<figure class="ld-rung" data-rung="최종 우회 Active" data-rll="[EQU(z_sm1_finger_bypass_mode,1)XIC(z_sm1_finger_60s_window),EQU(z_sm1_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)]OTE(z_sm1_finger_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">최종 우회 Active</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-3mode/ld_rung_07.svg?v=f4b0f98" alt="최종 우회 Active LD" width="1176" height="326">
 </figure>

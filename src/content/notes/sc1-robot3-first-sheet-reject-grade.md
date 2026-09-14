@@ -22,7 +22,7 @@ SC1 Robot#3는 A8 Reject에 전기동을 한 장씩 내려놓는다. Robot에서
 
 ### 수정 후 LD
 
-<figure class="ld-rung">
+<figure class="ld-rung" data-rung="14" data-rll="[XIC(Reject_Counter_1[0].0),XIC(Reject_Counter_2[0].0),XIC(z_reject_enable_at_bar)XIC(z_Sheet1_CV_Last_Reject),XIC(z_reject_enable_at_last_sc1)XIC(z_Vision_reject_R3),EQU(ToTal_Reject.ACC,0)[EQU(z_sc1_R3_Grade,3),EQU(z_sc1_R3_Grade,4)],XIC(Reject_Start_Cmd)]XIO(i_Reject_End)OTE(Reject_Start_Cmd);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 14</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-robot3-first-sheet-reject-grade/ld_rung_14.svg?v=f4b0f98" alt="Robot3 Reject Rung 14 수정 후 LD" width="920" height="1126">
 </figure>

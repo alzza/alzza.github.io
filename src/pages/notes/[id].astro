@@ -36,4 +36,12 @@ const { Content } = await render(note);
     <Content />
     <Comments />
   </div>
+  {
+    typeof note.body === "string" && note.body.includes("ld-rung") && (
+      <>
+        <script is:inline src="/l5x-ld-studio.js?v=live1"></script>
+        <script is:inline src="/ld-embed.js?v=1"></script>
+      </>
+    )
+  }
 </Base>
