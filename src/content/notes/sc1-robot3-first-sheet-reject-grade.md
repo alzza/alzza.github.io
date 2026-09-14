@@ -12,7 +12,7 @@ SC1 Robot#3는 A8 Reject에 전기동을 한 장씩 내려놓는다. Robot에서
 
 ## Rung 14 래더 비교
 
-아래에 **기존 RLL 원문**과 그 원문을 LD로 변환한 **수정 후 래더**를 함께 표시한다. LD의 초록색 블록은 이번에 바뀌는 첫 장 등급 비교다.
+아래에 **기존 RLL 원문**과 그 원문을 LD로 변환한 **수정 후 래더**를 함께 표시한다. 그림은 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/?v=52b5616) `52b5616`으로 다시 보냈다. 번호와 상태는 그림 위쪽에 두고, SVG 안에는 넣지 않았다. 바뀌는 부분은 `EQU(z_sc1_R3_Grade,3)`과 `EQU(z_sc1_R3_Grade,4)` 비교다.
 
 ### 기존 RLL 원문
 
@@ -22,7 +22,10 @@ SC1 Robot#3는 A8 Reject에 전기동을 한 장씩 내려놓는다. Robot에서
 
 ### 수정 후 LD
 
-![Robot3 Reject Rung 14 수정 후 LD](/images/notes/sc1-robot3-first-sheet-reject-grade/ld_rung_14.svg?v=fdd28ae)
+<figure class="ld-rung">
+<div class="rung-meta"><span class="rung-meta-number">Rung 14</span><span class="rung-status ok">정상</span></div>
+<img src="/images/notes/sc1-robot3-first-sheet-reject-grade/ld_rung_14.svg?v=52b5616" alt="Robot3 Reject Rung 14 수정 후 LD" width="1040" height="1126">
+</figure>
 
 | 등급 | 현재 첫 장 처리 | 수정 후 첫 장 처리 |
 |---|---|---|

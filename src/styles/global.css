@@ -628,7 +628,40 @@ button:focus-visible {
 }
 .prose p { margin: 0 0 1rem; max-width: 100%; }
 .prose p:has(> img[src*="/ld_rung_"]) { max-width: 100%; }
-.prose p > img[src*="/ld_rung_"] { display: block; width: 100%; max-width: 100%; }
+.prose p > img[src*="/ld_rung_"],
+.prose .ld-rung img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+.prose .ld-rung {
+  margin: 0 0 1.25rem;
+}
+.prose .ld-rung .rung-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+.prose .ld-rung .rung-status {
+  display: inline-block;
+  padding: 1px 7px;
+  border: var(--border-thin);
+  background: var(--green-light);
+  font-size: 11px;
+  font-weight: 800;
+}
+.prose .ld-rung .rung-status.warn {
+  background: var(--yellow-light);
+}
+@media print {
+  .prose .ld-rung .rung-meta { display: none !important; }
+}
 .prose p + p { margin-top: 0; }
 .prose ul, .prose ol { margin: 0 0 1rem; padding-left: 1.25rem; max-width: 100%; }
 .prose li { margin: 0.2rem 0; }

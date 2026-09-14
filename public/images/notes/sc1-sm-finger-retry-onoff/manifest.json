@@ -51,7 +51,7 @@
     "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger1_separated);",
     "warnings": [],
     "w": 1040,
-    "h": 226.0
+    "h": 286.0
   },
   {
     "file": "ld_rung_06.svg",
@@ -60,7 +60,7 @@
     "text": "XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger2_separated);",
     "warnings": [],
     "w": 1040,
-    "h": 226.0
+    "h": 286.0
   },
   {
     "file": "ld_rung_07.svg",
@@ -105,7 +105,7 @@
     "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger1_separated);",
     "warnings": [],
     "w": 1040,
-    "h": 226.0
+    "h": 286.0
   },
   {
     "file": "ld_rung_12.svg",
@@ -114,6 +114,6 @@
     "text": "XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger2_separated);",
     "warnings": [],
     "w": 1040,
-    "h": 226.0
+    "h": 286.0
   }
 ]

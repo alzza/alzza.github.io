@@ -15,7 +15,7 @@
     "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_bypass_active)]OTE(f_finger1_separated);",
     "warnings": [],
     "w": 1040,
-    "h": 226.0
+    "h": 286.0
   },
   {
     "file": "ld_rung_02.svg",
@@ -24,7 +24,7 @@
     "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_bypass_active)]OTE(f_finger1_separated);",
     "warnings": [],
     "w": 1040,
-    "h": 226.0
+    "h": 286.0
   },
   {
     "file": "ld_rung_03.svg",
@@ -33,7 +33,7 @@
     "text": "XIC(ui_sm1_finger_60s_req)ONS(ons_sm1_finger_60s_req)[MOV(1,z_sm1_finger_bypass_mode),OTL(z_sm1_finger_60s_window),OTU(z_sm1_finger_retry_seen)];",
     "warnings": [],
     "w": 1040,
-    "h": 326.0
+    "h": 446.0
   },
   {
     "file": "ld_rung_04.svg",
@@ -51,7 +51,7 @@
     "text": "XIC(tm_sm1_finger_bypass.DN)[MOV(0,z_sm1_finger_bypass_mode),OTU(z_sm1_finger_60s_window)];",
     "warnings": [],
     "w": 1040,
-    "h": 226.0
+    "h": 286.0
   },
   {
     "file": "ld_rung_06.svg",
@@ -69,6 +69,6 @@
     "text": "[EQU(z_sm1_finger_bypass_mode,1)XIC(z_sm1_finger_60s_window),EQU(z_sm1_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)]OTE(z_sm1_finger_bypass_active);",
     "warnings": [],
     "w": 1256,
-    "h": 266.0
+    "h": 326.0
   }
 ]
