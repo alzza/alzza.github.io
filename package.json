@@ -14,7 +14,8 @@
     "vehicle-weekly": "node scripts/vehicle-weekly/generate.mjs"
   },
   "dependencies": {
-    "astro": "^7.2.3",
-    "@modelcontextprotocol/sdk": "^1.30.0"
+    "@astrojs/starlight": "^0.42.0",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "astro": "^7.3.2"
   }
 }

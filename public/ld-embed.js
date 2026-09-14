@@ -4,9 +4,11 @@
   var lastW = 0;
 
   function sheetWidth() {
-    var wrap = document.querySelector(".wrap.prose") || document.querySelector(".wrap");
-    if (!wrap) return 920;
-    return Math.max(280, Math.floor(wrap.clientWidth));
+    var fig = document.querySelector(".ld-rung");
+    if (fig && fig.clientWidth > 40) return Math.max(280, Math.floor(fig.clientWidth));
+    var col = document.querySelector(".sl-markdown-content") || document.querySelector(".wrap.prose") || document.querySelector(".wrap");
+    if (!col) return 920;
+    return Math.max(280, Math.floor(col.clientWidth));
   }
 
   function paint() {
@@ -53,7 +55,7 @@
       if (e.target && e.target.tagName === "DETAILS") onResize();
     }, true);
     if (window.ResizeObserver) {
-      var wrap = document.querySelector(".wrap.prose") || document.querySelector(".wrap");
+      var wrap = document.querySelector(".sl-markdown-content") || document.querySelector(".wrap.prose") || document.querySelector(".wrap");
       if (wrap) new ResizeObserver(onResize).observe(wrap);
     }
   }

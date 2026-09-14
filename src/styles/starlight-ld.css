@@ -1,0 +1,47 @@
+/* Ladder figures inside Starlight markdown. */
+.ld-rung {
+  margin: 0 0 1.25rem;
+}
+.ld-rung img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+.ld-rung img[hidden] {
+  display: none !important;
+}
+.ld-rung-live {
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.ld-rung-live svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.ld-rung .rung-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  color: var(--sl-color-gray-2);
+  font-size: 13px;
+  font-weight: 700;
+}
+.ld-rung .rung-status {
+  display: inline-block;
+  padding: 1px 7px;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 4px;
+  background: var(--sl-color-green-low);
+  font-size: 11px;
+  font-weight: 800;
+}
+@media print {
+  .ld-rung .rung-meta {
+    display: none !important;
+  }
+}

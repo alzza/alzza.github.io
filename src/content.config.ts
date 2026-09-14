@@ -1,6 +1,8 @@
 import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
 import { glob } from "astro/loaders";
+import { docsLoader } from "@astrojs/starlight/loaders";
+import { docsSchema } from "@astrojs/starlight/schema";
 
 const notes = defineCollection({
   loader: glob({ pattern: "**/[^_]*.md", base: "./src/content/notes" }),
@@ -112,4 +114,13 @@ const vehicleData = defineCollection({
   }),
 });
 
-export const collections = { notes, vehicleReports, vehicleData };
+const docs = defineCollection({
+  loader: docsLoader(),
+  schema: docsSchema({
+    extend: z.object({
+      date: z.string().optional(),
+    }),
+  }),
+});
+
+export const collections = { notes, vehicleReports, vehicleData, docs };
