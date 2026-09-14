@@ -631,13 +631,23 @@ button:focus-visible {
 .prose p > img[src*="/ld_rung_"],
 .prose .ld-rung img {
   display: block;
-  width: 100%;
-  max-width: 100%;
   height: auto;
+  width: auto;
+  max-width: 100%;
   margin: 0 auto;
 }
 .prose .ld-rung {
   margin: 0 0 1.25rem;
+  overflow-x: auto;
+}
+/* 807 SVG units fill the note wrap. That is the EQU+접점+코일 Rung 비율.
+   Narrower rungs stay the same symbol size instead of stretching to 100%. */
+@supports (width: attr(width px)) {
+  .prose p > img[src*="/ld_rung_"],
+  .prose .ld-rung img {
+    width: min(100%, calc(attr(width number) / 807 * 100%));
+    max-width: none;
+  }
 }
 .prose .ld-rung .rung-meta {
   display: flex;

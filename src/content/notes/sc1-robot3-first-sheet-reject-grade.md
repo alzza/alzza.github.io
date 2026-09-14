@@ -12,7 +12,7 @@ SC1 Robot#3는 A8 Reject에 전기동을 한 장씩 내려놓는다. Robot에서
 
 ## Rung 14 래더 비교
 
-아래에 **기존 RLL 원문**과 그 원문을 LD로 변환한 **수정 후 래더**를 함께 표시한다. 그림은 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/?v=ffd5f67) `ffd5f67`으로 다시 보냈다. 번호와 상태는 그림 위쪽에 두고, SVG 안에는 넣지 않았다. 바뀌는 부분은 `EQU(z_sc1_R3_Grade,3)`과 `EQU(z_sc1_R3_Grade,4)` 비교다.
+아래에 **기존 RLL 원문**과 그 원문을 LD로 변환한 **수정 후 래더**를 함께 표시한다. 그림은 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/?v=e136d3b) `ffd5f67`으로 다시 보냈다. 번호와 상태는 그림 위쪽에 두고, SVG 안에는 넣지 않았다. 바뀌는 부분은 `EQU(z_sc1_R3_Grade,3)`과 `EQU(z_sc1_R3_Grade,4)` 비교다.
 
 ### 기존 RLL 원문
 

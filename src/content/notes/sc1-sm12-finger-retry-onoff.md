@@ -8,7 +8,7 @@ tags: ["PLC", "InTouch", "SC1", "SM1", "SM2", "Retry"]
 
 이 문서는 60초 타이머를 사용하지 않는 별도 방식이다. 작업자가 SM#1 또는 SM#2의 기능을 ON으로 선택하면 PLC가 그 상태를 기억하지만, 실제 우회 출력은 Retry 중에만 켠다. Retry가 아닐 때는 ON 상태여도 기존 Finger No Copper 센서를 그대로 사용한다.
 
-최신 확인 기준은 `Cathode1.L5X`(Controller `Cathode1`, SoftwareRevision 31.00, ExportDate 2026-06-20)이다. 아래 RLL과 LD는 이 파일의 현재 원본을 기준으로 다시 대조했다. LD 그림은 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/?v=ffd5f67) `ffd5f67`으로 다시 보냈고, 번호와 상태는 그림 위쪽에만 둔다. L5X 자체는 수정하지 않았다.
+최신 확인 기준은 `Cathode1.L5X`(Controller `Cathode1`, SoftwareRevision 31.00, ExportDate 2026-06-20)이다. 아래 RLL과 LD는 이 파일의 현재 원본을 기준으로 다시 대조했다. LD 그림은 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/?v=e136d3b)의 **고정 · 노트용** 배율로 넣었고, 번호와 상태는 그림 위쪽에만 둔다. L5X 자체는 수정하지 않았다.
 
 | 기능 상태 | 실제 조건 | Finger 완료 판정 |
 |---|---|---|
