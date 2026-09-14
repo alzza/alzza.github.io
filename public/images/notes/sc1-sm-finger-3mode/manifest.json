@@ -5,7 +5,7 @@
     "number": "BEFORE",
     "text": "XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);",
     "warnings": [],
-    "w": 1040,
+    "w": 656,
     "h": 126.0
   },
   {
@@ -14,7 +14,7 @@
     "number": "AFTER-SM1",
     "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_bypass_active)]OTE(f_finger1_separated);",
     "warnings": [],
-    "w": 1040,
+    "w": 698,
     "h": 286.0
   },
   {
@@ -23,7 +23,7 @@
     "number": "AFTER-SM2",
     "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_bypass_active)]OTE(f_finger1_separated);",
     "warnings": [],
-    "w": 1040,
+    "w": 698,
     "h": 286.0
   },
   {
@@ -32,7 +32,7 @@
     "number": "MODE-SELECT",
     "text": "XIC(ui_sm1_finger_60s_req)ONS(ons_sm1_finger_60s_req)[MOV(1,z_sm1_finger_bypass_mode),OTL(z_sm1_finger_60s_window),OTU(z_sm1_finger_retry_seen)];",
     "warnings": [],
-    "w": 1040,
+    "w": 747,
     "h": 446.0
   },
   {
@@ -41,7 +41,7 @@
     "number": "MODE-1-TIMER",
     "text": "XIC(z_sm1_finger_60s_window)TON(tm_sm1_finger_bypass,?,?);",
     "warnings": [],
-    "w": 1040,
+    "w": 549,
     "h": 166.0
   },
   {
@@ -50,7 +50,7 @@
     "number": "MODE-1-RETURN",
     "text": "XIC(tm_sm1_finger_bypass.DN)[MOV(0,z_sm1_finger_bypass_mode),OTU(z_sm1_finger_60s_window)];",
     "warnings": [],
-    "w": 1040,
+    "w": 545,
     "h": 286.0
   },
   {
@@ -59,7 +59,7 @@
     "number": "MODE-2",
     "text": "EQU(z_sm1_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)OTL(z_sm1_finger_retry_seen);",
     "warnings": [],
-    "w": 1040,
+    "w": 807,
     "h": 146.0
   },
   {
@@ -68,7 +68,7 @@
     "number": "ACTIVE",
     "text": "[EQU(z_sm1_finger_bypass_mode,1)XIC(z_sm1_finger_60s_window),EQU(z_sm1_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)]OTE(z_sm1_finger_bypass_active);",
     "warnings": [],
-    "w": 1256,
+    "w": 1176,
     "h": 326.0
   }
 ]

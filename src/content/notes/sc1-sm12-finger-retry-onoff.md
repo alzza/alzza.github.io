@@ -8,7 +8,7 @@ tags: ["PLC", "InTouch", "SC1", "SM1", "SM2", "Retry"]
 
 이 문서는 60초 타이머를 사용하지 않는 별도 방식이다. 작업자가 SM#1 또는 SM#2의 기능을 ON으로 선택하면 PLC가 그 상태를 기억하지만, 실제 우회 출력은 Retry 중에만 켠다. Retry가 아닐 때는 ON 상태여도 기존 Finger No Copper 센서를 그대로 사용한다.
 
-최신 확인 기준은 `Cathode1.L5X`(Controller `Cathode1`, SoftwareRevision 31.00, ExportDate 2026-06-20)이다. 아래 RLL과 LD는 이 파일의 현재 원본을 기준으로 다시 대조했다. LD 그림은 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/?v=52b5616) `52b5616`으로 다시 보냈고, 번호와 상태는 그림 위쪽에만 둔다. L5X 자체는 수정하지 않았다.
+최신 확인 기준은 `Cathode1.L5X`(Controller `Cathode1`, SoftwareRevision 31.00, ExportDate 2026-06-20)이다. 아래 RLL과 LD는 이 파일의 현재 원본을 기준으로 다시 대조했다. LD 그림은 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/?v=ffd5f67) `ffd5f67`으로 다시 보냈고, 번호와 상태는 그림 위쪽에만 둔다. L5X 자체는 수정하지 않았다.
 
 | 기능 상태 | 실제 조건 | Finger 완료 판정 |
 |---|---|---|
@@ -74,7 +74,7 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 52</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_00.svg?v=52b5616" alt="SM#1 Finger 1 원본 LD" width="1040" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_00.svg?v=ffd5f67" alt="SM#1 Finger 1 원본 LD" width="656" height="126">
 </figure>
 
 ### Finger 1 — 변경
@@ -85,7 +85,7 @@ XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_retry_bypass_act
 
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 52</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_05.svg?v=52b5616" alt="SM#1 Finger 1 변경 LD" width="1040" height="286">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_05.svg?v=ffd5f67" alt="SM#1 Finger 1 변경 LD" width="740" height="286">
 </figure>
 
 ### Finger 2 — 원본과 변경
@@ -100,11 +100,11 @@ XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm1_finger_retry_bypass_act
 
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 53</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_original_finger2.svg?v=52b5616" alt="SM#1 Finger 2 원본 LD" width="1040" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_original_finger2.svg?v=ffd5f67" alt="SM#1 Finger 2 원본 LD" width="656" height="126">
 </figure>
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 53</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_06.svg?v=52b5616" alt="SM#1 Finger 2 변경 LD" width="1040" height="286">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_06.svg?v=ffd5f67" alt="SM#1 Finger 2 변경 LD" width="740" height="286">
 </figure>
 
 ## 원본 로직과 변경 로직 — SM#2
@@ -119,7 +119,7 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 51</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_00.svg?v=52b5616" alt="SM#2 Finger 1 원본 LD" width="1040" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_00.svg?v=ffd5f67" alt="SM#2 Finger 1 원본 LD" width="656" height="126">
 </figure>
 
 ### Finger 1 — 변경
@@ -130,7 +130,7 @@ XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_retry_bypass_act
 
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 51</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_11.svg?v=52b5616" alt="SM#2 Finger 1 변경 LD" width="1040" height="286">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_11.svg?v=ffd5f67" alt="SM#2 Finger 1 변경 LD" width="740" height="286">
 </figure>
 
 ### Finger 2 — 원본과 변경
@@ -145,11 +145,11 @@ XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm2_finger_retry_bypass_act
 
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 52</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_original_finger2.svg?v=52b5616" alt="SM#2 Finger 2 원본 LD" width="1040" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_original_finger2.svg?v=ffd5f67" alt="SM#2 Finger 2 원본 LD" width="656" height="126">
 </figure>
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 52</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_12.svg?v=52b5616" alt="SM#2 Finger 2 변경 LD" width="1040" height="286">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_12.svg?v=ffd5f67" alt="SM#2 Finger 2 변경 LD" width="740" height="286">
 </figure>
 
 SM#1과 SM#2의 접점 구조는 같지만 프로그램 로컬 태그로 분리된다. SM#2 작업에서는 반드시 `z_sm2_finger_retry_bypass_active`를 사용한다.
@@ -161,19 +161,19 @@ SM#1과 SM#2의 접점 구조는 같지만 프로그램 로컬 태그로 분리�
 
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 47</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_01.svg?v=52b5616" alt="SM#1 ON 래치 LD" width="1051" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_01.svg?v=ffd5f67" alt="SM#1 ON 래치 LD" width="971" height="126">
 </figure>
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 48</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_02.svg?v=52b5616" alt="SM#1 OFF 래치 LD" width="1065" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_02.svg?v=ffd5f67" alt="SM#1 OFF 래치 LD" width="985" height="126">
 </figure>
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 49</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_03.svg?v=52b5616" alt="SM#1 첫 스캔 초기화 LD" width="1040" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_03.svg?v=ffd5f67" alt="SM#1 첫 스캔 초기화 LD" width="512" height="126">
 </figure>
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 50</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_04.svg?v=52b5616" alt="SM#1 Retry Active LD" width="1322" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_04.svg?v=ffd5f67" alt="SM#1 Retry Active LD" width="1242" height="126">
 </figure>
 
 </details>
@@ -183,19 +183,19 @@ SM#1과 SM#2의 접점 구조는 같지만 프로그램 로컬 태그로 분리�
 
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 46</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_07.svg?v=52b5616" alt="SM#2 ON 래치 LD" width="1051" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_07.svg?v=ffd5f67" alt="SM#2 ON 래치 LD" width="971" height="126">
 </figure>
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 47</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_08.svg?v=52b5616" alt="SM#2 OFF 래치 LD" width="1065" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_08.svg?v=ffd5f67" alt="SM#2 OFF 래치 LD" width="985" height="126">
 </figure>
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 48</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_09.svg?v=52b5616" alt="SM#2 첫 스캔 초기화 LD" width="1040" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_09.svg?v=ffd5f67" alt="SM#2 첫 스캔 초기화 LD" width="512" height="126">
 </figure>
 <figure class="ld-rung">
 <div class="rung-meta"><span class="rung-meta-number">Rung 49</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_10.svg?v=52b5616" alt="SM#2 Retry Active LD" width="1322" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_10.svg?v=ffd5f67" alt="SM#2 Retry Active LD" width="1242" height="126">
 </figure>
 
 </details>
