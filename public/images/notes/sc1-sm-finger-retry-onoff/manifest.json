@@ -5,7 +5,7 @@
     "number": 0,
     "text": "XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);",
     "warnings": [],
-    "w": 656,
+    "w": 920,
     "h": 126.0
   },
   {
@@ -32,7 +32,7 @@
     "number": 3,
     "text": "XIC(S:FS)OTU(z_sm1_finger_retry_bypass_enable);",
     "warnings": [],
-    "w": 512,
+    "w": 920,
     "h": 126.0
   },
   {
@@ -50,7 +50,7 @@
     "number": 5,
     "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger1_separated);",
     "warnings": [],
-    "w": 740,
+    "w": 920,
     "h": 286.0
   },
   {
@@ -59,7 +59,7 @@
     "number": 6,
     "text": "XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger2_separated);",
     "warnings": [],
-    "w": 740,
+    "w": 920,
     "h": 286.0
   },
   {
@@ -86,7 +86,7 @@
     "number": 9,
     "text": "XIC(S:FS)OTU(z_sm2_finger_retry_bypass_enable);",
     "warnings": [],
-    "w": 512,
+    "w": 920,
     "h": 126.0
   },
   {
@@ -104,7 +104,7 @@
     "number": 11,
     "text": "XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger1_separated);",
     "warnings": [],
-    "w": 740,
+    "w": 920,
     "h": 286.0
   },
   {
@@ -113,7 +113,7 @@
     "number": 12,
     "text": "XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger2_separated);",
     "warnings": [],
-    "w": 740,
+    "w": 920,
     "h": 286.0
   }
 ]
