@@ -457,7 +457,7 @@ button:focus-visible {
   color: var(--pink);
   font-style: italic;
 }
-.hero p { margin: 0; max-width: 46ch; color: var(--muted); font-size: 16px; }
+.hero p { margin: 0; max-width: 100%; color: var(--muted); font-size: 16px; }
 
 .grid {
   display: grid;
@@ -626,11 +626,11 @@ button:focus-visible {
   font-size: 1.08rem;
   overflow-wrap: anywhere;
 }
-.prose p { margin: 0 0 1rem; max-width: 68ch; }
+.prose p { margin: 0 0 1rem; max-width: 100%; }
 .prose p:has(> img[src*="/ld_rung_"]) { max-width: 100%; }
 .prose p > img[src*="/ld_rung_"] { display: block; width: 100%; max-width: 100%; }
 .prose p + p { margin-top: 0; }
-.prose ul, .prose ol { margin: 0 0 1rem; padding-left: 1.25rem; max-width: 68ch; }
+.prose ul, .prose ol { margin: 0 0 1rem; padding-left: 1.25rem; max-width: 100%; }
 .prose li { margin: 0.2rem 0; }
 .prose table,
 .day table,
@@ -1137,7 +1137,7 @@ code {
 }
 .comments-hint {
   margin: 0 0 14px;
-  max-width: 46ch;
+  max-width: 100%;
   color: var(--muted);
   font-size: 14px;
 }

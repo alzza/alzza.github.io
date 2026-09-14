@@ -10,6 +10,8 @@ tags: ["운영", "Astro"]
 
 노트와 Pages에 올리는 한국어는 [fluent-korean](https://github.com/snflkd/fluent-korean/)을 따른다. 조사와 어미를 빼고 명사만 나열하지 않는다. 자세한 항목은 저장소 `AGENTS.md`에 있다.
 
+본문·목록·표는 같은 `.wrap` 폭을 쓴다. 지금은 최대 920px이다. CSS에서 문단만 `68ch`처럼 좁히지 않고, 글을 쓸 때도 신문 칼럼처럼 짧게 끊지 않는다. 제목·태그·문단·표가 한 세로선에 맞춰 보이게 쓴다.
+
 작업 폴더: `/Users/akanus/orca/workspaces/design-page/alzza.github.io`
 
 라이브: https://alzza.github.io/
