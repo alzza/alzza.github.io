@@ -392,6 +392,47 @@ button:focus-visible {
 }
 .badge-pink { background: var(--pink); }
 
+.hero-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hero-kicker .badge { margin-bottom: 0; }
+.codex-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  padding: 4px 10px;
+  border: var(--border-thin);
+  background: var(--surface);
+  color: var(--black);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  word-break: keep-all;
+}
+.codex-reset strong {
+  font-size: 13px;
+}
+.codex-reset:hover {
+  background: var(--ink);
+  color: var(--yellow);
+}
+[data-theme="dark"] .hero-band .codex-reset {
+  background: #fff;
+  color: #000;
+}
+[data-theme="dark"] .hero-band .codex-reset:hover {
+  background: var(--ink);
+  color: var(--yellow);
+}
+
 .divider-band {
   display: block;
   height: 16px;
