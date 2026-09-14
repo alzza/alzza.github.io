@@ -1,3 +1,25 @@
+/* Field docs need the note-sheet width (~920px) plus room for RLL.
+   Starlight’s default 45rem column plus both sidebars leaves ~632px. */
+:root {
+  --sl-content-width: 72rem;
+  --sl-sidebar-width: 15rem;
+}
+
+@media (min-width: 72rem) {
+  .right-sidebar-container {
+    display: none;
+  }
+  html[data-has-sidebar][data-has-toc] .main-pane {
+    width: 100%;
+    --sl-content-margin-inline: 0 auto;
+  }
+}
+
+.sl-markdown-content .expressive-code pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 /* Ladder figures inside Starlight markdown. */
 .ld-rung {
   margin: 0 0 1.25rem;
