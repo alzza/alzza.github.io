@@ -83,7 +83,7 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger1_separated);
 ```
 
-<figure class="ld-rung" data-rung="52" data-rll="XIC(tm_sm1_finger_bypass.DN)[MOV(0,z_sm1_finger_bypass_mode),OTU(z_sm1_finger_60s_window)];">
+<figure class="ld-rung" data-rung="52" data-rll="XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger1_separated);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 52</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_05.svg?v=f4b0f98" alt="SM#1 Finger 1 변경 LD" width="920" height="286">
 </figure>
@@ -102,7 +102,7 @@ XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm1_finger_retry_bypass_act
 <div class="rung-meta"><span class="rung-meta-number">Rung 53</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_original_finger2.svg?v=f4b0f98" alt="SM#1 Finger 2 원본 LD" width="920" height="126">
 </figure>
-<figure class="ld-rung" data-rung="53" data-rll="EQU(z_sm1_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)OTL(z_sm1_finger_retry_seen);">
+<figure class="ld-rung" data-rung="53" data-rll="XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger2_separated);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 53</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_06.svg?v=f4b0f98" alt="SM#1 Finger 2 변경 LD" width="920" height="286">
 </figure>
@@ -159,19 +159,19 @@ SM#1과 SM#2의 접점 구조는 같지만 프로그램 로컬 태그로 분리�
 <details>
 <summary>SM#1 추가 Rung 4개 펼치기</summary>
 
-<figure class="ld-rung" data-rung="47" data-rll="XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_bypass_active)]OTE(f_finger1_separated);">
+<figure class="ld-rung" data-rung="47" data-rll="XIC(ui_sm1_finger_retry_bypass_on_req)ONS(ons_sm1_finger_retry_bypass_on_req)OTL(z_sm1_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 47</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_01.svg?v=f4b0f98" alt="SM#1 ON 래치 LD" width="971" height="126">
 </figure>
-<figure class="ld-rung" data-rung="48" data-rll="XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_bypass_active)]OTE(f_finger1_separated);">
+<figure class="ld-rung" data-rung="48" data-rll="XIC(ui_sm1_finger_retry_bypass_off_req)ONS(ons_sm1_finger_retry_bypass_off_req)OTU(z_sm1_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 48</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_02.svg?v=f4b0f98" alt="SM#1 OFF 래치 LD" width="985" height="126">
 </figure>
-<figure class="ld-rung" data-rung="49" data-rll="XIC(ui_sm1_finger_60s_req)ONS(ons_sm1_finger_60s_req)[MOV(1,z_sm1_finger_bypass_mode),OTL(z_sm1_finger_60s_window),OTU(z_sm1_finger_retry_seen)];">
+<figure class="ld-rung" data-rung="49" data-rll="XIC(S:FS)OTU(z_sm1_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 49</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_03.svg?v=f4b0f98" alt="SM#1 첫 스캔 초기화 LD" width="920" height="126">
 </figure>
-<figure class="ld-rung" data-rung="50" data-rll="XIC(z_sm1_finger_60s_window)TON(tm_sm1_finger_bypass,?,?);">
+<figure class="ld-rung" data-rung="50" data-rll="XIC(z_sm1_finger_retry_bypass_enable)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm1_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 50</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_04.svg?v=f4b0f98" alt="SM#1 Retry Active LD" width="1242" height="126">
 </figure>
@@ -181,7 +181,7 @@ SM#1과 SM#2의 접점 구조는 같지만 프로그램 로컬 태그로 분리�
 <details>
 <summary>SM#2 추가 Rung 4개 펼치기</summary>
 
-<figure class="ld-rung" data-rung="46" data-rll="[EQU(z_sm1_finger_bypass_mode,1)XIC(z_sm1_finger_60s_window),EQU(z_sm1_finger_bypass_mode,2)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)]OTE(z_sm1_finger_bypass_active);">
+<figure class="ld-rung" data-rung="46" data-rll="XIC(ui_sm2_finger_retry_bypass_on_req)ONS(ons_sm2_finger_retry_bypass_on_req)OTL(z_sm2_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 46</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_07.svg?v=f4b0f98" alt="SM#2 ON 래치 LD" width="971" height="126">
 </figure>

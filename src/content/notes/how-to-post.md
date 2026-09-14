@@ -12,6 +12,15 @@ tags: ["운영", "Astro"]
 
 본문·목록·표는 같은 `.wrap` 폭을 쓴다. 지금은 최대 920px이다. CSS에서 문단만 `68ch`처럼 좁히지 않고, 글을 쓸 때도 신문 칼럼처럼 짧게 끊지 않는다. 제목·태그·문단·표가 한 세로선에 맞춰 보이게 쓴다.
 
+노트에 래더를 넣을 때는 캡처 SVG만 붙이지 않는다. 아래처럼 `data-rll`을 두고 실시간 렌더로 넣는다. 본문 폭이 바뀌면 레일 폭도 따라간다. `img`는 스크립트가 꺼져 있을 때만 보인다.
+
+```html
+<figure class="ld-rung" data-rung="52" data-rll="XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);">
+<div class="rung-meta"><span class="rung-meta-number">Rung 52</span><span class="rung-status ok">정상</span></div>
+<img src="/images/notes/.../ld_rung_00.svg" alt="원본 Finger 완료 LD" width="920" height="126">
+</figure>
+```
+
 작업 폴더: `/Users/akanus/orca/workspaces/design-page/alzza.github.io`
 
 라이브: https://alzza.github.io/

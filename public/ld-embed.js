@@ -49,6 +49,9 @@
   function start() {
     paint();
     window.addEventListener("resize", onResize);
+    document.addEventListener("toggle", function (e) {
+      if (e.target && e.target.tagName === "DETAILS") onResize();
+    }, true);
     if (window.ResizeObserver) {
       var wrap = document.querySelector(".wrap.prose") || document.querySelector(".wrap");
       if (wrap) new ResizeObserver(onResize).observe(wrap);
