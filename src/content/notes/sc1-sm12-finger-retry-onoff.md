@@ -12,6 +12,23 @@ tags: ["PLC", "InTouch", "SC1", "SM1", "SM2", "Retry"]
 
 여기서 HMI의 기능 선택 ON과 실제 우회 Active는 서로 다르다. Gate 진입 성공 후 `z_sm*_finger_retry_bypass_active`는 0으로 복귀하지만 `z_sm*_finger_retry_bypass_enable`은 계속 1이다. 따라서 다음 Retry가 발생하면 우회가 다시 자동으로 켜진다. 다음 Retry에서도 사용하지 않으려면 HMI에서 해당 장비의 OFF 버튼을 누른다.
 
+## SM#1·SM#2 작동 흐름
+
+<section class="retry-flow" aria-label="Finger No Copper Retry 우회 작동 흐름">
+  <div class="retry-flow-track">
+    <div class="retry-flow-step"><b>1. 기능 ON</b><span>장비별 Enable=1</span><small>일반 탈취에서는 실제 센서를 사용한다.</small></div>
+    <span class="retry-flow-arrow" aria-hidden="true">→</span>
+    <div class="retry-flow-step retry-flow-alert"><b>2. 탈취 실패</b><span><code>f_strip_failed=1</code></span><small>이 플래그가 Retry를 연다.</small></div>
+    <span class="retry-flow-arrow" aria-hidden="true">→</span>
+    <div class="retry-flow-step"><b>3. 실제 Retry</b><span>SM#1: <code>_001.X</code></span><span>SM#2: <code>_003.X</code></span></div>
+    <span class="retry-flow-arrow" aria-hidden="true">→</span>
+    <div class="retry-flow-step retry-flow-active"><b>4. 센서 우회 중</b><span>Active=1</span><small>No Copper만 우회하며 Finger Down은 유지한다.</small></div>
+    <span class="retry-flow-arrow" aria-hidden="true">→</span>
+    <div class="retry-flow-step retry-flow-done"><b>5. Gate 진입</b><span><code>f_copper_in_gate=1</code></span><small>Active=0으로 만들고 실제 센서로 복귀한다.</small></div>
+  </div>
+  <p class="retry-flow-note"><b>다른 종료 경로:</b> 리젝트가 발생하거나 실제 Retry 스텝을 벗어나도 Active를 0으로 만든다. 기능 Enable은 OFF 버튼을 누르기 전까지 유지된다.</p>
+</section>
+
 이번에 직접 확인한 파일은 `Cathode1.L5X`(Controller `Cathode1`, SoftwareRevision 31.00, ExportDate 2026-06-20)이다. 아래 원본 RLL은 이 파일에서 확인했다. 별도로 언급된 `Cathode1(260714).L5X`는 이번 작업 환경에서 확보되지 않아 현장 ACD와 일치한다고 확정할 수 없다. 입력 전 해당 원본 Rung과 태그를 반드시 대조한다. LD는 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/) 렌더러로 표시한다. L5X 자체는 수정하지 않았다.
 
 | 기능 상태 | 실제 조건 | Finger 완료 판정 |
@@ -168,8 +185,8 @@ SM#1과 SM#2의 접점 구조는 같지만 프로그램 로컬 태그로 분리�
 
 다음 4개 Rung은 원본 L5X에 없으므로 변경 전 LD가 없다. ON, OFF, 첫 스캔 초기화, 실제 Retry 우회 판정을 각 장비에 새로 추가한다. 마지막 LD에는 이번 검토로 추가한 실제 Retry 스텝 접점이 들어 있다.
 
-<details>
-<summary>SM#1 추가 Rung 4개 펼치기</summary>
+<details open>
+<summary>SM#1에 추가할 RLL 4개와 LD</summary>
 
 <figure class="ld-rung" data-rung="47" data-rll="XIC(ui_sm1_finger_retry_bypass_on_req)ONS(ons_sm1_finger_retry_bypass_on_req)OTL(z_sm1_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 47</span><span class="rung-status ok">정상</span></div>
@@ -190,8 +207,8 @@ SM#1과 SM#2의 접점 구조는 같지만 프로그램 로컬 태그로 분리�
 
 </details>
 
-<details>
-<summary>SM#2 추가 Rung 4개 펼치기</summary>
+<details open>
+<summary>SM#2에 추가할 RLL 4개와 LD</summary>
 
 <figure class="ld-rung" data-rung="46" data-rll="XIC(ui_sm2_finger_retry_bypass_on_req)ONS(ons_sm2_finger_retry_bypass_on_req)OTL(z_sm2_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 46</span><span class="rung-status ok">정상</span></div>

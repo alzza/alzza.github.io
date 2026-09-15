@@ -844,15 +844,29 @@ code {
   padding: 2.6rem 1rem 1rem;
   font-size: 0.94rem;
   line-height: 1.55;
-  background: #101827 !important;
-  color: #f7f8fb;
-  scrollbar-color: #ffd54a #101827;
+  background: #fffdf5 !important;
+  color: #111827 !important;
+  border-color: #243b7a;
+  box-shadow: 4px 4px 0 #d8deef;
+  scrollbar-color: #243b7a #e7ebf4;
 }
 .prose-finger-retry pre code,
 .prose-finger-retry pre code span {
+  color: #111827 !important;
   white-space: pre;
   overflow-wrap: normal;
   word-break: normal;
+  font-weight: 600;
+}
+.prose-finger-retry pre::-webkit-scrollbar {
+  height: 12px;
+}
+.prose-finger-retry pre::-webkit-scrollbar-track {
+  background: #e7ebf4;
+}
+.prose-finger-retry pre::-webkit-scrollbar-thumb {
+  background: #243b7a;
+  border: 2px solid #e7ebf4;
 }
 .prose-finger-retry .plc-copy {
   position: absolute;
@@ -864,6 +878,59 @@ code {
   font: 700 0.75rem var(--font-mono);
   padding: 0.3rem 0.6rem;
   cursor: pointer;
+}
+
+.prose-finger-retry .retry-flow {
+  margin: 0 0 1.5rem;
+  padding: 1rem;
+  border: 2px solid #243b7a;
+  background: #fff;
+  box-shadow: 4px 4px 0 #d8deef;
+}
+.prose-finger-retry .retry-flow-track {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0.45rem;
+}
+.prose-finger-retry .retry-flow-step {
+  display: flex;
+  min-width: 0;
+  min-height: 8.6rem;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.7rem;
+  border: 2px solid #243b7a;
+  background: #f5f8ff;
+  color: #111827;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+.prose-finger-retry .retry-flow-step b { font-size: 0.9rem; }
+.prose-finger-retry .retry-flow-step span,
+.prose-finger-retry .retry-flow-step small { font-size: 0.72rem; line-height: 1.4; }
+.prose-finger-retry .retry-flow-step code { white-space: normal; word-break: break-word; }
+.prose-finger-retry .retry-flow-alert { background: #fff1f1; border-color: #b42318; }
+.prose-finger-retry .retry-flow-active { background: #e8fff2; border-color: #087a45; }
+.prose-finger-retry .retry-flow-done { background: #fff7d6; border-color: #8a6400; }
+.prose-finger-retry .retry-flow-arrow {
+  align-self: center;
+  color: #243b7a;
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+.prose-finger-retry .retry-flow-note {
+  max-width: 100%;
+  margin: 0.9rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid #aab6d5;
+  font-size: 0.84rem;
+}
+@media (max-width: 760px) {
+  .prose-finger-retry .retry-flow-track { grid-template-columns: 1fr; }
+  .prose-finger-retry .retry-flow-step { min-height: 0; }
+  .prose-finger-retry .retry-flow-arrow { transform: rotate(90deg); }
 }
 
 .board {
