@@ -838,6 +838,34 @@ code {
   font-size: inherit;
 }
 
+.prose-finger-retry pre,
+.prose-finger-retry pre.astro-code {
+  position: relative;
+  padding: 2.6rem 1rem 1rem;
+  font-size: 0.94rem;
+  line-height: 1.55;
+  background: #101827 !important;
+  color: #f7f8fb;
+  scrollbar-color: #ffd54a #101827;
+}
+.prose-finger-retry pre code,
+.prose-finger-retry pre code span {
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.prose-finger-retry .plc-copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.65rem;
+  border: 2px solid #ffd54a;
+  background: #ffd54a;
+  color: #101827;
+  font: 700 0.75rem var(--font-mono);
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
 .board {
   display: grid;
   gap: 0;

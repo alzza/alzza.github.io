@@ -9,21 +9,21 @@ sidebar:
 
 > 이것은 Starlight 테스트 페이지입니다. 기존 노트는 [여기](/notes/sc1-sm12-finger-retry-onoff/)입니다.
 
-이 문서는 60초 타이머를 사용하지 않는 별도 방식이다. 작업자가 SM#1 또는 SM#2의 기능을 ON으로 선택하면 PLC가 그 상태를 기억하지만, 실제 우회 출력은 Retry 중에만 켠다. Retry가 아닐 때는 ON 상태여도 기존 Finger No Copper 센서를 그대로 사용한다.
+이 문서는 60초 타이머를 사용하지 않는 별도 방식이다. 작업자가 SM#1 또는 SM#2의 기능을 ON으로 선택하면 PLC가 그 상태를 기억한다. 실제 센서 우회는 해당 장비의 Retry 스텝이 실행되고 `f_auto_mode_manual_retry=1`이며 전기동이 아직 게이트에 들어오지 않았을 때만 켜진다. 평소 STRIP 작업에서는 ON 상태여도 센서를 그대로 사용한다.
 
-최신 확인 기준은 `Cathode1.L5X`(Controller `Cathode1`, SoftwareRevision 31.00, ExportDate 2026-06-20)이다. 아래 RLL과 LD는 이 파일의 현재 원본을 기준으로 다시 대조했다. LD는 이 화면 폭에 맞춰 다시 그린다. L5X 자체는 수정하지 않았다.
+이번에 직접 확인한 파일은 `Cathode1.L5X`(Controller `Cathode1`, SoftwareRevision 31.00, ExportDate 2026-06-20)이다. 별도로 언급된 `Cathode1(260714).L5X`는 이번 작업 환경에서 확보되지 않아 현장 ACD와 일치한다고 확정할 수 없다. 입력 전 원본 Rung과 태그를 반드시 대조한다. LD는 이 화면 폭에 맞춰 다시 그린다. L5X 자체는 수정하지 않았다.
 
 | 기능 상태 | 실제 조건 | Finger 완료 판정 |
 |---|---|---|
 | OFF | 항상 일반 운전이다. | 실제 `i_finger_*_no_copper` 입력만 사용한다. |
 | ON, Retry 아님 | 기능은 대기 상태다. `f_auto_mode_manual_retry=0`이면 우회하지 않는다. | 실제 센서 입력을 사용한다. |
-| ON, Retry 중 | `f_auto_mode_manual_retry=1`이고 게이트 성공·리젝트 조건이 아직 없을 때만 우회한다. | `Finger Down`과 Retry 전용 우회 상태를 사용한다. |
+| ON, Retry 중 | 해당 장비의 실제 Retry 스텝 `.X=1`, `f_auto_mode_manual_retry=1`, 게이트 성공·리젝트 조건이 아직 없을 때만 우회한다. | `Finger Down`과 Retry 전용 우회 상태를 사용한다. |
 
 이 버전에는 60초 버튼, TON, ACC, 남은 시간 표시가 없다. ON 상태는 OFF 버튼을 누르거나 컨트롤러가 첫 스캔을 할 때까지 유지된다. 따라서 ON으로 둔 장비는 다음 Retry에서도 같은 정책을 사용한다.
 
 ## 확인된 원본과 변경 위치
 
-기준 파일은 `Cathode1(260714).L5X`이다. 기준 L5X, PLC, 로봇 LS는 수정하지 않았다.
+기준은 이번에 열어 확인한 `Cathode1.L5X`의 2026-06-20 Export다. 기준 L5X, PLC, 로봇 LS는 수정하지 않았다.
 
 | 장비 | 프로그램과 Routine | 추가 위치 | 완료 Rung 변경 |
 |---|---|---|---|
@@ -48,7 +48,7 @@ sidebar:
 
 > Rung 번호는 수정 전 L5X의 원본 번호다. 중간에 Rung을 삽입하면 Studio 5000이 뒤쪽 번호를 다시 매길 수 있으므로, 현장에서는 번호보다 위의 **Rung 내용과 태그명**을 함께 확인한다.
 
-Retry를 여는 원본 판정은 `f_strip_failed`이다. 실제 Retry 스텝은 SM#1의 `State_Manual_Retry_001`, SM#2의 `State_Manual_Retry_003`이며, 두 스텝의 Action이 `f_auto_mode_manual_retry := 1`을 만든다. 새 로직은 `f_secsep_failed`, `State_Manual_Retry.X`, `z_mode_manual`을 사용하지 않는다.
+Retry를 여는 원본 판정은 `f_strip_failed`이다. 실제 Retry 스텝은 SM#1의 `State_Manual_Retry_001`, SM#2의 `State_Manual_Retry_003`이다. 두 스텝의 `NonStored` Action은 활성인 동안 `f_auto_mode_manual_retry := 1`을 실행한다. 원본 Retry 종료 Transition은 `f_reject_cathode or f_copper_in_gate`이다. 이전 문서는 실제 Retry 스텝 `.X`를 확인하지 않아 중단 직후 플래그가 남는 경우를 배제하지 못했다. 아래 수정안에 SM별 실제 스텝 접점을 추가했다. `f_secsep_failed`, 잔여 태그 `State_Manual_Retry.X`, `z_mode_manual`은 사용하지 않는다.
 
 ### 최신 L5X 대조 결과
 
@@ -57,7 +57,7 @@ Retry를 여는 원본 판정은 `f_strip_failed`이다. 실제 Retry 스텝은 
 | `f_copper_in_gate` 원본 Rung | 46 | 45 |
 | Finger 1 완료 원본 Rung | 52 | 51 |
 | Finger 2 완료 원본 Rung | 53 | 52 |
-| Retry Step | `State_Manual_Retry_001` | `State_Manual_Retry_003` |
+| Retry Step | `State_Manual_Retry_001.X` | `State_Manual_Retry_003.X` |
 | Retry Action | `f_auto_mode_manual_retry := 1` | `f_auto_mode_manual_retry := 1` |
 | No Copper 입력 Alias | `N4:1:I.5`, `N4:1:I.6` | `N6:1:I.5`, `N6:1:I.6` |
 
@@ -65,11 +65,11 @@ Retry를 여는 원본 판정은 `f_strip_failed`이다. 실제 Retry 스텝은 
 
 기존 STRIP 버튼 `ui_i_auto_separate`와 `DoSeparation`은 바꾸지 않는다. SFC도 바꾸지 않는다. `Finger Down` 입력도 그대로 유지한다.
 
-## 원본 로직과 변경 로직 — SM#1
+## 원본 로직과 변경 로직: SM#1
 
 대상: `Programs → Stripping_Machine_1 → Routines → BasicControl`의 원본 Finger 완료 Rung 52/53.
 
-### Finger 1 — 원본
+### Finger 1: 원본
 
 ```text
 XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
@@ -80,7 +80,7 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_00.svg?v=f4b0f98" alt="SM#1 Finger 1 원본 LD" width="920" height="126">
 </figure>
 
-### Finger 1 — 변경
+### Finger 1: 변경
 
 ```text
 XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_retry_bypass_active)]OTE(f_finger1_separated);
@@ -91,7 +91,7 @@ XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm1_finger_retry_bypass_act
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_05.svg?v=f4b0f98" alt="SM#1 Finger 1 변경 LD" width="920" height="286">
 </figure>
 
-### Finger 2 — 원본과 변경
+### Finger 2: 원본과 변경
 
 ```text
 // 원본 Rung 53
@@ -110,11 +110,11 @@ XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm1_finger_retry_bypass_act
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_06.svg?v=f4b0f98" alt="SM#1 Finger 2 변경 LD" width="920" height="286">
 </figure>
 
-## 원본 로직과 변경 로직 — SM#2
+## 원본 로직과 변경 로직: SM#2
 
 대상: `Programs → Stripping_Machine_2 → Routines → BasicControl`의 원본 Finger 완료 Rung 51/52.
 
-### Finger 1 — 원본
+### Finger 1: 원본
 
 ```text
 XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
@@ -125,7 +125,7 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_00.svg?v=f4b0f98" alt="SM#2 Finger 1 원본 LD" width="920" height="126">
 </figure>
 
-### Finger 1 — 변경
+### Finger 1: 변경
 
 ```text
 XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_retry_bypass_active)]OTE(f_finger1_separated);
@@ -136,7 +136,7 @@ XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_sm2_finger_retry_bypass_act
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_11.svg?v=f4b0f98" alt="SM#2 Finger 1 변경 LD" width="920" height="286">
 </figure>
 
-### Finger 2 — 원본과 변경
+### Finger 2: 원본과 변경
 
 ```text
 // 원본 Rung 52
@@ -174,9 +174,9 @@ SM#1과 SM#2의 접점 구조는 같지만 프로그램 로컬 태그로 분리�
 <div class="rung-meta"><span class="rung-meta-number">Rung 49</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_03.svg?v=f4b0f98" alt="SM#1 첫 스캔 초기화 LD" width="920" height="126">
 </figure>
-<figure class="ld-rung" data-rung="50" data-rll="XIC(z_sm1_finger_retry_bypass_enable)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm1_finger_retry_bypass_active);">
+<figure class="ld-rung" data-rung="50" data-rll="XIC(z_sm1_finger_retry_bypass_enable)XIC(State_Manual_Retry_001.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm1_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 50</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_04.svg?v=f4b0f98" alt="SM#1 Retry Active LD" width="1242" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_04.svg?v=retry-step-20260915" alt="SM#1 Retry Active 변경 후 LD" width="1472" height="126">
 </figure>
 
 </details>
@@ -196,9 +196,9 @@ SM#1과 SM#2의 접점 구조는 같지만 프로그램 로컬 태그로 분리�
 <div class="rung-meta"><span class="rung-meta-number">Rung 48</span><span class="rung-status ok">정상</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_09.svg?v=f4b0f98" alt="SM#2 첫 스캔 초기화 LD" width="920" height="126">
 </figure>
-<figure class="ld-rung" data-rung="49" data-rll="XIC(z_sm2_finger_retry_bypass_enable)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm2_finger_retry_bypass_active);">
+<figure class="ld-rung" data-rung="49" data-rll="XIC(z_sm2_finger_retry_bypass_enable)XIC(State_Manual_Retry_003.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm2_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">Rung 49</span><span class="rung-status ok">정상</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_10.svg?v=f4b0f98" alt="SM#2 Retry Active LD" width="1242" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/ld_rung_10.svg?v=retry-step-20260915" alt="SM#2 Retry Active 변경 후 LD" width="1472" height="126">
 </figure>
 
 </details>
@@ -226,7 +226,7 @@ TIMER 태그는 만들지 않는다. `z_*_retry_bypass_enable`은 초기값 0으
 XIC(ui_sm1_finger_retry_bypass_on_req)ONS(ons_sm1_finger_retry_bypass_on_req)OTL(z_sm1_finger_retry_bypass_enable);
 XIC(ui_sm1_finger_retry_bypass_off_req)ONS(ons_sm1_finger_retry_bypass_off_req)OTU(z_sm1_finger_retry_bypass_enable);
 XIC(S:FS)OTU(z_sm1_finger_retry_bypass_enable);
-XIC(z_sm1_finger_retry_bypass_enable)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm1_finger_retry_bypass_active);
+XIC(z_sm1_finger_retry_bypass_enable)XIC(State_Manual_Retry_001.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm1_finger_retry_bypass_active);
 ```
 
 원본 Finger 완료 Rung은 다음 두 줄로 바꾼다.
@@ -244,7 +244,7 @@ XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm1_finger_retry_bypass_act
 XIC(ui_sm2_finger_retry_bypass_on_req)ONS(ons_sm2_finger_retry_bypass_on_req)OTL(z_sm2_finger_retry_bypass_enable);
 XIC(ui_sm2_finger_retry_bypass_off_req)ONS(ons_sm2_finger_retry_bypass_off_req)OTU(z_sm2_finger_retry_bypass_enable);
 XIC(S:FS)OTU(z_sm2_finger_retry_bypass_enable);
-XIC(z_sm2_finger_retry_bypass_enable)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm2_finger_retry_bypass_active);
+XIC(z_sm2_finger_retry_bypass_enable)XIC(State_Manual_Retry_003.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_sm2_finger_retry_bypass_active);
 ```
 
 원본 Finger 완료 Rung은 다음 두 줄로 바꾼다.
@@ -268,8 +268,8 @@ XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_sm2_finger_retry_bypass_act
 
 1. HMI에서 ON 버튼을 누르면 PLC가 `z_sm*_finger_retry_bypass_enable=1`로 기억한다.
 2. 일반 자동 운전과 일반 탈취에서는 Active가 0이다.
-3. 실제 Retry 스텝에서 `f_auto_mode_manual_retry=1`이 되고, `f_copper_in_gate=0`, `f_reject_cathode=0`이면 Active가 1이다.
-4. Retry 성공 또는 리젝트 조건이 되면 Active는 같은 스캔에 0으로 내려간다.
+3. 실제 Retry 스텝의 `.X=1`, `f_auto_mode_manual_retry=1`, `f_copper_in_gate=0`, `f_reject_cathode=0`인 동안 Active가 1이다.
+4. 전기동 게이트 도착, 리젝트, Retry 스텝 이탈 중 하나가 발생하면 Active는 다음 `BasicControl` 평가에서 0으로 내려간다.
 5. 기능 Enable은 유지되므로 다음 Retry에도 자동으로 같은 정책이 적용된다. 기능을 끝내려면 HMI OFF 버튼을 누른다.
 
 기능 ON은 센서 입력을 계속 우회하는 명령이 아니다. `f_auto_mode_manual_retry`가 0이면 항상 실제 센서 경로를 사용한다.
@@ -299,9 +299,10 @@ ON과 OFF가 같은 스캔에 들어오면 OFF Rung이 뒤에 있으므로 OFF�
 |---|---|
 | OFF 일반 운전 | 실제 No Copper 입력으로만 완료 비트가 켜져야 한다. |
 | ON 일반 운전 | Enable은 1이어도 Retry 전에는 Active가 0이어야 한다. |
-| ON Retry | `f_auto_mode_manual_retry=1`인 동안만 Active가 1이어야 한다. |
+| ON Retry | 실제 Retry 스텝 `.X=1`, `f_auto_mode_manual_retry=1`, 게이트·리젝트가 모두 0일 때만 Active가 1이어야 한다. |
 | Retry 성공 | `f_copper_in_gate=1`이면 Active가 0이어야 한다. |
 | Retry 리젝트 | `f_reject_cathode=1`이면 Active가 0이어야 한다. |
+| Retry 중단 | 실제 Retry 스텝 `.X=0`이면 플래그가 1로 남아 있어도 Active가 0이어야 한다. |
 | ON 유지 | OFF 전까지 다음 Retry에서도 Enable이 유지되어야 한다. |
 | 첫 스캔 | 컨트롤러 Run 전환 뒤 Enable과 Active가 0이어야 한다. |
 | Finger Down | Active가 1이어도 Finger Down이 0이면 완료 비트가 1이면 안 된다. |

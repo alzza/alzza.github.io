@@ -18,7 +18,7 @@ const { Content } = await render(note);
 
 <Base title={`${note.data.title} · alzza`} description={note.data.excerpt}>
   <Header links={[{ href: "/notes/", label: "노트" }, { href: "/info/", label: "정보" }]} />
-  <div class:list={["wrap", "prose", { "prose-plc": note.data.tags.includes("PLC") }]}>
+  <div class:list={["wrap", "prose", { "prose-plc": note.data.tags.includes("PLC"), "prose-finger-retry": note.id === "sc1-sm12-finger-retry-onoff" }]}>
     <section class="hero">
       <span class="badge">노트</span>
       <h1>{note.data.title}</h1>
@@ -45,3 +45,31 @@ const { Content } = await render(note);
     )
   }
 </Base>
+{note.id === "sc1-sm12-finger-retry-onoff" && (
+  <script>
+    document.querySelectorAll(".prose-finger-retry pre").forEach((pre) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "plc-copy";
+      button.textContent = "RLL 복사";
+      button.setAttribute("aria-label", "이 RLL 코드 복사");
+      button.addEventListener("click", async () => {
+        const code = pre.querySelector("code");
+        if (!code) return;
+        try {
+          await navigator.clipboard.writeText(code.textContent?.trim() ?? "");
+          button.textContent = "복사됨";
+        } catch {
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(code);
+          selection?.removeAllRanges();
+          selection?.addRange(range);
+          button.textContent = "선택됨 · 복사키";
+        }
+        setTimeout(() => { button.textContent = "RLL 복사"; }, 1800);
+      });
+      pre.appendChild(button);
+    });
+  </script>
+)}
