@@ -1,12 +1,16 @@
 ---
 title: SC1 SM#1·SM#2 Finger 센서 Retry 전용 ON/OFF 적용서
-date: "2026-09-13"
+date: "2026-09-15"
 excerpt: 60초 타이머 없이 SM#1과 SM#2의 Retry 전용 Finger 센서 우회를 각각 ON/OFF하는 PLC·InTouch 적용서이다. ON이어도 실제 Retry 중에만 센서를 우회한다.
 kicker: PLC
 tags: ["PLC", "InTouch", "SC1", "SM1", "SM2", "Retry"]
 ---
 
 이 문서는 60초 타이머를 사용하지 않는 별도 방식이다. 작업자가 SM#1 또는 SM#2의 기능을 ON으로 선택하면 PLC가 그 상태를 기억한다. 실제 센서 우회는 해당 장비의 Retry 스텝이 실행되고 `f_auto_mode_manual_retry=1`이며 전기동이 아직 게이트에 들어오지 않았을 때만 켜진다. 평소 STRIP 작업에서는 ON 상태여도 센서를 그대로 사용한다.
+
+> **확정한 동작 기준:** SM#1과 SM#2 모두 자동 탈취 실패로 실제 Retry 스텝에 들어가면 Finger No Copper 센서를 우회한다. 전기동이 Gate에 들어와 `f_copper_in_gate=1`이 되면 실제 우회 Active를 즉시 끄고 원래 센서 판정으로 돌아간다. Drop 완료까지 우회를 유지하지 않는다.
+
+여기서 HMI의 기능 선택 ON과 실제 우회 Active는 서로 다르다. Gate 진입 성공 후 `z_sm*_finger_retry_bypass_active`는 0으로 복귀하지만 `z_sm*_finger_retry_bypass_enable`은 계속 1이다. 따라서 다음 Retry가 발생하면 우회가 다시 자동으로 켜진다. 다음 Retry에서도 사용하지 않으려면 HMI에서 해당 장비의 OFF 버튼을 누른다.
 
 이번에 직접 확인한 파일은 `Cathode1.L5X`(Controller `Cathode1`, SoftwareRevision 31.00, ExportDate 2026-06-20)이다. 아래 원본 RLL은 이 파일에서 확인했다. 별도로 언급된 `Cathode1(260714).L5X`는 이번 작업 환경에서 확보되지 않아 현장 ACD와 일치한다고 확정할 수 없다. 입력 전 해당 원본 Rung과 태그를 반드시 대조한다. LD는 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/) 렌더러로 표시한다. L5X 자체는 수정하지 않았다.
 
