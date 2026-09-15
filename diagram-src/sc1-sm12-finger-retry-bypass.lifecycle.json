@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "SC1 SM#1·SM#2 Finger Retry 우회 흐름",
+    "output": "public/diagrams/sc1-sm12-finger-retry-bypass.html",
+    "viewBox": [1080, 640],
+    "animation": "none",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    { "id": "main", "label": "운전 흐름" },
+    { "id": "terminal", "label": "종료 조건" }
+  ],
+  "states": [
+    { "id": "enabled", "type": "start", "label": "기능 ON", "sublabel": "장비별 Enable = 1", "lane": "main", "col": 0, "step": "01", "tag": "HMI" },
+    { "id": "normal", "type": "waiting", "label": "일반 자동 운전", "sublabel": "실제 No Copper 센서 사용", "lane": "main", "col": 1, "step": "02", "tag": "대기" },
+    { "id": "failed", "type": "failure", "label": "탈취 실패", "sublabel": "f_strip_failed = 1", "lane": "main", "col": 2, "step": "03", "tag": "판정" },
+    { "id": "retry_step", "type": "active", "label": "실제 Retry Step", "sublabel": "SM1 _001.X / SM2 _003.X", "lane": "main", "col": 3, "step": "04", "tag": "SFC" },
+    { "id": "bypass", "type": "active", "label": "센서 우회 Active", "sublabel": "Finger Down은 계속 확인", "lane": "main", "col": 4, "step": "05", "tag": "LD + SFC" },
+    { "id": "gate", "type": "success", "label": "Gate 진입 성공", "sublabel": "f_copper_in_gate = 1", "lane": "terminal", "col": 2, "tag": "정상 종료" },
+    { "id": "abort", "type": "failure", "label": "Retry 중단", "sublabel": "리젝트 또는 Step 이탈", "lane": "terminal", "col": 1, "tag": "Active = 0" }
+  ],
+  "transitions": [
+    { "id": "enable_wait", "from": "enabled", "to": "normal", "variant": "default", "route": "straight" },
+    { "id": "normal_fail", "from": "normal", "to": "failed", "variant": "security", "route": "straight" },
+    { "id": "fail_retry", "from": "failed", "to": "retry_step", "variant": "emphasis", "route": "straight" },
+    { "id": "retry_active", "from": "retry_step", "to": "bypass", "variant": "emphasis", "route": "straight" },
+    { "id": "active_gate", "from": "bypass", "to": "gate", "label": "Gate 진입", "variant": "emphasis", "fromSide": "bottom", "toSide": "top", "route": "straight", "labelAt": [768, 202] },
+    { "id": "retry_abort", "from": "retry_step", "to": "abort", "label": "리젝트 또는 이탈", "variant": "security", "fromSide": "bottom", "toSide": "top", "route": "straight", "labelAt": [488, 202] }
+  ]
+}

@@ -1,0 +1,106 @@
+SC1 SM#1 / SM#2 Finger No Copper Retry 우회
+기준일: 2026-09-16
+
+주의
+- 아래 태그는 각 Program Scope에 만든다.
+- SM#1: Program Stripping_Machine_1
+- SM#2: Program Stripping_Machine_2
+- L5X 또는 물리 입력 Alias는 수정하지 않는다.
+
+============================================================
+1. 각 Program에 만들 태그 8개
+============================================================
+
+ui_i_finger_retry_bypass_on        BOOL  External Access Read/Write
+ui_i_finger_retry_bypass_off       BOOL  External Access Read/Write
+ui_o_finger_retry_bypass_enabled   BOOL  External Access Read Only
+ui_o_finger_retry_bypass_active    BOOL  External Access Read Only
+z_finger_retry_bypass_enable       BOOL  External Access None
+z_finger_retry_bypass_active       BOOL  External Access None
+ons_finger_retry_bypass_on         BOOL  External Access None
+ons_finger_retry_bypass_off        BOOL  External Access None
+
+============================================================
+2. SM#1 BasicControl 추가 RLL
+삽입 위치: 수정 전 Rung 46 f_copper_in_gate 바로 다음
+============================================================
+
+XIC(ui_i_finger_retry_bypass_on)ONS(ons_finger_retry_bypass_on)OTL(z_finger_retry_bypass_enable);
+XIC(ui_i_finger_retry_bypass_off)ONS(ons_finger_retry_bypass_off)OTU(z_finger_retry_bypass_enable);
+XIC(S:FS)OTU(z_finger_retry_bypass_enable);
+XIC(z_finger_retry_bypass_enable)XIC(z_mode_automatic)XIC(f_strip_failed)XIC(State_Manual_Retry_001.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_finger_retry_bypass_active);
+XIC(z_finger_retry_bypass_enable)OTE(ui_o_finger_retry_bypass_enabled);
+XIC(z_finger_retry_bypass_active)OTE(ui_o_finger_retry_bypass_active);
+
+SM#1 Finger 완료 수정 전
+XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
+XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);
+
+SM#1 Finger 완료 수정 후
+XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger1_separated);
+XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger2_separated);
+
+============================================================
+3. SM#2 BasicControl 추가 RLL
+삽입 위치: 수정 전 Rung 45 f_copper_in_gate 바로 다음
+============================================================
+
+XIC(ui_i_finger_retry_bypass_on)ONS(ons_finger_retry_bypass_on)OTL(z_finger_retry_bypass_enable);
+XIC(ui_i_finger_retry_bypass_off)ONS(ons_finger_retry_bypass_off)OTU(z_finger_retry_bypass_enable);
+XIC(S:FS)OTU(z_finger_retry_bypass_enable);
+XIC(z_finger_retry_bypass_enable)XIC(z_mode_automatic)XIC(f_strip_failed)XIC(State_Manual_Retry_003.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_finger_retry_bypass_active);
+XIC(z_finger_retry_bypass_enable)OTE(ui_o_finger_retry_bypass_enabled);
+XIC(z_finger_retry_bypass_active)OTE(ui_o_finger_retry_bypass_active);
+
+SM#2 Finger 완료 수정 전
+XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
+XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);
+
+SM#2 Finger 완료 수정 후
+XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger1_separated);
+XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger2_separated);
+
+============================================================
+4. SFC Transition 수정 전 / 수정 후
+============================================================
+
+SM#1 / Finger1Separate / Tran_099
+수정 전:
+(i_finger_1_down AND i_finger_1_no_copper) OR State_Lower_Finger1_001.DN
+수정 후:
+(i_finger_1_down AND i_finger_1_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger1_001.DN
+
+SM#1 / Finger2Separate / Tran_103
+수정 전:
+(i_finger_2_down AND i_finger_2_no_copper) OR State_Lower_Finger_001.DN
+수정 후:
+(i_finger_2_down AND i_finger_2_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger_001.DN
+
+SM#2 / Finger1Separate / Tran_155
+수정 전:
+(i_finger_1_down AND i_finger_1_no_copper) OR State_Lower_Finger1_003.DN
+수정 후:
+(i_finger_1_down AND i_finger_1_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger1_003.DN
+
+SM#2 / Finger2Separate / Tran_160
+수정 전:
+(i_finger_2_down AND i_finger_2_no_copper) OR State_Lower_Finger_003.DN
+수정 후:
+(i_finger_2_down AND i_finger_2_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger_003.DN
+
+============================================================
+5. InTouch Item 예시
+============================================================
+
+Program:Stripping_Machine_1.ui_i_finger_retry_bypass_on
+Program:Stripping_Machine_1.ui_i_finger_retry_bypass_off
+Program:Stripping_Machine_1.ui_o_finger_retry_bypass_enabled
+Program:Stripping_Machine_1.ui_o_finger_retry_bypass_active
+
+Program:Stripping_Machine_2.ui_i_finger_retry_bypass_on
+Program:Stripping_Machine_2.ui_i_finger_retry_bypass_off
+Program:Stripping_Machine_2.ui_o_finger_retry_bypass_enabled
+Program:Stripping_Machine_2.ui_o_finger_retry_bypass_active
+
+ON/OFF 입력은 Momentary로 설정한다.
+현재 InTouch 프로젝트의 기존 Program Scope Item 표기와 반드시 대조한다.
