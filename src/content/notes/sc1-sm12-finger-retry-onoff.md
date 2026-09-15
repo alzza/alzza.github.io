@@ -57,7 +57,7 @@ tags: ["PLC", "InTouch", "SC1", "SM1", "SM2", "Retry", "SFC"]
 
 ## 태그부터 만든다
 
-태그는 Controller Scope가 아니라 각 장비의 **Program Scope**에 만든다. SM#1은 `Stripping_Machine_1`, SM#2는 `Stripping_Machine_2`의 `Parameters and Local Tags`에서 만든다. 두 Program에 같은 이름을 각각 만들면 장비별 상태가 분리된다.
+태그는 Controller Scope가 아니라 각 장비의 **Program Scope**에 만든다. SM#1은 `Stripping_Machine_1`, SM#2는 `Stripping_Machine_2`의 `Parameters and Local Tags`에서 만든다. Program Scope가 이미 분리되어 있어도 태그 이름에 `sm1` 또는 `sm2`를 넣는다. 따라서 Cross Reference와 InTouch Item을 볼 때 어느 장비의 태그인지 바로 알 수 있다.
 
 ### SM#1 태그 생성 위치
 
@@ -67,20 +67,35 @@ tags: ["PLC", "InTouch", "SC1", "SM1", "SM2", "Retry", "SFC"]
 
 `Controller Organizer → Tasks → MainTask → Stripping_Machine_2 → Parameters and Local Tags`
 
-각 Program에 다음 8개 태그를 만든다.
+두 Program에 각각 8개 태그를 만든다. 기존 프로그램의 이름 규칙에 맞춰 HMI 입력은 `ui_i_`, HMI 출력은 `ui_o_`, 내부 상태 BOOL은 `f_`로 시작한다. ONS 저장 비트는 기존 `strip_failed_ons`처럼 `_ons`로 끝낸다.
+
+#### SM#1에 만들 태그
 
 | 태그 | 형식 | External Access | 역할 |
 |---|---|---|---|
-| `ui_i_finger_retry_bypass_on` | BOOL | Read/Write | InTouch ON 순간 요청이다. |
-| `ui_i_finger_retry_bypass_off` | BOOL | Read/Write | InTouch OFF 순간 요청이다. |
-| `ui_o_finger_retry_bypass_enabled` | BOOL | Read Only | HMI에 기능 선택 ON 상태를 표시한다. |
-| `ui_o_finger_retry_bypass_active` | BOOL | Read Only | HMI에 실제 센서 우회 중 상태를 표시한다. |
-| `z_finger_retry_bypass_enable` | BOOL | None | PLC가 기억하는 기능 ON/OFF 상태이다. |
-| `z_finger_retry_bypass_active` | BOOL | None | 실제 Retry 중에만 켜지는 내부 우회 상태이다. |
-| `ons_finger_retry_bypass_on` | BOOL | None | ON 버튼의 ONS 저장 비트이다. |
-| `ons_finger_retry_bypass_off` | BOOL | None | OFF 버튼의 ONS 저장 비트이다. |
+| `ui_i_sm1_finger_retry_bypass_on` | BOOL | Read/Write | InTouch의 SM#1 ON 순간 요청이다. |
+| `ui_i_sm1_finger_retry_bypass_off` | BOOL | Read/Write | InTouch의 SM#1 OFF 순간 요청이다. |
+| `ui_o_sm1_finger_retry_bypass_enabled` | BOOL | Read Only | HMI에 SM#1 기능 선택 ON 상태를 표시한다. |
+| `ui_o_sm1_finger_retry_bypass_active` | BOOL | Read Only | HMI에 SM#1 실제 센서 우회 중 상태를 표시한다. |
+| `f_sm1_finger_retry_bypass_enable` | BOOL | None | PLC가 기억하는 SM#1 기능 ON/OFF 상태이다. |
+| `f_sm1_finger_retry_bypass_active` | BOOL | None | SM#1의 실제 Retry 중에만 켜지는 내부 우회 상태이다. |
+| `sm1_finger_retry_bypass_on_ons` | BOOL | None | SM#1 ON 버튼의 ONS 저장 비트이다. |
+| `sm1_finger_retry_bypass_off_ons` | BOOL | None | SM#1 OFF 버튼의 ONS 저장 비트이다. |
 
-모든 BOOL의 초기값은 0으로 둔다. `ui_`로 시작하는 태그만 HMI가 직접 사용한다. `z_`와 `ons_` 태그는 PLC 내부에서만 사용한다.
+#### SM#2에 만들 태그
+
+| 태그 | 형식 | External Access | 역할 |
+|---|---|---|---|
+| `ui_i_sm2_finger_retry_bypass_on` | BOOL | Read/Write | InTouch의 SM#2 ON 순간 요청이다. |
+| `ui_i_sm2_finger_retry_bypass_off` | BOOL | Read/Write | InTouch의 SM#2 OFF 순간 요청이다. |
+| `ui_o_sm2_finger_retry_bypass_enabled` | BOOL | Read Only | HMI에 SM#2 기능 선택 ON 상태를 표시한다. |
+| `ui_o_sm2_finger_retry_bypass_active` | BOOL | Read Only | HMI에 SM#2 실제 센서 우회 중 상태를 표시한다. |
+| `f_sm2_finger_retry_bypass_enable` | BOOL | None | PLC가 기억하는 SM#2 기능 ON/OFF 상태이다. |
+| `f_sm2_finger_retry_bypass_active` | BOOL | None | SM#2의 실제 Retry 중에만 켜지는 내부 우회 상태이다. |
+| `sm2_finger_retry_bypass_on_ons` | BOOL | None | SM#2 ON 버튼의 ONS 저장 비트이다. |
+| `sm2_finger_retry_bypass_off_ons` | BOOL | None | SM#2 OFF 버튼의 ONS 저장 비트이다. |
+
+모든 BOOL의 초기값은 0으로 둔다. `ui_`로 시작하는 태그만 HMI가 직접 사용한다. `f_` 태그와 `_ons`로 끝나는 태그는 PLC 내부에서만 사용한다.
 
 ## SM#1 LD를 추가한다
 
@@ -99,42 +114,42 @@ XIO(i_copper_not_in_gate_right)XIO(i_copper_not_in_gate_left)OTE(f_copper_in_gat
 ### 복사해서 넣을 SM#1 RLL
 
 ```text
-XIC(ui_i_finger_retry_bypass_on)ONS(ons_finger_retry_bypass_on)OTL(z_finger_retry_bypass_enable);
-XIC(ui_i_finger_retry_bypass_off)ONS(ons_finger_retry_bypass_off)OTU(z_finger_retry_bypass_enable);
-XIC(S:FS)OTU(z_finger_retry_bypass_enable);
-XIC(z_finger_retry_bypass_enable)XIC(z_mode_automatic)XIC(f_strip_failed)XIC(State_Manual_Retry_001.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_finger_retry_bypass_active);
-XIC(z_finger_retry_bypass_enable)OTE(ui_o_finger_retry_bypass_enabled);
-XIC(z_finger_retry_bypass_active)OTE(ui_o_finger_retry_bypass_active);
+XIC(ui_i_sm1_finger_retry_bypass_on)ONS(sm1_finger_retry_bypass_on_ons)OTL(f_sm1_finger_retry_bypass_enable);
+XIC(ui_i_sm1_finger_retry_bypass_off)ONS(sm1_finger_retry_bypass_off_ons)OTU(f_sm1_finger_retry_bypass_enable);
+XIC(S:FS)OTU(f_sm1_finger_retry_bypass_enable);
+XIC(f_sm1_finger_retry_bypass_enable)XIC(z_mode_automatic)XIC(f_strip_failed)XIC(State_Manual_Retry_001.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(f_sm1_finger_retry_bypass_active);
+XIC(f_sm1_finger_retry_bypass_enable)OTE(ui_o_sm1_finger_retry_bypass_enabled);
+XIC(f_sm1_finger_retry_bypass_active)OTE(ui_o_sm1_finger_retry_bypass_active);
 ```
 
 ### SM#1 추가 LD
 
-<figure class="ld-rung" data-rung="47" data-rll="XIC(ui_i_finger_retry_bypass_on)ONS(ons_finger_retry_bypass_on)OTL(z_finger_retry_bypass_enable);">
+<figure class="ld-rung" data-rung="47" data-rll="XIC(ui_i_sm1_finger_retry_bypass_on)ONS(sm1_finger_retry_bypass_on_ons)OTL(f_sm1_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 47</span><span class="rung-status ok">ON 저장</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/sm1_add_01.svg" alt="SM#1 기능 ON 저장 LD" width="920" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/sm1_add_01.svg" alt="SM#1 기능 ON 저장 LD" width="929" height="126">
 </figure>
 
-<figure class="ld-rung" data-rung="48" data-rll="XIC(ui_i_finger_retry_bypass_off)ONS(ons_finger_retry_bypass_off)OTU(z_finger_retry_bypass_enable);">
+<figure class="ld-rung" data-rung="48" data-rll="XIC(ui_i_sm1_finger_retry_bypass_off)ONS(sm1_finger_retry_bypass_off_ons)OTU(f_sm1_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 48</span><span class="rung-status ok">OFF 저장</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/sm1_add_02.svg" alt="SM#1 기능 OFF 저장 LD" width="920" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/sm1_add_02.svg" alt="SM#1 기능 OFF 저장 LD" width="943" height="126">
 </figure>
 
-<figure class="ld-rung" data-rung="49" data-rll="XIC(S:FS)OTU(z_finger_retry_bypass_enable);">
+<figure class="ld-rung" data-rung="49" data-rll="XIC(S:FS)OTU(f_sm1_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 49</span><span class="rung-status ok">첫 스캔 OFF</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/sm1_add_03.svg" alt="SM#1 첫 스캔 기능 OFF LD" width="920" height="126">
 </figure>
 
-<figure class="ld-rung" data-rung="50" data-rll="XIC(z_finger_retry_bypass_enable)XIC(z_mode_automatic)XIC(f_strip_failed)XIC(State_Manual_Retry_001.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_finger_retry_bypass_active);">
+<figure class="ld-rung" data-rung="50" data-rll="XIC(f_sm1_finger_retry_bypass_enable)XIC(z_mode_automatic)XIC(f_strip_failed)XIC(State_Manual_Retry_001.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(f_sm1_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 50</span><span class="rung-status ok">Retry Active</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/sm1_add_04.svg" alt="SM#1 Retry 센서 우회 Active LD" width="1780" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/sm1_add_04.svg" alt="SM#1 Retry 센서 우회 Active LD" width="1806" height="126">
 </figure>
 
-<figure class="ld-rung" data-rung="51" data-rll="XIC(z_finger_retry_bypass_enable)OTE(ui_o_finger_retry_bypass_enabled);">
+<figure class="ld-rung" data-rung="51" data-rll="XIC(f_sm1_finger_retry_bypass_enable)OTE(ui_o_sm1_finger_retry_bypass_enabled);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 51</span><span class="rung-status ok">HMI Enable 표시</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/sm1_add_05.svg" alt="SM#1 HMI 기능 선택 표시 LD" width="920" height="126">
 </figure>
 
-<figure class="ld-rung" data-rung="52" data-rll="XIC(z_finger_retry_bypass_active)OTE(ui_o_finger_retry_bypass_active);">
+<figure class="ld-rung" data-rung="52" data-rll="XIC(f_sm1_finger_retry_bypass_active)OTE(ui_o_sm1_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 52</span><span class="rung-status ok">HMI Active 표시</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/sm1_add_06.svg" alt="SM#1 HMI 실제 우회 표시 LD" width="920" height="126">
 </figure>
@@ -158,42 +173,42 @@ XIO(i_copper_not_in_gate_left)XIO(i_copper_not_in_gate_right)OTE(f_copper_in_gat
 ### 복사해서 넣을 SM#2 RLL
 
 ```text
-XIC(ui_i_finger_retry_bypass_on)ONS(ons_finger_retry_bypass_on)OTL(z_finger_retry_bypass_enable);
-XIC(ui_i_finger_retry_bypass_off)ONS(ons_finger_retry_bypass_off)OTU(z_finger_retry_bypass_enable);
-XIC(S:FS)OTU(z_finger_retry_bypass_enable);
-XIC(z_finger_retry_bypass_enable)XIC(z_mode_automatic)XIC(f_strip_failed)XIC(State_Manual_Retry_003.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_finger_retry_bypass_active);
-XIC(z_finger_retry_bypass_enable)OTE(ui_o_finger_retry_bypass_enabled);
-XIC(z_finger_retry_bypass_active)OTE(ui_o_finger_retry_bypass_active);
+XIC(ui_i_sm2_finger_retry_bypass_on)ONS(sm2_finger_retry_bypass_on_ons)OTL(f_sm2_finger_retry_bypass_enable);
+XIC(ui_i_sm2_finger_retry_bypass_off)ONS(sm2_finger_retry_bypass_off_ons)OTU(f_sm2_finger_retry_bypass_enable);
+XIC(S:FS)OTU(f_sm2_finger_retry_bypass_enable);
+XIC(f_sm2_finger_retry_bypass_enable)XIC(z_mode_automatic)XIC(f_strip_failed)XIC(State_Manual_Retry_003.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(f_sm2_finger_retry_bypass_active);
+XIC(f_sm2_finger_retry_bypass_enable)OTE(ui_o_sm2_finger_retry_bypass_enabled);
+XIC(f_sm2_finger_retry_bypass_active)OTE(ui_o_sm2_finger_retry_bypass_active);
 ```
 
 ### SM#2 추가 LD
 
-<figure class="ld-rung" data-rung="46" data-rll="XIC(ui_i_finger_retry_bypass_on)ONS(ons_finger_retry_bypass_on)OTL(z_finger_retry_bypass_enable);">
+<figure class="ld-rung" data-rung="46" data-rll="XIC(ui_i_sm2_finger_retry_bypass_on)ONS(sm2_finger_retry_bypass_on_ons)OTL(f_sm2_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 46</span><span class="rung-status ok">ON 저장</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/sm2_add_01.svg" alt="SM#2 기능 ON 저장 LD" width="920" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/sm2_add_01.svg" alt="SM#2 기능 ON 저장 LD" width="929" height="126">
 </figure>
 
-<figure class="ld-rung" data-rung="47" data-rll="XIC(ui_i_finger_retry_bypass_off)ONS(ons_finger_retry_bypass_off)OTU(z_finger_retry_bypass_enable);">
+<figure class="ld-rung" data-rung="47" data-rll="XIC(ui_i_sm2_finger_retry_bypass_off)ONS(sm2_finger_retry_bypass_off_ons)OTU(f_sm2_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 47</span><span class="rung-status ok">OFF 저장</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/sm2_add_02.svg" alt="SM#2 기능 OFF 저장 LD" width="920" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/sm2_add_02.svg" alt="SM#2 기능 OFF 저장 LD" width="943" height="126">
 </figure>
 
-<figure class="ld-rung" data-rung="48" data-rll="XIC(S:FS)OTU(z_finger_retry_bypass_enable);">
+<figure class="ld-rung" data-rung="48" data-rll="XIC(S:FS)OTU(f_sm2_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 48</span><span class="rung-status ok">첫 스캔 OFF</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/sm2_add_03.svg" alt="SM#2 첫 스캔 기능 OFF LD" width="920" height="126">
 </figure>
 
-<figure class="ld-rung" data-rung="49" data-rll="XIC(z_finger_retry_bypass_enable)XIC(z_mode_automatic)XIC(f_strip_failed)XIC(State_Manual_Retry_003.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(z_finger_retry_bypass_active);">
+<figure class="ld-rung" data-rung="49" data-rll="XIC(f_sm2_finger_retry_bypass_enable)XIC(z_mode_automatic)XIC(f_strip_failed)XIC(State_Manual_Retry_003.X)XIC(f_auto_mode_manual_retry)XIO(f_copper_in_gate)XIO(f_reject_cathode)OTE(f_sm2_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 49</span><span class="rung-status ok">Retry Active</span></div>
-<img src="/images/notes/sc1-sm-finger-retry-onoff/sm2_add_04.svg" alt="SM#2 Retry 센서 우회 Active LD" width="1780" height="126">
+<img src="/images/notes/sc1-sm-finger-retry-onoff/sm2_add_04.svg" alt="SM#2 Retry 센서 우회 Active LD" width="1806" height="126">
 </figure>
 
-<figure class="ld-rung" data-rung="50" data-rll="XIC(z_finger_retry_bypass_enable)OTE(ui_o_finger_retry_bypass_enabled);">
+<figure class="ld-rung" data-rung="50" data-rll="XIC(f_sm2_finger_retry_bypass_enable)OTE(ui_o_sm2_finger_retry_bypass_enabled);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 50</span><span class="rung-status ok">HMI Enable 표시</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/sm2_add_05.svg" alt="SM#2 HMI 기능 선택 표시 LD" width="920" height="126">
 </figure>
 
-<figure class="ld-rung" data-rung="51" data-rll="XIC(z_finger_retry_bypass_active)OTE(ui_o_finger_retry_bypass_active);">
+<figure class="ld-rung" data-rung="51" data-rll="XIC(f_sm2_finger_retry_bypass_active)OTE(ui_o_sm2_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">추가 Rung 51</span><span class="rung-status ok">HMI Active 표시</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/sm2_add_06.svg" alt="SM#2 HMI 실제 우회 표시 LD" width="920" height="126">
 </figure>
@@ -218,10 +233,10 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 </figure>
 
 ```text
-XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger1_separated);
+XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(f_sm1_finger_retry_bypass_active)]OTE(f_finger1_separated);
 ```
 
-<figure class="ld-rung" data-rung="58" data-rll="XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger1_separated);">
+<figure class="ld-rung" data-rung="58" data-rll="XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(f_sm1_finger_retry_bypass_active)]OTE(f_finger1_separated);">
 <div class="rung-meta"><span class="rung-meta-number">수정 후 위치 예상 Rung 58</span><span class="rung-status ok">변경</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/sm1_f1_after.svg" alt="SM#1 Finger 1 수정 후 LD" width="920" height="286">
 </figure>
@@ -240,10 +255,10 @@ XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);
 </figure>
 
 ```text
-XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger2_separated);
+XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(f_sm1_finger_retry_bypass_active)]OTE(f_finger2_separated);
 ```
 
-<figure class="ld-rung" data-rung="59" data-rll="XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger2_separated);">
+<figure class="ld-rung" data-rung="59" data-rll="XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(f_sm1_finger_retry_bypass_active)]OTE(f_finger2_separated);">
 <div class="rung-meta"><span class="rung-meta-number">수정 후 위치 예상 Rung 59</span><span class="rung-status ok">변경</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/sm1_f2_after.svg" alt="SM#1 Finger 2 수정 후 LD" width="920" height="286">
 </figure>
@@ -262,10 +277,10 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 </figure>
 
 ```text
-XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger1_separated);
+XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(f_sm2_finger_retry_bypass_active)]OTE(f_finger1_separated);
 ```
 
-<figure class="ld-rung" data-rung="57" data-rll="XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger1_separated);">
+<figure class="ld-rung" data-rung="57" data-rll="XIC(i_finger_1_down)[XIO(i_finger_1_no_copper),XIC(f_sm2_finger_retry_bypass_active)]OTE(f_finger1_separated);">
 <div class="rung-meta"><span class="rung-meta-number">수정 후 위치 예상 Rung 57</span><span class="rung-status ok">변경</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/sm2_f1_after.svg" alt="SM#2 Finger 1 수정 후 LD" width="920" height="286">
 </figure>
@@ -284,10 +299,10 @@ XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);
 </figure>
 
 ```text
-XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger2_separated);
+XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(f_sm2_finger_retry_bypass_active)]OTE(f_finger2_separated);
 ```
 
-<figure class="ld-rung" data-rung="58" data-rll="XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(z_finger_retry_bypass_active)]OTE(f_finger2_separated);">
+<figure class="ld-rung" data-rung="58" data-rll="XIC(i_finger_2_down)[XIO(i_finger_2_no_copper),XIC(f_sm2_finger_retry_bypass_active)]OTE(f_finger2_separated);">
 <div class="rung-meta"><span class="rung-meta-number">수정 후 위치 예상 Rung 58</span><span class="rung-status ok">변경</span></div>
 <img src="/images/notes/sc1-sm-finger-retry-onoff/sm2_f2_after.svg" alt="SM#2 Finger 2 수정 후 LD" width="920" height="286">
 </figure>
@@ -321,22 +336,22 @@ SFC Transition의 조건은 문자식으로 입력하므로 L5X 안에서는 `<S
 
 <div class="sfc-compare-grid">
   <section class="sfc-panel"><h3>SM#1 Finger 1: 수정 전</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger1_001</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_099</b></div><code>(i_finger_1_down AND i_finger_1_no_copper) OR State_Lower_Finger1_001.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger1_001</div></div></section>
-  <section class="sfc-panel sfc-panel-after"><h3>SM#1 Finger 1: 수정 후</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger1_001</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_099</b></div><code>(i_finger_1_down AND i_finger_1_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger1_001.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger1_001</div></div></section>
+  <section class="sfc-panel sfc-panel-after"><h3>SM#1 Finger 1: 수정 후</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger1_001</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_099</b></div><code>(i_finger_1_down AND i_finger_1_no_copper AND NOT f_sm1_finger_retry_bypass_active) OR State_Lower_Finger1_001.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger1_001</div></div></section>
 </div>
 
 <div class="sfc-compare-grid">
   <section class="sfc-panel"><h3>SM#1 Finger 2: 수정 전</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger_001</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_103</b></div><code>(i_finger_2_down AND i_finger_2_no_copper) OR State_Lower_Finger_001.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger_001</div></div></section>
-  <section class="sfc-panel sfc-panel-after"><h3>SM#1 Finger 2: 수정 후</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger_001</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_103</b></div><code>(i_finger_2_down AND i_finger_2_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger_001.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger_001</div></div></section>
+  <section class="sfc-panel sfc-panel-after"><h3>SM#1 Finger 2: 수정 후</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger_001</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_103</b></div><code>(i_finger_2_down AND i_finger_2_no_copper AND NOT f_sm1_finger_retry_bypass_active) OR State_Lower_Finger_001.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger_001</div></div></section>
 </div>
 
 <div class="sfc-compare-grid">
   <section class="sfc-panel"><h3>SM#2 Finger 1: 수정 전</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger1_003</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_155</b></div><code>(i_finger_1_down AND i_finger_1_no_copper) OR State_Lower_Finger1_003.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger1_003</div></div></section>
-  <section class="sfc-panel sfc-panel-after"><h3>SM#2 Finger 1: 수정 후</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger1_003</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_155</b></div><code>(i_finger_1_down AND i_finger_1_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger1_003.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger1_003</div></div></section>
+  <section class="sfc-panel sfc-panel-after"><h3>SM#2 Finger 1: 수정 후</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger1_003</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_155</b></div><code>(i_finger_1_down AND i_finger_1_no_copper AND NOT f_sm2_finger_retry_bypass_active) OR State_Lower_Finger1_003.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger1_003</div></div></section>
 </div>
 
 <div class="sfc-compare-grid">
   <section class="sfc-panel"><h3>SM#2 Finger 2: 수정 전</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger_003</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_160</b></div><code>(i_finger_2_down AND i_finger_2_no_copper) OR State_Lower_Finger_003.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger_003</div></div></section>
-  <section class="sfc-panel sfc-panel-after"><h3>SM#2 Finger 2: 수정 후</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger_003</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_160</b></div><code>(i_finger_2_down AND i_finger_2_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger_003.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger_003</div></div></section>
+  <section class="sfc-panel sfc-panel-after"><h3>SM#2 Finger 2: 수정 후</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger_003</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_160</b></div><code>(i_finger_2_down AND i_finger_2_no_copper AND NOT f_sm2_finger_retry_bypass_active) OR State_Lower_Finger_003.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger_003</div></div></section>
 </div>
 
 변경 후에도 각 Step의 `.DN` 조건은 그대로 남긴다. 우회 Active 동안 No Copper 입력이 재시도 고리를 바로 진행시키는 것만 막는다. Finger가 실제로 내려오지 않아 완료 비트가 생기지 않는 경우에는 기존 Step 타임아웃 경로가 남아 있으므로 SFC가 무기한 멈추지 않는다.
@@ -345,16 +360,16 @@ SFC Transition의 조건은 문자식으로 입력하므로 L5X 안에서는 `<S
 
 ```text
 SM#1 Finger1Separate / Tran_099
-(i_finger_1_down AND i_finger_1_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger1_001.DN
+(i_finger_1_down AND i_finger_1_no_copper AND NOT f_sm1_finger_retry_bypass_active) OR State_Lower_Finger1_001.DN
 
 SM#1 Finger2Separate / Tran_103
-(i_finger_2_down AND i_finger_2_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger_001.DN
+(i_finger_2_down AND i_finger_2_no_copper AND NOT f_sm1_finger_retry_bypass_active) OR State_Lower_Finger_001.DN
 
 SM#2 Finger1Separate / Tran_155
-(i_finger_1_down AND i_finger_1_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger1_003.DN
+(i_finger_1_down AND i_finger_1_no_copper AND NOT f_sm2_finger_retry_bypass_active) OR State_Lower_Finger1_003.DN
 
 SM#2 Finger2Separate / Tran_160
-(i_finger_2_down AND i_finger_2_no_copper AND NOT z_finger_retry_bypass_active) OR State_Lower_Finger_003.DN
+(i_finger_2_down AND i_finger_2_no_copper AND NOT f_sm2_finger_retry_bypass_active) OR State_Lower_Finger_003.DN
 ```
 
 ## InTouch 화면을 만든다
@@ -363,14 +378,14 @@ SM#1과 SM#2에 같은 모양의 ON 버튼, OFF 버튼, 기능 선택 표시, �
 
 | 장비 | InTouch 기능 | PLC Item 예시 | 동작 |
 |---|---|---|---|
-| SM#1 | ON 버튼 | `Program:Stripping_Machine_1.ui_i_finger_retry_bypass_on` | Touch Down=1, Touch Up=0이다. |
-| SM#1 | OFF 버튼 | `Program:Stripping_Machine_1.ui_i_finger_retry_bypass_off` | Touch Down=1, Touch Up=0이다. |
-| SM#1 | 기능 선택 표시 | `Program:Stripping_Machine_1.ui_o_finger_retry_bypass_enabled` | 1이면 `Retry 우회 기능 ON`으로 표시한다. |
-| SM#1 | 실제 우회 중 표시 | `Program:Stripping_Machine_1.ui_o_finger_retry_bypass_active` | 1일 때만 적색 또는 황색으로 `센서 우회 중`을 표시한다. |
-| SM#2 | ON 버튼 | `Program:Stripping_Machine_2.ui_i_finger_retry_bypass_on` | Touch Down=1, Touch Up=0이다. |
-| SM#2 | OFF 버튼 | `Program:Stripping_Machine_2.ui_i_finger_retry_bypass_off` | Touch Down=1, Touch Up=0이다. |
-| SM#2 | 기능 선택 표시 | `Program:Stripping_Machine_2.ui_o_finger_retry_bypass_enabled` | 1이면 `Retry 우회 기능 ON`으로 표시한다. |
-| SM#2 | 실제 우회 중 표시 | `Program:Stripping_Machine_2.ui_o_finger_retry_bypass_active` | 1일 때만 적색 또는 황색으로 `센서 우회 중`을 표시한다. |
+| SM#1 | ON 버튼 | `Program:Stripping_Machine_1.ui_i_sm1_finger_retry_bypass_on` | Touch Down=1, Touch Up=0이다. |
+| SM#1 | OFF 버튼 | `Program:Stripping_Machine_1.ui_i_sm1_finger_retry_bypass_off` | Touch Down=1, Touch Up=0이다. |
+| SM#1 | 기능 선택 표시 | `Program:Stripping_Machine_1.ui_o_sm1_finger_retry_bypass_enabled` | 1이면 `Retry 우회 기능 ON`으로 표시한다. |
+| SM#1 | 실제 우회 중 표시 | `Program:Stripping_Machine_1.ui_o_sm1_finger_retry_bypass_active` | 1일 때만 적색 또는 황색으로 `센서 우회 중`을 표시한다. |
+| SM#2 | ON 버튼 | `Program:Stripping_Machine_2.ui_i_sm2_finger_retry_bypass_on` | Touch Down=1, Touch Up=0이다. |
+| SM#2 | OFF 버튼 | `Program:Stripping_Machine_2.ui_i_sm2_finger_retry_bypass_off` | Touch Down=1, Touch Up=0이다. |
+| SM#2 | 기능 선택 표시 | `Program:Stripping_Machine_2.ui_o_sm2_finger_retry_bypass_enabled` | 1이면 `Retry 우회 기능 ON`으로 표시한다. |
+| SM#2 | 실제 우회 중 표시 | `Program:Stripping_Machine_2.ui_o_sm2_finger_retry_bypass_active` | 1일 때만 적색 또는 황색으로 `센서 우회 중`을 표시한다. |
 
 `Program:...` Item 표기는 Logix Program Scope의 일반적인 전체 경로 예시이다. 실제 InTouch Access Name과 Item 표기 방식은 현재 프로젝트에서 사용 중인 기존 Program Scope 태그 하나를 복사해 같은 형식으로 맞춘다.
 
@@ -385,7 +400,7 @@ SM#1과 SM#2에 같은 모양의 ON 버튼, OFF 버튼, 기능 선택 표시, �
 
 1. `Controller Organizer`에서 SM#1과 SM#2의 새 태그 8개씩을 다시 확인한다.
 2. `BasicControl`에서 새 Rung 6개씩이 Gate 판정 Rung 바로 뒤에 있는지 확인한다.
-3. Cross Reference로 `z_finger_retry_bypass_active`의 OTE가 각 Program에서 한 곳뿐인지 확인한다.
+3. Cross Reference로 SM#1의 `f_sm1_finger_retry_bypass_active`와 SM#2의 `f_sm2_finger_retry_bypass_active`를 확인한다. 각 태그의 OTE가 해당 Program에서 한 곳뿐이어야 한다.
 4. Finger 완료 Rung 4개가 실제 `Finger Down` 접점을 계속 포함하는지 확인한다.
 5. SFC Transition 네 곳의 이름과 앞뒤 Step을 표와 다시 대조한다.
 6. `Verify Routine`을 각 수정 Routine에 실행한다.
@@ -414,13 +429,20 @@ SM#1과 SM#2에 같은 모양의 ON 버튼, OFF 버튼, 기능 선택 표시, �
 | 다음 Retry | Enable을 ON으로 유지한 채 다음 Retry를 만든다. | 실제 Retry 중에만 Active가 다시 켜져야 한다. |
 | 장비 독립성 | SM#1 ON/OFF를 조작한다. | SM#2의 Enabled와 Active가 바뀌면 안 된다. 반대도 같아야 한다. |
 
-시험 Trend에는 장비별로 다음 태그를 기록한다.
+시험 Trend에는 장비별로 다음 태그를 기록한다. 아래 첫 네 줄은 SM#1과 SM#2에서 이름이 다르므로 해당 장비의 목록을 사용한다.
 
 ```text
-ui_o_finger_retry_bypass_enabled
-ui_o_finger_retry_bypass_active
-z_finger_retry_bypass_enable
-z_finger_retry_bypass_active
+SM#1: ui_o_sm1_finger_retry_bypass_enabled
+SM#1: ui_o_sm1_finger_retry_bypass_active
+SM#1: f_sm1_finger_retry_bypass_enable
+SM#1: f_sm1_finger_retry_bypass_active
+
+SM#2: ui_o_sm2_finger_retry_bypass_enabled
+SM#2: ui_o_sm2_finger_retry_bypass_active
+SM#2: f_sm2_finger_retry_bypass_enable
+SM#2: f_sm2_finger_retry_bypass_active
+
+각 Program의 기존 태그:
 z_mode_automatic
 f_strip_failed
 State_Manual_Retry_001.X 또는 State_Manual_Retry_003.X
