@@ -29,8 +29,6 @@ tags: ["PLC", "InTouch", "SC1", "SM1", "SM2", "Retry"]
   <p class="retry-flow-note"><b>다른 종료 경로:</b> 리젝트가 발생하거나 실제 Retry 스텝을 벗어나도 Active를 0으로 만든다. 기능 Enable은 OFF 버튼을 누르기 전까지 유지된다.</p>
 </section>
 
-이번에 직접 확인한 파일은 `Cathode1.L5X`(Controller `Cathode1`, SoftwareRevision 31.00, ExportDate 2026-06-20)이다. 아래 원본 RLL은 이 파일에서 확인했다. 별도로 언급된 `Cathode1(260714).L5X`는 이번 작업 환경에서 확보되지 않아 현장 ACD와 일치한다고 확정할 수 없다. 입력 전 해당 원본 Rung과 태그를 반드시 대조한다. LD는 [L5X Ladder Studio](https://alzza.github.io/l5x-ld-studio/) 렌더러로 표시한다. L5X 자체는 수정하지 않았다.
-
 | 기능 상태 | 실제 조건 | Finger 완료 판정 |
 |---|---|---|
 | OFF | 항상 일반 운전이다. | 실제 `i_finger_*_no_copper` 입력만 사용한다. |
