@@ -1,5 +1,5 @@
 ---
-title: SC1 SM#1·SM#2 Finger 센서 Retry 우회 현장 적용서
+title: CSM SM#1·SM#2 Finger 센서 Retry 우회 현장 적용서
 date: "2026-09-16"
 excerpt: SM#1과 SM#2에서 탈취 Retry가 실제로 시작된 동안만 Finger No Copper 센서를 우회하고, 전기동이 Gate에 들어오면 자동으로 정상 센서 사용으로 복귀하는 LD·SFC·InTouch 적용 절차이다.
 kicker: PLC
