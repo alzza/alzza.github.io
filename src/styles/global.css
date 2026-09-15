@@ -856,7 +856,6 @@ code {
   white-space: pre;
   overflow-wrap: normal;
   word-break: normal;
-  font-weight: 600;
 }
 .prose-finger-retry pre::-webkit-scrollbar {
   height: 12px;
