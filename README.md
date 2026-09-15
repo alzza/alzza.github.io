@@ -18,6 +18,7 @@ http://localhost:4321
 | 하고 싶은 일 | 파일 |
 |---|---|
 | 노트 추가/수정 | `src/content/notes/이름.md` (홈 목록도 같이 갱신) |
+| 노트 LD / RLL 그림 | `AGENTS.md`의 `## 노트 LD`를 먼저 읽는다. 새 렌더러를 만들지 않는다 |
 | 홈 타일 | `src/pages/index.astro` |
 | 춘천 일정 | `src/pages/chuncheon/index.astro` |
 | 지도·코스 좌표 | `src/pages/chuncheon/map.astro`, `src/data/chuncheon.ts` |
