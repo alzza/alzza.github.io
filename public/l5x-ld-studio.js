@@ -398,6 +398,7 @@
     $('#textDialogClose').onclick=()=>textDialog.close();
     $('#textConvertBtn').onclick=()=>{try{loadTextLogic($('#textRoutineName').value,$('#textLogicInput').value);textDialog.close();}catch(e){toast(e.message,true);}};
     let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(state.selected&&!$('#viewer').hidden)renderRoutine();},180)});
+    if(window.ResizeObserver){const canvas=$('#ladderCanvas');let observedWidth=0;const ro=new ResizeObserver(entries=>{const w=Math.round(entries[0]?.contentRect?.width||0);if(!w||w===observedWidth)return;observedWidth=w;clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(state.selected&&!$('#viewer').hidden&&state.scaleMode==='fit')renderRoutine();},80);});if(canvas)ro.observe(canvas);}
     const dz=$('#dropZone');['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));dz.addEventListener('drop',e=>e.dataTransfer.files[0]&&loadFile(e.dataTransfer.files[0]));
     function tryPreload(){
       if(window.LD_TAG_VALUES)state.tagValues={...window.LD_TAG_VALUES};
