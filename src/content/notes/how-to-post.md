@@ -23,6 +23,17 @@ tags: ["운영", "Astro"]
 </figure>
 ```
 
+SFC를 비교할 때는 원본 L5X에서 Step 두 개와 그 사이 Transition의 이름, 조건, 상대 간격을 확인한다. 변경 전과 변경 후를 각각 `.sfc-snippet`으로 넣으면 노트가 Studio의 `renderSFC`로 다시 그린다. 아래 예시의 `data-transition-id`, `data-transition-y`, `data-next-y`는 실제 L5X를 확인한 뒤 해당 구간에 맞게 바꾼다. 그림이 Routine 전체가 아니라 일부라면 본문에 확대도라고 적는다.
+
+```html
+<div class="sfc-snippet" data-transition-id="15" data-transition-y="260" data-next-y="340">
+  <div class="sfc-step">State_Lower_Finger1_001</div>
+  <div class="sfc-transition"><b>Tran_099</b></div>
+  <code>(i_finger_1_down AND i_finger_1_no_copper) OR State_Lower_Finger1_001.DN</code>
+  <div class="sfc-step">State_raise_finger1_001</div>
+</div>
+```
+
 작업 폴더: `/Users/akanus/orca/workspaces/design-page/alzza.github.io`
 
 라이브: https://alzza.github.io/

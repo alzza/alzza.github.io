@@ -332,7 +332,9 @@ SFC Transition의 조건은 문자식으로 입력하므로 L5X 안에서는 `<S
 | SM#2 | `Finger1Separate` | `State_Lower_Finger1_003` | `Tran_155` | `State_raise_finger1_003` |
 | SM#2 | `Finger2Separate` | `State_Lower_Finger_003` | `Tran_160` | `State_raise_finger_003` |
 
-### 실제 SFC 모양과 수정 전·후 조건
+### Studio 렌더러로 본 SFC Transition 수정 전·후
+
+아래 그림은 각 SFC Routine에서 바뀌는 Step, Transition, 다음 Step만 확대해 보여준다. 원본 L5X의 Step 간격과 Transition 이름을 사용하며, Action과 나머지 SFC 경로는 이 확대도에서 생략했다. 수정 후 그림은 아래에 적은 변경 조건을 적용했을 때의 예상 모습이다.
 
 <div class="sfc-compare-grid">
   <section class="sfc-panel"><h3>SM#1 Finger 1: 수정 전</h3><div class="sfc-sheet"><div class="sfc-step">State_Lower_Finger1_001</div><div class="sfc-wire"></div><div class="sfc-transition"><span></span><b>Tran_099</b></div><code>(i_finger_1_down AND i_finger_1_no_copper) OR State_Lower_Finger1_001.DN</code><div class="sfc-wire"></div><div class="sfc-step">State_raise_finger1_001</div></div></section>

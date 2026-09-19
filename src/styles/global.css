@@ -657,8 +657,10 @@ button:focus-visible {
 .prose .ld-rung-live svg {
   display: block;
   width: 100%;
+  max-width: 100%;
   height: auto;
 }
+.prose .ld-rung-live { background: #fff; }
 .prose .ld-rung .rung-meta {
   display: flex;
   align-items: center;
@@ -952,7 +954,7 @@ code {
 
 .prose-finger-retry .sfc-compare-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   margin: 0 0 1.5rem;
 }
@@ -1031,6 +1033,21 @@ code {
   text-align: left;
   white-space: normal;
   overflow-wrap: anywhere;
+}
+.prose .sfc-snippet[data-renderer],
+.prose-finger-retry .sfc-sheet[data-renderer] {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  background: #fff;
+  overflow-x: auto;
+}
+.prose .sfc-snippet[data-renderer] svg,
+.prose-finger-retry .sfc-sheet[data-renderer] svg {
+  display: block;
+  width: 100%;
+  min-width: 640px;
+  height: auto;
 }
 @media (max-width: 760px) {
   .prose-finger-retry .sfc-compare-grid { grid-template-columns: 1fr; }

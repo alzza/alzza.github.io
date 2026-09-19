@@ -50,8 +50,9 @@ RLL을 LD로 그리거나 노트·문서에 래더를 넣을 때는 아래 `## �
 진실이 있는 곳:
 
 - 렌더러 원본: `https://github.com/alzza/l5x-ld-studio`
-- 이 저장소 복사본: `public/l5x-ld-studio.js`
-- 페이지 삽입: `public/ld-embed.js`
+- 노트 페이지는 `/l5x-ld-studio/app.js`를 직접 불러온다. `public/l5x-ld-studio.js`는 예전 복사본이므로 새 노트에서 불러오지 않는다.
+- LD 페이지 삽입: `public/ld-embed.js`
+- SFC 확대 그림은 `/l5x-ld-studio/sfc.js`와 `public/sfc-embed.js`를 사용한다. 새 노트에는 `.sfc-snippet` 마크업과 원본 L5X에서 확인한 Step·Transition 이름 및 상대 간격을 넣는다. Action과 나머지 SFC 경로를 생략했으면 본문에 확대도라고 설명한다.
 - 노트 예시는 `src/content/notes/how-to-post.md`
 - 옆 폴더 `design-page/theme`는 Next.js 공부용이며 이 사이트와 무관하다
 
