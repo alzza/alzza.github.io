@@ -1,16 +1,17 @@
 ---
-title: CSM SM#1·SM#2 Finger 센서 Retry 우회 현장 적용서 Rev.3
+title: CSM SM#1·SM#2 Finger 센서 Retry 우회 현장 적용서 Rev.4
 date: "2026-09-21"
 excerpt: 기능 ON 선택은 유지하고 탈취 실패부터 Gate 진입까지만 Finger No Copper를 감지 상태로 판단하는 수정안이다. 원본 비교, RLL, LD, SFC, InTouch 태그와 검증 절차를 담았다.
 kicker: PLC
 tags: ["PLC", "InTouch", "CSM", "SM1", "SM2", "Retry", "SFC"]
 ---
 
-## Rev.3 변경 이력
+## Rev.4 변경 이력
 
 - Rev.1: Retry Step 신호를 기준으로 Finger No Copper 우회를 여는 안내였다.
 - Rev.2: `f_strip_failed`를 Permits 해제 전에 보관하고 Gate 진입까지 Active를 유지하도록 수정했다.
 - Rev.3: 완료 래치 조건을 한 줄에 묶은 1안과 Gate·Reject·자동모드 이탈을 세 Rung으로 나눈 2안을 함께 제공한다. 실제 현장에는 둘 중 하나만 입력한다.
+- Rev.4: InTouch 버튼·표시등 표의 빈 행을 제거해 Markdown 표가 한 표로 렌더링되도록 수정했다.
 
 ## 이번 개정에서 달라진 점
 
@@ -88,7 +89,7 @@ OFF도 전처리가 버튼 요청을 읽은 시점부터 실제 No Copper 판단
 
 `Stripping_Machine_1 → Routines → New Routine`에서 이름을 `SM1_FingerRetryBypass`, Type을 Ladder Diagram으로 지정한다. 새 Routine의 Rung 0부터 다음 12개를 순서대로 입력한다. 이 코드는 기존 BasicControl 뒤에 붙이는 코드가 아니다.
 
-[SM#1 새 Routine RLL 다운로드](/downloads/csm-finger-retry-v3/sm1_routine.txt)
+[SM#1 새 Routine RLL 다운로드](/downloads/csm-finger-retry-v4/sm1_routine.txt)
 
 ### 완료 래치 조건 입력안 선택
 
@@ -138,7 +139,7 @@ ON 요청을 기억한다. OFF가 눌려 있으면 ON 요청을 받지 않는다
 
 <figure class="ld-rung" data-rung="0" data-rll="XIC(ui_i_sm1_finger_retry_bypass_on)XIO(ui_i_sm1_finger_retry_bypass_off)ONS(sm1_finger_retry_bypass_on_ons)OTL(f_sm1_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 0</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_00.svg" alt="SM#1 새 Routine Rung 0" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_00.svg" alt="SM#1 새 Routine Rung 0" width="920" height="160">
 </figure>
 
 #### Rung 1
@@ -147,7 +148,7 @@ OFF 요청을 기억한다. 같은 스캔의 ON 요청보다 OFF가 우선한다
 
 <figure class="ld-rung" data-rung="1" data-rll="XIC(ui_i_sm1_finger_retry_bypass_off)ONS(sm1_finger_retry_bypass_off_ons)OTU(f_sm1_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 1</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_01.svg" alt="SM#1 새 Routine Rung 1" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_01.svg" alt="SM#1 새 Routine Rung 1" width="920" height="160">
 </figure>
 
 #### Rung 2
@@ -156,7 +157,7 @@ OFF 요청을 기억한다. 같은 스캔의 ON 요청보다 OFF가 우선한다
 
 <figure class="ld-rung" data-rung="2" data-rll="XIC(S:FS)[OTU(f_sm1_finger_retry_bypass_enable),OTU(f_sm1_finger_retry_bypass_active),OTU(f_sm1_finger_retry_bypass_done),OTU(f_sm1_finger_retry_failed_pending)];">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 2</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_02.svg" alt="SM#1 새 Routine Rung 2" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_02.svg" alt="SM#1 새 Routine Rung 2" width="920" height="160">
 </figure>
 
 #### Rung 3
@@ -165,7 +166,7 @@ OFF 요청을 기억한다. 같은 스캔의 ON 요청보다 OFF가 우선한다
 
 <figure class="ld-rung" data-rung="3" data-rll="XIO(f_strip_failed)XIO(f_sm1_finger_retry_failed_pending)XIO(f_sm1_finger_retry_bypass_active)OTU(f_sm1_finger_retry_bypass_done);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 3</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_03.svg" alt="SM#1 새 Routine Rung 3" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_03.svg" alt="SM#1 새 Routine Rung 3" width="920" height="160">
 </figure>
 
 #### Rung 4
@@ -174,7 +175,7 @@ Gate 진입, 리젝트, 자동 모드 이탈로 끝난 실패 건을 기억한�
 
 <figure class="ld-rung" data-rung="4" data-rll="[XIC(f_copper_in_gate),XIC(f_reject_cathode),XIO(z_mode_automatic)][XIC(f_sm1_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_done);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 4</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_04.svg" alt="SM#1 새 Routine Rung 4" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_04.svg" alt="SM#1 새 Routine Rung 4" width="920" height="160">
 </figure>
 
 #### Rung 5
@@ -183,7 +184,7 @@ Gate 진입, 리젝트, 자동 모드 이탈로 끝난 실패 건을 기억한�
 
 <figure class="ld-rung" data-rung="5" data-rll="XIC(f_sm1_finger_retry_bypass_enable)XIC(z_mode_automatic)XIO(f_copper_in_gate)XIO(f_reject_cathode)XIO(f_sm1_finger_retry_bypass_done)[XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 5</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_05.svg" alt="SM#1 새 Routine Rung 5" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_05.svg" alt="SM#1 새 Routine Rung 5" width="920" height="160">
 </figure>
 
 #### Rung 6
@@ -192,7 +193,7 @@ Gate 진입, 리젝트, 자동 모드 이탈로 끝난 실패 건을 기억한�
 
 <figure class="ld-rung" data-rung="6" data-rll="[XIO(f_sm1_finger_retry_bypass_enable),XIO(z_mode_automatic),XIC(f_copper_in_gate),XIC(f_reject_cathode)]OTU(f_sm1_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 6</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_06.svg" alt="SM#1 새 Routine Rung 6" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_06.svg" alt="SM#1 새 Routine Rung 6" width="920" height="160">
 </figure>
 
 #### Rung 7
@@ -201,7 +202,7 @@ Gate 진입, 리젝트, 자동 모드 이탈로 끝난 실패 건을 기억한�
 
 <figure class="ld-rung" data-rung="7" data-rll="OTU(f_sm1_finger_retry_failed_pending);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 7</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_07.svg" alt="SM#1 새 Routine Rung 7" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_07.svg" alt="SM#1 새 Routine Rung 7" width="920" height="160">
 </figure>
 
 #### Rung 8
@@ -210,7 +211,7 @@ Finger 1의 내부 No Copper 판단값을 만든다. 우회 중에는 0이다.
 
 <figure class="ld-rung" data-rung="8" data-rll="XIC(i_finger_1_no_copper)XIO(f_sm1_finger_retry_bypass_active)OTE(f_sm1_finger1_no_copper_effective);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 8</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_08.svg" alt="SM#1 새 Routine Rung 8" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_08.svg" alt="SM#1 새 Routine Rung 8" width="920" height="160">
 </figure>
 
 #### Rung 9
@@ -219,7 +220,7 @@ Finger 2의 내부 No Copper 판단값을 만든다. 우회 중에는 0이다.
 
 <figure class="ld-rung" data-rung="9" data-rll="XIC(i_finger_2_no_copper)XIO(f_sm1_finger_retry_bypass_active)OTE(f_sm1_finger2_no_copper_effective);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 9</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_09.svg" alt="SM#1 새 Routine Rung 9" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_09.svg" alt="SM#1 새 Routine Rung 9" width="920" height="160">
 </figure>
 
 #### Rung 10
@@ -228,7 +229,7 @@ HMI에 기능 ON 선택 상태를 전달한다.
 
 <figure class="ld-rung" data-rung="10" data-rll="XIC(f_sm1_finger_retry_bypass_enable)OTE(ui_o_sm1_finger_retry_bypass_enabled);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 10</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_10.svg" alt="SM#1 새 Routine Rung 10" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_10.svg" alt="SM#1 새 Routine Rung 10" width="920" height="160">
 </figure>
 
 #### Rung 11
@@ -237,7 +238,7 @@ HMI에 실제 우회 상태를 전달한다.
 
 <figure class="ld-rung" data-rung="11" data-rll="XIC(f_sm1_finger_retry_bypass_active)OTE(ui_o_sm1_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 새 Routine Rung 11</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_new_11.svg" alt="SM#1 새 Routine Rung 11" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_new_11.svg" alt="SM#1 새 Routine Rung 11" width="920" height="160">
 </figure>
 </details>
 
@@ -253,7 +254,7 @@ HMI에 실제 우회 상태를 전달한다.
 
 <figure class="ld-rung" data-rung="0" data-rll="[XIC(z_mode_automatic) ,XIC(single_cycle) ][ONS(reset_ons) SFR(DoAutomatic,0) ,[JSR(DoAutomatic,0) ,XIO(single_cycle) JSR(prod_tracking,0) ] ];">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 MainRoutine 원본 Rung 0</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_main_original.svg" alt="SM#1 MainRoutine 원본 Rung 0" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_main_original.svg" alt="SM#1 MainRoutine 원본 Rung 0" width="920" height="160">
 </figure>
 추가 후 첫 Rung은 다음과 같다. 원본 Rung 0은 그 다음 Rung으로 밀린다.
 
@@ -263,7 +264,7 @@ JSR(SM1_FingerRetryBypass,0);
 
 <figure class="ld-rung" data-rung="0" data-rll="JSR(SM1_FingerRetryBypass,0);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 MainRoutine 추가 Rung 0</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_main_call.svg" alt="SM#1 MainRoutine 추가 Rung 0" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_main_call.svg" alt="SM#1 MainRoutine 추가 Rung 0" width="920" height="160">
 </figure>
 두 번째 위치는 수정 전 Rung 4의 `JSR(Background,0);` 바로 뒤, 수정 전 Rung 5의 `JSR(Permits,0);` 바로 앞이다. Background는 기존 배경 처리를 실행한다. 다음 Permits가 실패를 해제하기 전에 그 값을 기록한다.
 
@@ -284,7 +285,7 @@ JSR(Permits,0);
 
 <figure class="ld-rung" data-rung="6" data-rll="XIC(f_strip_failed)OTL(f_sm1_finger_retry_failed_pending);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 MainRoutine 추가 실패 기록 Rung, 새 위치 예상 6</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_main_capture.svg" alt="SM#1 MainRoutine 추가 실패 기록 Rung, 새 위치 예상 6" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_main_capture.svg" alt="SM#1 MainRoutine 추가 실패 기록 Rung, 새 위치 예상 6" width="920" height="160">
 </figure>
 원본에서 두 개만 추가했다면 `Background`는 새 Rung 5, 기록은 6, `Permits`는 7, `BasicControl`은 8이다. 현장에 다른 추가 Rung이 있으면 이 번호보다 위 원문과 호출 순서를 먼저 대조한다.
 
@@ -303,7 +304,7 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 
 <figure class="ld-rung" data-rung="52" data-rll="XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 Finger 1 완료 변경 전</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_f1_before.svg" alt="SM#1 Finger 1 완료 변경 전" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_f1_before.svg" alt="SM#1 Finger 1 완료 변경 전" width="920" height="160">
 </figure>
 변경 후:
 
@@ -313,7 +314,7 @@ XIC(i_finger_1_down)XIO(f_sm1_finger1_no_copper_effective)OTE(f_finger1_separate
 
 <figure class="ld-rung" data-rung="52" data-rll="XIC(i_finger_1_down)XIO(f_sm1_finger1_no_copper_effective)OTE(f_finger1_separated);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 Finger 1 완료 변경 후</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_f1_after.svg" alt="SM#1 Finger 1 완료 변경 후" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_f1_after.svg" alt="SM#1 Finger 1 완료 변경 후" width="920" height="160">
 </figure>
 
 #### Finger 2: 원본 Rung 53
@@ -326,7 +327,7 @@ XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);
 
 <figure class="ld-rung" data-rung="53" data-rll="XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 Finger 2 완료 변경 전</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_f2_before.svg" alt="SM#1 Finger 2 완료 변경 전" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_f2_before.svg" alt="SM#1 Finger 2 완료 변경 전" width="920" height="160">
 </figure>
 변경 후:
 
@@ -336,7 +337,7 @@ XIC(i_finger_2_down)XIO(f_sm1_finger2_no_copper_effective)OTE(f_finger2_separate
 
 <figure class="ld-rung" data-rung="53" data-rll="XIC(i_finger_2_down)XIO(f_sm1_finger2_no_copper_effective)OTE(f_finger2_separated);">
 <div class="rung-meta"><span class="rung-meta-number">SM#1 Finger 2 완료 변경 후</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm1_f2_after.svg" alt="SM#1 Finger 2 완료 변경 후" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm1_f2_after.svg" alt="SM#1 Finger 2 완료 변경 후" width="920" height="160">
 </figure>
 ### 4. Finger SFC의 전이 조건을 교체한다
 
@@ -401,7 +402,7 @@ XIC(i_finger_2_down)XIO(f_sm1_finger2_no_copper_effective)OTE(f_finger2_separate
 <div class="sfc-step">State_raise_finger_001</div>
 </div>
 
-[SM#1 전체 변경 위치·원본·변경 후 TXT 다운로드](/downloads/csm-finger-retry-v3/sm1_changes.txt)
+[SM#1 전체 변경 위치·원본·변경 후 TXT 다운로드](/downloads/csm-finger-retry-v4/sm1_changes.txt)
 
 
 ## SM#2 적용
@@ -427,7 +428,7 @@ XIC(i_finger_2_down)XIO(f_sm1_finger2_no_copper_effective)OTE(f_finger2_separate
 
 `Stripping_Machine_2 → Routines → New Routine`에서 이름을 `SM2_FingerRetryBypass`, Type을 Ladder Diagram으로 지정한다. 새 Routine의 Rung 0부터 다음 12개를 순서대로 입력한다. 이 코드는 기존 BasicControl 뒤에 붙이는 코드가 아니다.
 
-[SM#2 새 Routine RLL 다운로드](/downloads/csm-finger-retry-v3/sm2_routine.txt)
+[SM#2 새 Routine RLL 다운로드](/downloads/csm-finger-retry-v4/sm2_routine.txt)
 
 ### 완료 래치 조건 입력안 선택
 
@@ -477,7 +478,7 @@ ON 요청을 기억한다. OFF가 눌려 있으면 ON 요청을 받지 않는다
 
 <figure class="ld-rung" data-rung="0" data-rll="XIC(ui_i_sm2_finger_retry_bypass_on)XIO(ui_i_sm2_finger_retry_bypass_off)ONS(sm2_finger_retry_bypass_on_ons)OTL(f_sm2_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 0</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_00.svg" alt="SM#2 새 Routine Rung 0" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_00.svg" alt="SM#2 새 Routine Rung 0" width="920" height="160">
 </figure>
 
 #### Rung 1
@@ -486,7 +487,7 @@ OFF 요청을 기억한다. 같은 스캔의 ON 요청보다 OFF가 우선한다
 
 <figure class="ld-rung" data-rung="1" data-rll="XIC(ui_i_sm2_finger_retry_bypass_off)ONS(sm2_finger_retry_bypass_off_ons)OTU(f_sm2_finger_retry_bypass_enable);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 1</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_01.svg" alt="SM#2 새 Routine Rung 1" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_01.svg" alt="SM#2 새 Routine Rung 1" width="920" height="160">
 </figure>
 
 #### Rung 2
@@ -495,7 +496,7 @@ OFF 요청을 기억한다. 같은 스캔의 ON 요청보다 OFF가 우선한다
 
 <figure class="ld-rung" data-rung="2" data-rll="XIC(S:FS)[OTU(f_sm2_finger_retry_bypass_enable),OTU(f_sm2_finger_retry_bypass_active),OTU(f_sm2_finger_retry_bypass_done),OTU(f_sm2_finger_retry_failed_pending)];">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 2</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_02.svg" alt="SM#2 새 Routine Rung 2" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_02.svg" alt="SM#2 새 Routine Rung 2" width="920" height="160">
 </figure>
 
 #### Rung 3
@@ -504,7 +505,7 @@ OFF 요청을 기억한다. 같은 스캔의 ON 요청보다 OFF가 우선한다
 
 <figure class="ld-rung" data-rung="3" data-rll="XIO(f_strip_failed)XIO(f_sm2_finger_retry_failed_pending)XIO(f_sm2_finger_retry_bypass_active)OTU(f_sm2_finger_retry_bypass_done);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 3</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_03.svg" alt="SM#2 새 Routine Rung 3" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_03.svg" alt="SM#2 새 Routine Rung 3" width="920" height="160">
 </figure>
 
 #### Rung 4
@@ -513,7 +514,7 @@ Gate 진입, 리젝트, 자동 모드 이탈로 끝난 실패 건을 기억한�
 
 <figure class="ld-rung" data-rung="4" data-rll="[XIC(f_copper_in_gate),XIC(f_reject_cathode),XIO(z_mode_automatic)][XIC(f_sm2_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm2_finger_retry_failed_pending)]OTL(f_sm2_finger_retry_bypass_done);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 4</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_04.svg" alt="SM#2 새 Routine Rung 4" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_04.svg" alt="SM#2 새 Routine Rung 4" width="920" height="160">
 </figure>
 
 #### Rung 5
@@ -522,7 +523,7 @@ Gate 진입, 리젝트, 자동 모드 이탈로 끝난 실패 건을 기억한�
 
 <figure class="ld-rung" data-rung="5" data-rll="XIC(f_sm2_finger_retry_bypass_enable)XIC(z_mode_automatic)XIO(f_copper_in_gate)XIO(f_reject_cathode)XIO(f_sm2_finger_retry_bypass_done)[XIC(f_strip_failed),XIC(f_sm2_finger_retry_failed_pending)]OTL(f_sm2_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 5</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_05.svg" alt="SM#2 새 Routine Rung 5" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_05.svg" alt="SM#2 새 Routine Rung 5" width="920" height="160">
 </figure>
 
 #### Rung 6
@@ -531,7 +532,7 @@ Gate 진입, 리젝트, 자동 모드 이탈로 끝난 실패 건을 기억한�
 
 <figure class="ld-rung" data-rung="6" data-rll="[XIO(f_sm2_finger_retry_bypass_enable),XIO(z_mode_automatic),XIC(f_copper_in_gate),XIC(f_reject_cathode)]OTU(f_sm2_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 6</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_06.svg" alt="SM#2 새 Routine Rung 6" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_06.svg" alt="SM#2 새 Routine Rung 6" width="920" height="160">
 </figure>
 
 #### Rung 7
@@ -540,7 +541,7 @@ Gate 진입, 리젝트, 자동 모드 이탈로 끝난 실패 건을 기억한�
 
 <figure class="ld-rung" data-rung="7" data-rll="OTU(f_sm2_finger_retry_failed_pending);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 7</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_07.svg" alt="SM#2 새 Routine Rung 7" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_07.svg" alt="SM#2 새 Routine Rung 7" width="920" height="160">
 </figure>
 
 #### Rung 8
@@ -549,7 +550,7 @@ Finger 1의 내부 No Copper 판단값을 만든다. 우회 중에는 0이다.
 
 <figure class="ld-rung" data-rung="8" data-rll="XIC(i_finger_1_no_copper)XIO(f_sm2_finger_retry_bypass_active)OTE(f_sm2_finger1_no_copper_effective);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 8</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_08.svg" alt="SM#2 새 Routine Rung 8" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_08.svg" alt="SM#2 새 Routine Rung 8" width="920" height="160">
 </figure>
 
 #### Rung 9
@@ -558,7 +559,7 @@ Finger 2의 내부 No Copper 판단값을 만든다. 우회 중에는 0이다.
 
 <figure class="ld-rung" data-rung="9" data-rll="XIC(i_finger_2_no_copper)XIO(f_sm2_finger_retry_bypass_active)OTE(f_sm2_finger2_no_copper_effective);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 9</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_09.svg" alt="SM#2 새 Routine Rung 9" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_09.svg" alt="SM#2 새 Routine Rung 9" width="920" height="160">
 </figure>
 
 #### Rung 10
@@ -567,7 +568,7 @@ HMI에 기능 ON 선택 상태를 전달한다.
 
 <figure class="ld-rung" data-rung="10" data-rll="XIC(f_sm2_finger_retry_bypass_enable)OTE(ui_o_sm2_finger_retry_bypass_enabled);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 10</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_10.svg" alt="SM#2 새 Routine Rung 10" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_10.svg" alt="SM#2 새 Routine Rung 10" width="920" height="160">
 </figure>
 
 #### Rung 11
@@ -576,7 +577,7 @@ HMI에 실제 우회 상태를 전달한다.
 
 <figure class="ld-rung" data-rung="11" data-rll="XIC(f_sm2_finger_retry_bypass_active)OTE(ui_o_sm2_finger_retry_bypass_active);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 새 Routine Rung 11</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_new_11.svg" alt="SM#2 새 Routine Rung 11" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_new_11.svg" alt="SM#2 새 Routine Rung 11" width="920" height="160">
 </figure>
 </details>
 
@@ -592,7 +593,7 @@ HMI에 실제 우회 상태를 전달한다.
 
 <figure class="ld-rung" data-rung="0" data-rll="[XIC(z_mode_automatic) ,XIC(single_cycle) ]XIO(ui_i_test)[ONS(reset_ons) SFR(DoAutomatic,0) ,[JSR(DoAutomatic,0) ,XIO(single_cycle) JSR(prod_tracking,0) ] ];">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 MainRoutine 원본 Rung 0</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_main_original.svg" alt="SM#2 MainRoutine 원본 Rung 0" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_main_original.svg" alt="SM#2 MainRoutine 원본 Rung 0" width="920" height="160">
 </figure>
 추가 후 첫 Rung은 다음과 같다. 원본 Rung 0은 그 다음 Rung으로 밀린다.
 
@@ -602,7 +603,7 @@ JSR(SM2_FingerRetryBypass,0);
 
 <figure class="ld-rung" data-rung="0" data-rll="JSR(SM2_FingerRetryBypass,0);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 MainRoutine 추가 Rung 0</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_main_call.svg" alt="SM#2 MainRoutine 추가 Rung 0" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_main_call.svg" alt="SM#2 MainRoutine 추가 Rung 0" width="920" height="160">
 </figure>
 두 번째 위치는 수정 전 Rung 4의 `JSR(Background,0);` 바로 뒤, 수정 전 Rung 5의 `JSR(Permits,0);` 바로 앞이다. Background는 기존 배경 처리를 실행한다. 다음 Permits가 실패를 해제하기 전에 그 값을 기록한다.
 
@@ -623,7 +624,7 @@ JSR(Permits,0);
 
 <figure class="ld-rung" data-rung="6" data-rll="XIC(f_strip_failed)OTL(f_sm2_finger_retry_failed_pending);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 MainRoutine 추가 실패 기록 Rung, 새 위치 예상 6</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_main_capture.svg" alt="SM#2 MainRoutine 추가 실패 기록 Rung, 새 위치 예상 6" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_main_capture.svg" alt="SM#2 MainRoutine 추가 실패 기록 Rung, 새 위치 예상 6" width="920" height="160">
 </figure>
 원본에서 두 개만 추가했다면 `Background`는 새 Rung 5, 기록은 6, `Permits`는 7, `BasicControl`은 8이다. 현장에 다른 추가 Rung이 있으면 이 번호보다 위 원문과 호출 순서를 먼저 대조한다.
 
@@ -642,7 +643,7 @@ XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
 
 <figure class="ld-rung" data-rung="51" data-rll="XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 Finger 1 완료 변경 전</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_f1_before.svg" alt="SM#2 Finger 1 완료 변경 전" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_f1_before.svg" alt="SM#2 Finger 1 완료 변경 전" width="920" height="160">
 </figure>
 변경 후:
 
@@ -652,7 +653,7 @@ XIC(i_finger_1_down)XIO(f_sm2_finger1_no_copper_effective)OTE(f_finger1_separate
 
 <figure class="ld-rung" data-rung="51" data-rll="XIC(i_finger_1_down)XIO(f_sm2_finger1_no_copper_effective)OTE(f_finger1_separated);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 Finger 1 완료 변경 후</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_f1_after.svg" alt="SM#2 Finger 1 완료 변경 후" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_f1_after.svg" alt="SM#2 Finger 1 완료 변경 후" width="920" height="160">
 </figure>
 
 #### Finger 2: 원본 Rung 52
@@ -665,7 +666,7 @@ XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);
 
 <figure class="ld-rung" data-rung="52" data-rll="XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 Finger 2 완료 변경 전</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_f2_before.svg" alt="SM#2 Finger 2 완료 변경 전" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_f2_before.svg" alt="SM#2 Finger 2 완료 변경 전" width="920" height="160">
 </figure>
 변경 후:
 
@@ -675,7 +676,7 @@ XIC(i_finger_2_down)XIO(f_sm2_finger2_no_copper_effective)OTE(f_finger2_separate
 
 <figure class="ld-rung" data-rung="52" data-rll="XIC(i_finger_2_down)XIO(f_sm2_finger2_no_copper_effective)OTE(f_finger2_separated);">
 <div class="rung-meta"><span class="rung-meta-number">SM#2 Finger 2 완료 변경 후</span><span class="rung-status ok">LD 변환</span></div>
-<img src="/images/notes/csm-finger-retry-v3/sm2_f2_after.svg" alt="SM#2 Finger 2 완료 변경 후" width="920" height="160">
+<img src="/images/notes/csm-finger-retry-v4/sm2_f2_after.svg" alt="SM#2 Finger 2 완료 변경 후" width="920" height="160">
 </figure>
 ### 4. Finger SFC의 전이 조건을 교체한다
 
@@ -740,7 +741,7 @@ XIC(i_finger_2_down)XIO(f_sm2_finger2_no_copper_effective)OTE(f_finger2_separate
 <div class="sfc-step">State_raise_finger_003</div>
 </div>
 
-[SM#2 전체 변경 위치·원본·변경 후 TXT 다운로드](/downloads/csm-finger-retry-v3/sm2_changes.txt)
+[SM#2 전체 변경 위치·원본·변경 후 TXT 다운로드](/downloads/csm-finger-retry-v4/sm2_changes.txt)
 
 
 ## InTouch 버튼과 표시등
@@ -749,7 +750,6 @@ Access Name과 통신 드라이버 설정은 현장 프로젝트를 따른다. �
 
 | 장비 | HMI 기능 | PLC Item 예시 | 동작 |
 |---|---|---|---|
-
 | SM#1 | ON 버튼 | `Program:Stripping_Machine_1.ui_i_sm1_finger_retry_bypass_on` | 누를 때 1, 놓을 때 0을 쓴다. |
 | SM#1 | OFF 버튼 | `Program:Stripping_Machine_1.ui_i_sm1_finger_retry_bypass_off` | 누를 때 1, 놓을 때 0을 쓴다. |
 | SM#1 | 기능 선택 표시 | `Program:Stripping_Machine_1.ui_o_sm1_finger_retry_bypass_enabled` | 1이면 기능 ON이다. 실제 우회 중이라는 뜻은 아니다. |
