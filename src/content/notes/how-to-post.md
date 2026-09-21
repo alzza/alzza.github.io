@@ -18,9 +18,11 @@ tags: ["운영", "Astro"]
 
 노트에 래더를 넣을 때는 캡처 SVG만 붙이지 않는다. 아래처럼 `data-rll`을 두고 실시간 렌더로 넣는다. 본문 폭이 바뀌면 레일 폭도 따라간다. `img`는 스크립트가 꺼져 있을 때만 보인다. 폭 공식, 호출 방법, 이미 버린 그림 방식은 저장소 `AGENTS.md`의 `## 노트 LD`에 있다. 래더를 그리기 전에 그 절을 먼저 읽는다.
 
+LD 바로 위의 `.rung-meta`에는 장비·Program/Routine·원본/변경/추가 구분·Rung 번호와 함께, 아래 렁이 어떤 조건에서 무엇을 하는지 한 문장으로 적는다. `LD 변환`만 표시하고 기능 설명을 생략하지 않는다. 원본과 변경 후 그림은 각각의 동작을 따로 적는다.
+
 ```html
 <figure class="ld-rung" data-rung="52" data-rll="XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);">
-<div class="rung-meta"><span class="rung-meta-number">Rung 52</span><span class="rung-status ok">정상</span></div>
+<div class="rung-meta"><span class="rung-meta-number">SM#1 BasicControl 원본 Rung 52</span><span class="rung-meta-description">Finger 1이 내려가고 No Copper 입력이 꺼지면 탈취 완료 비트를 켠다.</span><span class="rung-status ok">LD 변환</span></div>
 <img src="/images/notes/.../ld_rung_00.svg" alt="원본 Finger 완료 LD" width="920" height="126">
 </figure>
 ```

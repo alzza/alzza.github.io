@@ -10,6 +10,20 @@
     Tran_160: { id: 17, transitionY: 280, nextY: 400 }
   };
 
+  // renderSFC uses stable clipPath/marker IDs. A note has several SVGs, and
+  // duplicate IDs make later Step names use the first SVG's clipping rectangle.
+  function scopeSvgIds(markup, suffix) {
+    var ids = new Set(Array.from(markup.matchAll(/\bid="([^"]+)"/g), function (match) { return match[1]; }));
+    ids.forEach(function (id) {
+      var scoped = id + "-" + suffix;
+      markup = markup.replaceAll('id="' + id + '"', 'id="' + scoped + '"');
+      markup = markup.replaceAll('url(#' + id + ')', 'url(#' + scoped + ')');
+      markup = markup.replaceAll('="#' + id + '"', '="#' + scoped + '"');
+    });
+    return markup;
+  }
+  window.L5XScopeSfcSvgIds = scopeSvgIds;
+
   function step(id, operand, y) {
     return {
       kind: "step", id: id, x: 120, y: y, operand: operand,
@@ -41,7 +55,7 @@
 
   function paint() {
     if (!window.L5XSFC || typeof window.L5XSFC.renderSFC !== "function") return;
-    document.querySelectorAll(".sfc-snippet, .prose-finger-retry .sfc-sheet").forEach(function (host) {
+    document.querySelectorAll(".sfc-snippet, .prose-finger-retry .sfc-sheet").forEach(function (host, index) {
       var names = host.querySelectorAll(".sfc-step");
       var transition = host.querySelector(".sfc-transition b");
       var condition = host.querySelector("code");
@@ -75,7 +89,7 @@
       snippet.transitions[0].x = center - 18; // Studio transition width is 36.
       var result = window.L5XSFC.renderSFC(snippet);
       if (result.warnings.length || result.overlap) return;
-      host.innerHTML = result.svg;
+      host.innerHTML = scopeSvgIds(result.svg, "note-" + index);
       host.setAttribute("data-renderer", "L5XSFC.renderSFC");
     });
   }

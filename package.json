@@ -10,7 +10,7 @@
     "fetch-news": "node scripts/fetch-geeknews.mjs",
     "build": "node scripts/fetch-geeknews.mjs && astro build",
     "preview": "astro preview --port 4321",
-    "test": "node --test test/vehicle-weekly/*.test.mjs",
+    "test": "node --test test/vehicle-weekly/*.test.mjs test/sfc-embed.test.mjs",
     "vehicle-weekly": "node scripts/vehicle-weekly/generate.mjs"
   },
   "dependencies": {

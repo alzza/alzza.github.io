@@ -113,6 +113,20 @@
           "previous": "State_Lower_Finger1_001",
           "next": "State_raise_finger1_001",
           "failure_step": "State_raise_finger1_001",
+          "raise_exit": {
+            "name": "Tran_100",
+            "condition": "i_finger_1_up AND i_flex_cyl_2_retracted"
+          },
+          "hammer": "State_Hammer_Trial_001",
+          "hammer_exit": {
+            "name": "Tran_098",
+            "condition": "f_hammering_complete"
+          },
+          "flex": "State_Flex_2",
+          "flex_exit": {
+            "name": "Tran_023",
+            "condition": "i_flex_cyl_2_extended"
+          },
           "preset_ms": 2500,
           "parent_completion": [
             {
@@ -137,6 +151,20 @@
           "previous": "State_Lower_Finger_001",
           "next": "State_raise_finger_001",
           "failure_step": "State_raise_finger_001",
+          "raise_exit": {
+            "name": "Tran_104",
+            "condition": "i_finger_2_up AND i_flex_cyl_1_retracted"
+          },
+          "hammer": "State_Hammer_Trial_002",
+          "hammer_exit": {
+            "name": "Tran_105",
+            "condition": "f_hammering_complete"
+          },
+          "flex": "State_Flex_1",
+          "flex_exit": {
+            "name": "Tran_001",
+            "condition": "i_flex_cyl_1_extended"
+          },
           "preset_ms": 2500,
           "parent_completion": [
             {
@@ -317,6 +345,20 @@
           "previous": "State_Lower_Finger1_003",
           "next": "State_raise_finger1_003",
           "failure_step": "State_raise_finger1_003",
+          "raise_exit": {
+            "name": "Tran_154",
+            "condition": "i_finger_1_up AND i_flex_cyl_2_retracted"
+          },
+          "hammer": "State_Hammer_Trial_004",
+          "hammer_exit": {
+            "name": "Tran_156",
+            "condition": "f_hammering_complete"
+          },
+          "flex": "State_Flex_2",
+          "flex_exit": {
+            "name": "Tran_023",
+            "condition": "i_flex_cyl_2_extended"
+          },
           "preset_ms": 2000,
           "parent_completion": [
             {
@@ -341,6 +383,20 @@
           "previous": "State_Lower_Finger_003",
           "next": "State_raise_finger_003",
           "failure_step": "State_raise_finger_003",
+          "raise_exit": {
+            "name": "Tran_157",
+            "condition": "i_finger_2_up AND i_flex_cyl_1_retracted"
+          },
+          "hammer": "State_Hammer_Trial_005",
+          "hammer_exit": {
+            "name": "Tran_159",
+            "condition": "f_hammering_complete"
+          },
+          "flex": "State_Flex_1",
+          "flex_exit": {
+            "name": "Tran_001",
+            "condition": "i_flex_cyl_1_extended"
+          },
           "preset_ms": 2000,
           "parent_completion": [
             {

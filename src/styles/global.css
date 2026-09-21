@@ -664,11 +664,17 @@ button:focus-visible {
 .prose .ld-rung .rung-meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   margin: 0 0 6px;
   color: var(--muted);
   font-size: 13px;
   font-weight: 700;
+}
+.prose .ld-rung .rung-meta-description {
+  flex: 1 1 300px;
+  color: var(--text);
+  font-weight: 400;
 }
 .prose .ld-rung .rung-status {
   display: inline-block;
@@ -1048,6 +1054,159 @@ code {
   width: 100%;
   min-width: 640px;
   height: auto;
+}
+.prose-finger-retry .finger-retry-replay {
+  margin: 1.5rem 0 2rem;
+  padding: 1.1rem;
+  border: 3px solid #111;
+  box-shadow: 5px 5px 0 #111;
+  background: #fff;
+  color: #111827;
+}
+.prose-finger-retry .finger-retry-replay h4,
+.prose-finger-retry .finger-retry-replay h5 {
+  margin: 0 0 0.7rem;
+  color: #111827;
+}
+.prose-finger-retry .finger-retry-replay h4 { font-size: 1.15rem; }
+.prose-finger-retry .finger-retry-replay h5 { margin-top: 1.25rem; font-size: 0.95rem; }
+.prose-finger-retry .fr-warning,
+.prose-finger-retry .fr-return {
+  margin: 0.5rem 0 1rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+.prose-finger-retry .fr-warning {
+  padding: 0.7rem 0.8rem;
+  border-left: 4px solid #a75500;
+  background: #fff4d1;
+}
+.prose-finger-retry .fr-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: end;
+  margin-bottom: 1rem;
+}
+.prose-finger-retry .fr-control {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 7.5rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.prose-finger-retry .fr-controls select,
+.prose-finger-retry .fr-controls button {
+  min-height: 2.55rem;
+  padding: 0.42rem 0.58rem;
+  border: 2px solid #111;
+  border-radius: 0;
+  background: #fff;
+  color: #111827;
+  font: 600 0.84rem var(--font-body);
+}
+.prose-finger-retry .fr-controls button { cursor: pointer; }
+.prose-finger-retry .fr-controls button:hover,
+.prose-finger-retry .fr-controls button:focus-visible {
+  background: #ffd23f;
+}
+.prose-finger-retry .fr-controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.prose-finger-retry .fr-position {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0.6rem 0 1rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.prose-finger-retry .fr-position input { width: 100%; accent-color: #243b7a; }
+.prose-finger-retry .fr-event {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.75rem;
+  border: 2px solid #243b7a;
+  background: #eef3ff;
+  font-size: 0.87rem;
+  overflow-wrap: anywhere;
+}
+.prose-finger-retry .fr-event span { font: 400 0.78rem/1.55 var(--font-mono); }
+.prose-finger-retry .fr-visual {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: start;
+  gap: 0.7rem;
+  margin-top: 0.8rem;
+}
+.prose-finger-retry .fr-sfc {
+  min-width: 0;
+  max-height: 650px;
+  overflow: auto;
+  border: 1px solid #9aa8ca;
+  background: #fff;
+}
+.prose-finger-retry .fr-sfc svg {
+  display: block;
+  width: 100%;
+  min-width: 480px;
+  height: auto;
+}
+.prose-finger-retry .fr-return {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #9aa8ca;
+  background: #f6f8fc;
+  overflow-wrap: anywhere;
+}
+.prose-finger-retry .fr-signals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+.prose-finger-retry .fr-signal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.52rem 0.6rem;
+  border: 1px solid #9aa8ca;
+  background: #fff;
+  font-size: 0.75rem;
+}
+.prose-finger-retry .fr-signal span { overflow-wrap: anywhere; }
+.prose-finger-retry .fr-signal b {
+  flex: none;
+  min-width: 2.3rem;
+  padding: 0.1rem 0.25rem;
+  background: #eceef2;
+  text-align: center;
+}
+.prose-finger-retry .fr-signal b.on { background: #bdf0cf; color: #064d2e; }
+.prose-finger-retry .fr-compare {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+.prose-finger-retry .fr-compare-card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.7rem;
+  border: 2px solid #111;
+  background: #fff;
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+.prose-finger-retry .fr-compare-card span { white-space: pre-line; overflow-wrap: anywhere; }
+.prose-finger-retry .fr-compare-card.selected { background: #fff4d1; }
+@media (max-width: 760px) {
+  .prose-finger-retry .fr-visual { grid-template-columns: 1fr; }
+  .prose-finger-retry .fr-signals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .prose-finger-retry .fr-compare { grid-template-columns: 1fr; }
+  .prose-finger-retry .fr-position { grid-template-columns: 1fr auto; }
+  .prose-finger-retry .fr-position label { grid-column: 1 / -1; }
 }
 @media (max-width: 760px) {
   .prose-finger-retry .sfc-compare-grid { grid-template-columns: 1fr; }

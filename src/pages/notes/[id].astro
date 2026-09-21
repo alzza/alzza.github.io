@@ -48,12 +48,14 @@ const { Content } = await render(note);
     typeof note.body === "string" && (note.body.includes("sfc-snippet") || note.body.includes("sfc-compare-grid")) && (
       <>
         <script is:inline src="https://alzza.github.io/l5x-ld-studio/sfc.js?v=20260920"></script>
-        <script is:inline src="/sfc-embed.js?v=2"></script>
+        <script is:inline src="/sfc-embed.js?v=3"></script>
       </>
     )
   }
 </Base>
 {note.id === "sc1-sm12-finger-retry-onoff" && (
+  <>
+  <script is:inline src="/finger-retry-replay.js?v=2"></script>
   <script>
     document.querySelectorAll(".prose-finger-retry pre").forEach((pre) => {
       const button = document.createElement("button");
@@ -80,4 +82,5 @@ const { Content } = await render(note);
       pre.appendChild(button);
     });
   </script>
+  </>
 )}

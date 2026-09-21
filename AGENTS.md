@@ -68,12 +68,14 @@ L5XLadder.renderRung({ number: "52", text: rll }, 0, viewportWidth, false)
 
 ```html
 <figure class="ld-rung" data-rung="52" data-rll="XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);">
-<div class="rung-meta"><span class="rung-meta-number">Rung 52</span><span class="rung-status ok">정상</span></div>
+<div class="rung-meta"><span class="rung-meta-number">SM#1 BasicControl 원본 Rung 52</span><span class="rung-meta-description">Finger 1이 내려가고 No Copper 입력이 꺼지면 탈취 완료 비트를 켠다.</span><span class="rung-status ok">LD 변환</span></div>
 <img src="/images/notes/.../ld_rung_00.svg" alt="원본 Finger 완료 LD" width="920" height="126">
 </figure>
 ```
 
 `data-rll`은 그 그림의 RLL이다. 세미콜론을 포함한다. `data-rung`은 Studio 렁 번호이며 SVG 속 텍스트가 아니다. 라이브에서는 `img`를 숨기고 `.ld-rung-live`에 SVG를 넣는다.
+
+`.rung-meta`는 아래 LD의 설명 자리다. `.rung-meta-number`에는 장비·Program/Routine·원본/변경/추가 구분·Rung 번호를 적는다. `.rung-meta-description`에는 그 렁이 어떤 조건에서 무엇을 실행하거나 어떤 비트를 바꾸는지 한 문장으로 짧게 적는다. `LD 변환`, `정상`처럼 그림의 형식이나 상태만 적고 기능 설명을 생략하지 않는다. 원본과 변경 후 LD가 나란히 있으면 각각의 실제 동작을 따로 설명한다. 설명은 `data-rll`과 일치해야 하며, 확인하지 않은 결과나 현장 동작을 단정하지 않는다. `.rung-status`는 변환 상태를 표시할 때만 별도로 쓴다.
 
 폭 공식 (`renderRung`):
 
@@ -103,7 +105,7 @@ Logix 규칙. 렌더러가 이미 하므로 바꾸지 않는다.
 - 좌우 세로 레일, 가로 전선, 접점/코일/블록
 - 병렬 `[A,B]`는 첫 분기가 본선이고 나머지는 아래로 내려간다. 위아래 대칭으로 두지 않는다
 - OTE/OTL/OTU는 오른쪽 레일 쪽에 붙는다
-- SVG 안에 렁 번호를 넣지 않는다. 번호와 「정상」은 HTML `.rung-meta`에 둔다
+- SVG 안에 렁 번호를 넣지 않는다. 번호·기능 설명·변환 상태는 HTML `.rung-meta`에 둔다
 
 금지. 이미 실패해서 버린 방법이다.
 
