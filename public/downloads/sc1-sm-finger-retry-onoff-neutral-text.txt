@@ -1,3 +1,9 @@
+ARCHIVED VERSION - Do not combine these old instructions with the 2026-09-21 v2.
+Current guide: https://alzza.github.io/notes/sc1-sm12-finger-retry-onoff/
+Current SM1: https://alzza.github.io/downloads/csm-finger-retry-v2/sm1_changes.txt
+Current SM2: https://alzza.github.io/downloads/csm-finger-retry-v2/sm2_changes.txt
+The old text below is retained only for comparison and rollback investigation.
+
 SC1 SM#1 / SM#2 Finger No Copper Retry-only ON/OFF Neutral Text
 This version has no 60-second timer and no TON instruction.
 Verified source: Cathode1.L5X (ExportDate 2026-06-20). Compare with site ACD before import.

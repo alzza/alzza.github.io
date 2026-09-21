@@ -59,8 +59,8 @@ const { Content } = await render(note);
       const button = document.createElement("button");
       button.type = "button";
       button.className = "plc-copy";
-      button.textContent = "RLL 복사";
-      button.setAttribute("aria-label", "이 RLL 코드 복사");
+      button.textContent = "코드 복사";
+      button.setAttribute("aria-label", "이 코드 복사");
       button.addEventListener("click", async () => {
         const code = pre.querySelector("code");
         if (!code) return;
@@ -75,7 +75,7 @@ const { Content } = await render(note);
           selection?.addRange(range);
           button.textContent = "선택됨 · 복사키";
         }
-        setTimeout(() => { button.textContent = "RLL 복사"; }, 1800);
+        setTimeout(() => { button.textContent = "코드 복사"; }, 1800);
       });
       pre.appendChild(button);
     });
