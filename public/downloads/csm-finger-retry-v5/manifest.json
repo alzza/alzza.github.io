@@ -1,0 +1,421 @@
+{
+  "revision": "2026-09-21 Rev.5",
+  "source": "Cathode1_260915.L5X",
+  "source_sha256": "c09af47a9d79884231d944d78b94468480f8ff8e76e778d5e5f2b1d974561a7f",
+  "controller": "Cathode1",
+  "export_date": "Tue Sep 15 05:02:19 2026",
+  "machines": [
+    {
+      "sm": 1,
+      "program": "Stripping_Machine_1",
+      "routine": "SM1_FingerRetryBypass",
+      "tags": {
+        "on": "ui_i_sm1_finger_retry_bypass_on",
+        "off": "ui_i_sm1_finger_retry_bypass_off",
+        "enabled": "ui_o_sm1_finger_retry_bypass_enabled",
+        "indicator": "ui_o_sm1_finger_retry_bypass_active",
+        "enable": "f_sm1_finger_retry_bypass_enable",
+        "active": "f_sm1_finger_retry_bypass_active",
+        "on_ons": "sm1_finger_retry_bypass_on_ons",
+        "off_ons": "sm1_finger_retry_bypass_off_ons",
+        "done": "f_sm1_finger_retry_bypass_done",
+        "pending": "f_sm1_finger_retry_failed_pending",
+        "effective1": "f_sm1_finger1_no_copper_effective",
+        "effective2": "f_sm1_finger2_no_copper_effective"
+      },
+      "rungs": [
+        {
+          "number": 0,
+          "text": "XIC(ui_i_sm1_finger_retry_bypass_on)XIO(ui_i_sm1_finger_retry_bypass_off)ONS(sm1_finger_retry_bypass_on_ons)OTL(f_sm1_finger_retry_bypass_enable);",
+          "description": "ON 요청을 기억한다. OFF가 눌려 있으면 ON 요청을 받지 않는다."
+        },
+        {
+          "number": 1,
+          "text": "XIC(ui_i_sm1_finger_retry_bypass_off)ONS(sm1_finger_retry_bypass_off_ons)OTU(f_sm1_finger_retry_bypass_enable);",
+          "description": "OFF 요청을 기억한다. 같은 스캔의 ON 요청보다 OFF가 우선한다."
+        },
+        {
+          "number": 2,
+          "text": "XIC(S:FS)[OTU(f_sm1_finger_retry_bypass_enable),OTU(f_sm1_finger_retry_bypass_active),OTU(f_sm1_finger_retry_bypass_done),OTU(f_sm1_finger_retry_failed_pending)];",
+          "description": "첫 스캔에 기능 선택과 이전 내부 기억을 초기화한다."
+        },
+        {
+          "number": 3,
+          "text": "XIO(f_strip_failed)XIO(f_sm1_finger_retry_failed_pending)XIO(f_sm1_finger_retry_bypass_active)OTU(f_sm1_finger_retry_bypass_done);",
+          "description": "실패 신호와 기록이 모두 사라지고 우회가 끝나면 다음 실패를 받을 준비를 한다."
+        },
+        {
+          "number": 4,
+          "text": "[XIC(f_copper_in_gate),XIC(f_reject_cathode),XIO(z_mode_automatic)][XIC(f_sm1_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_done);",
+          "description": "Gate 진입, 리젝트, 자동 모드 이탈로 끝난 실패 건을 기억한다."
+        },
+        {
+          "number": 5,
+          "text": "XIC(f_sm1_finger_retry_bypass_enable)XIC(z_mode_automatic)XIO(f_copper_in_gate)XIO(f_reject_cathode)XIO(f_sm1_finger_retry_bypass_done)[XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_active);",
+          "description": "기능 ON인 자동 운전에서 현재 실패 또는 기록된 실패가 있으면 우회를 시작한다."
+        },
+        {
+          "number": 6,
+          "text": "[XIO(f_sm1_finger_retry_bypass_enable),XIO(z_mode_automatic),XIC(f_copper_in_gate),XIC(f_reject_cathode)]OTU(f_sm1_finger_retry_bypass_active);",
+          "description": "기능 OFF, 자동 모드 이탈, Gate 진입, 리젝트일 때 실제 우회를 끝낸다."
+        },
+        {
+          "number": 7,
+          "text": "XIC(i_finger_1_no_copper)XIO(f_sm1_finger_retry_bypass_active)OTE(f_sm1_finger1_no_copper_effective);",
+          "description": "Finger 1의 내부 No Copper 판단값을 만든다. 우회 중에는 0이다."
+        },
+        {
+          "number": 8,
+          "text": "XIC(i_finger_2_no_copper)XIO(f_sm1_finger_retry_bypass_active)OTE(f_sm1_finger2_no_copper_effective);",
+          "description": "Finger 2의 내부 No Copper 판단값을 만든다. 우회 중에는 0이다."
+        },
+        {
+          "number": 9,
+          "text": "XIC(f_sm1_finger_retry_bypass_enable)OTE(ui_o_sm1_finger_retry_bypass_enabled);",
+          "description": "HMI에 기능 ON 선택 상태를 전달한다."
+        },
+        {
+          "number": 10,
+          "text": "XIC(f_sm1_finger_retry_bypass_active)OTE(ui_o_sm1_finger_retry_bypass_active);",
+          "description": "HMI에 실제 우회 상태를 전달한다."
+        }
+      ],
+      "main": {
+        "0": "[XIC(z_mode_automatic) ,XIC(single_cycle) ][ONS(reset_ons) SFR(DoAutomatic,0) ,[JSR(DoAutomatic,0) ,XIO(single_cycle) JSR(prod_tracking,0) ] ];",
+        "4": "JSR(Background,0);",
+        "5": "JSR(Permits,0);",
+        "6": "JSR(BasicControl,0);",
+        "7": "[XIO(z_mode_manual) ,[XIC(z_mode_manual) XIC(single_cycle) ,XIC(f_auto_mode_manual_retry) ] ]JSR(SecondarySeparation,0);"
+      },
+      "call": "JSR(SM1_FingerRetryBypass,0);",
+      "capture": "XIC(f_strip_failed)OTE(f_sm1_finger_retry_failed_pending);",
+      "complete": [
+        {
+          "finger": 1,
+          "number": 52,
+          "before": "XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);",
+          "after": "XIC(i_finger_1_down)XIO(f_sm1_finger1_no_copper_effective)OTE(f_finger1_separated);"
+        },
+        {
+          "finger": 2,
+          "number": 53,
+          "before": "XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);",
+          "after": "XIC(i_finger_2_down)XIO(f_sm1_finger2_no_copper_effective)OTE(f_finger2_separated);"
+        }
+      ],
+      "sfc": [
+        {
+          "finger": 1,
+          "routine": "Finger1Separate",
+          "transition": "Tran_099",
+          "before": "(i_finger_1_down and i_finger_1_no_copper) or State_Lower_Finger1_001.DN",
+          "after": "(i_finger_1_down and f_sm1_finger1_no_copper_effective) or State_Lower_Finger1_001.DN",
+          "previous": "State_Lower_Finger1_001",
+          "next": "State_raise_finger1_001",
+          "failure_step": "State_raise_finger1_001",
+          "preset_ms": 2500,
+          "parent_completion": [
+            {
+              "name": "Tran_073",
+              "condition": "f_finger1_separated"
+            },
+            {
+              "name": "Tran_094",
+              "condition": "f_finger1_separated "
+            }
+          ],
+          "transition_id": 15,
+          "transition_y": 260,
+          "next_y": 340
+        },
+        {
+          "finger": 2,
+          "routine": "Finger2Separate",
+          "transition": "Tran_103",
+          "before": "(i_finger_2_down and i_finger_2_no_copper) or State_Lower_Finger_001.DN",
+          "after": "(i_finger_2_down and f_sm1_finger2_no_copper_effective) or State_Lower_Finger_001.DN",
+          "previous": "State_Lower_Finger_001",
+          "next": "State_raise_finger_001",
+          "failure_step": "State_raise_finger_001",
+          "preset_ms": 2500,
+          "parent_completion": [
+            {
+              "name": "Tran_083",
+              "condition": "f_finger2_separated"
+            },
+            {
+              "name": "Tran_097",
+              "condition": "f_finger2_separated "
+            }
+          ],
+          "transition_id": 15,
+          "transition_y": 280,
+          "next_y": 400
+        }
+      ],
+      "sensor_consumers": [
+        {
+          "routine": "BasicControl",
+          "text": "XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);"
+        },
+        {
+          "routine": "BasicControl",
+          "text": "XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);"
+        },
+        {
+          "routine": "Finger1Separate",
+          "text": "i_finger_1_no_copper) or State_Lower_Finger1_001.DN"
+        },
+        {
+          "routine": "Finger2Separate",
+          "text": "i_finger_2_no_copper) or State_Lower_Finger_001.DN"
+        }
+      ],
+      "failure_writers": [
+        {
+          "routine": "DoAutomatic",
+          "text": "f_strip_failed :=0;"
+        },
+        {
+          "routine": "DoAutomatic",
+          "text": "f_strip_failed :=0;"
+        },
+        {
+          "routine": "DoSeparation",
+          "text": "f_strip_failed := 1;"
+        },
+        {
+          "routine": "Finger1Separate",
+          "text": "f_strip_failed :=1;"
+        },
+        {
+          "routine": "Finger2Separate",
+          "text": "f_strip_failed :=1;"
+        },
+        {
+          "routine": "Permits",
+          "text": "[XIC(i_copper_not_present) ,XIC(z_mode_off) ][OTU(f_reject_cathode) ,OTU(f_strip_failed) ,[OTU(z_permit_sm1_r2_auto_reject_unload) ,OTU(z_permit_sm1_r2_auto_reject_load) ] ];"
+        },
+        {
+          "routine": "Permits",
+          "text": "[XIC(tmr_copper_skewed_in_gate.DN) ,XIC(sep_stop) ]ONS(skewed_in_gate_ons)OTL(f_strip_failed);"
+        }
+      ],
+      "variant2": [
+        "XIC(f_copper_in_gate)[XIC(f_sm1_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_done);",
+        "XIC(f_reject_cathode)[XIC(f_sm1_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_done);",
+        "XIO(z_mode_automatic)[XIC(f_sm1_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_done);"
+      ],
+      "gate_rung": "XIO(i_copper_not_in_gate_right)XIO(i_copper_not_in_gate_left)OTE(f_copper_in_gate);",
+      "permits_clear": "[XIC(i_copper_not_present) ,XIC(z_mode_off) ][OTU(f_reject_cathode) ,OTU(f_strip_failed) ,[OTU(z_permit_sm1_r2_auto_reject_unload) ,OTU(z_permit_sm1_r2_auto_reject_load) ] ];"
+    },
+    {
+      "sm": 2,
+      "program": "Stripping_Machine_2",
+      "routine": "SM2_FingerRetryBypass",
+      "tags": {
+        "on": "ui_i_sm2_finger_retry_bypass_on",
+        "off": "ui_i_sm2_finger_retry_bypass_off",
+        "enabled": "ui_o_sm2_finger_retry_bypass_enabled",
+        "indicator": "ui_o_sm2_finger_retry_bypass_active",
+        "enable": "f_sm2_finger_retry_bypass_enable",
+        "active": "f_sm2_finger_retry_bypass_active",
+        "on_ons": "sm2_finger_retry_bypass_on_ons",
+        "off_ons": "sm2_finger_retry_bypass_off_ons",
+        "done": "f_sm2_finger_retry_bypass_done",
+        "pending": "f_sm2_finger_retry_failed_pending",
+        "effective1": "f_sm2_finger1_no_copper_effective",
+        "effective2": "f_sm2_finger2_no_copper_effective"
+      },
+      "rungs": [
+        {
+          "number": 0,
+          "text": "XIC(ui_i_sm2_finger_retry_bypass_on)XIO(ui_i_sm2_finger_retry_bypass_off)ONS(sm2_finger_retry_bypass_on_ons)OTL(f_sm2_finger_retry_bypass_enable);",
+          "description": "ON 요청을 기억한다. OFF가 눌려 있으면 ON 요청을 받지 않는다."
+        },
+        {
+          "number": 1,
+          "text": "XIC(ui_i_sm2_finger_retry_bypass_off)ONS(sm2_finger_retry_bypass_off_ons)OTU(f_sm2_finger_retry_bypass_enable);",
+          "description": "OFF 요청을 기억한다. 같은 스캔의 ON 요청보다 OFF가 우선한다."
+        },
+        {
+          "number": 2,
+          "text": "XIC(S:FS)[OTU(f_sm2_finger_retry_bypass_enable),OTU(f_sm2_finger_retry_bypass_active),OTU(f_sm2_finger_retry_bypass_done),OTU(f_sm2_finger_retry_failed_pending)];",
+          "description": "첫 스캔에 기능 선택과 이전 내부 기억을 초기화한다."
+        },
+        {
+          "number": 3,
+          "text": "XIO(f_strip_failed)XIO(f_sm2_finger_retry_failed_pending)XIO(f_sm2_finger_retry_bypass_active)OTU(f_sm2_finger_retry_bypass_done);",
+          "description": "실패 신호와 기록이 모두 사라지고 우회가 끝나면 다음 실패를 받을 준비를 한다."
+        },
+        {
+          "number": 4,
+          "text": "[XIC(f_copper_in_gate),XIC(f_reject_cathode),XIO(z_mode_automatic)][XIC(f_sm2_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm2_finger_retry_failed_pending)]OTL(f_sm2_finger_retry_bypass_done);",
+          "description": "Gate 진입, 리젝트, 자동 모드 이탈로 끝난 실패 건을 기억한다."
+        },
+        {
+          "number": 5,
+          "text": "XIC(f_sm2_finger_retry_bypass_enable)XIC(z_mode_automatic)XIO(f_copper_in_gate)XIO(f_reject_cathode)XIO(f_sm2_finger_retry_bypass_done)[XIC(f_strip_failed),XIC(f_sm2_finger_retry_failed_pending)]OTL(f_sm2_finger_retry_bypass_active);",
+          "description": "기능 ON인 자동 운전에서 현재 실패 또는 기록된 실패가 있으면 우회를 시작한다."
+        },
+        {
+          "number": 6,
+          "text": "[XIO(f_sm2_finger_retry_bypass_enable),XIO(z_mode_automatic),XIC(f_copper_in_gate),XIC(f_reject_cathode)]OTU(f_sm2_finger_retry_bypass_active);",
+          "description": "기능 OFF, 자동 모드 이탈, Gate 진입, 리젝트일 때 실제 우회를 끝낸다."
+        },
+        {
+          "number": 7,
+          "text": "XIC(i_finger_1_no_copper)XIO(f_sm2_finger_retry_bypass_active)OTE(f_sm2_finger1_no_copper_effective);",
+          "description": "Finger 1의 내부 No Copper 판단값을 만든다. 우회 중에는 0이다."
+        },
+        {
+          "number": 8,
+          "text": "XIC(i_finger_2_no_copper)XIO(f_sm2_finger_retry_bypass_active)OTE(f_sm2_finger2_no_copper_effective);",
+          "description": "Finger 2의 내부 No Copper 판단값을 만든다. 우회 중에는 0이다."
+        },
+        {
+          "number": 9,
+          "text": "XIC(f_sm2_finger_retry_bypass_enable)OTE(ui_o_sm2_finger_retry_bypass_enabled);",
+          "description": "HMI에 기능 ON 선택 상태를 전달한다."
+        },
+        {
+          "number": 10,
+          "text": "XIC(f_sm2_finger_retry_bypass_active)OTE(ui_o_sm2_finger_retry_bypass_active);",
+          "description": "HMI에 실제 우회 상태를 전달한다."
+        }
+      ],
+      "main": {
+        "0": "[XIC(z_mode_automatic) ,XIC(single_cycle) ]XIO(ui_i_test)[ONS(reset_ons) SFR(DoAutomatic,0) ,[JSR(DoAutomatic,0) ,XIO(single_cycle) JSR(prod_tracking,0) ] ];",
+        "4": "JSR(Background,0);",
+        "5": "JSR(Permits,0);",
+        "6": "JSR(BasicControl,0);",
+        "7": "[XIO(z_mode_manual) ,[XIC(z_mode_manual) XIC(single_cycle) ,XIC(f_auto_mode_manual_retry) ] ]JSR(SecondarySeparation,0);"
+      },
+      "call": "JSR(SM2_FingerRetryBypass,0);",
+      "capture": "XIC(f_strip_failed)OTE(f_sm2_finger_retry_failed_pending);",
+      "complete": [
+        {
+          "finger": 1,
+          "number": 51,
+          "before": "XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);",
+          "after": "XIC(i_finger_1_down)XIO(f_sm2_finger1_no_copper_effective)OTE(f_finger1_separated);"
+        },
+        {
+          "finger": 2,
+          "number": 52,
+          "before": "XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);",
+          "after": "XIC(i_finger_2_down)XIO(f_sm2_finger2_no_copper_effective)OTE(f_finger2_separated);"
+        }
+      ],
+      "sfc": [
+        {
+          "finger": 1,
+          "routine": "Finger1Separate",
+          "transition": "Tran_155",
+          "before": "(i_finger_1_down and i_finger_1_no_copper) or State_Lower_Finger1_003.DN",
+          "after": "(i_finger_1_down and f_sm2_finger1_no_copper_effective) or State_Lower_Finger1_003.DN",
+          "previous": "State_Lower_Finger1_003",
+          "next": "State_raise_finger1_003",
+          "failure_step": "State_raise_finger1_003",
+          "preset_ms": 2000,
+          "parent_completion": [
+            {
+              "name": "Tran_142",
+              "condition": "f_finger1_separated "
+            },
+            {
+              "name": "Tran_151",
+              "condition": "f_finger1_separated"
+            }
+          ],
+          "transition_id": 16,
+          "transition_y": 260,
+          "next_y": 400
+        },
+        {
+          "finger": 2,
+          "routine": "Finger2Separate",
+          "transition": "Tran_160",
+          "before": "(i_finger_2_down and i_finger_2_no_copper) or State_Lower_Finger_003.DN",
+          "after": "(i_finger_2_down and f_sm2_finger2_no_copper_effective) or State_Lower_Finger_003.DN",
+          "previous": "State_Lower_Finger_003",
+          "next": "State_raise_finger_003",
+          "failure_step": "State_raise_finger_003",
+          "preset_ms": 2000,
+          "parent_completion": [
+            {
+              "name": "Tran_124",
+              "condition": "f_finger2_separated "
+            },
+            {
+              "name": "Tran_129",
+              "condition": "f_finger2_separated"
+            }
+          ],
+          "transition_id": 17,
+          "transition_y": 280,
+          "next_y": 400
+        }
+      ],
+      "sensor_consumers": [
+        {
+          "routine": "BasicControl",
+          "text": "XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);"
+        },
+        {
+          "routine": "BasicControl",
+          "text": "XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);"
+        },
+        {
+          "routine": "Finger1Separate",
+          "text": "i_finger_1_no_copper) or State_Lower_Finger1_003.DN"
+        },
+        {
+          "routine": "Finger2Separate",
+          "text": "i_finger_2_no_copper) or State_Lower_Finger_003.DN"
+        }
+      ],
+      "failure_writers": [
+        {
+          "routine": "DoAutomatic",
+          "text": "f_strip_failed := 0;"
+        },
+        {
+          "routine": "DoAutomatic",
+          "text": "f_strip_failed :=0;"
+        },
+        {
+          "routine": "DoAutomatic",
+          "text": "f_strip_failed :=0;"
+        },
+        {
+          "routine": "DoSeparation",
+          "text": "f_strip_failed := 1;"
+        },
+        {
+          "routine": "Finger1Separate",
+          "text": "f_strip_failed :=1;"
+        },
+        {
+          "routine": "Finger2Separate",
+          "text": "f_strip_failed :=1;"
+        },
+        {
+          "routine": "Permits",
+          "text": "[XIC(i_copper_not_present) ,XIC(z_mode_off) ][OTU(f_reject_cathode) ,OTU(f_strip_failed) ,OTU(z_permit_sm2_r2_auto_reject_unload) ,OTU(z_permit_sm2_r2_auto_reject_load) ];"
+        },
+        {
+          "routine": "Permits",
+          "text": "[XIC(tmr_copper_skewed_in_gate.DN) ,XIC(sep_stop) ]ONS(copper_skewed_in_gate_ons)OTL(f_strip_failed);"
+        }
+      ],
+      "variant2": [
+        "XIC(f_copper_in_gate)[XIC(f_sm2_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm2_finger_retry_failed_pending)]OTL(f_sm2_finger_retry_bypass_done);",
+        "XIC(f_reject_cathode)[XIC(f_sm2_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm2_finger_retry_failed_pending)]OTL(f_sm2_finger_retry_bypass_done);",
+        "XIO(z_mode_automatic)[XIC(f_sm2_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm2_finger_retry_failed_pending)]OTL(f_sm2_finger_retry_bypass_done);"
+      ],
+      "gate_rung": "XIO(i_copper_not_in_gate_left)XIO(i_copper_not_in_gate_right)OTE(f_copper_in_gate);",
+      "permits_clear": "[XIC(i_copper_not_present) ,XIC(z_mode_off) ][OTU(f_reject_cathode) ,OTU(f_strip_failed) ,OTU(z_permit_sm2_r2_auto_reject_unload) ,OTU(z_permit_sm2_r2_auto_reject_load) ];"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+XIC(f_copper_in_gate)[XIC(f_sm2_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm2_finger_retry_failed_pending)]OTL(f_sm2_finger_retry_bypass_done);
+XIC(f_reject_cathode)[XIC(f_sm2_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm2_finger_retry_failed_pending)]OTL(f_sm2_finger_retry_bypass_done);
+XIO(z_mode_automatic)[XIC(f_sm2_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm2_finger_retry_failed_pending)]OTL(f_sm2_finger_retry_bypass_done);

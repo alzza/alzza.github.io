@@ -56,10 +56,24 @@
       if (!Number.isInteger(position.id) || position.id === 7 || position.id === 10 ||
           !Number.isFinite(position.transitionY) || !Number.isFinite(position.nextY) ||
           position.transitionY <= 80 || position.nextY <= position.transitionY) return;
-      var result = window.L5XSFC.renderSFC(chart(
+      var snippet = chart(
         names[0].textContent.trim(), name, condition.textContent.trim(),
         names[1].textContent.trim(), position
-      ));
+      );
+      // The Studio renderer measures step boxes from their full names. Align
+      // their measured centers with the transition center before final paint.
+      var measured = window.L5XSFC.renderSFC(snippet);
+      if (measured.warnings.length || measured.overlap) return;
+      var probe = new DOMParser().parseFromString(measured.svg, "image/svg+xml");
+      var boxes = probe.querySelectorAll("rect.sfc-box");
+      if (boxes.length !== 2) return;
+      var widths = Array.from(boxes, function (box) { return Number(box.getAttribute("width")); });
+      if (widths.some(function (width) { return !Number.isFinite(width) || width <= 0; })) return;
+      var center = Math.max(widths[0], widths[1]) / 2 + 26;
+      snippet.steps[0].x = center - widths[0] / 2;
+      snippet.steps[1].x = center - widths[1] / 2;
+      snippet.transitions[0].x = center - 18; // Studio transition width is 36.
+      var result = window.L5XSFC.renderSFC(snippet);
       if (result.warnings.length || result.overlap) return;
       host.innerHTML = result.svg;
       host.setAttribute("data-renderer", "L5XSFC.renderSFC");

@@ -1,0 +1,53 @@
+Program: Stripping_Machine_1
+
+NEW ROUTINE: SM1_FingerRetryBypass
+
+XIC(ui_i_sm1_finger_retry_bypass_on)XIO(ui_i_sm1_finger_retry_bypass_off)ONS(sm1_finger_retry_bypass_on_ons)OTL(f_sm1_finger_retry_bypass_enable);
+XIC(ui_i_sm1_finger_retry_bypass_off)ONS(sm1_finger_retry_bypass_off_ons)OTU(f_sm1_finger_retry_bypass_enable);
+XIC(S:FS)[OTU(f_sm1_finger_retry_bypass_enable),OTU(f_sm1_finger_retry_bypass_active),OTU(f_sm1_finger_retry_bypass_done),OTU(f_sm1_finger_retry_failed_pending)];
+XIO(f_strip_failed)XIO(f_sm1_finger_retry_failed_pending)XIO(f_sm1_finger_retry_bypass_active)OTU(f_sm1_finger_retry_bypass_done);
+[XIC(f_copper_in_gate),XIC(f_reject_cathode),XIO(z_mode_automatic)][XIC(f_sm1_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_done);
+XIC(f_sm1_finger_retry_bypass_enable)XIC(z_mode_automatic)XIO(f_copper_in_gate)XIO(f_reject_cathode)XIO(f_sm1_finger_retry_bypass_done)[XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_active);
+[XIO(f_sm1_finger_retry_bypass_enable),XIO(z_mode_automatic),XIC(f_copper_in_gate),XIC(f_reject_cathode)]OTU(f_sm1_finger_retry_bypass_active);
+XIC(i_finger_1_no_copper)XIO(f_sm1_finger_retry_bypass_active)OTE(f_sm1_finger1_no_copper_effective);
+XIC(i_finger_2_no_copper)XIO(f_sm1_finger_retry_bypass_active)OTE(f_sm1_finger2_no_copper_effective);
+XIC(f_sm1_finger_retry_bypass_enable)OTE(ui_o_sm1_finger_retry_bypass_enabled);
+XIC(f_sm1_finger_retry_bypass_active)OTE(ui_o_sm1_finger_retry_bypass_active);
+
+VARIANT 2: replace only completion Rung 4 with these three Rungs
+
+XIC(f_copper_in_gate)[XIC(f_sm1_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_done);
+XIC(f_reject_cathode)[XIC(f_sm1_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_done);
+XIO(z_mode_automatic)[XIC(f_sm1_finger_retry_bypass_active),XIC(f_strip_failed),XIC(f_sm1_finger_retry_failed_pending)]OTL(f_sm1_finger_retry_bypass_done);
+
+MainRoutine: insert before ORIGINAL Rung 0
+
+JSR(SM1_FingerRetryBypass,0);
+
+MainRoutine: insert after ORIGINAL Rung 4 JSR(Background,0), before ORIGINAL Rung 5 JSR(Permits,0)
+
+XIC(f_strip_failed)OTE(f_sm1_finger_retry_failed_pending);
+
+BasicControl ORIGINAL Rung 52
+
+BEFORE: XIC(i_finger_1_down)XIO(i_finger_1_no_copper)OTE(f_finger1_separated);
+
+AFTER: XIC(i_finger_1_down)XIO(f_sm1_finger1_no_copper_effective)OTE(f_finger1_separated);
+
+BasicControl ORIGINAL Rung 53
+
+BEFORE: XIC(i_finger_2_down)XIO(i_finger_2_no_copper)OTE(f_finger2_separated);
+
+AFTER: XIC(i_finger_2_down)XIO(f_sm1_finger2_no_copper_effective)OTE(f_finger2_separated);
+
+Finger1Separate / Tran_099
+
+BEFORE: (i_finger_1_down and i_finger_1_no_copper) or State_Lower_Finger1_001.DN
+
+AFTER: (i_finger_1_down and f_sm1_finger1_no_copper_effective) or State_Lower_Finger1_001.DN
+
+Finger2Separate / Tran_103
+
+BEFORE: (i_finger_2_down and i_finger_2_no_copper) or State_Lower_Finger_001.DN
+
+AFTER: (i_finger_2_down and f_sm1_finger2_no_copper_effective) or State_Lower_Finger_001.DN

@@ -1,0 +1,208 @@
+{
+  "revision": "2026-09-21 Rev.5",
+  "source_sha256": "c09af47a9d79884231d944d78b94468480f8ff8e76e778d5e5f2b1d974561a7f",
+  "renderer_url": "https://alzza.github.io/l5x-ld-studio/app.js?v=20260920",
+  "renderer_sha256": "b26221f0de8e5839c8023f4dd880d41dcf4c52fbbca07f767aaafc7de22438ac",
+  "limitations": [
+    "Bounded boolean and Main scan model; not Studio 5000 Verify or full SFC/plant emulation.",
+    "Installed field L5X not supplied.",
+    "No online PLC/HMI test performed."
+  ],
+  "results": {
+    "tests": 47,
+    "passed": 47,
+    "ld_figures": 36,
+    "sfc_snippets": 8,
+    "rll_parser_warnings": 0
+  },
+  "tests": [
+    {
+      "name": "SM1: Neutral Text has terminated, conditioned output Rungs",
+      "passed": true
+    },
+    {
+      "name": "SM1: unique local tag names and Studio identifier lengths",
+      "passed": true
+    },
+    {
+      "name": "SM1: variant 2 split completion Rungs equal variant 1",
+      "passed": true
+    },
+    {
+      "name": "SM1: OFF original equivalence: 64 down/no-copper/DN combinations",
+      "passed": true
+    },
+    {
+      "name": "SM1: ON before failure preserves first-operation predicates",
+      "passed": true
+    },
+    {
+      "name": "SM1: failure alone starts bypass without Retry Step or manual-retry flag",
+      "passed": true
+    },
+    {
+      "name": "SM1: ON selected during an existing failure",
+      "passed": true
+    },
+    {
+      "name": "SM1: latched active survives premature failure clear",
+      "passed": true
+    },
+    {
+      "name": "SM1: capture before original Permits prevents lost failure",
+      "passed": true
+    },
+    {
+      "name": "SM1: Gate ends only active; retained failure does not restart",
+      "passed": true
+    },
+    {
+      "name": "SM1: Gate and failure together never start bypass",
+      "passed": true
+    },
+    {
+      "name": "SM1: both gate sensors are required; actual Drop is not completion",
+      "passed": true
+    },
+    {
+      "name": "SM1: OFF/ON cannot reopen a Gate-completed retained failure",
+      "passed": true
+    },
+    {
+      "name": "SM1: OFF restores original reads and ON may resume unfinished failure",
+      "passed": true
+    },
+    {
+      "name": "SM1: simultaneous buttons and held OFF have OFF priority",
+      "passed": true
+    },
+    {
+      "name": "SM1: f_reject_cathode cancels and blocks same failure restart",
+      "passed": true
+    },
+    {
+      "name": "SM1: mode_exit cancels and blocks same failure restart",
+      "passed": true
+    },
+    {
+      "name": "SM1: Run first scan clears retained selection and episode",
+      "passed": true
+    },
+    {
+      "name": "SM1: down protection and common effective sensor for all combinations",
+      "passed": true
+    },
+    {
+      "name": "SM1: upper completion after down, with original Main scan ordering",
+      "passed": true
+    },
+    {
+      "name": "SM1: original timeout path remains; does not synthesize down completion",
+      "passed": true
+    },
+    {
+      "name": "SM1: no raw input writes and sensor snapshot stays consistent within scan",
+      "passed": true
+    },
+    {
+      "name": "SM1: copy-ready TXT matches executable manifest exactly",
+      "passed": true
+    },
+    {
+      "name": "SM2: Neutral Text has terminated, conditioned output Rungs",
+      "passed": true
+    },
+    {
+      "name": "SM2: unique local tag names and Studio identifier lengths",
+      "passed": true
+    },
+    {
+      "name": "SM2: variant 2 split completion Rungs equal variant 1",
+      "passed": true
+    },
+    {
+      "name": "SM2: OFF original equivalence: 64 down/no-copper/DN combinations",
+      "passed": true
+    },
+    {
+      "name": "SM2: ON before failure preserves first-operation predicates",
+      "passed": true
+    },
+    {
+      "name": "SM2: failure alone starts bypass without Retry Step or manual-retry flag",
+      "passed": true
+    },
+    {
+      "name": "SM2: ON selected during an existing failure",
+      "passed": true
+    },
+    {
+      "name": "SM2: latched active survives premature failure clear",
+      "passed": true
+    },
+    {
+      "name": "SM2: capture before original Permits prevents lost failure",
+      "passed": true
+    },
+    {
+      "name": "SM2: Gate ends only active; retained failure does not restart",
+      "passed": true
+    },
+    {
+      "name": "SM2: Gate and failure together never start bypass",
+      "passed": true
+    },
+    {
+      "name": "SM2: both gate sensors are required; actual Drop is not completion",
+      "passed": true
+    },
+    {
+      "name": "SM2: OFF/ON cannot reopen a Gate-completed retained failure",
+      "passed": true
+    },
+    {
+      "name": "SM2: OFF restores original reads and ON may resume unfinished failure",
+      "passed": true
+    },
+    {
+      "name": "SM2: simultaneous buttons and held OFF have OFF priority",
+      "passed": true
+    },
+    {
+      "name": "SM2: f_reject_cathode cancels and blocks same failure restart",
+      "passed": true
+    },
+    {
+      "name": "SM2: mode_exit cancels and blocks same failure restart",
+      "passed": true
+    },
+    {
+      "name": "SM2: Run first scan clears retained selection and episode",
+      "passed": true
+    },
+    {
+      "name": "SM2: down protection and common effective sensor for all combinations",
+      "passed": true
+    },
+    {
+      "name": "SM2: upper completion after down, with original Main scan ordering",
+      "passed": true
+    },
+    {
+      "name": "SM2: original timeout path remains; does not synthesize down completion",
+      "passed": true
+    },
+    {
+      "name": "SM2: no raw input writes and sensor snapshot stays consistent within scan",
+      "passed": true
+    },
+    {
+      "name": "SM2: copy-ready TXT matches executable manifest exactly",
+      "passed": true
+    },
+    {
+      "name": "SM1/SM2 local state and requests are independent",
+      "passed": true
+    }
+  ]
+}
