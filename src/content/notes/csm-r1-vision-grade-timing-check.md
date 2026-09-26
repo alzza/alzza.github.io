@@ -1,179 +1,160 @@
 ---
-title: CSM Robot #1 Vision 등급 전달 타이밍 점검서
+title: CSM#1 VISION 등급소실 원인분석
 date: "2026-09-26"
-excerpt: Vision 판정부터 Robot #1, SM#1·SM#2까지의 등급 전달 흐름을 정리하고, 타이머를 한 번에 하나씩 바꾸며 원인을 분리하는 현장 점검 절차다.
+excerpt: HMI의 등급 없음 표시를 기준으로 Vision 등급 전달, Robot1 등급 대기, SM#1·SM#2 Drop Tracking을 8태그 Trend 묶음으로 나누어 점검하는 절차다.
 kicker: PLC
-tags: ["PLC", "Vision", "Robot1", "FANUC", "InTouch", "CSM", "Timing"]
+tags: ["PLC", "VISION", "Robot1", "InTouch", "CSM", "Timing"]
 ---
 
-## 먼저 결론
+## 증상과 현재 판단
 
-4000장 가운데 약 10~14회만 발생한다면, 항상 틀린 I/O 매핑보다는 Vision 판정 결과가 Robot1의 등급 대기 시간보다 늦거나, 짧게 나온 등급 신호가 다음 단계에서 사라지는 경우를 먼저 의심할 수 있다. 다만 현재 파일만으로 현장 원인을 확정할 수는 없다. 같은 시각의 Vision, Cathode1, FANUC 신호를 함께 남겨야 한다.
+HMI에서 `z_sm1_Grade_None` 또는 `z_sm2_Grade_None`이 켜지고 “등급 없음”이 표시된다. 이 태그는 SM#1 또는 SM#2로 제품을 넘기기 직전에 원본 버퍼의 Weight가 0일 때 켜지는 구조다.
 
-타이머를 한 번에 여러 개 바꾸면 원인을 알 수 없다. 첫 시험에서는 Cathode1의 `Robot1.TON_01.PRE`만 `4000 ms`에서 `5000 ms`로 바꾼다. 이 값은 등급을 기다리다가, 등급이 없어도 Pickup Tracking을 강제로 진행하는 기준 시간이다. Vision의 `RESET_GR`과 Robot1의 `DELAY`는 첫 시험에서 바꾸지 않는다.
+따라서 증상은 SM에서 새로 등급이 지워졌다는 뜻보다는, 그보다 앞 단계에서 등급이 만들어지지 않았거나 Robot1이 등급을 기다리다 시간 초과로 다음 단계로 진행했을 가능성을 먼저 뜻한다.
 
-이 글은 제공받은 `VISION_CSM1.L5K`, `Cathode1.L5X`, Robot #1 PE 파일을 읽어서 작성한 오프라인 점검서다. 실제 Controller Online 상태, 현장 ACD, Vision 프로그램과 일치하는지는 입력 전에 반드시 대조해야 한다. 이 글만으로 PLC나 Robot 프로그램을 변경하지 않는다.
+아직 타이머를 바꾸지 않는다. 먼저 아래 Trend 묶음으로 실제 시간 순서를 확보한다. 로그를 받은 뒤 같은 실패 건을 기준으로 원인을 확정하고, 그때 한 타이머만 수정한다.
 
-## 등급 전달 흐름
-
-<iframe src="/diagrams/csm-r1-grade-timing-dataflow.html?embed=1" title="CSM Robot #1 등급 전달과 타임아웃 판정 다이어그램" loading="lazy" style="width:100%;height:620px;border:0;"></iframe>
-
-[새 창에서 도식 열기](/diagrams/csm-r1-grade-timing-dataflow.html)
-
-정상 흐름은 다음과 같다.
+## 간단한 전달 순서
 
 ```text
-카메라·ML 등급 판정
-→ VISION_CSM1 o_csm_Grade_S/E/G/R
-→ Cathode1 Robot1 R4_S/E/G/R_Grade
-→ Track_Infeed_Robot1_Pickup_Bar
-→ a_cathode[11].Weight → a_cathode[7].Weight
-→ FANUC BLOAD_1 또는 BLOAD_2
-→ DO[2] 또는 DO[3] Loaded Pulse
-→ SM#1 또는 SM#2 Drop Tracking
-→ a_cathode[9] 또는 a_cathode[12]
+카메라·ML 판정
+→ VISION PLC가 등급 신호를 유지한다
+→ CATHODE 1 PLC Robot1이 등급을 받는다
+→ Robot1이 등급을 기다리거나 시간 초과로 Pickup Tracking을 진행한다
+→ Weight가 SM#1 또는 SM#2로 이동한다
+→ Weight가 0이면 HMI에 등급 없음이 표시된다
 ```
 
-그리퍼 오픈은 등급을 새로 전달하는 시점이 아니다. `BLOAD_1.PE`와 `BLOAD_2.PE`는 `CALL OPEN` 뒤에 각각 `DO[2]`, `DO[3] Loaded Pulse`를 1초간 출력한다. Cathode1은 이 로딩 신호를 받고 이미 `a_cathode[7]`에 저장된 Weight를 SM 목적지로 옮긴다.
+그리퍼 오픈은 등급을 새로 쓰는 동작이 아니다. Robot1이 앞 단계에서 확보한 Weight를 유지한 채 SM 로딩 완료 신호를 보내고, 이후 SM Drop Tracking이 그 Weight를 읽는다.
 
-## 원본에서 확인한 타이머와 역할
+## 타이머와 수정 위치
 
-| 우선순위 | Controller / Program | Tag | 현재값 | 실제 역할 | 첫 시험에서 변경 여부 |
-|---:|---|---|---:|---|---|
-| 1 | Cathode1 / `Robot1` / `prod_tracking` Rung 9 | `TON_01.PRE` | 4000 ms | 등급 대기 최대 시간이다. 만료되어도 Pickup Tracking을 진행한다. | 변경한다. |
-| 2 | VISION_CSM1 / `AUTO` | `RESET_GR.PRE` | 300 ms | `o_csm_Grade_*` 출력 래치를 유지하는 시간이다. | 첫 시험에서는 유지한다. |
-| 3 | Cathode1 / `Robot1` / `Background` Rung 83~84 | `DELAY.PRE` | 700 ms | Robot1 내부 `R4_*_Grade` 래치를 유지하는 시간이다. | 첫 시험에서는 유지한다. |
-| 해당 없음 | FANUC `BLOAD_1.PE`, `BLOAD_2.PE` | 없음 | - | 그리퍼 오픈과 Loaded Pulse를 실행한다. Vision 등급 대기 타이머는 없다. | 변경하지 않는다. |
+수정 위치는 세 군데 후보가 있지만, 로그 없이 동시에 수정하면 원인을 찾을 수 없다. 우선순위는 `TON_01`이다.
 
-`TON_01.DN`은 `zTimeOverGrade`를 Set한다. 동시에 `z_Get_R1_Pickup_Bar`가 발생하면 `Track_Infeed_Robot1_Pickup_Bar`가 실행된다. 이 Routine은 R4 등급 비트가 하나도 켜지지 않았으면 `a_cathode[11].Weight`를 쓰지 않은 채 `a_cathode[7]`으로 이동시킨다. 그 결과 Weight가 0인 제품이 SM으로 갈 수 있다.
+| 순서 | PLC 프로그램 | Routine / Rung | 현재 타이머 | 역할 | 로그에서 확인할 조건 | 수정 판단 |
+|---:|---|---|---:|---|---|---|
+| 1 | CATHODE 1 PLC | `Robot1` → `prod_tracking` → Rung 9 | `TON_01.PRE = 4000 ms` | Robot1이 Vision 등급을 기다리는 최대 시간이다. 등급이 없어도 4초가 지나면 Pickup Tracking을 진행한다. | `TON_01.DN=1`일 때 `R4_*_Grade`가 모두 0인지 확인한다. | 이 조합이 확인되면 `4000 → 5000 ms`만 시험한다. |
+| 2 | VISION PLC | `AUTO` Routine의 등급 출력 구간. `OTL(o_csm_Grade_*)` 바로 아래 `TON(RESET_GR)` Rung | `RESET_GR.PRE = 300 ms` | Vision 등급 출력을 유지하는 시간이다. ML 판정 시간을 늘리는 타이머는 아니다. | Vision 출력은 있었는데 CATHODE 1 PLC에서 등급 수신이 없을 때 확인한다. | 이 경우에만 `300 → 500 ms`를 단독 시험한다. |
+| 3 | CATHODE 1 PLC | `Robot1` → `Background` → Rung 83~84 | `DELAY.PRE = 700 ms` | CATHODE 1 PLC 안에서 받은 `R4_*_Grade`를 유지하는 시간이다. | `R4_*_Grade`가 켜졌지만 Pickup Tracking 전에 `DELAY.DN=1`로 꺼질 때 확인한다. | 이 경우에만 `700 → 1000 ms`를 단독 시험한다. |
 
-SM Drop Routine은 이동 전에 `a_cathode[7].Weight = 0`을 검사한다.
+`prod_tracking`의 Rung 10은 `TON_01.DN`일 때 `zTimeOverGrade`를 켠다. Rung 12는 `z_Get_R1_Pickup_Bar`가 켜졌을 때 Pickup Tracking 명령을 만든다. 따라서 Rung 9, 10, 12는 항상 함께 확인한다.
+
+VISION PLC의 `AUTO` Routine에서는 다음 연속 구간을 찾는다.
 
 ```text
-SM#1: a_cathode[7].Weight = 0 → z_sm1_Grade_None := 1
-SM#2: a_cathode[7].Weight = 0 → z_sm2_Grade_None := 1
+Local:4:I.Data.2 / .3 / .15 / .1
+→ GRADE_S / GRADE_E / GRADE_R / GRADE_G
+→ OTL(o_csm_Grade_S / E / G / R)
+→ TON(RESET_GR)
+→ RESET_GR.DN에서 o_csm_Grade_* 해제
 ```
 
-현재 확인한 원본에서는 `z_sm1_Grade_None`, `z_sm2_Grade_None`을 Set하는 쓰기는 확인했지만, 이를 0으로 되돌리는 쓰기는 찾지 못했다. 따라서 HMI의 “등급 없음”은 현재 제품의 즉시 상태가 아니라 과거 이벤트가 남아 있는 표시일 수도 있다. 현장 수정본과 ACD에서 Reset 또는 HMI 쓰기 위치를 다시 확인해야 한다.
+이 구간의 `RESET_GR`만 Vision 등급 출력 유지시간을 바꾼다. 다른 Vision 타이머나 Robot 동작 타이머는 이번 점검에서 수정하지 않는다.
 
-## 현장에서 먼저 해야 할 일
+## PLC Trend는 8개씩 나누어 저장한다
 
-### 1. 변경 전 기준을 남긴다
+Trend 하나에 8개만 넣을 수 있으므로, 아래 네 묶음을 순서대로 사용한다. 한 묶음에서 “등급 없음” 사건이 한 번이라도 잡히면 그 파일을 보관하고 다음 묶음으로 바꾼다. 각 파일 이름에는 시작 시각, 종료 시각, 설정값을 적는다.
 
-1. 현장 Controller의 ACD와 L5X를 날짜와 시간까지 붙여 별도 보관한다.
-2. Vision PLC, Cathode1 PLC, Robot #1의 날짜·시간을 비교한다. 시간대가 다르면 이벤트 순서를 해석할 수 없다.
-3. 현재 `TON_01.PRE=4000`, `RESET_GR.PRE=300`, `DELAY.PRE=700`을 화면 캡처와 Trend 내보내기로 남긴다.
-4. HMI “등급 없음” 표시가 뜬 시각, 해당 제품의 Serial·Lot·생산 번호와 SM#1 또는 SM#2를 기록한다.
-5. 현장에 이미 적용된 온라인 편집이 있으면 원본 L5X와 비교한다. 이 문서의 Rung 번호만 보고 입력하지 않는다.
-
-### 2. 같은 시간축으로 Trend를 남긴다
-
-한 Controller의 화면만 보면 원인을 분리할 수 없다. 아래 신호를 같은 사건 기준으로 저장한다. 권장 구간은 `zTimeOverGrade`가 켜지는 시점 또는 `z_sm*_Grade_None`이 켜지는 시점의 앞 10초, 뒤 10초다. 시스템이 허용하면 더 길게 남긴다.
-
-#### VISION_CSM1 PLC Trend
+예시:
 
 ```text
-i_Servo2_Ready_Status
-Local:4:I.Data.1
-Local:4:I.Data.2
-Local:4:I.Data.3
-Local:4:I.Data.15
-GRADE_S
-GRADE_E
-GRADE_G
-GRADE_R
-o_csm_Grade_S
-o_csm_Grade_E
-o_csm_Grade_G
-o_csm_Grade_R
-RESET_GR.EN
-RESET_GR.ACC
-RESET_GR.DN
+2026-09-26_A_VisionOutput_TON01-4000ms.csv
+2026-09-27_B_RobotWait_TON01-4000ms.csv
 ```
 
-이 로그로 ML 결과가 Vision PLC 입력까지 실제 들어왔는지, `i_Servo2_Ready_Status`가 당시 1이었는지, 출력 래치가 300ms 동안 유지됐는지를 확인한다.
+### A. VISION 판정과 출력 묶음
 
-#### Cathode1 PLC, Robot1 Program Trend
+이 묶음은 Vision이 결과를 실제 출력했는지 확인한다. `zp_Vision_Write[0]`은 등급 출력 비트 전체를 한 번에 보는 태그다.
 
 ```text
-R4_i_Die_S_Grade_Signal
-R4_i_Die_E_Grade_Signal
-R4_i_Die_G_Grade_Signal
-R4_i_Die_R_Grade_Signal
-R4_S_Grade
-R4_E_Grade
-R4_G_Grade
-R4_R_Grade
-DELAY.EN
-DELAY.ACC
-DELAY.DN
-z_R1_Pickup_Bar
-TON_01.EN
-TON_01.ACC
-TON_01.DN
-z_Get_R1_Pickup_Bar
-zTimeOverGrade
-z_GradeBackup
-a_cathode[11].Weight
-a_cathode[7].Weight
+1. i_Servo2_Ready_Status
+2. Local:4:I.Data.1
+3. Local:4:I.Data.2
+4. Local:4:I.Data.3
+5. Local:4:I.Data.15
+6. zp_Vision_Write[0]
+7. RESET_GR.ACC
+8. RESET_GR.DN
 ```
 
-이 로그가 가장 중요하다. `TON_01.DN=1`이고 `R4_*_Grade`가 모두 0이면, Robot1이 등급 없이 다음 단계로 진행했다는 뜻이다.
+`zp_Vision_Write[0]`에서 S, E, G, R 출력 비트가 바뀌는지 확인한다. 입력이 있었는데 `i_Servo2_Ready_Status=0`이면 등급 출력이 만들어지지 않을 수 있다.
 
-#### SM#1·SM#2 및 HMI 확인 신호
+### B. CATHODE 1 PLC 등급 수신과 4초 대기 묶음
+
+이 묶음은 Vision 출력이 Robot1까지 들어왔는지와 4초 시간 초과를 확인한다.
 
 ```text
-i_sm1_loaded
-i_sm2_loaded
-z_signal_r1_sm1_loaded
-z_signal_r1_sm2_loaded
-z_R1_sm1_Drop_done
-z_R1_sm2_Drop_done
-a_cathode[9].Weight
-a_cathode[12].Weight
-z_sm1_Grade_None
-z_sm2_Grade_None
-z_GradeFault
+1. zc_Vision_Read[0]
+2. R4_S_Grade
+3. R4_E_Grade
+4. R4_G_Grade
+5. R4_R_Grade
+6. TON_01.ACC
+7. TON_01.DN
+8. zTimeOverGrade
 ```
 
-여기서는 빈 Weight가 어느 SM으로 옮겨졌는지, 또는 HMI 표시만 과거 상태로 남은 것인지를 구분한다.
-
-#### FANUC Robot #1에서 같이 보관할 항목
+가장 중요한 판정은 다음이다.
 
 ```text
-DO[18:VISION_OK_ON]
-DO[7:Gripper Open]
-DO[8:Gripper Closed]
-DO[2:Loaded 1 Pulse]
-DO[3:Loaded 2 Pulse]
-DI[4:Load Sta. 1]
-DI[5:Load Sta. 2]
-DI[12:R2 Clear of 1]
-DI[13:R2 Clear of 2]
+TON_01.DN = 1
+AND R4_S_Grade / R4_E_Grade / R4_G_Grade / R4_R_Grade = 모두 0
 ```
 
-FANUC I/O 화면 또는 I/O 설정 백업으로 `DO[2]`와 `DO[3]`이 실제 Cathode1의 `i_sm1_loaded`, `i_sm2_loaded`에 각각 연결되는지도 대조한다. PE 파일만으로는 이 통신 매핑을 확정할 수 없다.
+이 조합이면 Robot1이 등급을 받지 못한 채 4초를 기다리고 다음 단계로 진행한 것이다. 이 경우에만 `TON_01.PRE`를 5000ms로 바꾸는 시험을 검토한다.
 
-## 로그를 읽는 순서
+### C. Pickup Tracking과 HMI 등급 없음 묶음
 
-아래 순서대로 보면 같은 실패를 서로 다른 원인으로 잘못 해석하는 일을 줄일 수 있다.
+이 묶음은 Weight가 어느 단계에서 0이 됐는지 확인한다.
 
-| 순서 | 확인할 조건 | 판단 |
-|---:|---|---|
-| 1 | Vision의 `Local:4:I.Data.*`에 등급 입력이 있었는가 | 없으면 카메라·ML 결과 또는 Vision 입력 문제를 먼저 확인한다. |
-| 2 | 입력 당시 `i_Servo2_Ready_Status=1`이었는가 | 0이면 Vision은 `GRADE_*`와 `o_csm_Grade_*`를 만들지 않는다. |
-| 3 | `o_csm_Grade_*`가 켜졌는가 | 안 켜졌으면 Vision 내부 조건 또는 300ms 래치 이전 문제다. |
-| 4 | Cathode1의 `R4_i_Die_*`와 `R4_*_Grade`가 켜졌는가 | Vision 출력은 있었는데 여기서 없으면 통신·RPI·소비 태그를 확인한다. |
-| 5 | `TON_01.DN`이 먼저 켜졌는가 | 먼저 켜졌으면 Robot1의 4초 등급 대기 시간이 끝난 것이다. |
-| 6 | `a_cathode[11].Weight`가 0이었는가 | 0이면 SM 이전, Robot1 Pickup 단계에서 이미 등급이 비어 있었다. |
-| 7 | `a_cathode[7].Weight`가 0이었는가 | 0이면 SM Drop Routine이 Grade None을 Set할 조건이 갖춰졌다. |
-| 8 | `a_cathode[7].Weight`는 정상인데 `z_sm*_Grade_None=1`인가 | HMI Grade None 태그가 이전 사건부터 남아 있을 가능성을 확인한다. |
+```text
+1. z_Get_R1_Pickup_Bar
+2. z_Tracking_Commands[22]
+3. a_cathode[11].Weight
+4. a_cathode[7].Weight
+5. z_R1_sm1_Drop_done
+6. z_R1_sm2_Drop_done
+7. z_sm1_Grade_None
+8. z_sm2_Grade_None
+```
 
-## 타이머 시험안: 한 번에 하나만 바꾼다
+판정은 다음과 같다.
 
-각 시험은 같은 생산 조건에서 시행하고, 시험 시작·종료 시각과 설정값을 기록한다. 시험 중 알람이나 품질 판단에 영향이 생기면 즉시 원래값으로 복귀한다.
+| 결과 | 뜻 |
+|---|---|
+| `a_cathode[11].Weight=0` | Robot1 Pickup Tracking 이전 또는 그 시점에 등급이 없었다. |
+| `a_cathode[11].Weight`는 정상이고 `a_cathode[7].Weight=0` | Pickup 이후 이동 또는 중복 처리 가능성을 확인한다. |
+| `a_cathode[7].Weight=0` 직후 `z_sm1_Grade_None` 또는 `z_sm2_Grade_None=1` | HMI 표시가 실제 빈 Weight Drop과 연결된다. |
+| Weight는 0이 아닌데 Grade None 태그가 이미 1이다 | 이전 사건의 표시가 남아 있는지 Reset 조건을 확인한다. |
 
-### 시험 0: 현재값 기준 로그 확보
+### D. SM 로딩과 목적지 Weight 묶음
+
+이 묶음은 SM#1·SM#2 어느 쪽으로 빈 Weight가 넘어갔는지 확인한다.
+
+```text
+1. i_sm1_loaded
+2. i_sm2_loaded
+3. z_signal_r1_sm1_loaded
+4. z_signal_r1_sm2_loaded
+5. a_cathode[9].Weight
+6. a_cathode[12].Weight
+7. z_GradeFault
+8. z_R1_Pickup_done
+```
+
+SM#1 Loaded는 `a_cathode[9]`, SM#2 Loaded는 `a_cathode[12]`의 Weight와 시간 순서가 맞아야 한다. 서로 다른 SM 로딩 신호가 너무 가까운 시점에 생기는지도 이 묶음에서 확인한다.
+
+## 로그 판독 순서
+
+1. A 묶음에서 Vision 입력과 `zp_Vision_Write[0]` 변화를 본다.
+2. B 묶음에서 CATHODE 1 PLC가 R4 등급을 받았는지와 `TON_01.DN` 순서를 본다.
+3. C 묶음에서 Weight가 `a_cathode[11]` 또는 `a_cathode[7]` 중 어디에서 0이 됐는지 본다.
+4. D 묶음에서 어느 SM으로 넘겼는지와 HMI 표시 시점을 대조한다.
+5. 같은 유형의 사건이 확인되면 그 유형에 해당하는 타이머 하나만 바꾼다.
+
+## 타이머 시험 순서
+
+### 시험 0. 현재값에서 로그만 확보한다
 
 ```text
 TON_01.PRE = 4000 ms
@@ -181,86 +162,51 @@ RESET_GR.PRE = 300 ms
 DELAY.PRE = 700 ms
 ```
 
-목적은 기준선을 만드는 것이다. `zTimeOverGrade`가 실제로 켜지는지, 그리고 그때 `R4_*_Grade`와 Weight가 어떤 값인지 확인한다.
+먼저 B 또는 C 묶음에서 “등급 없음” 사건 하나를 확보한다. 로그가 없으면 값을 바꾸지 않는다.
 
-### 시험 1: `TON_01.PRE`만 5000ms로 변경
-
-대상:
+### 시험 1. `TON_01.PRE`만 5000ms로 바꾼다
 
 ```text
-Cathode1
-Program: Robot1
-Routine: prod_tracking
-Rung: 9
-Tag: TON_01.PRE
-4000 → 5000 ms
+CATHODE 1 PLC
+Robot1 → prod_tracking → Rung 9
+TON_01.PRE: 4000 → 5000 ms
 ```
 
-예상되는 결과는 다음과 같다.
+이 시험은 `TON_01.DN=1`과 R4 등급 없음이 함께 확인됐을 때만 한다. 시험 중에는 B와 C 묶음을 우선 저장한다. 개선 여부는 Grade None 발생 횟수뿐 아니라 `zTimeOverGrade` 발생 횟수도 같이 비교한다.
 
-| 결과 | 해석 | 다음 조치 |
-|---|---|---|
-| `zTimeOverGrade`와 Grade None 발생이 뚜렷하게 줄어든다 | Vision 결과가 4초를 조금 넘겨 도착하는 경우가 유력하다. | 5000ms를 유지한 상태에서 충분한 생산 수량을 추가 관찰한다. |
-| `zTimeOverGrade`는 줄지 않는다 | 단순 대기시간 부족만의 문제는 아닐 수 있다. | Vision 출력과 Cathode1 수신 로그를 비교한다. |
-| 생산 흐름이 1초 더 늦어져도 품질 이상은 없다 | 대기 연장에 따른 영향이 제한적일 수 있다. | 운영 승인 후 다음 단계 여부를 정한다. |
-| 다른 제품의 등급이 붙는다 | 대기시간 연장은 중단하고 원래값으로 복귀한다. | 제품-등급 연결 조건을 먼저 분석한다. |
-
-5000ms 시험에서도 `TON_01.DN=1`이 반복되고 Vision 결과가 늦게 들어온 사실이 확인될 때만, 별도 시험으로 `6000ms`를 검토한다. 4000에서 바로 큰 값으로 올리지 않는다.
-
-### 시험 2: Vision `RESET_GR.PRE`만 500ms로 변경
-
-이 시험은 Vision에서 `o_csm_Grade_*`가 실제로 나왔지만 Cathode1의 `R4_i_Die_*` 또는 `R4_*_Grade`가 빠지는 증거가 있을 때만 시행한다.
+### 시험 2. `RESET_GR.PRE`만 500ms로 바꾼다
 
 ```text
-VISION_CSM1
-Routine: AUTO
-Tag: RESET_GR.PRE
-300 → 500 ms
+VISION PLC
+AUTO Routine → TON(RESET_GR) Rung
+RESET_GR.PRE: 300 → 500 ms
 ```
 
-이 타이머는 ML 판정 자체를 빠르게 만들지 않는다. 이미 나온 Vision 등급 출력을 더 오래 유지할 뿐이다. 너무 길게 유지하면 이전 제품 등급이 다음 제품에 남을 수 있으므로, 첫 변경은 500ms까지만 한다.
+이 시험은 A 묶음에서 Vision 출력은 확인됐지만 B 묶음의 `zc_Vision_Read[0]` 또는 `R4_*_Grade`가 빠지는 경우에만 한다. ML 판정 시간이 늦다는 사실만으로 이 값을 먼저 늘리지는 않는다.
 
-### 시험 3: Robot1 `DELAY.PRE`만 1000ms로 변경
-
-이 시험은 Cathode1에서 `R4_*_Grade`가 켜졌지만, Pickup Tracking 전에 700ms를 넘겨 꺼지는 증거가 있을 때만 시행한다.
+### 시험 3. `DELAY.PRE`만 1000ms로 바꾼다
 
 ```text
-Cathode1
-Program: Robot1
-Routine: Background
-Rung: 83~84
-Tag: DELAY.PRE
-700 → 1000 ms
+CATHODE 1 PLC
+Robot1 → Background → Rung 83~84
+DELAY.PRE: 700 → 1000 ms
 ```
 
-`DELAY`를 먼저 늘리면 Vision이 아예 등급을 보내지 않은 문제를 가릴 수 있다. 따라서 `TON_01`과 Vision 출력 확인보다 앞서 변경하지 않는다.
+이 시험은 `R4_*_Grade`가 켜졌지만 Pickup Tracking 전에 `DELAY.DN=1`이 되는 경우에만 한다.
 
-## 변경하지 말아야 할 것
+## 지금은 수정하지 않는 부분
 
-- `BLOAD_1.PE`, `BLOAD_2.PE`의 `WAIT` 조건과 1초 Loaded Pulse는 현재 등급 대기 시간이 아니다.
-- Vision, Cathode1, FANUC 타이머를 같은 시험에서 함께 바꾸지 않는다.
-- `z_sm1_Grade_None`, `z_sm2_Grade_None`을 현장 HMI에서 임의로 0으로 쓰지 않는다. 먼저 누가 Set하고 누가 Reset해야 하는지 현장 L5X와 HMI 태그 설정을 확인한다.
-- `TON_01`을 늘린 뒤 발생 횟수만 보고 즉시 원인 확정하지 않는다. 같은 실패 건의 Vision 입력, R4 등급, Weight, `zTimeOverGrade` 순서를 확인한다.
+- Robot 프로그램의 그리퍼 오픈, `DO[2]`, `DO[3]` 펄스는 이번 타이머 시험에서 수정하지 않는다.
+- `z_sm1_Grade_None`, `z_sm2_Grade_None`의 Reset 로직도 로그 확인 전에는 바꾸지 않는다.
+- Vision, CATHODE 1 PLC의 타이머를 같은 시험에서 함께 바꾸지 않는다.
+- 시험 중 HMI에서 Grade None 태그를 임의로 0으로 쓰지 않는다.
 
-## 원본 위치
+## 로그 전달 시 함께 알려줄 내용
 
-| 파일 | 확인한 내용 |
-|---|---|
-| [VISION_CSM1.L5K](/Users/akanus/Desktop/VISION_CSM1.L5K:1473) | Vision 입력, `i_Servo2_Ready_Status`, `o_csm_Grade_*`, `RESET_GR` 등급 출력 래치 로직이다. |
-| [Cathode1.L5X](/Users/akanus/Desktop/Cathode1.L5X:54159) | Robot1 `prod_tracking`의 `TON_01`, `zTimeOverGrade`, Pickup Tracking 명령 로직이다. |
-| [Cathode1.L5X](/Users/akanus/Desktop/Cathode1.L5X:35535) | `R4_*_Grade`를 `a_cathode[11].Weight`로 기록하고 `a_cathode[7]`으로 옮기는 ST Routine이다. |
-| [Cathode1.L5X](/Users/akanus/Desktop/Cathode1.L5X:35807) | SM#1·SM#2 Drop 전에 `a_cathode[7].Weight=0`이면 Grade None을 Set하는 Routine이다. |
-| [BLOAD_1.PE](</Users/akanus/Desktop/CSM1_PE변환 프로그램/R1/BLOAD_1.PE:34>) | SM#1에서 `CALL OPEN` 뒤 `DO[2] Loaded 1 Pulse`를 출력하는 순서다. |
-| [BLOAD_2.PE](</Users/akanus/Desktop/CSM1_PE변환 프로그램/R1/BLOAD_2.PE:27>) | SM#2에서 `CALL OPEN` 뒤 `DO[3] Loaded 2 Pulse`를 출력하는 순서다. |
-| [OPEN.PE](</Users/akanus/Desktop/CSM1_PE변환 프로그램/R1/OPEN.PE:22>) | 클램프 Open 입력 확인 뒤 `DO[7:Gripper Open]`을 켜는 프로그램이다. |
+1. 사용한 Trend 묶음 이름과 저장 시작·종료 시각이다.
+2. 당시 `TON_01.PRE`, `RESET_GR.PRE`, `DELAY.PRE` 값이다.
+3. HMI에 등급 없음이 뜬 SM 번호와 시각이다.
+4. 가능하면 해당 제품의 생산 순번이다.
+5. Trend 화면 캡처와 CSV 또는 내보낸 파일이다.
 
-## 현장 점검 완료 기준
-
-다음 네 가지가 같은 실패 건에서 확보되어야 원인을 좁힐 수 있다.
-
-1. Vision 원시 등급 입력과 `o_csm_Grade_*`의 시각이다.
-2. Cathode1의 `R4_*_Grade`, `TON_01`, `zTimeOverGrade`의 시각이다.
-3. `a_cathode[11].Weight`, `a_cathode[7].Weight`, SM 목적지 Weight의 값이다.
-4. FANUC Loaded Pulse와 SM 로딩 입력의 연결 관계다.
-
-이 네 가지 중 하나라도 빠지면 “Vision이 늦었다”와 “HMI 표시가 이전 상태로 남았다”를 구분할 수 없다. 먼저 로그를 확보하고, 그 다음에 한 타이머만 바꾸는 순서를 지킨다.
+로그를 받으면 네 묶음의 시간 순서를 맞춰서, Vision 판정 지연인지, 통신·수신 문제인지, Robot1 4초 시간 초과인지, HMI 표시가 남은 문제인지를 구분한다.
