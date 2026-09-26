@@ -31,13 +31,15 @@ HMI에서 `z_sm1_Grade_None` 또는 `z_sm2_Grade_None`이 켜지고 “등급 �
 
 수정 위치는 세 군데 후보가 있지만, 로그 없이 동시에 수정하면 원인을 찾을 수 없다. 우선순위는 `TON_01`이다.
 
-| 순서 | PLC 프로그램 | Routine / Rung | 현재 타이머 | 역할 | 로그에서 확인할 조건 | 수정 판단 |
-|---:|---|---|---:|---|---|---|
-| 1 | CATHODE 1 PLC | `Robot1` → `prod_tracking` → Rung 9 | `TON_01.PRE = 4000 ms` | Robot1이 Vision 등급을 기다리는 최대 시간이다. 등급이 없어도 4초가 지나면 Pickup Tracking을 진행한다. | `TON_01.DN=1`일 때 `R4_*_Grade`가 모두 0인지 확인한다. | 이 조합이 확인되면 `4000 → 5000 ms`만 시험한다. |
-| 2 | VISION PLC | `AUTO` Routine의 등급 출력 구간. `OTL(o_csm_Grade_*)` 바로 아래 `TON(RESET_GR)` Rung | `RESET_GR.PRE = 300 ms` | Vision 등급 출력을 유지하는 시간이다. ML 판정 시간을 늘리는 타이머는 아니다. | Vision 출력은 있었는데 CATHODE 1 PLC에서 등급 수신이 없을 때 확인한다. | 이 경우에만 `300 → 500 ms`를 단독 시험한다. |
-| 3 | CATHODE 1 PLC | `Robot1` → `Background` → Rung 83~84 | `DELAY.PRE = 700 ms` | CATHODE 1 PLC 안에서 받은 `R4_*_Grade`를 유지하는 시간이다. | `R4_*_Grade`가 켜졌지만 Pickup Tracking 전에 `DELAY.DN=1`로 꺼질 때 확인한다. | 이 경우에만 `700 → 1000 ms`를 단독 시험한다. |
+| 순서 | PLC 위치 | 현재값 | 로그로 확인한 뒤의 단독 시험 |
+|---:|---|---:|---|
+| 1 | CATHODE 1 PLC `Robot1` Program의 `prod_tracking` Routine Rung 9 | `TON_01.PRE = 4000 ms` | `TON_01.DN=1`인 순간에 `R4_*_Grade`가 모두 0이면 `4000 → 5000 ms`만 시험한다. |
+| 2 | VISION PLC `AUTO` Routine. `OTL(o_csm_Grade_*)` 바로 아래 `TON(RESET_GR)` Rung | `RESET_GR.PRE = 300 ms` | Vision 출력이 있었는데 CATHODE 1 PLC 수신이 없을 때만 `300 → 500 ms`를 단독 시험한다. |
+| 3 | CATHODE 1 PLC `Robot1` Program의 `Background` Routine Rung 83~84 | `DELAY.PRE = 700 ms` | `R4_*_Grade`가 Pickup Tracking 전에 `DELAY.DN=1`로 꺼질 때만 `700 → 1000 ms`를 단독 시험한다. |
 
 `prod_tracking`의 Rung 10은 `TON_01.DN`일 때 `zTimeOverGrade`를 켠다. Rung 12는 `z_Get_R1_Pickup_Bar`가 켜졌을 때 Pickup Tracking 명령을 만든다. 따라서 Rung 9, 10, 12는 항상 함께 확인한다.
+
+`TON_01`은 Robot1이 Vision 등급을 기다리는 최대 시간이다. `RESET_GR`은 Vision이 판정 결과를 유지하는 시간이며, ML 판정 시간을 늘리는 타이머는 아니다. `DELAY`는 CATHODE 1 PLC가 받은 `R4_*_Grade`를 유지하는 시간이다.
 
 VISION PLC의 `AUTO` Routine에서는 다음 연속 구간을 찾는다.
 
