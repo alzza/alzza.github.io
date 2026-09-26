@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "CSM Robot #1 등급 전달과 타임아웃 판정",
+    "output": "public/diagrams/csm-r1-grade-timing-dataflow.html",
+    "viewBox": [1068, 640],
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "normal-flow",
+        "label": "정상 전달",
+        "focus": ["ml", "vision-output", "robot-grade", "pickup", "drop-sm"],
+        "note": "Vision 등급을 Robot1이 받아 a_cathode[7]을 거쳐 SM 목적지로 옮기는 정상 흐름입니다."
+      },
+      {
+        "id": "timeout-flow",
+        "label": "타임아웃 경로",
+        "focus": ["vision-output", "robot-grade", "pickup", "drop-sm"],
+        "note": "4초 안에 Robot1 등급 래치가 없으면 빈 Weight가 다음 단계로 이동하는 경로입니다."
+      }
+    ]
+  },
+  "stages": [
+    { "label": "Vision 판정" },
+    { "label": "Vision PLC" },
+    { "label": "Cathode1 / Robot1" },
+    { "label": "Robot 투입" },
+    { "label": "SM 판정" }
+  ],
+  "nodes": [
+    { "id": "ml", "type": "external", "label": "ML 등급 판정", "sublabel": "S / E / G / R", "stage": 0, "row": 0, "tag": "외부 처리 시간" },
+    { "id": "vision-output", "type": "backend", "label": "Vision 등급 래치", "sublabel": "o_csm_Grade_*", "stage": 1, "row": 0, "tag": "Ready, Reset 300 ms" },
+    { "id": "robot-grade", "type": "security", "label": "Robot1 등급 대기", "sublabel": "R4_*_Grade", "stage": 2, "row": 0, "tag": "DELAY 700 ms, TON_01 4000 ms" },
+    { "id": "pickup", "type": "database", "label": "Pickup Tracking", "sublabel": "a[11] → a[7]", "stage": 3, "row": 0, "tag": "Weight 기록" },
+    { "id": "drop-sm", "type": "database", "label": "SM Drop Tracking", "sublabel": "a[7] → SM1 / SM2", "stage": 4, "row": 0, "tag": "Weight 0이면 HMI None Set" }
+  ],
+  "flows": [
+    { "from": "ml", "to": "vision-output", "label": "등급 결과", "classification": "판정 지연 가능", "variant": "emphasis", "route": "straight", "labelDy": -82 },
+    { "from": "vision-output", "to": "robot-grade", "label": "zc_Vision_Read", "classification": "RPI 20 ms", "variant": "emphasis", "route": "straight", "labelDy": -82 },
+    { "from": "robot-grade", "to": "pickup", "label": "등급 수신 또는 4초 만료", "classification": "TON_01", "variant": "emphasis", "route": "straight", "labelDy": -82 },
+    { "from": "pickup", "to": "drop-sm", "label": "BLOAD OPEN, DO[2] / DO[3]", "classification": "Loaded Pulse", "variant": "emphasis", "route": "straight", "labelDy": -82 }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "정상 조건", "items": ["Vision 등급이 Servo2 Ready 상태에서 래치됩니다.", "Robot1이 4초 안에 R4 등급을 받습니다.", "Pickup Tracking이 0이 아닌 Weight를 a_cathode[7]에 기록합니다."] },
+    { "dot": "rose", "title": "타임아웃 경로", "items": ["TON_01.DN은 등급이 없어도 Pickup Tracking을 진행시킵니다.", "그때 Weight가 0이면 SM Drop Routine이 z_sm*_Grade_None을 Set합니다.", "이 태그가 해제되는 쓰기 위치는 현장 L5X와 다시 대조해야 합니다."] }
+  ]
+}
