@@ -957,6 +957,64 @@ code {
   border-top: 1px solid #aab6d5;
   font-size: 0.84rem;
 }
+
+/* CSM Vision grade timing note: simple semantic flow cards, not a diagram renderer. */
+.prose-grade-timing .grade-flow {
+  margin: 0 0 1.5rem;
+  padding: 1rem;
+  border: 2px solid #243b7a;
+  background: #fff;
+  box-shadow: 4px 4px 0 #d8deef;
+}
+.prose-grade-timing .grade-flow-track {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 0.55rem;
+}
+.prose-grade-timing .grade-flow-step {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 8.3rem;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.7rem;
+  border: 2px solid #243b7a;
+  background: #f5f8ff;
+  color: #111827;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+.prose-grade-timing .grade-flow-step:not(:last-child)::after {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: -0.76rem;
+  color: #243b7a;
+  content: "→";
+  font-size: 1.3rem;
+  font-weight: 900;
+  transform: translateY(-50%);
+}
+.prose-grade-timing .grade-flow-step b { font-size: 0.88rem; }
+.prose-grade-timing .grade-flow-step span,
+.prose-grade-timing .grade-flow-step small { font-size: 0.72rem; line-height: 1.42; }
+.prose-grade-timing .grade-flow-step code { white-space: normal; overflow-wrap: anywhere; }
+.prose-grade-timing .grade-flow-step.signal { background: #e8fff2; border-color: #087a45; }
+.prose-grade-timing .grade-flow-step.timer { background: #fff7d6; border-color: #8a6400; }
+.prose-grade-timing .grade-flow-step.fault { background: #fff1f1; border-color: #b42318; }
+@media (max-width: 760px) {
+  .prose-grade-timing .grade-flow-track { grid-template-columns: 1fr; }
+  .prose-grade-timing .grade-flow-step { min-height: 0; }
+  .prose-grade-timing .grade-flow-step:not(:last-child)::after {
+    top: auto;
+    right: 50%;
+    bottom: -1.04rem;
+    transform: translateX(50%) rotate(90deg);
+  }
+}
 @media (max-width: 760px) {
   .prose-finger-retry .retry-flow-track { grid-template-columns: 1fr; }
   .prose-finger-retry .retry-flow-step { min-height: 0; }
