@@ -1,0 +1,1862 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="T2CAN Universal v3.7.2 실제 펌웨어 메뉴에 대응하는 한글 기능 설명서"><title>T2CAN Universal v3.7.2 한글 메뉴 설명서</title><style>
+:root{--ink:#203043;--muted:#586779;--line:#dbe2e9;--accent:#175f78;--soft:#edf5f7}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:26px}body{margin:0;background:#f4f6f8;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:16px;line-height:1.8;word-break:keep-all;overflow-wrap:break-word}.wrap{width:min(1040px,calc(100% - 40px));margin:0 auto}.topline{padding:28px 0 16px;color:var(--accent);font-size:12px;letter-spacing:.12em;font-weight:700;display:flex;justify-content:space-between;gap:12px}.toolbar{display:flex;gap:8px;align-items:center;letter-spacing:0;flex-wrap:wrap}.toolbar a,.toolbar button{font:inherit;background:white;border:1px solid var(--line);color:var(--ink);padding:7px 13px;border-radius:6px;text-decoration:none;cursor:pointer}.paper{background:#fff;border:1px solid var(--line);padding:48px 54px 60px;border-radius:12px;margin-bottom:40px}h1{font-size:34px;letter-spacing:-.045em;line-height:1.35;margin:0 0 28px}h2{font-size:25px;letter-spacing:-.025em;line-height:1.5;margin:64px 0 20px;padding-top:22px;border-top:2px solid var(--ink)}h3{font-size:19px;line-height:1.5;margin:32px 0 14px}p{margin:15px 0}a{color:var(--accent);text-underline-offset:3px}blockquote{margin:20px 0;padding:13px 20px;border-left:4px solid var(--accent);background:var(--soft);font-size:14px}blockquote p{margin:4px 0}strong{font-weight:750}code{font-family:ui-monospace,SFMono-Regular,monospace;font-size:.86em;background:#f0f3f6;border-radius:3px;padding:2px 4px;white-space:nowrap}p code{white-space:normal;overflow-wrap:anywhere}li{margin:9px 0}.table-scroll{max-width:100%;overflow-x:auto;margin:22px 0;border:1px solid var(--line);border-radius:6px}table{border-collapse:collapse;width:100%;min-width:650px;font-size:14px;line-height:1.7}th{text-align:left;background:#ecf2f5;font-weight:750}th,td{padding:12px 15px;vertical-align:top;border-bottom:1px solid var(--line)}th:first-child,td:first-child{width:26%;font-weight:600}tr:last-child td{border-bottom:0}tr:nth-child(even) td{background:#fafbfc}details{margin:30px 0;padding:18px 22px;background:#f6f8fa;border:1px solid var(--line);border-radius:8px}summary{font-weight:750;cursor:pointer}.toc{display:grid;grid-template-columns:1fr 1fr;gap:6px 28px;padding-top:16px}.toc a{font-size:14px;text-decoration:none;padding:3px 0}.toc a:hover{text-decoration:underline}.foot{font-size:12px;color:var(--muted);padding-top:22px}button:focus-visible,a:focus-visible,summary:focus-visible,.table-scroll:focus-visible{outline:3px solid #2586ac;outline-offset:3px}
+@media(max-width:700px){.wrap{width:calc(100% - 24px)}.topline{padding:18px 0;display:block}.toolbar{margin-top:12px}.paper{padding:26px 20px;border-radius:8px}h1{font-size:27px}h2{font-size:22px;margin-top:45px}body{font-size:15px}.toc{grid-template-columns:1fr}table{min-width:620px}blockquote{padding:12px 14px}}
+@media print{@page{size:A4;margin:15mm 13mm}body{background:white;font-size:10pt;line-height:1.6}.wrap{width:100%;max-width:none}.topline,.toolbar,.foot{display:none}.paper{margin:0;padding:0;border:0}h1{font-size:23pt}h2{font-size:16pt;margin-top:26pt;padding-top:12pt;break-after:avoid}h3{font-size:12pt;break-after:avoid}p,li{orphans:3;widows:3}table{min-width:0;font-size:9pt;line-height:1.55}th,td{padding:7pt 8pt}tr{break-inside:avoid}.table-scroll{overflow:visible;border-radius:0}thead{display:table-header-group}code{white-space:normal;overflow-wrap:anywhere}details{display:none}blockquote{font-size:9pt;break-inside:avoid}a{color:inherit;text-decoration:none}}
+</style></head><body><header class="wrap topline"><span>T2CAN / USER GUIDE / 한국어</span><div class="toolbar"><a href="user-guide-ko.md" download>Markdown 원본</a><button onclick="window.print()">인쇄 / PDF 저장</button></div></header><main class="wrap paper"><h1>T2CAN Universal v3.7.2 한글 메뉴 설명서</h1><details open><summary>목차 · 메뉴 바로 찾기</summary><nav aria-label="설명서 목차" class="toc"><a href="#section-1">1. 먼저 알아둘 용어와 화면 구조</a><a href="#section-5">2. 첫 연결과 차량 프로필</a><a href="#section-9">3. HOME — 현재 상태 보기</a><a href="#section-13">4. DEVICES — S3XY 버튼</a><a href="#section-18">5. SETTINGS → Nag Killer — NAG 신호 주입</a><a href="#section-24">6. SETTINGS → Auto Blinker — 자동 방향지시등</a><a href="#section-25">7. SETTINGS → Summon Monitor — 호출 상태·R79</a><a href="#section-26">8. SETTINGS → TLSSC — 신호등·정지표지 관련 플래그</a><a href="#section-27">9. SETTINGS → Lane Change / ULC — 차선 변경 필드</a><a href="#section-28">10. SETTINGS → PedalMap Control — 현재 주행의 가속 맵</a><a href="#section-29">11. SETTINGS → AP Right Scroll — 우측 스크롤 입력</a><a href="#section-30">12. SETTINGS → AP Drive Profile — AP 중 가속·회생제동 설정</a><a href="#section-31">13. SETTINGS → Wireless — Bluetooth와 Wi-Fi</a><a href="#section-32">14. SETTINGS → System — 관리 기능</a><a href="#section-36">15. SETTINGS → Diagnostics &amp; CAN Recovery</a><a href="#section-40">16. SETTINGS → Banned Car / TLSSC Restore</a><a href="#section-41">17. LAB Menu — 실험 메뉴의 공통 원칙</a><a href="#section-47">18. LAB → CAN Research Capture — CAN 연구 기록</a><a href="#section-51">19. LAB → Driver Monitoring Capture — 운전자 감시 신호 기록</a><a href="#section-52">20. 자주 헷갈리는 상황</a><a href="#section-53">21. 기본값·저장 범위 빠른 참고</a><a href="#section-54">22. 문서 근거와 확인 범위</a></nav></details>
+<blockquote>
+<p><strong>대상:</strong> 소스 커밋 <code>2e7a2f0</code> · 작성일 2026-09-28<br/>
+<strong>확인 기준:</strong> 펌웨어에 실제 내장된 화면(<code>index_html.h</code>)과 해당 설정 처리 코드. 정적 화면 문구보다 실제 처리 코드가 우선합니다.<br/>
+<strong>검증 범위:</strong> 소스 확인 및 ESP32-S3 컴파일 성공. 보드 접속·실차 동작은 검증하지 않았습니다.</p>
+</blockquote>
+<p>이 설명서는 화면의 영문 이름을 그대로 병기하여 메뉴를 찾을 수 있게 구성했습니다. 기본값은 <strong>저장된 설정이 없는 경우</strong>를 뜻합니다. 이전 버전에서 설정을 가져온 기기는 값이 다를 수 있습니다.</p>
+<p>프로젝트는 연구·시험용 CAN 펌웨어입니다. 특히 운전자 감시, 차선 변경, 조향 토크 관련 메뉴는 차량이 받는 신호를 바꿉니다. 아래 내용은 기능의 의미를 설명하는 문서이며, 운전자 감시를 대신하거나 차량의 안전 기능을 보장하지 않습니다. 위험 기능은 원본 화면의 경고도 함께 설명했습니다.</p>
+<h2 id="section-1">1. 먼저 알아둘 용어와 화면 구조</h2>
+<h3 id="section-2">1.1 공통 용어</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">화면 용어</th>
+<th scope="col">한글 뜻</th>
+<th scope="col">읽는 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AP / AUTOPILOT</td>
+<td>오토파일럿 상태</td>
+<td>단순히 스위치를 켰다는 뜻이 아니라 수신한 차량 상태입니다.</td>
+</tr>
+<tr>
+<td>AUTOSTEER / NOA / FSD</td>
+<td>오토스티어 / 내비게이션 기반 오토파일럿 / FSD</td>
+<td>기능별로 허용하는 상태가 다릅니다. 모든 AP 기능이 FSD에서도 작동하는 것은 아닙니다.</td>
+</tr>
+<tr>
+<td>NAG / Hands-On / HO</td>
+<td>운전자에게 조향 참여를 요구하는 경고 / 손 감지 관련 값</td>
+<td>HO 숫자는 CAN 신호값입니다. 카메라가 주시를 확인했다는 뜻으로 해석하면 안 됩니다.</td>
+</tr>
+<tr>
+<td>ALC / ULC</td>
+<td>자동 차선 변경 / 화면에서 사용하는 ULC 차선 변경 관련 제어</td>
+<td>비슷한 이름이어도 아래의 확인 요청·고속도로 외 허용·사각지대 설정은 서로 다른 필드를 바꿉니다.</td>
+</tr>
+<tr>
+<td>STOCK</td>
+<td>차량이 원래 보내는 값 유지</td>
+<td><code>OFF</code>와 다릅니다. STOCK은 원래 값이 ON이면 그것을 유지할 수 있습니다.</td>
+</tr>
+<tr>
+<td>RX / TX</td>
+<td>수신 / 송신</td>
+<td>RX는 받은 메시지, TX는 보낸 메시지입니다.</td>
+</tr>
+<tr>
+<td>TX OK / FAIL</td>
+<td>송신 성공 / 실패 집계</td>
+<td>송신 API가 성공했다는 뜻이지 차량이 의도한 동작을 했다는 증거는 아닙니다.</td>
+</tr>
+<tr>
+<td>Gate / Blocked</td>
+<td>허용 조건 / 조건에 막힘</td>
+<td>AP 상태, 신호 유효성, 통신 복구 등의 조건 때문에 송신하지 않는 상태입니다.</td>
+</tr>
+<tr>
+<td>Template / Fresh / Stale / Age</td>
+<td>원본 메시지 / 최신 / 오래됨 / 경과 시간</td>
+<td>원본 메시지를 받아야 값을 일부 바꿔 보낼 수 있습니다. 허용 시간은 기능마다 다릅니다.</td>
+</tr>
+<tr>
+<td>NVS / Saved / Persistent</td>
+<td>전원을 꺼도 남는 저장소 / 저장됨</td>
+<td>재부팅 뒤에도 설정이 유지됩니다.</td>
+</tr>
+<tr>
+<td>RAM-only / Session / Volatile</td>
+<td>임시 저장 / 현재 세션</td>
+<td>재부팅하면 사라집니다. PedalMap은 P 진입 확인 때도 해제됩니다.</td>
+</tr>
+<tr>
+<td>CAN A / CAN B</td>
+<td>보드의 두 CAN 통신 경로</td>
+<td>A는 MCP2515, B는 ESP32 TWAI입니다. 실제 연결 버스는 차량 프로필에 따라 달라집니다.</td>
+</tr>
+<tr>
+<td>BUS OFF</td>
+<td>CAN 오류 누적으로 통신에서 이탈한 상태</td>
+<td>기능 OFF와 다릅니다. 진단 화면의 오류·복구 기록을 확인하는 상태입니다.</td>
+</tr>
+<tr>
+<td>ms / s / Nm</td>
+<td>밀리초 / 초 / 뉴턴미터</td>
+<td>1,000 ms = 1초. Nm 표시는 토크 신호 크기이며 실제 조향 명령과 동일시하면 안 됩니다.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-3">1.2 하단의 네 메뉴</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">메뉴</th>
+<th scope="col">역할</th>
+<th scope="col">주요 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HOME</td>
+<td>현재 상태 요약</td>
+<td>AP 상태, NAG·방향지시등, 빠른 스위치, R79 송신, CAN 수신</td>
+</tr>
+<tr>
+<td>DEVICES</td>
+<td>S3XY 버튼 관리</td>
+<td>등록, 누름 동작 배정, 자동 연결, 버튼별 진단</td>
+</tr>
+<tr>
+<td>SETTINGS</td>
+<td>기능 및 장치 설정</td>
+<td>차량 프로필, 기능 설정, 무선, 진단, 업데이트, 초기화</td>
+</tr>
+<tr>
+<td>LAB</td>
+<td>실험·기록 도구</td>
+<td>R79 관찰, 감시 관련 실험, 송신 비교, CAN 기록</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>SETTINGS → LAB Menu</code>를 켜야 LAB 화면이 표시됩니다. 지원하지 않는 기능은 차량 프로필에 따라 숨겨지거나 변경 요청이 거부됩니다.</p>
+<h3 id="section-4">1.3 설정을 적용하는 방식</h3>
+<p>스위치·선택 버튼은 대부분 변경 즉시 장치로 전송됩니다. 숫자 입력 옆에 <code>Apply</code>, <code>Apply Delay</code>, <code>Apply Mode H Tuning</code>, <code>Save Labels</code>가 있으면 입력 후 해당 버튼까지 눌러야 합니다. <code>Unsaved</code>는 아직 저장되지 않았다는 뜻입니다. 실패 안내가 뜨면 화면에 적힌 숫자만 보고 적용됐다고 판단하지 마세요.</p>
+<h2 id="section-5">2. 첫 연결과 차량 프로필</h2>
+<h3 id="section-6">2.1 Wi-Fi 접속</h3>
+<ol>
+<li>휴대전화 또는 PC에서 기본 Wi-Fi 이름 <code>T2CAN-****</code>에 연결합니다. 이름을 변경한 기기는 변경된 이름을 사용합니다.</li>
+<li>기본 비밀번호는 <code>12345678</code>입니다. 변경한 기기는 기존에 설정한 비밀번호를 사용합니다.</li>
+<li>브라우저에서 <code>http://192.168.4.1</code>을 엽니다. 인터넷 연결이 아니라 보드의 로컬 대시보드 접속입니다.</li>
+<li>첫 실행이면 <code>PROFILE SETUP MODE</code>에서 차량과 실제 CAN 배선을 선택합니다.</li>
+</ol>
+<h3 id="section-7">2.2 Select your vehicle / CAN Connection</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">선택 항목</th>
+<th scope="col">뜻</th>
+<th scope="col">확인할 점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model Y L</td>
+<td>Y L 프로필</td>
+<td>Party CAN + VH CAN으로 고정됩니다.</td>
+</tr>
+<tr>
+<td>Model Y Juniper / Legacy</td>
+<td>신형 / 기존형 Model Y 프로필</td>
+<td>실제 배선에 맞는 Body + Chassis 또는 Party + Chassis를 고릅니다.</td>
+</tr>
+<tr>
+<td>Model 3 Highland / Legacy</td>
+<td>Highland / 기존형 Model 3 프로필</td>
+<td>지원 기능은 모델뿐 아니라 배선 조합으로 결정됩니다.</td>
+</tr>
+<tr>
+<td>Steering wheel buttons</td>
+<td>Highland의 방향지시등 버튼형</td>
+<td>Body + Chassis 구성에서 실제 장착 형태와 일치해야 합니다.</td>
+</tr>
+<tr>
+<td>Turn stalk</td>
+<td>방향지시등 레버형</td>
+<td>Highland에서는 직접 선택하며, 다른 해당 프로필은 레버형으로 결정됩니다.</td>
+</tr>
+<tr>
+<td>Save Profile &amp; Reboot / Confirm &amp; Reboot</td>
+<td>프로필 저장 후 재부팅</td>
+<td>저장 후 다시 시작해야 CAN 초기화에 반영됩니다.</td>
+</tr>
+<tr>
+<td>Cancel Profile Change / Back</td>
+<td>변경 취소 / 확인 화면에서 돌아가기</td>
+<td>잘못 선택했다면 저장 전에 돌아갑니다.</td>
+</tr>
+</tbody>
+</table></div>
+<p>프로필 미설정 상태에서는 CAN 송신·신호 주입·복구 감독과 Bluetooth가 시작되지 않고 Wi-Fi 설정 화면이 열립니다. 기존 설정이 없는 첫 실행과, 구형 펌웨어의 대규모 설정 이전 안내는 구분해야 합니다. <code>MAJOR FIRMWARE UPDATE</code>는 해당 마이그레이션에서 이전 설정이 지워졌다는 안내입니다.</p>
+<h3 id="section-8">2.3 배선별 기능 차이</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">배선 구성</th>
+<th scope="col">NAG / Auto Blinker</th>
+<th scope="col">PedalMap / AP Drive Profile</th>
+<th scope="col">R79 / AP Right Scroll</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Y L · Party + VH</td>
+<td>둘 다 지원</td>
+<td>둘 다 지원</td>
+<td>둘 다 지원</td>
+</tr>
+<tr>
+<td>일반 3/Y · Body + Chassis</td>
+<td>NAG 미지원 / Auto Blinker 지원</td>
+<td>둘 다 지원</td>
+<td>둘 다 지원</td>
+</tr>
+<tr>
+<td>일반 3/Y · Party + Chassis</td>
+<td>NAG 지원 / Auto Blinker 미지원</td>
+<td>둘 다 미지원</td>
+<td>둘 다 지원</td>
+</tr>
+</tbody>
+</table></div>
+<p>위의 ‘지원’은 코드가 해당 경로를 허용한다는 뜻입니다. 해당 차량 소프트웨어에서 기능 효과가 확인됐다는 뜻은 아닙니다. Party + Chassis에서는 방향지시등 송신용 프로필도 비활성입니다. <strong>기능을 보이게 하려고 실제 배선과 다른 프로필을 선택하면 안 됩니다.</strong></p>
+<h2 id="section-9">3. HOME — 현재 상태 보기</h2>
+<h3 id="section-10">3.1 상단 상태와 Quick Controls</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 설명</th>
+<th scope="col">함께 볼 값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connecting / 연결 상태</td>
+<td>브라우저와 보드의 응답 상태</td>
+<td>차량 CAN 통신 정상 여부와 별개입니다.</td>
+</tr>
+<tr>
+<td>AUTOPILOT</td>
+<td>받은 AP 상태를 OFF, AUTOSTEER, NOA, FSD 등으로 표시</td>
+<td><code>AP STATE UNKNOWN</code>은 유효한 상태가 없다는 뜻입니다.</td>
+</tr>
+<tr>
+<td>TORQUE</td>
+<td>수신한 조향 토크 신호</td>
+<td><code>Last injected</code>와 비교하면 수신값과 주입값을 구분할 수 있습니다.</td>
+</tr>
+<tr>
+<td>NAG</td>
+<td>NAG 기능의 현재 상태</td>
+<td>OFF, STANDBY, ACTIVE, PAUSED, CARRIER 등의 표시를 봅니다.</td>
+</tr>
+<tr>
+<td>BLINKER</td>
+<td>Auto Blinker 준비 상태</td>
+<td>STABILIZATION, READY, PAUSED, EXIT WAIT 등입니다.</td>
+</tr>
+<tr>
+<td>S3XY</td>
+<td>버튼 연결·등록 현황 요약</td>
+<td>DEVICES에서 각 버튼의 상태를 확인합니다.</td>
+</tr>
+<tr>
+<td>Nag Killer / Auto Blinker / TLSSC</td>
+<td>자주 쓰는 기능의 빠른 스위치</td>
+<td>SETTINGS의 동일 기능과 연동됩니다. 별도의 독립 기능이 아닙니다.</td>
+</tr>
+</tbody>
+</table></div>
+<p>상태가 <code>ACTIVE</code>여도 매 순간 송신하는 것은 아닙니다. 원본 프레임, 실행 단계, 복구 상태 등의 추가 조건이 있습니다. 소스에 남아 있는 HOME의 <code>Off-Highway ALC</code> 타일은 숨김 처리되어 있으므로 설정은 <code>Lane Change / ULC</code>에서 확인합니다.</p>
+<h3 id="section-11">3.2 Injection State — R79·CAN</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R79 TX / REASON</td>
+<td>R79 송신 상태와 이유. <code>WAIT TEMPLATE</code>는 사용할 원본 프레임 대기, <code>SUSPENDED</code>는 정책상 송신 중지 상태입니다.</td>
+</tr>
+<tr>
+<td>DEFAULT ON · MANUAL D/R SUSPEND</td>
+<td>R79는 기본 허용 정책이지만 D/R에서 수동 운전이 확인되면 중지하는 구조입니다. 별도의 일반 ON/OFF 메뉴가 아닙니다.</td>
+</tr>
+<tr>
+<td>BIT 18</td>
+<td>SmartSummonOnly 필드에 적용하는 STOCK 또는 FORCE 0 정책입니다.</td>
+</tr>
+<tr>
+<td>TX OK / FAIL / LAST TX</td>
+<td>송신 성공·실패 집계와 마지막 송신 경과 시간입니다.</td>
+</tr>
+<tr>
+<td>CAN A / CAN B</td>
+<td>해당 버스의 상태와 수신량·최근 수신 경과 시간입니다. PARTY, BODY, VH, CHASSIS 표기는 프로필에 따라 바뀝니다.</td>
+</tr>
+<tr>
+<td>WAITING / No frames yet</td>
+<td>아직 프레임 수신이 확인되지 않았습니다. Wi-Fi 연결 성공만으로 이 상태가 해소되지는 않습니다.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-12">3.3 Live details — 상세 수치</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HandsOn real / Last injected</td>
+<td>수신한 HO 값 / 마지막 주입 토크·HO 값</td>
+</tr>
+<tr>
+<td>0x370 RX / 0x249 RX</td>
+<td>해당 CAN ID의 수신 횟수</td>
+</tr>
+<tr>
+<td>NAG TX OK / FAIL</td>
+<td>NAG 송신 성공·실패 횟수</td>
+</tr>
+<tr>
+<td>NAG last / max gap</td>
+<td>마지막 송신 후 시간 / 관찰한 최대 송신 간격</td>
+</tr>
+<tr>
+<td>VH overlay TX OK / FAIL</td>
+<td>해당 오버레이 송신 경로의 성공·실패 집계</td>
+</tr>
+<tr>
+<td>NOA cancel TX</td>
+<td>차선 변경 취소 관련 송신 집계</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-13">4. DEVICES — S3XY 버튼</h2>
+<h3 id="section-14">4.1 Add Button — 버튼 등록</h3>
+<p>최대 <strong>3개</strong>를 등록합니다. 먼저 <code>Wireless Settings → Bluetooth Master</code>가 ON인지 확인합니다. <code>+ Add Button</code>을 누르면 화면이 버튼을 계속 누르고 있으라고 안내합니다. <code>Continue</code>로 검색을 시작하며, 미등록 버튼이 하나면 자동 페어링하고 여러 개면 <code>Select</code>로 대상을 고릅니다. <code>Connected</code>가 표시된 뒤 버튼을 놓습니다.</p>
+<p><code>Device found → Bluetooth connected → Securing connection → Preparing button</code>은 검색·연결·보안·사용 준비 단계입니다. 완료 후 <code>Done</code>은 종료, <code>Configure Button</code>은 동작 배정 화면입니다. 새 버튼의 동작은 <strong>None</strong>으로 시작합니다. <code>Scan Again</code>은 재검색, <code>Try Again</code>은 실패한 등록 재시도입니다.</p>
+<h3 id="section-15">4.2 버튼 상세 메뉴</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">메뉴</th>
+<th scope="col">한글 설명</th>
+<th scope="col">저장·영향</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single / Double / Long</td>
+<td>한 번 / 두 번 / 길게 눌렀을 때 실행할 기능</td>
+<td>각 제스처에 별도로 배정합니다.</td>
+</tr>
+<tr>
+<td>Auto Connect</td>
+<td>이 버튼의 자동 재연결 허용</td>
+<td>전역 S3XY Auto Connect도 켜져 있어야 자동 연결됩니다.</td>
+</tr>
+<tr>
+<td>Connection</td>
+<td>현재 연결 상태</td>
+<td>Connected, Connecting, Preparing, Reconnecting, Offline 등을 표시합니다.</td>
+</tr>
+<tr>
+<td>Rename</td>
+<td>버튼 이름 변경</td>
+<td>구분하기 쉬운 이름을 저장합니다.</td>
+</tr>
+<tr>
+<td>Connect</td>
+<td>수동 연결 시도</td>
+<td>등록을 새로 하는 동작과 다릅니다.</td>
+</tr>
+<tr>
+<td>Forget Device</td>
+<td>선택한 버튼 등록·BLE 보안 연결 정보 삭제</td>
+<td>다시 쓰려면 재등록이 필요합니다.</td>
+</tr>
+<tr>
+<td>Diagnostics</td>
+<td>선택한 버튼의 Bluetooth·입력 진단</td>
+<td>일반 사용보다 연결 문제 분석용입니다.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-16">4.3 Choose Action — 누름 동작에 배정할 기능</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">영문 선택</th>
+<th scope="col">한글 뜻</th>
+<th scope="col">실제 요청</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>None</td>
+<td>동작 없음</td>
+<td>버튼을 눌러도 차량 기능을 요청하지 않습니다.</td>
+</tr>
+<tr>
+<td>NOA Lane Change Cancel</td>
+<td>차선 변경 취소</td>
+<td>취소 동작과 Auto Blinker의 취소 일시정지 처리에 연결됩니다.</td>
+</tr>
+<tr>
+<td>Left Blinker / Right Blinker</td>
+<td>왼쪽 / 오른쪽 방향지시등</td>
+<td>지원 프로필의 직접 방향지시등 요청입니다. Auto Blinker 스위치·안정화 타이머와 독립입니다.</td>
+</tr>
+<tr>
+<td>Acceleration Mode Toggle</td>
+<td>가속 맵 전환</td>
+<td>CHILL ↔ SPORT. 현재 PERFORMANCE이면 CHILL을 요청합니다. 현재 주행 세션에만 적용됩니다.</td>
+</tr>
+<tr>
+<td>Performance Mode</td>
+<td>PERFORMANCE 가속 맵 요청</td>
+<td>토글이 아니라 PERFORMANCE 선택 요청입니다. 실제 차량의 출력 향상을 보장하지 않습니다.</td>
+</tr>
+<tr>
+<td>TLSSC Toggle</td>
+<td>TLSSC 켜기/끄기 전환</td>
+<td>일반 TLSSC 설정을 전환합니다. TLSSC Restore와 다릅니다.</td>
+</tr>
+<tr>
+<td>Auto Blinker Toggle</td>
+<td>자동 방향지시등 켜기/끄기</td>
+<td>Auto Blinker 설정을 전환합니다.</td>
+</tr>
+<tr>
+<td>Research Capture A / B / C / D</td>
+<td>A/B/C/D 표식으로 CAN 기록</td>
+<td>LAB의 CAN Research Capture에 대응하는 기록 요청입니다.</td>
+</tr>
+<tr>
+<td>Research Capture Reset</td>
+<td>연구 기록 초기화</td>
+<td>기존 캡처 데이터를 지우는 동작입니다. 다운로드와 다릅니다.</td>
+</tr>
+</tbody>
+</table></div>
+<p>프로필에서 지원하지 않는 동작은 목록에서 숨겨집니다. 버튼 입력을 받았더라도 AP 상태·원본 프레임·LAB 상태 같은 조건에 막혀 실제 요청이 거부될 수 있습니다.</p>
+<h3 id="section-17">4.4 버튼별 Diagnostics</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">구역·항목</th>
+<th scope="col">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Raw state / RSSI</td>
+<td>Bluetooth 내부 연결 단계 / 수신 신호 세기. RSSI는 음수이며 0에 가까울수록 강한 편입니다.</td>
+</tr>
+<tr>
+<td>Secure / Notify subscription</td>
+<td>보안 연결 상태 / 버튼 알림 구독 상태</td>
+</tr>
+<tr>
+<td>Single / Double / Long</td>
+<td>각 누름 입력의 수신 횟수</td>
+</tr>
+<tr>
+<td>Notify / unparsed</td>
+<td>받은 알림 수 / 해석하지 못한 알림 수</td>
+</tr>
+<tr>
+<td>BLE address type / Saved 3D49 ID / 3D49 NVS verified</td>
+<td>주소 종류, 저장된 버튼 식별 정보, 영구 저장 확인 상태</td>
+</tr>
+<tr>
+<td>B6 ACK / Last notify / Error</td>
+<td>프로토콜 응답 횟수, 최근 알림, 최근 오류</td>
+</tr>
+<tr>
+<td>Reconnects / Attempts / Failures</td>
+<td>재연결 및 시도·실패 집계</td>
+</tr>
+<tr>
+<td>Last path / Discover / BLE connect / Attempt → READY</td>
+<td>재연결 경로와 단계별 소요 시간</td>
+</tr>
+<tr>
+<td>Identity recovery / Retry</td>
+<td>식별 복구 및 재시도 상태</td>
+</tr>
+<tr>
+<td>Send B6 Handshake / BLE CSV</td>
+<td>프로토콜 핸드셰이크 요청 / BLE 로그 다운로드</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-18">5. SETTINGS → Nag Killer — NAG 신호 주입</h2>
+<h3 id="section-19">5.1 Enabled와 기본 동작</h3>
+<p>조향 토크·Hands-On 관련 CAN 메시지를 가공해 보내는 기능입니다. 화면의 토크는 신호에 넣는 값이며 물리적 핸들 회전 명령을 뜻하지 않습니다. Party CAN 경로가 있는 프로필에서 지원합니다.</p>
+<p><strong>설정이 없는 경우 코드 기본값은 Enabled ON, Mode A입니다.</strong> README의 Rev.4 기본 튜닝값은 ‘Rev.4 프로필을 선택했을 때의 값’이며, 최초 기본 모드가 Rev.4라는 뜻이 아닙니다. 실제 송신은 프로필과 AP 등의 조건을 추가로 만족해야 합니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">메뉴</th>
+<th scope="col">한글 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enabled</td>
+<td>NAG 기능을 켜거나 끕니다. 설정은 저장됩니다.</td>
+</tr>
+<tr>
+<td>Pause at 0 km/h</td>
+<td>신선한 Party CAN 속도가 정확히 0.00 km/h일 때 송신을 쉬게 하는 옵션입니다. 기본 OFF입니다. Mode H의 별도 속도 조건과 구분합니다.</td>
+</tr>
+<tr>
+<td>Mode H Profiles</td>
+<td>Mode H 프로필별 수치와 실행 상태 화면을 엽니다.</td>
+</tr>
+<tr>
+<td>Apply</td>
+<td>고급 매개변수 편집을 적용·저장합니다.</td>
+</tr>
+<tr>
+<td>Reset Mode A</td>
+<td><strong>NAG 설정을 Mode A 기본값으로 되돌립니다.</strong> 단순히 현재 입력만 취소하는 버튼이 아니며 기본 Enabled ON도 주의해야 합니다.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-20">5.2 Mode A / B / C / H</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">모드</th>
+<th scope="col">한글 설명</th>
+<th scope="col">구분점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mode A</td>
+<td>토크 표의 항목을 순서대로 사용하는 기본 방식</td>
+<td>유효한 수신·AP 조건에 따라 송신합니다.</td>
+</tr>
+<tr>
+<td>Mode B</td>
+<td>송신 구간과 휴식 구간을 반복하는 방식</td>
+<td><code>BURST MS</code>와 <code>PAUSE MS</code>가 주기 구성을 정합니다.</td>
+</tr>
+<tr>
+<td>Mode C</td>
+<td>정해진 범위 안에서 토크값이 무작위 보행 형태로 변하는 방식</td>
+<td>화면은 토크 표 선택처럼 설명하지만 실제 런타임은 동적으로 값을 만듭니다.</td>
+</tr>
+<tr>
+<td>Mode H</td>
+<td>대기·상승·유지·하강·휴식 단계를 가진 프로필 방식</td>
+<td>유효 AP와 신선한 속도·이동 조건을 별도로 확인합니다.</td>
+</tr>
+</tbody>
+</table></div>
+<p>모드 선택은 즉시 적용·저장 요청을 보냅니다. UI의 <code>RECOMMENDED</code>·<code>BETA</code>는 원본 화면 표기이며 이 설명서가 특정 모드의 실차 안전성이나 효과를 추천·확인한 것은 아닙니다.</p>
+<h3 id="section-21">5.3 ADVANCED PARAMETERS</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 뜻</th>
+<th scope="col">해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HANDSON RATE %</td>
+<td>HO 덮어쓰기 비율</td>
+<td>A에서 HO 설정 여부를 결정하는 비율입니다. B/C/H가 이 숫자를 같은 방식으로 사용하는 것은 아닙니다.</td>
+</tr>
+<tr>
+<td>BURST MS / PAUSE MS</td>
+<td>송신 구간 / 휴식 구간 시간</td>
+<td>주로 Mode B를 설명하는 값입니다. 모든 모드의 공통 송신 주기로 읽으면 안 됩니다.</td>
+</tr>
+<tr>
+<td>TARGET ID</td>
+<td>대상 CAN ID</td>
+<td>일반적인 기본 대상은 <code>0x370</code>입니다. 임의 ID 변경은 다른 메시지에 영향을 줄 수 있습니다.</td>
+</tr>
+<tr>
+<td>AP STATE ID</td>
+<td>AP 상태를 읽는 CAN ID</td>
+<td>기본 <code>0x399</code>입니다.</td>
+</tr>
+<tr>
+<td>STEERING ID</td>
+<td>조향 정보를 읽는 CAN ID</td>
+<td>기본 <code>0x129</code>입니다.</td>
+</tr>
+<tr>
+<td>TORQUE TABLE · B2 / B3 / Nm</td>
+<td>토크의 바이트 표현과 환산값</td>
+<td>B2/B3는 원시 데이터이며 Nm는 화면 환산값입니다.</td>
+</tr>
+<tr>
+<td>Add Torque / Remove</td>
+<td>토크 표 행 추가 / 제거</td>
+<td>행을 편집한 다음 Apply로 반영합니다. Mode H에서는 일부 입력이 잠깁니다.</td>
+</tr>
+</tbody>
+</table></div>
+<p>고급 항목은 CAN 신호 해석과 연결된 값이므로 단순한 사용자 취향 설정으로 보지 마세요.</p>
+<h3 id="section-22">5.4 Mode H Profiles — 프로필의 차이</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">프로필</th>
+<th scope="col">한글 설명</th>
+<th scope="col">화면에서의 취급</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rev.1</td>
+<td>대기 후 주 토크 이벤트를 만들고 다시 쉬는 Human Interaction 방식</td>
+<td>선택·튜닝 가능</td>
+</tr>
+<tr>
+<td>Rev.3</td>
+<td>Rev.1 계열 이벤트에 대기 중 작은 보정 신호를 더한 방식</td>
+<td>선택·튜닝 가능. 저장 정보가 없는 H 하위 프로필 기본값입니다.</td>
+</tr>
+<tr>
+<td>Rev.4</td>
+<td>대기·휴식 중 원본 부호와 반대 방향의 보정 신호를 만드는 방식</td>
+<td>선택·튜닝 가능. 시각 경고 대응 옵션이 있습니다.</td>
+</tr>
+<tr>
+<td>Rev.2</td>
+<td>작은 Natural Grip 유지 신호와 주기적 이벤트를 쓰는 기존 방식</td>
+<td>현재 선택 버튼에는 없습니다. 예전 저장값을 읽기 위한 호환 처리와 고정 참조 설명이 남아 있습니다.</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>Carrier</code>는 주 이벤트 사이에 보내는 보정 신호, <code>Primary</code>는 주 이벤트, <code>Refractory</code>는 주 이벤트 뒤의 휴식 단계입니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">튜닝 항목</th>
+<th scope="col">한글 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY PEAK MIN / MAX</td>
+<td>주 이벤트의 최소·최대 토크 크기</td>
+</tr>
+<tr>
+<td>WAIT MIN / MAX</td>
+<td>다음 이벤트를 기다리는 시간 범위</td>
+</tr>
+<tr>
+<td>REFRACTORY MIN / MAX</td>
+<td>이벤트 이후 휴식 시간 범위</td>
+</tr>
+<tr>
+<td>HO OVERRIDE (%)</td>
+<td>Rev.1 계열에서 HO를 덮어쓰는 비율</td>
+</tr>
+<tr>
+<td>WAIT CARRIER MIN / MAX</td>
+<td>Rev.3 대기 단계의 보정 신호 범위</td>
+</tr>
+<tr>
+<td>Carrier Direction</td>
+<td>Rev.3의 보정 방향. FOLLOW STOCK은 원본 부호 기준, RANDOM + / −는 무작위 방향입니다.</td>
+</tr>
+<tr>
+<td>CARRIER MIN / MAX</td>
+<td>Rev.4의 원본 반대 방향 보정에 쓰는 크기 범위</td>
+</tr>
+<tr>
+<td>Hands-On Policy</td>
+<td>ALWAYS HO=1은 1 지정, THRESHOLD HO=1은 임계값에 따른 1 지정, TIERED HO=1 / 2는 단계별 지정입니다.</td>
+</tr>
+<tr>
+<td>HO=1 / HO=2 THRESHOLD</td>
+<td>위 단계 판단에 사용하는 토크 기준값. TIERED에서 낮은 기준 미만은 원래 HO를 유지합니다. HO=3은 생성하지 않습니다.</td>
+</tr>
+<tr>
+<td>Visual Warning Rescue</td>
+<td>Rev.4에서 시각 경고를 감지하면 지연 뒤 주 이벤트를 요청하는 옵션입니다.</td>
+</tr>
+<tr>
+<td>RESCUE DELAY</td>
+<td>위 경고 대응의 대기 시간. 대기 중 경고가 사라지면 대응 요청을 취소합니다.</td>
+</tr>
+<tr>
+<td>Stop Behavior</td>
+<td>STOPPED 상태의 송신 처리. HARD PAUSE · 0-TX는 송신 중지, STOCK CARRIER는 원본 토크·HO를 유지하며 카운터·체크섬만 진행합니다.</td>
+</tr>
+<tr>
+<td>Apply Mode H Tuning</td>
+<td>현재 편집한 프로필 수치를 저장·적용합니다.</td>
+</tr>
+<tr>
+<td>Reset Current Profile</td>
+<td>현재 H 프로필의 튜닝을 기본값으로 돌립니다. Reset Mode A와 다릅니다.</td>
+</tr>
+<tr>
+<td>PHASE / EVENT · ENGINE OUTPUT</td>
+<td>현재 단계·이벤트와 계산된 토크 출력을 표시하는 관찰 항목입니다.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Rev.4 기본 튜닝은 Primary <strong>1.80–2.60 Nm</strong>, Wait <strong>0.90–3.00초</strong>, Refractory <strong>0.50–1.50초</strong>, Carrier <strong>0.10–0.60 Nm</strong>, HO 기준 <strong>0.40 / 2.00 Nm</strong>, Visual Warning Rescue <strong>ON·0.5초</strong>입니다. 이는 소스 기본값 설명이며 실차 권장값이 아닙니다. 정지 처리의 기본은 <strong>HARD PAUSE</strong>입니다. 속도가 오래됐거나 이동 확인 중이면 STOCK CARRIER를 골라도 별도 정지 조건이 적용됩니다.</p>
+<h3 id="section-23">5.5 NAG Continuity Monitor</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AP state / validity</td>
+<td>AP 숫자값과 유효 여부. 코드에서는 단순 경과 시간만으로 AP 유효성을 판단하지 않습니다.</td>
+</tr>
+<tr>
+<td>Last TX / max gap / Session TX OK</td>
+<td>마지막 송신 후 시간, 최대 간격, 현재 AP 세션 송신 성공 수</td>
+</tr>
+<tr>
+<td>Last skip / Vehicle speed / gate</td>
+<td>최근 생략 이유, 속도 정보, 송신 허용 상태</td>
+</tr>
+<tr>
+<td>Mode H phase / motion / event / output</td>
+<td>H 단계·정지/이동 판정·이벤트·계산 출력</td>
+</tr>
+<tr>
+<td>Skip stopped / speed stale</td>
+<td>정지 또는 오래된 속도 때문에 생략한 횟수</td>
+</tr>
+<tr>
+<td>Skip AP invalid / inactive / HO&gt;1</td>
+<td>AP 무효·비활성 또는 HO 조건 때문에 생략한 횟수</td>
+</tr>
+<tr>
+<td>TX block fresh / epoch / mutex</td>
+<td>최신 원본 부족, 복구 전후 상태 불일치, 송신 자원 잠금 등으로 차단된 횟수</td>
+</tr>
+<tr>
+<td>TX block MCP / send error / Last TX block</td>
+<td>CAN A 준비 상태 또는 실제 송신 오류와 마지막 차단 이유</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-24">6. SETTINGS → Auto Blinker — 자동 방향지시등</h2>
+<p>NOA·차선 변경 상태를 관찰하고, 해당 방향이 허용되면 지연 후 방향지시등 신호를 요청합니다. <strong>주변 차로의 안전을 보장하거나 운전자의 확인을 대신하는 기능이 아닙니다.</strong> 기본 Enabled는 OFF이며 지원 배선은 Y L 또는 일반 3/Y의 Body + Chassis입니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 설명</th>
+<th scope="col">범위·기본값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enabled</td>
+<td>자동 방향지시등 기능 켜기/끄기</td>
+<td>기본 OFF, 저장</td>
+</tr>
+<tr>
+<td>Door Open Lane Change Cancel</td>
+<td>앞문 열림 버튼 관련 입력을 차선 변경 취소에 사용하는 옵션</td>
+<td>기본 OFF, 저장. 문을 실제로 열라는 뜻이 아닙니다.</td>
+</tr>
+<tr>
+<td>DELAY BEFORE TRIGGER (S)</td>
+<td>허용된 요청의 방향지시등 송신 전 지연</td>
+<td>0–30초, 기본 2초. Apply Delay로 저장</td>
+</tr>
+<tr>
+<td>NOA Stabilization (S)</td>
+<td>NOA 조건이 안정적으로 유지돼야 하는 시간</td>
+<td>1–20초, 기본 10초</td>
+</tr>
+<tr>
+<td>Cancel Pause (S)</td>
+<td>취소 후 자동 동작을 잠시 막는 시간</td>
+<td>10–100초, 기본 20초</td>
+</tr>
+<tr>
+<td>Apply Auto Blinker Timing</td>
+<td>안정화·취소 대기 값을 함께 저장</td>
+<td>위 두 숫자 편집 후 실행</td>
+</tr>
+</tbody>
+</table></div>
+<p>예를 들어 기본값의 10초는 NOA 준비를 위한 안정화 시간이고, 2초는 개별 방향지시등 요청의 지연입니다. 두 숫자는 다른 시점에 적용됩니다. 요청을 준비할 때와 실제 실행할 때 방향별 ALC 조건을 다시 확인합니다. 대기 중 차선 변경 조건이 사라지면 요청이 취소될 수 있습니다. NOA 이탈은 2초의 확인 구간을 거치며 화면에 <code>EXIT WAIT</code>가 표시될 수 있습니다.</p>
+<p>취소 입력은 취소 일시정지를 만들며, 이미 일시정지 중에 같은 취소 동작을 다시 요청하면 일찍 해제할 수 있습니다. 화면의 <code>PAUSED</code>와 남은 시간을 함께 보세요.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">상태·진단</th>
+<th scope="col">뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gate / NOA stabilization / Cancel pause</td>
+<td>현재 허용 조건 / NOA 안정화 진행 / 취소 대기 잔여 시간</td>
+</tr>
+<tr>
+<td>Auto armed / Countdown</td>
+<td>준비된 자동 요청 / 지연 또는 재시도까지 남은 시간</td>
+</tr>
+<tr>
+<td>Behavior / ALC state</td>
+<td>받은 동작 분류 / 차선 변경 상태값</td>
+</tr>
+<tr>
+<td>ALC direction gate</td>
+<td>요청한 왼쪽·오른쪽 방향의 허용 여부</td>
+</tr>
+<tr>
+<td>0x24A freshness / RX</td>
+<td>차선 변경 관련 원본의 최신 여부와 수신 횟수</td>
+</tr>
+<tr>
+<td>Active turn</td>
+<td>현재 해석한 방향지시등 방향</td>
+</tr>
+<tr>
+<td>0x249 checksum / raw</td>
+<td>레버 메시지 체크섬 확인 결과와 원시 데이터</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-25">7. SETTINGS → Summon Monitor — 호출 상태·R79</h2>
+<p>이 화면은 <strong>Summon 실행 버튼이 아닙니다.</strong> 호출 관련 수신 상태와 R79 송신 상태를 관찰하며, 사용자가 바꿀 수 있는 일반 R79 항목은 bit18 정책입니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R79 bit18 · STOCK</td>
+<td>SmartSummonOnly 값을 원본대로 둡니다.</td>
+</tr>
+<tr>
+<td>R79 bit18 · FORCE 0</td>
+<td>해당 값을 0으로 지정합니다. 기본값이며 저장됩니다.</td>
+</tr>
+<tr>
+<td>Session / Priority state</td>
+<td>수신으로 확인한 호출 세션과 우선 처리 상태</td>
+</tr>
+<tr>
+<td>Profile route / Confirmed gear</td>
+<td>프로필의 CAN 경로와 확인된 기어</td>
+</tr>
+<tr>
+<td>ACA / SPR freshness</td>
+<td>호출 판단에 사용하는 ACA·SPR 신호의 최신 여부</td>
+</tr>
+<tr>
+<td>Remote startup evidence</td>
+<td>원격 시작으로 판단할 근거가 수신됐는지 표시</td>
+</tr>
+<tr>
+<td>R79 manual latch</td>
+<td>D/R 수동 운전 확인 후 송신 중지 상태를 유지하는 내부 상태</td>
+</tr>
+<tr>
+<td>Summon load shedding</td>
+<td>호출 처리 중 다른 송신·작업 부담을 줄이는 상태</td>
+</tr>
+<tr>
+<td>TX queue now / max</td>
+<td>현재 송신 대기열 / 관찰한 최대 길이</td>
+</tr>
+<tr>
+<td>Shed total / PARK / READY / ACTIVE</td>
+<td>상태별 부하 절감 처리 횟수</td>
+</tr>
+<tr>
+<td>R79 retry scheduled / OK / FAIL / exhausted</td>
+<td>예약 재시도와 성공·실패·횟수 소진 집계</td>
+</tr>
+<tr>
+<td>Emergency flush / retry OK / FAIL</td>
+<td>긴급 대기열 처리 및 재시도 집계</td>
+</tr>
+<tr>
+<td>RX 0x118 / 0x186 / 0x399 / 0x3F8</td>
+<td>관련 메시지의 수신 횟수</td>
+</tr>
+</tbody>
+</table></div>
+<p>v3.7.2의 고정 정책은 bit19=0, bit47=1입니다. mux1 원본에 대한 Fast Echo는 2ms의 제한된 대기를 사용하며, mux2 수신 후 한 번의 +150ms 갱신을 예약합니다. 이 화면에 과거 버전의 송신 타이밍 조정 메뉴가 있다고 가정하면 안 됩니다.</p>
+<p>수동 D/R이 확인되면 R79가 중지되며, 잠깐 상태가 불명확해졌다는 이유만으로 즉시 다시 켜지지 않습니다. AP, 확인된 Summon 세션, 명확한 P/N은 이 수동 중지 상태를 해제하는 조건입니다. <code>FORCE 0</code> 선택이나 TX 성공 자체가 차량에서 Summon이 허용됐다는 의미는 아닙니다.</p>
+<h2 id="section-26">8. SETTINGS → TLSSC — 신호등·정지표지 관련 플래그</h2>
+<p>Traffic-light / stop-sign control 관련 플래그를 CAN 메시지에 반영하는 기능입니다. 신호등을 카메라로 직접 인식하거나 제동을 보장하는 독립 시스템이 아닙니다. AP 활성 조건은 항상 적용됩니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 설명</th>
+<th scope="col">기본값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enabled</td>
+<td>일반 TLSSC 플래그 주입 사용</td>
+<td>OFF</td>
+</tr>
+<tr>
+<td>Highway / Controlled-Access Gate</td>
+<td>통제 진입 도로 정보를 이용해 해당 조건에서 TLSSC를 차단</td>
+<td>OFF</td>
+</tr>
+<tr>
+<td>Block TLSSC in NOA</td>
+<td>AUTOSTEER에서는 허용하고 NOA 진입 때 차단</td>
+<td>OFF</td>
+</tr>
+</tbody>
+</table></div>
+<p>도로 정보는 <code>0x238</code>을 사용하며 화면의 신선도 기준은 2초입니다. Highway 판단에는 연속 2회 샘플을 사용합니다. Highway 또는 NOA 차단으로 전환할 때 한 번의 OFF 전환을 보낸 뒤 원본 처리로 돌아갑니다.</p>
+<p><code>Road Context Monitor</code>의 <code>GPS Road Match</code>, <code>Road Class</code>, <code>Controlled Access</code>, <code>Off Ramp L/R</code>는 수신 도로 정보입니다. <code>Highway confirmed</code>는 내부 확인 결과, <code>TLSSC Highway Gate</code>는 차단 상태, <code>Blocked mux0 frames</code>와 <code>Highway transitions</code>는 집계입니다. <code>TLSSC ownership / clear</code>, <code>Clear TX OK / FAIL</code>은 해당 필드를 맡고 있는지와 해제 송신 결과를 보여줍니다.</p>
+<h2 id="section-27">9. SETTINGS → Lane Change / ULC — 차선 변경 필드</h2>
+<p>여러 항목이 하나의 최신 CAN B <code>0x3F8</code> 원본에 함께 반영됩니다. 저장된 선택과 실제 송신 가능 상태는 다릅니다. 이 구역은 정식 SETTINGS 항목이므로 <strong>LAB을 끄는 것으로 이 설정들이 모두 꺼진다고 생각하면 안 됩니다.</strong></p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 설명</th>
+<th scope="col">기본 상태·저장</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Confirm-Free Lane Change</td>
+<td>차선 변경의 레버 확인 관련 필드(bit1)를 0으로 지정</td>
+<td>OFF, 저장</td>
+</tr>
+<tr>
+<td>Pre-AP Injection</td>
+<td>Confirm-Free 필드 주입을 AP 활성 전에도 허용할지 선택</td>
+<td>OFF면 기존 AP ACTIVE ONLY, 저장</td>
+</tr>
+<tr>
+<td>Off-Highway ALC</td>
+<td>고속도로 외 ALC 허용 관련 필드(bit56)를 지정</td>
+<td>OFF, 저장</td>
+</tr>
+<tr>
+<td>ULC Off-Highway</td>
+<td>별도의 ULC 고속도로 외 필드(bit15) 제어</td>
+<td>STOCK / OFF / ON, 기본 STOCK, 저장</td>
+</tr>
+<tr>
+<td>ULC Blind Spot</td>
+<td>사각지대 관련 설정 필드(bits52–53) 선택</td>
+<td>STOCK / STANDARD / AGGRESSIVE / MAD MAX, 기본 STOCK, 저장</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>Off-Highway ALC</code>와 <code>ULC Off-Highway</code>는 이름이 비슷하지만 <strong>서로 다른 필드</strong>입니다. <code>STOCK</code>은 원본 유지, <code>OFF</code>는 해당 선택 필드를 끔으로 지정하는 뜻입니다. <code>AGGRESSIVE</code>·<code>MAD MAX</code>는 코드상의 모드 이름이며 실제 차간 간격이나 허용 위험도를 이 문서에서 수치로 보장할 수 없습니다.</p>
+<p><code>INJECTION GATE</code>는 Confirm-Free 조건, <code>STOCK / FORCED BIT1</code>은 원본/지정값, <code>COMPOSITOR GATE</code>는 공통 조합 송신 조건입니다. <code>TX CAN B OK / FAIL</code>, <code>0x3F8 TX OK / FAIL</code>, <code>Off-Highway TX OK / FAIL</code>은 해당 송신 집계입니다. <code>RX age</code>, <code>bit1 / Hz / age / RX</code>, <code>raw</code>는 원본의 최근성·주기·내용이며, <code>Gate-blocked</code>는 조건 때문에 생략한 프레임 수입니다.</p>
+<h2 id="section-28">10. SETTINGS → PedalMap Control — 현재 주행의 가속 맵</h2>
+<p>가속 페달 맵 관련 <code>0x334</code> 필드를 현재 주행 세션 동안 덮어씁니다. <strong>NVS에는 저장하지 않습니다.</strong> 메뉴에 PERFORMANCE가 있다는 사실만으로 차량 하드웨어나 구독 기능이 추가되는 것은 아닙니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">선택</th>
+<th scope="col">한글 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STOCK</td>
+<td>임시 가속 맵 지정을 즉시 해제하고 원본으로 돌아갑니다.</td>
+</tr>
+<tr>
+<td>CHILL</td>
+<td>가속 맵 raw 0 요청</td>
+</tr>
+<tr>
+<td>SPORT</td>
+<td>가속 맵 raw 1 요청</td>
+</tr>
+<tr>
+<td>PERFORMANCE</td>
+<td>가속 맵 raw 2 요청</td>
+</tr>
+</tbody>
+</table></div>
+<p>선택 변경 때 최신 원본으로 즉시 한 번 송신을 시도하고, 이후 들어오는 원본 프레임에 따라 지정값을 반영합니다. 지원 경로, 유효한 원본, 수동 운전 상태 등이 필요하며 AP·Summon·통신 복구 조건에 막힐 수 있습니다. 선택했다고 반드시 수락되는 것은 아닙니다.</p>
+<p>저장 위치는 RAM이며, <strong>P 진입이 확인되거나 보드가 재부팅되면 해제</strong>됩니다. AP Drive Profile이 켜져 있고 해당 AP 상태가 되면 AP 프로필이 먼저 적용됩니다. 기존 수동 목표는 RAM에 남았다가 AP 프로필이 해제되고 허용 조건을 만족하면 다시 적용됩니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">상태 항목</th>
+<th scope="col">뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STOCK 0x334 / SESSION TARGET / SESSION ORIGIN</td>
+<td>차량 원본 가속 맵 / 임시 목표 / 세션 시작 시 원래 값</td>
+</tr>
+<tr>
+<td>PERFORMANCE</td>
+<td>임시 PERFORMANCE 상태 요약</td>
+</tr>
+<tr>
+<td>TOTAL TX OK / FAIL</td>
+<td>전체 송신 성공·실패</td>
+</tr>
+<tr>
+<td>Immediate one-shot TX OK / FAIL</td>
+<td>선택 변경 직후 1회 송신 시도 결과</td>
+</tr>
+<tr>
+<td>Stock-follow TX OK / FAIL</td>
+<td>후속 원본을 따라 반영한 송신 결과</td>
+</tr>
+<tr>
+<td>0x334 age / blocked</td>
+<td>원본 경과 시간 / 요청·송신 차단 집계</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-29">11. SETTINGS → AP Right Scroll — 우측 스크롤 입력</h2>
+<p>AP 활성 중 CAN B의 우측 스크롤 UP·DOWN 입력을 짧게 보내는 기능입니다. 일반 주기와 시각 경고 때의 반복 주기는 별도입니다. 실제 운전자의 물리 스크롤 입력을 우선합니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 설명</th>
+<th scope="col">범위·기본값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enabled</td>
+<td>기능 사용</td>
+<td>기본 OFF, 저장</td>
+</tr>
+<tr>
+<td>Interval</td>
+<td>일반 주기 동작 간격</td>
+<td>1–600초, 기본 30초, 저장</td>
+</tr>
+<tr>
+<td>Visual Warning Repeat</td>
+<td>시각 Hands-On 경고가 계속될 때 반복 간격</td>
+<td>1–5초, 기본 2초, 저장</td>
+</tr>
+</tbody>
+</table></div>
+<p>시각 경고가 새로 감지되면 즉시 한 쌍의 입력을 요청하고 경고가 계속되면 설정 주기로 반복합니다. AP 해제, CAN 복구, 기능 OFF 때 자동 중단합니다. 모든 유효한 차량 프로필의 CAN B VH/Chassis 경로를 사용합니다.</p>
+<p><code>CAN B route</code>는 송신 경로, <code>Visual warning / repeat</code>는 경고·반복 상태, <code>Gate / next pulse</code>는 허용 조건·다음 입력 예정, <code>UP / DOWN / FAIL</code>은 집계입니다. <code>MUX1 RX / driver deferrals</code>는 원본 수신과 운전자 입력 때문에 양보한 횟수, <code>Last pulse</code>는 마지막 입력 시각 관련 정보입니다.</p>
+<h2 id="section-30">12. SETTINGS → AP Drive Profile — AP 중 가속·회생제동 설정</h2>
+<p>AUTOSTEER·NOA 상태에서 <code>0x334</code>의 가속 맵을 CHILL로, 회생제동 필드를 선택값으로 반영합니다. 코드의 대상은 AP 상태 3/4/5이며 <strong>FSD 상태 6은 이 기능의 대상에 포함하지 않습니다.</strong></p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 설명</th>
+<th scope="col">저장</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AP Drive Profile</td>
+<td>기능 켜기/끄기. 기본 OFF</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>STANDARD · 20</td>
+<td>회생제동 raw 20 선택</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>REDUCED · 10</td>
+<td>회생제동 raw 10 선택. 기본 선택값</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>MINIMAL · 1</td>
+<td>회생제동 raw 1 선택</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>AP ownership / Selected regen</td>
+<td>AP 프로필이 현재 제어 중인지 / 선택된 회생제동 값</td>
+<td>상태 표시</td>
+</tr>
+</tbody>
+</table></div>
+<p>20·10·1은 CAN 원시값이며 회생제동 퍼센트나 kW가 아닙니다. 실제 효과는 차량 수용 여부에 달려 있습니다. 새 선택은 다음 유효 원본 프레임부터 반영되며, 프로필이 해제되면 보존된 PedalMap 세션 값이 다시 적용될 수 있습니다.</p>
+<h2 id="section-31">13. SETTINGS → Wireless — Bluetooth와 Wi-Fi</h2>
+<p>상위 <code>S3XY</code> 스위치는 Bluetooth 기능 사용과 연결됩니다. Bluetooth를 끄는 것은 버튼 등록 정보를 삭제하는 동작이 아닙니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">메뉴</th>
+<th scope="col">한글 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bluetooth Master</td>
+<td>Bluetooth 전체 켜기/끄기. 재부팅 없이 적용하며 버튼·보안 연결 정보·동작 배정은 유지합니다. 기본 OFF입니다.</td>
+</tr>
+<tr>
+<td>S3XY Auto Connect</td>
+<td>모든 버튼의 자동 연결을 허용하는 전역 스위치. 기본 ON이며 버튼별 Auto Connect와 함께 적용됩니다.</td>
+</tr>
+<tr>
+<td>Wi-Fi / Registered Buttons</td>
+<td>현재 AP 상태 / 저장된 버튼 수</td>
+</tr>
+<tr>
+<td>WI-FI NAME (SSID)</td>
+<td>AP 이름. UTF-8 1–32바이트이며 한글은 글자 수와 바이트 수가 다릅니다.</td>
+</tr>
+<tr>
+<td>NEW PASSWORD</td>
+<td>새 비밀번호. 8–63바이트이며 <strong>빈칸은 현재 비밀번호 유지</strong>입니다.</td>
+</tr>
+<tr>
+<td>Show / Hide</td>
+<td>비밀번호 표시/숨김</td>
+</tr>
+<tr>
+<td>Apply Wi-Fi Settings</td>
+<td>Wi-Fi 설정을 저장하고 필요 시 AP만 재시작합니다. CAN·BLE·MCU 전체 재부팅은 아닙니다.</td>
+</tr>
+<tr>
+<td>Reset Bluetooth Data</td>
+<td>모든 버튼·동작 배정·BLE 보안 연결 정보·검색 캐시를 지우고 재부팅합니다. Bluetooth Master·전역 Auto Connect 설정은 보존합니다.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Wi-Fi 변경 뒤에는 휴대전화에서 새 이름으로 다시 연결해야 할 수 있습니다. Bluetooth 전체 초기화는 <strong>Bluetooth ON 상태가 필요</strong>합니다. 기능 설정 초기화와 버튼 데이터 초기화는 별도 작업입니다.</p>
+<h2 id="section-32">14. SETTINGS → System — 관리 기능</h2>
+<h3 id="section-33">14.1 Firmware Profile / Firmware / Dashboard Polling Rate</h3>
+<p><code>Firmware Profile → Change</code>는 차량·배선 프로필을 다시 선택하는 메뉴입니다. 저장하면 재부팅합니다. <code>Firmware</code>는 현재 실행 중인 애플리케이션 버전 표시입니다.</p>
+<p><code>Dashboard Polling Rate</code>는 HOME의 데이터를 얼마나 자주 브라우저가 읽을지 정합니다. 선택은 <strong>250 / 500 / 1000 ms</strong>, 기본 <strong>500 ms</strong>입니다. 값이 작으면 갱신 요청이 더 잦아집니다. <strong>CAN 자체의 송신 주기를 바꾸지 않으며, 보드 NVS가 아니라 현재 브라우저의 localStorage에 저장</strong>됩니다.</p>
+<h3 id="section-34">14.2 Firmware Update — 펌웨어 업데이트</h3>
+<p><code>Firmware Update</code>에서 **Arduino 애플리케이션 <code>.bin</code>**을 선택하고 <code>Upload &amp; Flash</code>로 업로드하는 구조입니다. 성공하면 보드가 자동 재부팅합니다. 부트로더·파티션 파일이나 전체 플래시용 <code>merged.bin</code>을 이 메뉴의 애플리케이션 파일과 혼동하면 안 됩니다.</p>
+<p>이번에 빌드한 애플리케이션은 <code>build/artifacts/t2can-universal-unlock.ino.bin</code>입니다. 이는 컴파일 산출물의 구분이며 이번 작업에서 보드에 업로드하지는 않았습니다. 업로드 중에는 전원과 Wi-Fi 연결이 유지되어야 합니다.</p>
+<h3 id="section-35">14.3 재부팅·초기화의 차이</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">메뉴</th>
+<th scope="col">지워지는 것·실행 내용</th>
+<th scope="col">남는 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reboot T-2CAN</td>
+<td>보드 재시작, RAM 세션·일반 런타임 상태 재시작</td>
+<td>NVS에 저장된 설정</td>
+</tr>
+<tr>
+<td>Reset Firmware Settings</td>
+<td>기능 설정을 기본값으로 초기화 후 재부팅. LAB·Banned Car·TLSSC Restore는 OFF</td>
+<td>차량 프로필, Wi-Fi, 버튼 등록·동작·BLE 보안 정보, 저장 BUS OFF 증거</td>
+</tr>
+<tr>
+<td>Reset Bluetooth Data</td>
+<td>버튼·동작 배정·BLE 보안 정보·검색 캐시 삭제 후 재부팅</td>
+<td>Bluetooth Master·전역 자동 연결 및 다른 기능 설정</td>
+</tr>
+<tr>
+<td>Reset Stats</td>
+<td>런타임 집계와 저장 BUS OFF 증거 초기화</td>
+<td>기능 설정·프로필을 공장 초기화하는 작업은 아님</td>
+</tr>
+<tr>
+<td>Factory Reset — Erase All NVS</td>
+<td>프로필·기능·Wi-Fi·BLE 및 저장 BUS OFF 증거를 포함한 NVS 전체 삭제</td>
+<td>펌웨어 자체는 남고 첫 프로필 설정 화면으로 돌아감</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>Reset Firmware Settings</code>는 “모든 기능 OFF”와 같지 않습니다. 예를 들어 NAG 기본 설정은 ON·Mode A입니다. CAN Research Capture의 저장 라벨도 기능 설정 초기화 대상 네임스페이스에 포함됩니다. 진단 기록이 필요하면 지우기 전에 내려받아야 합니다.</p>
+<h2 id="section-36">15. SETTINGS → Diagnostics &amp; CAN Recovery</h2>
+<p>상태 관찰, 로그 다운로드, 통신 복구가 모인 화면입니다. 장치의 오류 증거와 차량 기능의 효과는 구분해서 읽어야 합니다.</p>
+<h3 id="section-37">15.1 SYSTEM</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Firmware / Uptime</td>
+<td>실행 버전 / 부팅 후 경과 시간</td>
+</tr>
+<tr>
+<td>Heap current / minimum</td>
+<td>현재 사용 가능한 힙 메모리 / 실행 중 관찰한 최소 여유량</td>
+</tr>
+<tr>
+<td>Largest heap block</td>
+<td>한 번에 연속 할당 가능한 가장 큰 메모리 블록</td>
+</tr>
+<tr>
+<td>Task stack HWM · CAN A/B, Sup/Web/BLE</td>
+<td>각 작업의 스택 최소 여유량 지표. 값이 작으면 여유가 적다는 뜻입니다.</td>
+</tr>
+<tr>
+<td>TWAI TX/RX queue · now/max</td>
+<td>송신·수신 대기열의 현재/최대 길이</td>
+</tr>
+<tr>
+<td>BLE log capacity</td>
+<td>BLE 로그 저장 용량 정보</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-38">15.2 S3XY / BLE</h3>
+<p><code>Bluetooth Master</code>, <code>BLE stack initialized</code>, <code>BLE stack</code>, <code>Arduino-ESP32 core</code>는 사용 여부와 구현 환경을 표시합니다. <code>Boot bonds / current</code>는 부팅 당시/현재 보안 연결 정보 수입니다.</p>
+<p><code>Bond repair armed / attempts / READY / persist still missing</code>는 보안 연결 정보 복구 상태와 결과, <code>Identity probes / matches / rebinds / mismatches</code>는 버튼 식별 확인·재연결 관계 변경 집계입니다. <code>Auto exact hits / misses</code>, <code>Auto link failures</code>, <code>Last auto trace</code>는 자동 연결 진단입니다.</p>
+<p><code>S3XY ULC accepted / blocked</code>, <code>TX OK / FAIL</code>, <code>Last ULC result</code>는 버튼으로 요청한 차선 변경 취소의 접수·차단·송신 결과입니다. <code>BLE CSV</code>는 로그 다운로드, <code>Clear BLE Log</code>는 해당 로그 삭제입니다.</p>
+<h3 id="section-39">15.3 CAN A RECOVERY / CAN B RECOVERY</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">구역·항목</th>
+<th scope="col">한글 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CAN A MCP state / EFLG / TX fail seq</td>
+<td>MCP2515 상태, 오류 플래그, 연속 송신 실패</td>
+</tr>
+<tr>
+<td>CAN A TX OK / FAIL / RX overflow</td>
+<td>송신 집계와 수신 버퍼 넘침</td>
+</tr>
+<tr>
+<td>Last MCP recover / BUS OFF count</td>
+<td>최근 복구와 BUS OFF 횟수</td>
+</tr>
+<tr>
+<td>CAN A Last BUS OFF snapshot / EFLG / RX age / TX trace</td>
+<td>오류 당시 저장한 상태·수신 경과·직전 송신 흔적</td>
+</tr>
+<tr>
+<td>CAN hard reinit / fail / Last hard reason</td>
+<td>CAN 전체 재초기화 횟수·실패·이유</td>
+</tr>
+<tr>
+<td>Heartbeat timeout / age / count A/B/BOTH</td>
+<td>CAN 작업 생존 확인 시간초과와 관련 경과 시간·집계</td>
+</tr>
+<tr>
+<td>CAN B TWAI state / Last recovery event</td>
+<td>ESP32 내장 CAN 상태와 최근 복구 이벤트</td>
+</tr>
+<tr>
+<td>BUS OFF / STOPPED / age</td>
+<td>통신 이탈·정지 집계와 최근 발생 경과</td>
+</tr>
+<tr>
+<td>Session avg/min · bus / arb / BUS OFF</td>
+<td>세션의 버스 오류·중재 손실·BUS OFF 분당 평균 지표</td>
+</tr>
+<tr>
+<td>Recovery start / fail / Restart OK / FAIL</td>
+<td>복구 시작·실패와 재시작 결과</td>
+</tr>
+<tr>
+<td>CAN B RX gap last / max</td>
+<td>최근 수신 간격 / 최대 수신 간격</td>
+</tr>
+<tr>
+<td>TWAI TEC / REC</td>
+<td>송신·수신 오류 카운터</td>
+</tr>
+<tr>
+<td>TWAI TX fail / bus err / arb lost</td>
+<td>송신 실패·버스 오류·중재 손실 집계</td>
+</tr>
+<tr>
+<td>CAN B Last BUS OFF snapshot / queue / TEC / REC / TX trace</td>
+<td>오류 순간의 대기열·오류값·송신 흔적</td>
+</tr>
+</tbody>
+</table></div>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">실행 버튼</th>
+<th scope="col">역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CAN A TX CSV / CAN B TX CSV</td>
+<td>해당 송신 추적 자료 다운로드</td>
+</tr>
+<tr>
+<td>Boot Capture CSV</td>
+<td>부팅 단계 진단 자료 다운로드</td>
+</tr>
+<tr>
+<td>Reset Stats</td>
+<td>통계와 저장 BUS OFF 증거를 지웁니다. 내려받기 버튼이 아닙니다.</td>
+</tr>
+<tr>
+<td>Hard Reinitialize</td>
+<td>CAN 서브시스템 재초기화를 요청합니다. 단순 통계 삭제와 다르며 통신이 재설정됩니다.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-40">16. SETTINGS → Banned Car / TLSSC Restore</h2>
+<p>이 구역은 일반 TLSSC와 분리된 위험 메뉴입니다. Model Y L에서는 숨김·차단되며, 지원 프로필에서도 별도 상태 조건이 있습니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">메뉴</th>
+<th scope="col">실제 의미</th>
+<th scope="col">원본 경고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Banned Car</td>
+<td>이미 제한된 차량용 상태를 켜고 TLSSC Restore 제어를 노출</td>
+<td>이 스위치만 켜는 것으로 Restore 송신을 시작하지는 않습니다.</td>
+</tr>
+<tr>
+<td>TLSSC Restore</td>
+<td>별도 Restore 송신 기능 활성화</td>
+<td>원본 화면은 활성화하면 차량이 제한될 것이라고 강하게 경고하고, 이미 제한된 차량인지 확인을 요구합니다.</td>
+</tr>
+</tbody>
+</table></div>
+<p>두 항목은 기본 OFF입니다. Banned Car를 끄면 Restore도 꺼집니다. <strong>차량 제한을 해제해 주는 보장된 복구 메뉴로 해석하면 안 됩니다.</strong> 제한 발생 여부에 대한 화면 문구는 프로젝트의 경고이며 이번 작업에서 Tesla 측 동작을 검증한 것은 아닙니다.</p>
+<h2 id="section-41">17. LAB Menu — 실험 메뉴의 공통 원칙</h2>
+<p><code>SETTINGS → LAB Menu</code>는 실험 메뉴 표시와 LAB 전용 기능의 실행 조건을 함께 제어합니다. 기본 OFF이며 저장됩니다. LAB의 모든 항목이 송신 기능은 아닙니다. <strong>상태 보기·RX 기록</strong>과 <strong>실험 신호 주입</strong>을 구분하세요.</p>
+<p>LAB을 끄면 DMS bit43 실험 같은 LAB 전용 주입은 중단되고 기록은 중지/보류됩니다. 하지만 저장된 선택값을 모두 지우지는 않습니다. 다시 켜면 남아 있는 설정이 실행 조건을 다시 만족할 수 있습니다. Blinker TX Comparison의 임시 선택은 예외로 프로필 기본값으로 돌아갑니다.</p>
+<p>상단 <code>Driving State</code>의 <code>R79 TX</code>, <code>Reason</code>, <code>Gear</code>, <code>ALC STATE</code>, <code>LEFT / RIGHT</code>, <code>Lane</code>은 큰 글자로 표시하는 실시간 관찰값입니다.</p>
+<h3 id="section-42">17.1 R79 Status — 고정 정책 상태 보기</h3>
+<p><strong>읽기 전용</strong>입니다. 설정 변경은 Summon Monitor의 bit18 메뉴에서 합니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fixed R79 Policy / Transport / Periodic</td>
+<td>고정 송신 정책과 전송·예약 갱신 상태</td>
+</tr>
+<tr>
+<td>Bit 18 policy</td>
+<td>STOCK / FORCE 0 선택</td>
+</tr>
+<tr>
+<td>DMS bit43 (LAB)</td>
+<td>감시 실험의 선택·적용 및 원본 관련 상태</td>
+</tr>
+<tr>
+<td>Runtime / template</td>
+<td>현재 허용 여부와 원본 준비 상태</td>
+</tr>
+<tr>
+<td>MUX1 RX / TX OK / FAIL</td>
+<td>원본 수신·송신 집계</td>
+</tr>
+<tr>
+<td>Fast attempts / OK / FAIL</td>
+<td>즉시 반영 경로의 시도·결과</td>
+</tr>
+<tr>
+<td>Periodic OK / FAIL</td>
+<td>예약 갱신 경로의 결과</td>
+</tr>
+<tr>
+<td>Quiet arm / fire / guard</td>
+<td>지연 갱신 예약·실행·차단 상태 집계</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-43">17.2 Disable Driver Monitoring (NAG) — 감시 관련 bit43 실험</h3>
+<p>이름은 감시 해제를 뜻하지만, 코드에서 확인되는 동작은 <strong><code>0x3FD mux1 bit43</code>을 0으로 지정</strong>하는 것입니다. 카메라 기반 DMS나 NAG 전체가 실제로 비활성화됐다고 단정할 수 없습니다. 차량 세대·소프트웨어별 효과는 별도 검증 대상입니다.</p>
+<p>기본 OFF이며 선택은 <strong>NVS에 저장</strong>됩니다. 모든 유효한 현재 3/Y·Y L 프로필의 R79 경로에서 허용됩니다. LAB OFF이면 적용은 중단되지만 저장 선택은 남습니다. <code>SAVED</code>는 선택이 저장됐다는 뜻이고, 차량 감시 해제 성공 표시가 아닙니다.</p>
+<h3 id="section-44">17.3 Blinker TX Comparison — 방향지시등 전송 방식 비교</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">선택</th>
+<th scope="col">한글 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SINGLE TX</td>
+<td>원본과 동기화한 단발 방식</td>
+</tr>
+<tr>
+<td>LEGACY 350ms BURST</td>
+<td>기존 반복 전송 방식. 레버 경로에서는 약 20ms 간격 반복을 사용하며 버튼형은 기존 press/release 경로를 유지합니다.</td>
+</tr>
+<tr>
+<td>ACTIVE SOURCE / LAST RESULT</td>
+<td>현재 요청의 출처 / 최근 처리 결과</td>
+</tr>
+<tr>
+<td>Requests / blocked / TX OK / FAIL</td>
+<td>요청·차단·송신 집계</td>
+</tr>
+</tbody>
+</table></div>
+<p>프로필 기본은 <strong>Y L = SINGLE TX</strong>, <strong>그 외 지원 3/Y = LEGACY 350ms BURST</strong>입니다. LAB에서의 변경은 RAM 임시값이며 <strong>LAB OFF 또는 재부팅 때 기본값으로 복귀</strong>합니다. Auto Blinker와 S3XY 방향지시등 요청에 영향을 줍니다. 원본 화면은 기존 반복 경로의 BUS OFF 위험을 명시합니다.</p>
+<h3 id="section-45">17.4 Auto Lane Change Enable — 별도 차선 변경 실험</h3>
+<p><code>0x293 UI_autoLaneChangeEnable</code> bits24–25를 raw 1로 지정하는 실험입니다. SETTINGS의 <code>0x3F8</code> 차선 변경 설정과 별도 경로입니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Auto Lane Change Enable · EXPERIMENTAL</td>
+<td>실험 스위치. 기본 OFF, 선택 저장. LAB 및 AP 활성 조건이 적용됩니다.</td>
+</tr>
+<tr>
+<td>0x293 TX Target · CAN A / CAN B / BOTH</td>
+<td>어느 물리 버스에 적용할지 선택. 기본 BOTH이며 각 버스가 받은 그 버스의 원본만 사용합니다.</td>
+</tr>
+<tr>
+<td>AP GATE / STOCK A/B</td>
+<td>AP 허용 여부 / 각 버스 원본값</td>
+</tr>
+<tr>
+<td>CAN A/B stock / age / RX</td>
+<td>원본값·최근 수신 경과·수신 횟수</td>
+</tr>
+<tr>
+<td>TX A/B OK / FAIL · Gate-blocked A/B</td>
+<td>버스별 송신 결과·차단 집계</td>
+</tr>
+<tr>
+<td>Last forced TX</td>
+<td>마지막 실험 송신 정보</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-46">17.5 Blind Spot Injection Monitor — 사각지대 설정 관찰</h3>
+<p><strong>읽기 전용</strong>입니다. 설정 변경은 <code>SETTINGS → Lane Change / ULC</code>에서 합니다.</p>
+<p><code>Selected</code>는 선택한 모드, <code>Stock RX</code>는 원본값, <code>Last TX</code>는 공통 송신 처리기가 마지막 제출한 프레임의 bits52–53입니다. <code>TX result</code>는 제출 결과, <code>Blind changed</code>는 필드 변경 여부, <code>Last TX age</code>는 경과 시간입니다. 마지막 제출값은 차량이 실제 채택한 값의 확인과 다릅니다.</p>
+<h2 id="section-47">18. LAB → CAN Research Capture — CAN 연구 기록</h2>
+<p>두 물리 CAN 버스의 수신 자료를 저장하는 <strong>RX 전용 기록기</strong>입니다. 캡처 버튼 자체는 CAN 신호를 재생·송신하지 않습니다.</p>
+<h3 id="section-48">18.1 모드 선택</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">CAPTURE MODE</th>
+<th scope="col">한글 설명</th>
+<th scope="col">시간 구간</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SNAPSHOT</td>
+<td>시점별 최신 상태 묶음을 기록</td>
+<td>PRE/POST 선택 사용</td>
+</tr>
+<tr>
+<td>RAW TRANSITION</td>
+<td>트리거 전후 실제 수신 프레임을 기록</td>
+<td>고정 PRE 최대 5초 + POST 2초</td>
+</tr>
+<tr>
+<td>AUTO ALC TRANSITION</td>
+<td>ALC의 왼쪽 가능/차단 전환을 기준으로 자동 기록</td>
+<td>자동 PRE 2초 + POST 2초; 수동 C/D는 PRE 최대 5초 + POST 2초</td>
+</tr>
+<tr>
+<td>ULC / CONFIRM-FREE</td>
+<td>ULC 관련 ID만 양쪽 버스에서 원시 기록</td>
+<td><strong>고정 PRE 3초 + POST 7초</strong>, 일반 PRE/POST 선택과 구분</td>
+</tr>
+</tbody>
+</table></div>
+<p>ULC 전용 모드의 대상은 <code>0x247 / 0x3F8 / 0x3E9 / 0x24A / 0x3FD / 0x293</code>입니다. 원시 바이트 해석은 오프라인 분석 대상으로 남깁니다. AUTO 모드는 ALC 6/8을 LEFT OPEN, 다른 유효 상태를 LEFT BLOCKED로 분류합니다. A/B 표식은 자동 전환용이며 구간 사이의 수동 기록에는 C/D를 사용합니다. 전환은 300ms 유지 조건을 거치고, 진행 중인 자동 구간의 추가 전환은 후반 시간을 연장할 수 있습니다. OPEN에는 신선한 왼쪽 차선 정보 등 추가 조건이 있습니다. OPEN/BLOCKED는 기록기의 분류이며 실제 주변 공간이 안전하다는 판단이 아닙니다. RAW 기록은 완료 후 자동으로 다음 구간을 준비하며 최대 8구간입니다.</p>
+<h3 id="section-49">18.2 입력·실행 버튼</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">한글 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LABEL A / B / C / D</td>
+<td>상황을 구분하는 기록 이름. UTF-8 1–63바이트이며 Save Labels로 저장하면 재부팅 후 유지됩니다.</td>
+</tr>
+<tr>
+<td>PRE WINDOW</td>
+<td>SNAPSHOT의 트리거 전 기록 구간. 선택은 2/5/10/15초, 기본 2초입니다. RAW 모드는 위 고정값을 사용합니다.</td>
+</tr>
+<tr>
+<td>POST WINDOW</td>
+<td>SNAPSHOT의 트리거 후 기록 구간. 선택은 2/5/10초, 기본 5초입니다. RAW 모드는 위 고정값을 사용합니다.</td>
+</tr>
+<tr>
+<td>Capture A / B / C / D</td>
+<td>해당 표식을 붙여 기록 요청</td>
+</tr>
+<tr>
+<td>Save Labels</td>
+<td>라벨 문구 저장</td>
+</tr>
+<tr>
+<td>Download Research CSV</td>
+<td>현재 기록을 CSV로 내려받기</td>
+</tr>
+<tr>
+<td>Reset CAN Research Capture</td>
+<td>현재 연구 기록 초기화</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-50">18.3 상태·용량 표시</h3>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">항목</th>
+<th scope="col">읽는 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATE / SEGMENTS / MAX</td>
+<td>준비·기록·일시정지 등 상태 / 기록 구간 수와 한도</td>
+</tr>
+<tr>
+<td>CURRENT / LAST / REMAINING POST</td>
+<td>현재·최근 구간 / 후반 기록 남은 시간</td>
+</tr>
+<tr>
+<td>SAMPLES / CAPACITY / OBSERVED IDs</td>
+<td>표본 수·한도 / 관찰한 ID 수</td>
+</tr>
+<tr>
+<td>Snapshot plan / PRE ready / Last segment snapshots</td>
+<td>설정한 시간 계획 / 확보된 사전 표본 / 최근 구간 표본 구성</td>
+</tr>
+<tr>
+<td>Memory / RAW PRE ring / archive</td>
+<td>메모리 할당과 원시 사전 버퍼·보관 공간 상태</td>
+</tr>
+<tr>
+<td>RAW PRE actual coverage</td>
+<td>실제 확보한 사전 시간 길이. 설정 시간과 항상 같지는 않습니다.</td>
+</tr>
+<tr>
+<td>Requests / ignored / dropped</td>
+<td>요청 / 무시된 요청 / 버려진 표본 수</td>
+</tr>
+<tr>
+<td>AUTO qualified / segments / merged</td>
+<td>자동 전환 인식과 구간 생성·병합 집계</td>
+</tr>
+<tr>
+<td>AUTO LEFT OPEN / BLOCKED / last transition</td>
+<td>자동 기록 분류와 최근 전환</td>
+</tr>
+<tr>
+<td>0x239 Virtual Lane Width / View Range / C0·C1·C2</td>
+<td>차선 관련 수신 신호의 참고 해석. 원시 데이터와 함께 봅니다.</td>
+</tr>
+</tbody>
+</table></div>
+<p>캡처 데이터가 전원 차단 뒤에도 남는 영구 로그라고 가정하지 마세요. 라벨의 NVS 저장과 기록 데이터 보존은 다릅니다. 초기화·재부팅 전에 필요한 CSV를 내려받습니다.</p>
+<h2 id="section-51">19. LAB → Driver Monitoring Capture — 운전자 감시 신호 기록</h2>
+<p>모든 차량 프로필에서 두 버스의 <code>0x389 / 0x5D9 / 0x247 / 0x399 / 0x370</code>을 관찰하는 <strong>RX 전용 도구</strong>입니다. 고정 시간은 <strong>PRE 2초 + POST 5초</strong>, 실제 코드의 보관 한도는 <strong>12구간·2,048표본</strong>이며 사전 버퍼는 512표본입니다. 초기 정적 HTML에는 1,024가 남아 있지만 상태 응답은 코드의 2,048을 전달하므로 연결 후 갱신된 용량을 기준으로 읽습니다.</p>
+<p>아래 A–F는 기록에 붙이는 상황 라벨입니다. 실제 도로에서 주시를 분산시키라는 사용 지시가 아닙니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">라벨</th>
+<th scope="col">화면 영문</th>
+<th scope="col">한글 의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>FRONT · NORMAL</td>
+<td>정상적인 전방 주시 상황</td>
+</tr>
+<tr>
+<td>B</td>
+<td>SCREEN GLANCE</td>
+<td>화면을 잠깐 보는 상황</td>
+</tr>
+<tr>
+<td>C</td>
+<td>SIDE LOOK</td>
+<td>옆을 보는 상황</td>
+</tr>
+<tr>
+<td>D</td>
+<td>LOOK DOWN</td>
+<td>아래를 보는 상황</td>
+</tr>
+<tr>
+<td>E</td>
+<td>TORQUE + LOOK AWAY</td>
+<td>조향 토크 입력과 다른 방향 주시가 함께 있는 상황</td>
+</tr>
+<tr>
+<td>F</td>
+<td>FRONT · NO TORQUE</td>
+<td>전방을 보되 의도적인 조향 토크 입력이 없는 상황</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>DRIVER INTERACTION</code>은 해석한 상호작용 상태, <code>CAPTURE STATE</code>, <code>SEGMENTS/MAX</code>, <code>SAMPLES/CAPACITY</code>, <code>REMAINING POST</code>는 기록 진행 정보입니다. <code>PRE BUFFER WARMUP</code>은 사전 기록 버퍼를 채우는 중이라는 뜻입니다.</p>
+<p>각 ID의 <code>bus / age / count / raw</code>는 버스·경과 시간·횟수·원시 바이트입니다. <code>0x399 DAS hands-on</code>, <code>0x370 EPAS hands-on / torque</code>는 참고 해석값입니다. <code>Last interaction transition</code>은 최근 해석 상태 전환, <code>Requests / ignored / dropped</code>는 요청·누락 집계, <code>Storage</code>는 저장 공간 상태입니다.</p>
+<p><code>Download Driver Monitoring CSV</code>로 자료를 저장하고, <code>Reset Driver Monitoring Capture</code>로 현재 기록을 지웁니다. <strong>원시 바이트와 CAN A/B·버스 역할 기록이 근거이며, 화면의 주시·HO 해석은 연구용 추정</strong>입니다. 기록기가 RX 전용이라는 사실은 별도로 켜져 있는 다른 주입 기능까지 OFF라는 뜻은 아닙니다.</p>
+<h2 id="section-52">20. 자주 헷갈리는 상황</h2>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">상황</th>
+<th scope="col">먼저 확인할 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>메뉴가 없거나 스위치가 안 켜진다</td>
+<td>차량 프로필·CAN 배선 지원 여부, LAB Menu 상태를 확인합니다.</td>
+</tr>
+<tr>
+<td>ON인데 TX가 0이다</td>
+<td>AP 조건, 원본 수신, Fresh/Valid, 복구 상태, 기능별 Gate를 확인합니다.</td>
+</tr>
+<tr>
+<td>TX OK인데 차량 변화가 없다</td>
+<td>TX OK는 송신 결과입니다. 차량 채택·기능 효과를 별도로 확인해야 합니다.</td>
+</tr>
+<tr>
+<td>PedalMap 값이 사라졌다</td>
+<td>P 진입 확인·재부팅·STOCK 선택의 세션 해제 규칙을 확인합니다.</td>
+</tr>
+<tr>
+<td>PedalMap과 다른 값이 적용된다</td>
+<td>AP Drive Profile이 현재 0x334를 우선 제어하는지 확인합니다.</td>
+</tr>
+<tr>
+<td>LAB을 껐는데 ULC 설정이 남아 있다</td>
+<td>SETTINGS의 ULC는 일반 기능입니다. LAB OFF가 모든 기능 초기화는 아닙니다.</td>
+</tr>
+<tr>
+<td>LAB을 다시 켜니 이전 감시 실험 설정이 보인다</td>
+<td>DMS bit43 선택은 NVS 저장입니다. LAB OFF는 저장값 삭제가 아닙니다.</td>
+</tr>
+<tr>
+<td>NAG 초기화 후 ON이 됐다</td>
+<td>코드의 NAG 기본값이 ON·Mode A입니다. Reset Mode A와 Reset Current Profile을 구분합니다.</td>
+</tr>
+<tr>
+<td>버튼은 등록됐는데 재연결이 안 된다</td>
+<td>Bluetooth Master, 전역 Auto Connect, 버튼별 Auto Connect, 버튼별 진단을 확인합니다.</td>
+</tr>
+<tr>
+<td>Wi-Fi 변경 후 화면이 끊겼다</td>
+<td>AP 재시작 및 새 SSID 재연결이 필요한 정상 절차일 수 있습니다.</td>
+</tr>
+<tr>
+<td>오류 흔적이 초기화 후 없어졌다</td>
+<td>Reset Stats·Factory Reset은 저장 BUS OFF 증거를 지웁니다.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-53">21. 기본값·저장 범위 빠른 참고</h2>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">기능</th>
+<th scope="col">저장 정보가 없을 때</th>
+<th scope="col">유지 범위</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAG</td>
+<td>ON·Mode A, Pause at 0 OFF</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>Mode H 하위 프로필</td>
+<td>Rev.3</td>
+<td>NVS; Rev.4 튜닝 기본값과 별개</td>
+</tr>
+<tr>
+<td>Auto Blinker</td>
+<td>OFF, 지연 2초, NOA 안정화 10초, 취소 대기 20초</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>Door Open Lane Change Cancel</td>
+<td>OFF</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>TLSSC / Highway Gate / NOA Block</td>
+<td>모두 OFF</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>R79 bit18</td>
+<td>FORCE 0</td>
+<td>NVS; 송신 경로는 기본 허용·수동 D/R 중지 정책</td>
+</tr>
+<tr>
+<td>Confirm-Free / Pre-AP / Off-Highway ALC</td>
+<td>OFF</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>ULC Off-Highway / ULC Blind Spot</td>
+<td>STOCK</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>PedalMap</td>
+<td>STOCK</td>
+<td>RAM; P 진입·재부팅 때 해제</td>
+</tr>
+<tr>
+<td>AP Right Scroll</td>
+<td>OFF, 일반 30초, 경고 반복 2초</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>AP Drive Profile</td>
+<td>OFF, 회생제동 REDUCED raw 10</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>Bluetooth Master / 전역 Auto Connect</td>
+<td>OFF / ON</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>LAB Menu / DMS bit43 실험</td>
+<td>OFF / OFF</td>
+<td>NVS; LAB OFF여도 DMS 선택 보존</td>
+</tr>
+<tr>
+<td>Auto Lane Change Enable 실험</td>
+<td>OFF, 버스 BOTH</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>Blinker TX Comparison</td>
+<td>Y L 단발, 그 외 지원 3/Y 반복</td>
+<td>RAM 임시 변경; LAB OFF·재부팅 시 프로필 기본 복귀</td>
+</tr>
+<tr>
+<td>Banned Car / TLSSC Restore</td>
+<td>OFF / OFF</td>
+<td>NVS</td>
+</tr>
+<tr>
+<td>Dashboard Polling Rate</td>
+<td>500ms</td>
+<td>현재 브라우저 localStorage</td>
+</tr>
+<tr>
+<td>Research Capture 라벨 / 캡처 데이터</td>
+<td>라벨과 기록은 별도</td>
+<td>라벨 NVS / 캡처는 영구 보존으로 간주하지 않음</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-54">22. 문서 근거와 확인 범위</h2>
+<p>문서의 메뉴 목록은 <code>index_html.h</code>에 포함된 gzip HTML을 풀어 <strong>4개 하단 메뉴, 프로필 설정, 21개 상세 패널, 동적 버튼 등록·동작 선택 화면</strong>을 확인했습니다. <code>docs/index.html</code> 데모만을 기준으로 작성하지 않았습니다.</p>
+<div aria-label="설명 표: 가로로 스크롤할 수 있습니다" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">근거 파일</th>
+<th scope="col">확인한 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>index_html.h</code></td>
+<td>실제 펌웨어 내장 메뉴·설명·선택지·화면 갱신 및 저장 동작</td>
+</tr>
+<tr>
+<td><code>vehicle_profile.h</code></td>
+<td>차량·배선별 지원 여부와 Highland 방향지시등 구분</td>
+</tr>
+<tr>
+<td><code>can_core.h</code>, <code>nag_human_v1/v2/v3/v4_pure.h</code></td>
+<td>NAG 기본 모드·Enabled·H 프로필·토크 처리</td>
+</tr>
+<tr>
+<td><code>vehicle_logic.h</code>, <code>auto_blinker_pure.h</code></td>
+<td>기능 기본값·NVS·Auto Blinker·PedalMap·AP Drive Profile</td>
+</tr>
+<tr>
+<td><code>web_api.h</code></td>
+<td>설정 적용, LAB OFF, 초기화 범위, OTA·진단 요청</td>
+</tr>
+<tr>
+<td><code>summon_state_pure.h</code>, <code>r79_fixed_policy_pure.h</code></td>
+<td>R79 수동 운전 중지와 고정 송신 정책</td>
+</tr>
+<tr>
+<td><code>pedal_map_session_pure.h</code>, <code>ap_drive_profile_pure.h</code>, <code>ap_right_scroll_pure.h</code></td>
+<td>세션 해제·회생제동 raw 값·스크롤 시간 기본값</td>
+</tr>
+<tr>
+<td><code>s3xy_ble.h</code></td>
+<td>버튼 동작 목록·등록·자동 연결·기본 Bluetooth 상태</td>
+</tr>
+<tr>
+<td><code>can_research_capture.h</code>, <code>driver_monitor_capture.h</code></td>
+<td>연구 캡처 및 운전자 감시 캡처 구현</td>
+</tr>
+<tr>
+<td><code>README.md</code>, <code>VALIDATION.md</code></td>
+<td>프로젝트 범위·릴리스 설명·기존 검증 기록과 대조</td>
+</tr>
+</tbody>
+</table></div>
+<p>이 문서는 화면과 코드의 동작 설명이며 차량 CAN 의미 전체의 공식 사양서는 아닙니다. 불확실한 차량 효과, 실제 출력 증가, 감시 해제 성공, Tesla 제한 발생 여부는 확인된 사실로 표현하지 않았습니다. 이후 펌웨어 버전이 바뀌면 메뉴 위치·기본값·저장 정책을 다시 확인해야 합니다.</p>
+<footer class="foot">2026-09-28 · 소스 2e7a2f0 · 메뉴·설정 코드 기준 / 실차 검증 미수행</footer></main></body></html>
