@@ -10,7 +10,9 @@ tags: ["PLC", "VISION", "Robot1", "Infeed", "CSM", "Trend"]
 
 2026-09-30에 처음 등록했다. 기준 파일은 워크스페이스의 `Cathode1_260915.L5X`이고, VISION 타이머만 Desktop의 `VISION_CSM1.L5K`에서 다시 확인했다. 컨트롤러에 다운로드하지 않았고, 온라인 Trend도 아직 기록하지 않았다. 이 글은 수정안을 넣는 절차가 아니다.
 
-등급 비트의 수신 경로와 SM 등급 없음은 [CSM#1 VISION 등급소실 원인분석 Rev.2](/notes/csm-r1-vision-grade-timing-check/)에 있다. SC1 Robot3와 SM Finger Retry는 이 글의 대상이 아니다.
+2026-09-30에 동작 흐름을 [CSM#1 VISION 등급소실 동작흐름 Rev.3](/notes/csm-r1-vision-grade-timing-check/)으로 갱신했다. 등급이 0이 되는 중심은 이 글의 휠 오버런이 아니라, 조그로 다이에 올린 판정이 R1 집기보다 먼저 끝나는 쪽이다. 이 글은 전기동 감지의 상승과 번호 이동만 다룬다.
+
+SC1 Robot3와 SM Finger Retry는 이 글의 대상이 아니다.
 
 ## 상승은 1로 머무는 상태가 아니다
 
