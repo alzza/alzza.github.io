@@ -716,6 +716,20 @@ button:focus-visible {
   vertical-align: top;
 }
 .vehicle-chart-table table { margin-top: 8px; }
+.prose .note-identifier-table {
+  max-width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+}
+.prose .note-identifier-table table {
+  min-width: 640px;
+  margin-bottom: 0;
+}
+.prose .note-identifier-table code {
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
 .prose th,
 .prose td,
 .day th,

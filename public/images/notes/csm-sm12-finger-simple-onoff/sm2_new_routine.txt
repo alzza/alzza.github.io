@@ -1,0 +1,5 @@
+XIC(S:FS)OTU(ui_i_sm2_finger_bypass);
+XIC(ui_i_sm2_finger_bypass)OTE(f_sm2_finger_bypass);
+XIC(i_finger_1_no_copper)XIO(f_sm2_finger_bypass)OTE(f_sm2_finger1_no_copper_used);
+XIC(i_finger_2_no_copper)XIO(f_sm2_finger_bypass)OTE(f_sm2_finger2_no_copper_used);
+XIC(f_sm2_finger_bypass)OTE(ui_o_sm2_finger_bypass);
