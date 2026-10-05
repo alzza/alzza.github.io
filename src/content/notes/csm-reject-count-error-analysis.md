@@ -1,12 +1,14 @@
 ---
-title: "CSM Reject 적산오류 분석"
+title: "CSM Reject 적산오류 분석 · Rev.2"
 date: "2026-10-05"
 excerpt: "탈취 완료 후 Blank를 빠르게 Reject할 때 생산 적산이 두 번 증가한다. 두 로봇 경로, PLC 카운트 조건, 출근 후 수집할 8개 Trend와 판독 순서를 정리했다."
 kicker: 현장 진단
 tags: ["CSM", "PLC", "Robot2", "Reject", "Trend"]
 ---
 
-Rev.1 · 2026-10-05 · 현장 Trend 수집 전 분석이다. PLC와 로봇 프로그램은 변경하지 않는다.
+Rev.2 · 2026-10-05 · 원본 RLL 5개에 L5X Ladder Studio LD를 추가했다. 현장 Trend 수집 전 분석이다. PLC와 로봇 프로그램은 변경하지 않는다.
+
+LD는 기존 L5X Ladder Studio 렌더러로 표시한다. 각 그림은 바로 위 원본 RLL과 같은 렁이다. ST로 작성된 표시값 복사·초기화는 ST 원문으로 유지한다.
 
 ## 출근하면 먼저 할 일
 
@@ -70,6 +72,11 @@ SM#1 또는 SM#2에서 전기동 탈취가 끝난 뒤 Robot#2가 Blank Cathode�
 XIC(z_signal_reject_loaded)ONS(reject_incr_ons)ADD(reject_increment,1,reject_increment);
 ```
 
+<figure class="ld-rung" data-rung="1" data-rll="XIC(z_signal_reject_loaded)ONS(reject_incr_ons)ADD(reject_increment,1,reject_increment);">
+<div class="rung-meta"><span class="rung-meta-number">Prod_Tracking / Background 원본 Rung 1</span><span class="rung-meta-description">Reject 적산 신호의 상승을 한 번 검출해 생산 누적값을 1 증가시킨다.</span><span class="rung-status ok">LD 변환</span></div>
+<img src="/images/notes/csm-reject-count-error-analysis/ld_rung_00.svg" alt="Prod_Tracking Background 원본 Rung 1 LD" width="1040">
+</figure>
+
 `Prod_Tracking → Background2 → ST 62행`은 표시값을 복사한다.
 
 ```text
@@ -92,6 +99,11 @@ reject_increment := 0;
 [XIC(i_reject) ,XIC(ui_i_R2_reject) ][OTL(z_i_reject) ,OTL(z_i_reject_rb2) ];
 ```
 
+<figure class="ld-rung" data-rung="21" data-rll="[XIC(i_reject) ,XIC(ui_i_R2_reject) ][OTL(z_i_reject) ,OTL(z_i_reject_rb2) ];">
+<div class="rung-meta"><span class="rung-meta-number">Operator_Console / Background 원본 Rung 21</span><span class="rung-meta-description">판넬 또는 HMI Reject 요청을 두 요청 비트에 기억한다.</span><span class="rung-status ok">LD 변환</span></div>
+<img src="/images/notes/csm-reject-count-error-analysis/ld_rung_01.svg" alt="Operator_Console Background 원본 Rung 21 LD" width="1040">
+</figure>
+
 ### 요청으로 Reject 이동 명령을 만든다
 
 `Robot2 → Background → Rung 24`는 여러 Reject 요청을 합쳐 `o_load_reject`를 만든다. 판넬 요청 경로만 보면 `z_i_reject_rb2=1`, `i_reject_rack_full=0`, `i_clear_of_reject=1`일 때 명령이 성립한다. 이 경로에는 Auto/Manual 또는 Gripper Closed 접점이 없다. 아래는 다른 요청 경로까지 포함한 원본 전체다.
@@ -100,6 +112,11 @@ reject_increment := 0;
 [XIC(signal_man_load_reject) ,XIC(signal_man_load_reject2) ,XIC(z_i_reject_rb2) ,AFI() [XIC(z_permit_sm1_r2_auto_reject_load) XIO(signal_man_load_reject) ,XIC(z_permit_sm2_r2_auto_reject_load) XIO(signal_man_load_reject) ] XIC(i_gripper_open) ][XIO(f_rb2_set_outfeed) ,XIC(z_i_reject_rb2) ]XIO(i_reject_rack_full)XIC(i_clear_of_reject)OTE(o_load_reject);
 ```
 
+<figure class="ld-rung" data-rung="24" data-rll="[XIC(signal_man_load_reject) ,XIC(signal_man_load_reject2) ,XIC(z_i_reject_rb2) ,AFI() [XIC(z_permit_sm1_r2_auto_reject_load) XIO(signal_man_load_reject) ,XIC(z_permit_sm2_r2_auto_reject_load) XIO(signal_man_load_reject) ] XIC(i_gripper_open) ][XIO(f_rb2_set_outfeed) ,XIC(z_i_reject_rb2) ]XIO(i_reject_rack_full)XIC(i_clear_of_reject)OTE(o_load_reject);">
+<div class="rung-meta"><span class="rung-meta-number">Robot2 / Background 원본 Rung 24</span><span class="rung-meta-description">Reject 요청과 랙 Full·Clear 조건으로 로봇 Reject 이동 명령을 만든다.</span><span class="rung-status ok">LD 변환</span></div>
+<img src="/images/notes/csm-reject-count-error-analysis/ld_rung_02.svg" alt="Robot2 Background 원본 Rung 24 LD" width="1040">
+</figure>
+
 ### 이동 명령을 15초 OFF-delay로 유지한다
 
 바로 다음 `Robot2 → Background → Rung 25`가 생산 적산 신호를 만든다.
@@ -107,6 +124,11 @@ reject_increment := 0;
 ```text
 [XIC(o_load_reject) TOF(tm_RejectWait,?,?) ,XIC(tm_RejectWait.DN) OTE(z_signal_reject_loaded) ];
 ```
+
+<figure class="ld-rung" data-rung="25" data-rll="[XIC(o_load_reject) TOF(tm_RejectWait,?,?) ,XIC(tm_RejectWait.DN) OTE(z_signal_reject_loaded) ];">
+<div class="rung-meta"><span class="rung-meta-number">Robot2 / Background 원본 Rung 25</span><span class="rung-meta-description">Reject 명령이 꺼져도 TOF의 DN이 유지되는 동안 생산 적산 신호를 유지한다.</span><span class="rung-status ok">LD 변환</span></div>
+<img src="/images/notes/csm-reject-count-error-analysis/ld_rung_03.svg" alt="Robot2 Background 원본 Rung 25 LD" width="1040">
+</figure>
 
 분석한 `tm_RejectWait.PRE`는 15000ms다. 원문 `?`는 내보내기의 타이머 피연산자 표기이며 PRE가 없다는 뜻이 아니다. TOF는 명령이 켜지면 DN도 즉시 켜지고, 명령이 꺼진 뒤 15초가 지나야 DN이 꺼진다. “버튼을 누르고 15초 뒤에 적산”하는 구조가 아니다. 그래서 버튼 직후 먼저 +1이 될 수 있다.
 
@@ -117,6 +139,11 @@ reject_increment := 0;
 ```text
 [XIC(i_reject_loaded) ,XIC(f_reject_st1_done) XIC(i_clear_of_station_1) ,XIC(f_reject_st2_done) XIC(i_clear_of_station_2) ,XIC(z_ui_i_home_all) ][OTE(z_signal_r2_sm1_reject_complete) ,OTE(z_signal_r2_sm2_reject_complete) ,[XIC(f_reject_st1_done) ,XIC(z_ui_i_home_all) ] OTU(z_signal_rejecting_sm1) ,[XIC(f_reject_st2_done) ,XIC(z_ui_i_home_all) ] OTU(z_signal_rejecting_sm2) ,OTU(z_i_reject_rb2) ,OTU(z_i_reject) ,OTU(f_reject_st1_done) ,OTU(f_reject_st2_done) ];
 ```
+
+<figure class="ld-rung" data-rung="48" data-rll="[XIC(i_reject_loaded) ,XIC(f_reject_st1_done) XIC(i_clear_of_station_1) ,XIC(f_reject_st2_done) XIC(i_clear_of_station_2) ,XIC(z_ui_i_home_all) ][OTE(z_signal_r2_sm1_reject_complete) ,OTE(z_signal_r2_sm2_reject_complete) ,[XIC(f_reject_st1_done) ,XIC(z_ui_i_home_all) ] OTU(z_signal_rejecting_sm1) ,[XIC(f_reject_st2_done) ,XIC(z_ui_i_home_all) ] OTU(z_signal_rejecting_sm2) ,OTU(z_i_reject_rb2) ,OTU(z_i_reject) ,OTU(f_reject_st1_done) ,OTU(f_reject_st2_done) ];">
+<div class="rung-meta"><span class="rung-meta-number">Robot2 / Background 원본 Rung 48</span><span class="rung-meta-description">배출 완료 또는 Home 요청으로 Reject 요청을 해제하고 완료 신호를 만든다.</span><span class="rung-status ok">LD 변환</span></div>
+<img src="/images/notes/csm-reject-count-error-analysis/ld_rung_04.svg" alt="Robot2 Background 원본 Rung 48 LD" width="1040">
+</figure>
 
 50ms 주기 Task 안에서는 `Operator_Console`, `Prod_Tracking`, `Robot2` 순으로 실행된다. 생산 적산은 통상 이전 Robot2 실행에서 만든 신호를 다음 실행에 읽는다. 입력 갱신은 별도로 일어날 수 있으므로, 이 순서만으로 외부 신호의 실제 도착 순서를 단정하지 않는다.
 
