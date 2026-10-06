@@ -1,0 +1,57 @@
+{
+  "passed_scenarios": 10,
+  "negative_controls": 2,
+  "ld": 11,
+  "parser_warnings": 0,
+  "scope": "Exact proposed AST for counter only, injected command/IO; not full request logic, SFC, robot, asynchronous IO, or vendor emulator",
+  "results": {
+    "fast": {
+      "count": 1,
+      "expected": 1
+    },
+    "slow": {
+      "count": 1,
+      "expected": 1
+    },
+    "full_before_start": {
+      "count": 1,
+      "expected": 1
+    },
+    "full_after_start": {
+      "count": 1,
+      "expected": 1
+    },
+    "queued_followup": {
+      "count": 2,
+      "expected": 2
+    },
+    "three_jobs": {
+      "count": 3,
+      "expected": 3
+    },
+    "clear_bounce_before_completion": {
+      "count": 1,
+      "expected": 1
+    },
+    "home_before_start": {
+      "count": 0,
+      "expected": 0
+    },
+    "home_during_job": {
+      "count": 1,
+      "expected": 1
+    },
+    "held_completion": {
+      "count": 2,
+      "expected": 2
+    },
+    "input_loss_after_arm": {
+      "count": 1,
+      "limitation": "Input loss looks identical to entry; no communication-quality gate is implemented."
+    },
+    "duplicate_request_causes_second_physical_job": {
+      "count": 2,
+      "limitation": "Counter counts actual second entry; source-specific request suppression is NOT implemented."
+    }
+  }
+}

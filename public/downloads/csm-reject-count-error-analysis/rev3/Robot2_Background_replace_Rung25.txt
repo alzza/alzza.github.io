@@ -1,0 +1,5 @@
+XIC(z_ui_i_home_all)OTU(f_reject_count_armed);
+XIC(z_ui_i_home_all)XIC(i_clear_of_reject)XIO(i_reject_loaded)OTU(f_reject_cycle_counted);
+XIC(o_load_reject)XIC(i_clear_of_reject)XIO(i_reject_loaded)XIO(z_ui_i_home_all)XIO(f_reject_cycle_counted)OTL(f_reject_count_armed);
+XIC(f_reject_count_armed)XIO(i_clear_of_reject)XIO(i_reject_loaded)XIO(z_ui_i_home_all)XIO(f_reject_cycle_counted)[OTE(z_signal_reject_loaded),OTL(f_reject_cycle_counted)];
+XIC(f_reject_cycle_counted)OTU(f_reject_count_armed);
