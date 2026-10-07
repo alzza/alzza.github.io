@@ -1,0 +1,70 @@
+CSM Reject 적산오류 분석 · Rev.4 · 2026-10-07
+
+목표: 실제 Reject 배출 완료 한 번에 생산 리젝트 적산 +1.
+버튼을 누르는 순간에는 적산하지 않는다.
+랙 매수를 복사하는 것이 아니라 같은 완료 입력을 별도로 센다.
+
+변경 전 확인
+[ ] 한 작업에서 랙 +1, 생산 적산 +2라는 증상과 현재 HMI 연결을 대조했다.
+[ ] 현재 프로그램을 백업하고 카운터 시작값을 기록했다.
+[ ] Rev.3의 다중 렁 추가안이 실제 적용되어 있지 않다.
+    적용되어 있다면 바로 진행하지 말고 승인된 백업과 현재 변경분을 먼저 대조한다.
+[ ] reject_increment / reject_incr_ons의 다른 쓰기와 ONS 공유가 없는지 확인했다.
+[ ] 진행 중인 Reject와 대기 요청이 없고 완료 입력은 0이다.
+
+태그
+Scope: Prod_Tracking (Program 로컬)
+Name: i_r2_reject_loaded
+Type: Alias
+Alias For: ROBOT2:I1.Input[4].3
+Data Type: BOOL (대상에 따라 결정)
+Description: Robot2 Reject 배출 완료 입력. 생산 리젝트 완료 적산용.
+위 주소는 현장 Robot2.i_reject_loaded의 실제 Alias 대상과 반드시 대조한다.
+Base BOOL로 만들거나 MOV/OTE로 값을 복사하지 않는다. HMI 쓰기나 Force를 하지 않는다.
+
+수정 위치
+Prod_Tracking -> Background -> 원본 Rung 1.
+MOV(ui_i_smpl_frequency,z_smpl_frequency); 바로 아래의 기존 생산 리젝트 적산 렁이다.
+다음 렁은 z_cycle_sample_taken으로 sample_increment를 증가시키는 샘플 적산 렁이다.
+추가 렁은 없다. 첫 XIC의 태그만 교체한다.
+
+변경 전
+XIC(z_signal_reject_loaded)ONS(reject_incr_ons)ADD(reject_increment,1,reject_increment);
+
+변경 후
+XIC(i_r2_reject_loaded)ONS(reject_incr_ons)ADD(reject_increment,1,reject_increment);
+
+유지
+Robot2 Background 원본 Rung 24/25/47/48, 타이머 PRE, 요청 기억, 기존 ALL HOME 처리,
+SM1/SM2 SFC, 로봇 프로그램, 표시 ST, 생산 리셋 ST, 랙 비우기를 바꾸지 않는다.
+기존 reject_incr_ons를 유지하며 랙 카운터의 ons_reject_done을 공유하지 않는다.
+
+적용
+[ ] Alias 대상과 Scope를 대조하고 Studio 5000 Verify를 통과했다.
+[ ] 현장 Online Edit 절차로 시험·확정했으며 두 개의 독립 활성 적산 렁이 남지 않았다.
+[ ] 정상 0 입력을 읽은 뒤 다음 실제 완료부터 시험했다. ONS와 카운터를 강제 변경하지 않았다.
+
+시험
+[ ] 고속 Reject: 버튼 시 +0, 완료 시 생산 +1 / 랙 +1.
+[ ] SM1/SM2, Auto/Manual, 저속 Reject도 현장 허용 범위에서 확인했다.
+[ ] Full 대기나 명령 재발생만으로 추가 적산하지 않는다.
+[ ] 후속 요청은 접수 때 세지 않고 각 실제 완료 때 +1이다.
+[ ] 같은 실제 작업의 버튼 반복은 완료가 한 번이면 +1이다.
+[ ] 완료 입력 유지 중 재적산하지 않고, 0을 읽은 뒤 다음 완료를 센다.
+[ ] 일반 Outfeed의 Gripper Open만으로 증가하지 않는다.
+Full이나 위험 상태를 일부러 만들거나 실제 I/O를 Force하여 시험하지 않는다.
+요청 중복 억제, 전체 ALL HOME 취소, 비정상 완료 입력 중복은 이번 수정 범위가 아니다.
+
+복구
+완료 입력 0인 정지 상태에서 위 변경 전 한 줄로 해당 렁만 복구한다.
+Verify와 편집 확정 절차를 거치고 두 적산 렁이 동시에 활성화되지 않게 한다.
+랙 카운터, 타이머, 기존 ONS와 누적값은 초기화하지 않는다.
+과거 잘못 누적된 수량은 자동 보정되지 않는다.
+
+적용 일시 / 담당자:
+프로그램 백업 식별:
+생산 적산 시작값 -> 종료값:
+랙 카운터 시작값 -> 종료값:
+작업 종류 / SM 출처 / 모드 / Full 유무:
+완료 입력 횟수 / 실제 배출 장수:
+시험 결과 / 특이사항:

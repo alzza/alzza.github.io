@@ -1,0 +1,187 @@
+{
+  "revision": 4,
+  "date": "2026-10-07",
+  "scope": "Exact counter RLL ASTs; reduced panel-command/TOF model; 50ms frozen-input scans. No full SFC, robot motion, real queue, asynchronous IO or field validation.",
+  "studio_verify": false,
+  "field_validated": false,
+  "renderer_sha256": "b26221f0de8e5839c8023f4dd880d41dcf4c52fbbca07f767aaafc7de22438ac",
+  "figures": [
+    {
+      "key": "/images/notes/csm-reject-count-error-analysis/rev4/rack47.svg",
+      "rll": "XIC(i_reject_loaded)ONS(ons_reject_done)ADD(z_R2_Reject_Count,1,z_R2_Reject_Count);",
+      "parser_warnings": 0,
+      "width": 1040
+    },
+    {
+      "key": "/images/notes/csm-reject-count-error-analysis/rev4/timer25.svg",
+      "rll": "[XIC(o_load_reject) TOF(tm_RejectWait,?,?) ,XIC(tm_RejectWait.DN) OTE(z_signal_reject_loaded) ];",
+      "parser_warnings": 0,
+      "width": 1040
+    },
+    {
+      "key": "/images/notes/csm-reject-count-error-analysis/rev4/before1.svg",
+      "rll": "XIC(z_signal_reject_loaded)ONS(reject_incr_ons)ADD(reject_increment,1,reject_increment);",
+      "parser_warnings": 0,
+      "width": 1040
+    },
+    {
+      "key": "/images/notes/csm-reject-count-error-analysis/rev4/after1.svg",
+      "rll": "XIC(i_r2_reject_loaded)ONS(reject_incr_ons)ADD(reject_increment,1,reject_increment);",
+      "parser_warnings": 0,
+      "width": 1040
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "full0_off10_same",
+      "original": 1,
+      "changed": 1,
+      "rack": 1,
+      "changed_event_ms": [
+        11000
+      ]
+    },
+    {
+      "name": "full0_off16_same",
+      "original": 2,
+      "changed": 1,
+      "rack": 1,
+      "changed_event_ms": [
+        17000
+      ]
+    },
+    {
+      "name": "full0_off16_done_first",
+      "original": 1,
+      "changed": 1,
+      "rack": 1,
+      "changed_event_ms": [
+        16950
+      ]
+    },
+    {
+      "name": "full0_off16_clear_first",
+      "original": 2,
+      "changed": 1,
+      "rack": 1,
+      "changed_event_ms": [
+        17050
+      ]
+    },
+    {
+      "name": "held_button_one_completion",
+      "original": 2,
+      "changed": 1,
+      "rack": 1,
+      "changed_event_ms": [
+        17000
+      ]
+    },
+    {
+      "name": "repeated_button_one_completion",
+      "original": 2,
+      "changed": 1,
+      "rack": 1,
+      "changed_event_ms": [
+        17000
+      ]
+    },
+    {
+      "name": "full_wait_then_release",
+      "original": 2,
+      "changed": 1,
+      "rack": 1,
+      "changed_event_ms": [
+        17000
+      ]
+    },
+    {
+      "name": "full_during_work_then_resume",
+      "original": 2,
+      "changed": 1,
+      "rack": 1,
+      "changed_event_ms": [
+        36000
+      ]
+    },
+    {
+      "name": "completion_held_three_seconds",
+      "original": 0,
+      "changed": 1,
+      "rack": 1,
+      "changed_event_ms": [
+        200
+      ]
+    },
+    {
+      "name": "two_sequential_completion_inputs",
+      "original": 2,
+      "changed": 2,
+      "rack": 2,
+      "changed_event_ms": [
+        17000,
+        30500
+      ]
+    },
+    {
+      "name": "two_completions_within_15_seconds",
+      "original": 1,
+      "changed": 2,
+      "rack": 2,
+      "changed_event_ms": [
+        100,
+        1400
+      ]
+    },
+    {
+      "name": "cancel_without_completion",
+      "original": 1,
+      "changed": 0,
+      "rack": 0,
+      "changed_event_ms": []
+    },
+    {
+      "name": "normal_outfeed_open_not_reject",
+      "original": 0,
+      "changed": 0,
+      "rack": 0,
+      "changed_event_ms": []
+    },
+    {
+      "name": "prescan_input_already_high",
+      "original": 0,
+      "changed": 0,
+      "rack": 0,
+      "changed_event_ms": []
+    },
+    {
+      "name": "prescan_then_new_completion",
+      "original": 0,
+      "changed": 1,
+      "rack": 1,
+      "changed_event_ms": [
+        1100
+      ]
+    }
+  ],
+  "sweep_cases": 36,
+  "reset_check": {
+    "production": 1,
+    "rack": 2,
+    "expected": "Production reset does not reset rack or retrigger held completion."
+  },
+  "negative_controls": [
+    {
+      "name": "Two completion pulses for one physical job",
+      "production": 2,
+      "rack": 2,
+      "limitation": "Input deduplication is not implemented."
+    },
+    {
+      "name": "External clear of production ONS during high input",
+      "production": 2,
+      "rack": 1,
+      "limitation": "Other writers must be ruled out; rack +1 alone does not exclude this cause."
+    }
+  ]
+}
