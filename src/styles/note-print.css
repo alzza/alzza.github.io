@@ -1,0 +1,151 @@
+.note-print-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: 12px 0 0;
+}
+
+.note-print-actions .note-print-button {
+  background: var(--yellow);
+  color: #000;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.note-print-actions span { color: var(--muted); font-size: 0.82rem; }
+
+@page notePortrait {
+  size: A4 portrait;
+  margin: 14mm 14mm 17mm;
+  @bottom-right { content: counter(page); font: 9pt Arial, sans-serif; color: #444; }
+}
+
+@page noteWide {
+  size: A4 landscape;
+  margin: 8mm 13mm 12mm;
+  @bottom-right { content: counter(page); font: 9pt Arial, sans-serif; color: #444; }
+}
+
+@media print {
+  html,
+  html[data-theme="dark"] {
+    color-scheme: light;
+    --ink: #000;
+    --text: #000;
+    --muted: #444;
+    --surface: #fff;
+    --surface-2: #f5f0e8;
+    --bg: #fff;
+    --code-surface: #1f1e28;
+    --code-text: #f3f3f6;
+    --code-border: #000;
+    --code-shadow: #000;
+  }
+
+  html, body { overflow: visible !important; background: #fff !important; }
+  body { color: #000; font-size: 10.5pt; line-height: 1.48; }
+  .bar, .comments, .back-to-top, .note-print-actions,
+  .plc-copy, .fr-controls, .fr-position { display: none !important; }
+
+  .wrap.prose {
+    page: notePortrait;
+    display: block;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .wrap.prose:has(.ld-rung, .sfc-snippet, .sfc-compare-grid) { page: noteWide; }
+  .prose .hero { padding: 0 0 11pt; break-after: avoid; }
+  .prose .hero h1 { font-size: 20pt; line-height: 1.18; }
+  .prose .note-meta { color: #444; }
+  .prose .note-tags a { text-decoration: none; }
+  .prose h2, .prose h3, .prose h4 { break-after: avoid; }
+  .prose p:has(+ .ld-rung),
+  .prose pre:has(+ .sfc-snippet) { break-after: avoid; }
+  .prose p, .prose li { orphans: 3; widows: 3; }
+  .prose blockquote, .prose figure, .prose img, .prose svg,
+  .prose .sfc-snippet, .prose .sfc-sheet, .prose pre { break-inside: avoid; }
+
+  .prose .note-identifier-table {
+    overflow: visible !important;
+    width: 100%;
+    max-width: 100%;
+  }
+  .prose table,
+  .prose .note-identifier-table table,
+  .prose table:has(> thead > tr > :nth-child(5)) {
+    display: table !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    font-size: 8.5pt;
+    margin-bottom: 10pt;
+  }
+  .prose thead { display: table-header-group; }
+  .prose tfoot { display: table-footer-group; }
+  .prose tr { break-inside: avoid; }
+  .prose th, .prose td { padding: 4pt 5pt; }
+  .prose table code { font-size: 0.9em; }
+
+  .prose pre, .prose pre.astro-code {
+    overflow: visible !important;
+    max-width: 100%;
+    box-shadow: none;
+    font-size: 8.5pt;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .prose pre code, .prose pre code span {
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+
+  .prose .ld-rung,
+  .prose .ld-rung-live,
+  .prose .sfc-snippet[data-renderer],
+  .prose-finger-retry .sfc-sheet[data-renderer] {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible !important;
+    background: #fff !important;
+    break-inside: avoid;
+  }
+  .prose .ld-rung .rung-meta { display: flex !important; color: #333; }
+  .prose .ld-rung svg,
+  .prose .ld-rung img,
+  .prose .sfc-snippet svg,
+  .prose-finger-retry .sfc-sheet svg {
+    display: block;
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+  }
+  .prose .ld-rung img[hidden] { display: none !important; }
+  /* Tall wrapped rungs must fit a single sheet instead of fragmenting across pages. */
+  .prose .ld-rung svg,
+  .prose .ld-rung img:not([hidden]) {
+    width: auto !important;
+    max-width: 100% !important;
+    max-height: 160mm !important;
+    height: auto !important;
+    margin: 0 auto;
+  }
+  .prose .rung-status { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .prose .sfc-snippet[data-renderer] svg {
+    width: 65%;
+    min-width: 0;
+    margin: 0 auto;
+  }
+  .prose th, .prose .badge, .prose .note-tags a {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .prose details { display: block !important; }
+  .prose details > summary { break-after: avoid; }
+}
