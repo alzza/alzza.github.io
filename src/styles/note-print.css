@@ -14,12 +14,16 @@
 }
 
 .note-print-actions span { color: var(--muted); font-size: 0.82rem; }
-.ld-print-sheets { display: none; }
 
-@page {
+@page notePortrait {
   size: A4 portrait;
-  margin: 16mm 17mm 19mm;
-  @bottom-left { content: "alzza · 노트"; font: 8pt Arial, sans-serif; color: #555; }
+  margin: 14mm 14mm 17mm;
+  @bottom-right { content: counter(page); font: 9pt Arial, sans-serif; color: #444; }
+}
+
+@page noteWide {
+  size: A4 landscape;
+  margin: 8mm 13mm 12mm;
   @bottom-right { content: counter(page); font: 9pt Arial, sans-serif; color: #444; }
 }
 
@@ -40,12 +44,12 @@
   }
 
   html, body { overflow: visible !important; background: #fff !important; }
-  body { color: #000; font-size: 11pt; line-height: 1.52; }
+  body { color: #000; font-size: 10.5pt; line-height: 1.48; }
   .bar, .comments, .back-to-top, .note-print-actions,
   .plc-copy, .fr-controls, .fr-position { display: none !important; }
 
   .wrap.prose {
-    page: auto;
+    page: notePortrait;
     display: block;
     width: 100% !important;
     max-width: none !important;
@@ -54,12 +58,12 @@
     overflow: visible !important;
   }
 
-  .prose .hero { padding: 0 0 12pt; border-bottom: 2pt solid #111; break-after: avoid; }
-  .prose .hero h1 { font-size: 22pt; line-height: 1.18; }
+  .wrap.prose:has(.ld-rung, .sfc-snippet, .sfc-compare-grid) { page: noteWide; }
+  .prose .hero { padding: 0 0 11pt; break-after: avoid; }
+  .prose .hero h1 { font-size: 20pt; line-height: 1.18; }
   .prose .note-meta { color: #444; }
   .prose .note-tags a { text-decoration: none; }
   .prose h2, .prose h3, .prose h4 { break-after: avoid; }
-  .prose h2 { padding-bottom: 3pt; border-bottom: 1pt solid #999; }
   .prose p:has(+ .ld-rung),
   .prose pre:has(+ .sfc-snippet) { break-after: avoid; }
   .prose p, .prose li { orphans: 3; widows: 3; }
@@ -79,10 +83,9 @@
     min-width: 0 !important;
     max-width: 100% !important;
     overflow: visible !important;
-    font-size: 9pt;
+    font-size: 8.5pt;
     margin-bottom: 10pt;
   }
-  .prose table:not(:has(tbody > tr:nth-child(13))) { break-inside: avoid; }
   .prose thead { display: table-header-group; }
   .prose tfoot { display: table-footer-group; }
   .prose tr { break-inside: avoid; }
@@ -93,7 +96,7 @@
     overflow: visible !important;
     max-width: 100%;
     box-shadow: none;
-    font-size: 9pt;
+    font-size: 8.5pt;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
@@ -111,11 +114,9 @@
     max-width: 100%;
     overflow: visible !important;
     background: #fff !important;
-    break-inside: auto;
+    break-inside: avoid;
   }
-  .prose .sfc-snippet[data-renderer],
-  .prose-finger-retry .sfc-sheet[data-renderer] { break-inside: avoid; }
-  .prose .ld-rung .rung-meta { display: flex !important; color: #333; break-after: avoid; }
+  .prose .ld-rung .rung-meta { display: flex !important; color: #333; }
   .prose .ld-rung svg,
   .prose .ld-rung img,
   .prose .sfc-snippet svg,
@@ -125,34 +126,19 @@
     width: 100%;
     height: auto;
   }
-  .prose .ld-rung:has(.ld-print-sheets) img,
-  .prose .ld-rung:has(.ld-print-sheets) .ld-rung-live { display: none !important; }
-  .prose .ld-print-sheets { display: block !important; }
-  .prose .ld-print-sheet { break-inside: avoid; margin: 0 0 9pt; }
-  .prose .ld-print-continuation { border-top: 1pt dashed #8994b5; padding-top: 7pt; }
-  .prose .ld-print-sheet svg {
-    display: block;
-    width: 100% !important;
+  .prose .ld-rung img[hidden] { display: none !important; }
+  /* Tall wrapped rungs must fit a single sheet instead of fragmenting across pages. */
+  .prose .ld-rung svg,
+  .prose .ld-rung img:not([hidden]) {
+    width: auto !important;
     max-width: 100% !important;
+    max-height: 160mm !important;
     height: auto !important;
-    overflow: hidden;
-  }
-  .prose .ld-print-caption {
-    margin: 0 0 4pt;
-    color: #333;
-    font-size: 8.5pt;
-    font-weight: 700;
-    break-after: avoid;
-  }
-  .prose .ld-print-next {
-    margin: 4pt 0 0;
-    color: #444;
-    font-size: 8pt;
-    text-align: right;
+    margin: 0 auto;
   }
   .prose .rung-status { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .prose .sfc-snippet[data-renderer] svg {
-    width: 100%;
+    width: 65%;
     min-width: 0;
     margin: 0 auto;
   }
