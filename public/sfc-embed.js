@@ -94,8 +94,6 @@
     });
   }
 
-  window.L5XRenderNoteSFC = paint;
-
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", paint);
   else paint();
 })();

@@ -3,7 +3,6 @@ import { getCollection, render } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import Header from "../../components/Header.astro";
 import Comments from "../../components/Comments.astro";
-import "../../styles/note-print.css";
 
 export async function getStaticPaths() {
   const notes = await getCollection("notes");
@@ -24,10 +23,6 @@ const { Content } = await render(note);
       <span class="badge">노트</span>
       <h1>{note.data.title}</h1>
       <p class="note-meta">{note.data.date}</p>
-      <div class="note-print-actions">
-        <button class="btn note-print-button" id="note-print-button" type="button" aria-label="이 노트를 인쇄하거나 PDF로 저장">인쇄 · PDF 저장</button>
-        <span>인쇄 창에서 PDF로 저장할 수 있습니다.</span>
-      </div>
       {
         note.data.tags.length > 0 && (
           <p class="note-tags">
@@ -41,7 +36,6 @@ const { Content } = await render(note);
     <Content />
     <Comments />
   </div>
-  <script is:inline src="/note-print.js?v=1"></script>
   {
     typeof note.body === "string" && note.body.includes("ld-rung") && (
       <>

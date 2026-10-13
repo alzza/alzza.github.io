@@ -11,12 +11,12 @@
     return Math.max(280, Math.floor(col.clientWidth));
   }
 
-  function paint(force, viewportWidth) {
+  function paint() {
     if (!window.L5XLadder || typeof L5XLadder.renderRung !== "function") return;
     var figs = document.querySelectorAll(".ld-rung[data-rll]");
     if (!figs.length) return;
-    var w = viewportWidth || sheetWidth();
-    if (!force && w === lastW && lastW !== 0) return;
+    var w = sheetWidth();
+    if (w === lastW && lastW !== 0) return;
     lastW = w;
     figs.forEach(function (fig) {
       var rll = fig.getAttribute("data-rll") || "";
@@ -42,12 +42,7 @@
     });
   }
 
-  window.L5XRenderNoteRungs = function (viewportWidth) {
-    paint(true, viewportWidth);
-  };
-
   function onResize() {
-    if (window.L5XNotePrinting) return;
     lastW = 0;
     clearTimeout(timer);
     timer = setTimeout(paint, 120);
