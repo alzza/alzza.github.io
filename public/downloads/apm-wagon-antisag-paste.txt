@@ -1,0 +1,11 @@
+XIC(hmi_enable)TON(tm_WG_AntiSag_Limit,10800000,0);
+XIO(hmi_enable)RES(tm_WG_AntiSag_Limit)RES(tm_WG_AntiSag_Period)RES(tm_WG_AntiSag_Lead)RES(tm_WG_AntiSag_Pulse)OTU(zWG_AntiSag_Pump);
+XIC(hmi_enable)XIO(cWG.Mode_Man)XIO(tm_WG_AntiSag_Limit.DN)XIC(tm_WG_Up_LS.DN)XIO(tm_WG_Dn_LS.DN)XIO(uWGZUD.op_DOWN)XIO(zWG_Down_Req)XIO(q_WGDOWN_Sol)XIO(i_WG_LSLL_Oil)XIO(aWG_OILT_HH)XIO(i_WGHYTrip)XIO(EStop)XIC(cWG.zEnable)OTE(zWG_AntiSag_Run);
+XIC(zWG_AntiSag_Run)XIO(zWG_AntiSag_Pump)TON(tm_WG_AntiSag_Period,30000,0);
+XIC(zWG_AntiSag_Run)XIC(tm_WG_AntiSag_Period.DN)OTL(zWG_AntiSag_Pump)RES(tm_WG_AntiSag_Period);
+XIC(zWG_AntiSag_Pump)TON(tm_WG_AntiSag_Lead,2000,0);
+XIC(zWG_AntiSag_Pump)XIC(tm_WG_AntiSag_Lead.DN)TON(tm_WG_AntiSag_Pulse,300,0);
+XIC(tm_WG_AntiSag_Pulse.DN)OTU(zWG_AntiSag_Pump)RES(tm_WG_AntiSag_Lead)RES(tm_WG_AntiSag_Pulse);
+XIO(zWG_AntiSag_Run)OTU(zWG_AntiSag_Pump)RES(tm_WG_AntiSag_Lead)RES(tm_WG_AntiSag_Pulse);
+XIC(hmi_enable)XIO(cWG.Mode_Man)XIC(zWG_AntiSag_Run)XIC(zWG_AntiSag_Pump)XIC(tm_WG_AntiSag_Lead.DN)XIO(tm_WG_AntiSag_Pulse.DN)XIO(q_WGDOWN_Sol)XIO(zWG_Down_Req)OTL(q_WGUP_Sol);
+XIC(hmi_enable)XIO(cWG.Mode_Man)XIC(zWG_AntiSag_Run)XIC(zWG_AntiSag_Pump)XIO(q_WGDOWN_Sol)XIO(zWG_Down_Req)OTL(q_WGHY_Run_CMD);
