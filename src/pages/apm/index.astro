@@ -1,0 +1,76 @@
+---
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+
+const repoRoot = "https://github.com/alzza/csm-sc1-improvement/tree/alzza/%EA%B0%84%EB%8B%A8%EA%B0%9C%EC%84%A0/output/l1_apm_20261019";
+const repoFile = "https://github.com/alzza/csm-sc1-improvement/blob/alzza/%EA%B0%84%EB%8B%A8%EA%B0%9C%EC%84%A0/output/l1_apm_20261019";
+const repoTree = "https://github.com/alzza/csm-sc1-improvement/tree/alzza/%EA%B0%84%EB%8B%A8%EA%B0%9C%EC%84%A0/output/l1_apm_20261019";
+const privateNote = "https://github.com/alzza/csm-sc1-improvement/blob/alzza/%EA%B0%84%EB%8B%A8%EA%B0%9C%EC%84%A0/docs/L1_APM_20261019_Publication.md";
+const resources = [
+  {
+    title: "L1_APM 로직 분석과 태그 데이터베이스",
+    text: "태그 인덱스, 루틴별 LD, 시퀀스 분석, 정적 검토 결과와 원본 근거를 확인합니다.",
+    href: `${repoFile}/index.html`,
+    label: "분석 자료 열기",
+  },
+  {
+    title: "스테이션별 센서 I/O 엑셀",
+    text: "I/O 주소와 로직에서 추론한 센서 역할, 관련 근거를 정리했습니다.",
+    href: `${repoFile}/L1_APM_sensor_IO.xlsx`,
+    label: "엑셀 파일 열기",
+  },
+  {
+    title: "WG 유압 회로와 동작 분석",
+    text: "제공된 유압 도면과 WG 시퀀스 로직을 함께 확인합니다.",
+    href: privateNote,
+    label: "WG 분석 열기",
+  },
+  {
+    title: "원본 L5X와 전체 래더 자료",
+    text: "원본 내보내기 파일, 루틴별 LD 변환 자료와 변환 기록을 확인합니다.",
+    href: `${repoTree}/ladder/`,
+    label: "래더 목록 열기",
+  },
+];
+---
+
+<Base title="APM 자료 · alzza" description="L1_APM 로직 분석과 관련 자료 안내" noindex={true}>
+  <Header links={[{ href: "/", label: "홈" }, { href: "/notes/", label: "노트" }]} />
+  <main class="wrap apm-page">
+    <section class="hero">
+      <span class="badge">L1_APM</span>
+      <h1>APM 자료</h1>
+      <p>PLC 로직 분석, 스테이션별 센서 I/O, WG 유압 회로 검토와 원본 근거 자료를 모았습니다.</p>
+      <p class="access-note">자료는 권한이 설정된 비공개 저장소에서 제공합니다. 회사 GitHub 계정으로 로그인하고 저장소 접근 권한이 있어야 열 수 있습니다.</p>
+      <a class="repo-button" href={`${repoRoot}/`} target="_blank" rel="noopener noreferrer">비공개 자료 저장소 열기 ↗</a>
+    </section>
+
+    <section class="resource-grid" aria-label="APM 자료 목록">
+      {resources.map((resource) => (
+        <a class="resource-card" href={resource.href} target="_blank" rel="noopener noreferrer">
+          <span class="resource-mark" aria-hidden="true">↗</span>
+          <h2>{resource.title}</h2>
+          <p>{resource.text}</p>
+          <strong>{resource.label}</strong>
+        </a>
+      ))}
+    </section>
+    <p class="source-note">해석은 제공된 L5X와 유압 도면을 바탕으로 정리했습니다. 실제 PLC 온라인 상태와 현장 배선·동작은 별도 확인이 필요합니다.</p>
+  </main>
+</Base>
+
+<style>
+  .apm-page { padding-bottom: 4rem; }
+  .apm-page .hero { margin-top: 2.5rem; }
+  .access-note { margin-top: 1.25rem; padding: 0.9rem 1rem; border: 2px solid var(--ink, #24232b); background: var(--surface-2, #fff8d5); font-weight: 650; }
+  .repo-button { display: inline-flex; margin-top: 0.4rem; padding: 0.75rem 1rem; border: 2px solid var(--ink, #24232b); box-shadow: 4px 4px 0 var(--ink, #24232b); color: inherit; font-weight: 750; text-decoration: none; }
+  .repo-button:hover, .resource-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink, #24232b); }
+  .resource-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 2rem; }
+  .resource-card { display: block; min-height: 12rem; padding: 1.2rem; border: 2px solid var(--ink, #24232b); box-shadow: 4px 4px 0 var(--ink, #24232b); color: inherit; text-decoration: none; transition: transform 120ms ease, box-shadow 120ms ease; }
+  .resource-mark { float: right; font-size: 1.25rem; font-weight: 800; }
+  .resource-card h2 { margin: 0.4rem 2rem 0.6rem 0; font-size: 1.25rem; }
+  .resource-card p { min-height: 3.5rem; margin: 0 0 1rem; line-height: 1.65; }
+  .resource-card strong { text-decoration: underline; text-underline-offset: 0.2em; }
+  .source-note { margin-top: 2rem; font-size: 0.92rem; }
+  @media (max-width: 640px) { .resource-grid { grid-template-columns: 1fr; } .resource-card { min-height: 0; } .resource-card p { min-height: 0; } }
+</style>
