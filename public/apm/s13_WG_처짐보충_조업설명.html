@@ -150,16 +150,17 @@
 <h2 id="height">수동이 더 낮아 보이는 이유</h2>
 <p>밸브는 자동이든 수동이든 DG4V-5-6H 하나다. 높이 설정값은 없다. 자동은 업센서에 닿아도 프로그램이 솔을 10초 더 연다. 수동은 업센서가 10초 켜진 뒤부터 리모콘 상승이 안 먹는다. 닿는 즉시가 아니다.</p>
 <div class="cyl-demo">
-<svg class="scheme" id="cyl-svg" viewBox="0 160 920 540" role="img" aria-label="자동은 센서 뒤에도 솔이 열리고 수동은 10초 뒤 리모콘이 막힘">
-  <text x="250" y="24" text-anchor="middle" font-size="18" font-weight="700">자동</text>
-  <text x="670" y="24" text-anchor="middle" font-size="18" font-weight="700">수동</text>
+<svg class="scheme" id="cyl-svg" viewBox="0 145 920 410" role="img" aria-label="0초는 업센서에 닿은 순간. 그 뒤 10초 동안 솔이 열려 있다">
+  <text x="250" y="168" text-anchor="middle" font-size="18" font-weight="700">자동</text>
+  <text x="670" y="168" text-anchor="middle" font-size="18" font-weight="700">수동</text>
   <g id="cyl-auto"></g>
   <g id="cyl-man"></g>
-  <text id="cyl-cap-a" x="250" y="678" text-anchor="middle" font-size="15"></text>
-  <text id="cyl-cap-m" x="670" y="678" text-anchor="middle" font-size="15"></text>
+  <text id="cyl-cap-a" x="250" y="536" text-anchor="middle" font-size="15"></text>
+  <text id="cyl-cap-m" x="670" y="536" text-anchor="middle" font-size="15"></text>
 </svg>
+<p id="cyl-note">눈금 0초는 실린더가 움직이기 시작한 때가 아니다. 업센서에 닿은 순간이다. 닿기 전의 상승은 이 눈금에 없다. 그림은 행정 40mm의 한가운데에서 센서가 들어온 것으로 그려 두었다. 남은 20mm는 17mm/s면 약 1.2초다. 그 뒤부터 10초까지는 높이가 그대로고 솔만 열려 있다.</p>
 <div class="controls">
-  <label>센서 들어온 뒤 <output id="cyl-t-out">10.0</output>초
+  <label>업센서 터치 후 <output id="cyl-t-out">10.0</output>초
     <input id="cyl-t" type="range" min="0" max="12" step="0.1" value="10">
   </label>
   <label><input id="cyl-hold" type="checkbox"> 리모콘 상승을 누르고 있음</label>
@@ -168,17 +169,25 @@
 <script>
 (function () {
   var SPEED = 17;
-  var EXTRA = 10 * SPEED;
-  function cylinder(cx, extend, blocked) {
-    var barrelW = 108, barrelH = 132, barrelTop = 500;
+  var STROKE = 40;
+  var TOUCH = 20;
+  var AFTER = STROKE - TOUCH;
+  var RISE_S = AFTER / SPEED;
+  var PX = 3.6;
+  var barrelTop = 388;
+  function mmAfterTouch(t) {
+    return Math.min(AFTER, SPEED * Math.max(0, Math.min(t, 10)));
+  }
+  function cylinder(cx, mm, blocked) {
+    var barrelW = 108, barrelH = 118;
     var bx = cx - barrelW / 2;
     var rodW = 26;
     var rx = cx - rodW / 2;
-    var px = Math.max(0, Math.min(EXTRA, extend)) / EXTRA * 151;
-    var rodTop = barrelTop - 70 - px;
+    var px = Math.max(0, Math.min(STROKE, mm)) * PX;
+    var rodTop = barrelTop - 50 - px;
     var dogY = rodTop + 8;
-    var sensorY = 287;
-    var led = (dogY < sensorY + 28 && dogY + 14 > sensorY) ? "#3ddc84" : "#8b93a0";
+    var sensorY = barrelTop - 50 - TOUCH * PX + 8;
+    var led = (dogY + 7 <= sensorY + 16) ? "#3ddc84" : "#8b93a0";
     var glandL = rx - (bx - 6);
     var glandR = (bx + barrelW + 6) - (rx + rodW);
     return [
@@ -202,14 +211,24 @@
     var t = parseFloat(tEl.value);
     if (!(t >= 0)) t = 0;
     outEl.textContent = t.toFixed(1);
-    var autoMm = Math.min(EXTRA, SPEED * Math.min(t, 10));
-    var manMm = 0;
+    var autoMm = TOUCH + mmAfterTouch(t);
+    var manMm = TOUCH;
     var blocked = t >= 10;
-    if (holdEl.checked) manMm = Math.min(EXTRA, SPEED * Math.min(t, 10));
+    if (holdEl.checked) manMm = TOUCH + mmAfterTouch(t);
     document.getElementById("cyl-auto").innerHTML = cylinder(250, autoMm, false);
-    document.getElementById("cyl-man").innerHTML = cylinder(690, manMm, blocked && holdEl.checked);
-    document.getElementById("cyl-cap-a").textContent = t < 10 ? "솔 열리는 중. 끝까지 " + (10 - t).toFixed(1) + "초" : "10초 끝. 솔 닫힘. 여기까지 올림";
-    document.getElementById("cyl-cap-m").textContent = blocked ? "리모콘 상승 안 됨" : (holdEl.checked ? "누르고 있으면 같이 올라감" : "안 누르면 이 높이");
+    document.getElementById("cyl-man").innerHTML = cylinder(670, manMm, blocked && holdEl.checked);
+    var autoCap;
+    if (t <= 0) autoCap = "센서 닿음. 여기서부터 10초";
+    else if (t < RISE_S) autoCap = "터치 후 " + t.toFixed(1) + "초. 남은 행정 올리는 중";
+    else if (t < 10) autoCap = "터치 후 " + t.toFixed(1) + "초. 높이는 끝, 솔은 열림";
+    else autoCap = "터치 후 10초 끝. 솔 닫힘";
+    var manCap;
+    if (blocked) manCap = "터치 후 10초. 리모콘 상승 안 됨";
+    else if (holdEl.checked && t >= RISE_S) manCap = "누르고 있지만 행정 끝. 솔은 열림";
+    else if (holdEl.checked) manCap = "누르고 있으면 터치 뒤로도 올라감";
+    else manCap = "안 누르면 터치한 높이";
+    document.getElementById("cyl-cap-a").textContent = autoCap;
+    document.getElementById("cyl-cap-m").textContent = manCap;
   }
   tEl.addEventListener("input", draw);
   holdEl.addEventListener("change", draw);
