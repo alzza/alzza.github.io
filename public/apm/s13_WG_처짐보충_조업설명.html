@@ -145,31 +145,38 @@
 </div>
 
 <h2 id="height">수동이 더 낮아 보이는 이유</h2>
-<p>리프트 업, 다운은 방향밸브 DG4V-5-6H 하나다. 자동이랑 수동이 높이를 따로 저장해 둔 값은 없다. 상승 솔 <code>q_WGUP_Sol</code>을 얼마나 오래 여느냐만 다르다.</p>
-<svg class="scheme" viewBox="0 0 920 460" role="img" aria-label="자동과 수동 상승 높이 비교">
-  <text x="230" y="28" text-anchor="middle" font-size="16" font-weight="700">자동</text>
-  <text x="690" y="28" text-anchor="middle" font-size="16" font-weight="700">수동, 리모콘</text>
-  <rect x="170" y="50" width="120" height="250" rx="8" fill="#fff" stroke="#1c1915" stroke-width="2"/>
-  <rect x="630" y="50" width="120" height="250" rx="8" fill="#fff" stroke="#1c1915" stroke-width="2"/>
-  <rect x="174" y="54" width="112" height="242" rx="6" fill="#1d6b45"/>
-  <rect x="634" y="168" width="112" height="128" rx="6" fill="#c4a15a"/>
-  <path d="M150 170 H310 M610 170 H770" stroke="#8a5a12" stroke-width="2" stroke-dasharray="6 4"/>
-  <text x="150" y="162" text-anchor="end" font-size="13" fill="#8a5a12">업센서 들어옴</text>
-  <text x="610" y="162" text-anchor="end" font-size="13" fill="#8a5a12">업센서 들어옴</text>
-  <text x="230" y="78" text-anchor="middle" font-size="13" fill="#fff">행정 끝</text>
-  <text x="690" y="150" text-anchor="middle" font-size="13" fill="#5c564c">리모콘으로 못 감</text>
-  <text x="230" y="320" text-anchor="middle" font-size="14">센서 뒤 10초는 솔을 스스로 염</text>
-  <text x="690" y="320" text-anchor="middle" font-size="14">10초 지나면 리모콘 상승은 막힘</text>
-  <text x="40" y="372" font-size="14">업센서가 들어온 시각을 0초로 보면</text>
-  <rect x="40" y="404" width="480" height="28" rx="4" fill="#1d6b45"/>
-  <path d="M280 396 V440" stroke="#1c1915" stroke-width="2"/>
-  <text x="280" y="396" text-anchor="middle" font-size="13">5초. 스텝만 이동. 솔은 켜져 있음</text>
-  <text x="400" y="423" text-anchor="middle" font-size="13" fill="#fff">10초. 자동 솔 닫힘</text>
-  <rect x="560" y="404" width="320" height="28" rx="4" fill="#fff4df" stroke="#8a5a12"/>
-  <text x="720" y="423" text-anchor="middle" font-size="13">10초 후 리모콘 상승은 안 먹음</text>
+<p>밸브는 자동이든 수동이든 DG4V-5-6H 하나다. 높이 설정값은 없다. 자동은 업센서에 닿아도 프로그램이 솔을 10초 더 연다. 수동은 업센서가 10초 켜진 뒤부터 리모콘 상승이 안 먹는다. 닿는 즉시가 아니다.</p>
+<svg class="scheme" viewBox="0 0 920 520" role="img" aria-label="자동은 센서 뒤에도 솔이 열리고 수동은 10초 뒤 리모콘이 막힘">
+  <text x="230" y="28" text-anchor="middle" font-size="18" font-weight="700">자동</text>
+  <text x="690" y="28" text-anchor="middle" font-size="18" font-weight="700">수동</text>
+  <rect x="188" y="150" width="84" height="200" rx="6" fill="#c5ccd4" stroke="#1c1915" stroke-width="2"/>
+  <rect x="196" y="158" width="68" height="184" rx="3" fill="#e8edf2"/>
+  <rect x="214" y="70" width="32" height="100" rx="3" fill="#9aa3ad" stroke="#1c1915"/>
+  <rect x="206" y="148" width="48" height="18" rx="2" fill="#5c656e"/>
+  <rect x="208" y="78" width="44" height="16" rx="2" fill="#1c1915"/>
+  <rect x="648" y="210" width="84" height="200" rx="6" fill="#c5ccd4" stroke="#1c1915" stroke-width="2"/>
+  <rect x="656" y="218" width="68" height="184" rx="3" fill="#e8edf2"/>
+  <rect x="674" y="150" width="32" height="80" rx="3" fill="#9aa3ad" stroke="#1c1915"/>
+  <rect x="666" y="208" width="48" height="18" rx="2" fill="#5c656e"/>
+  <rect x="668" y="156" width="44" height="16" rx="2" fill="#1c1915"/>
+  <rect x="120" y="86" width="52" height="28" rx="4" fill="#1e3f73"/>
+  <circle cx="164" cy="100" r="5" fill="#3ddc84"/>
+  <path d="M172 100 H208" stroke="#1e3f73" stroke-width="2"/>
+  <text x="146" y="78" text-anchor="middle" font-size="13" fill="#1e3f73">업센서 감지</text>
+  <rect x="580" y="156" width="52" height="28" rx="4" fill="#1e3f73"/>
+  <circle cx="624" cy="170" r="5" fill="#3ddc84"/>
+  <path d="M632 170 H668" stroke="#1e3f73" stroke-width="2"/>
+  <text x="606" y="148" text-anchor="middle" font-size="13" fill="#1e3f73">업센서 감지</text>
+  <text x="230" y="390" text-anchor="middle" font-size="15">닿아도 솔을 10초 더 염</text>
+  <text x="690" y="450" text-anchor="middle" font-size="15">10초 켜지면 리모콘 상승 차단</text>
+  <text x="40" y="490" font-size="14">센서가 들어온 시각이 0초</text>
+  <rect x="250" y="474" width="220" height="26" rx="4" fill="#1d6b45"/>
+  <text x="360" y="492" text-anchor="middle" font-size="13" fill="#fff">0~10초 자동 솔 열림</text>
+  <rect x="490" y="474" width="280" height="26" rx="4" fill="#8a5a12"/>
+  <text x="630" y="492" text-anchor="middle" font-size="13" fill="#fff">10초부터 수동 상승 안 됨</text>
 </svg>
-<p>손을 떼서 낮은 게 아니다. 업센서가 들어와 있으면 리모콘 상승이 더 안 먹는다. 막는 곳은 71번 <code>XIO(tm_WG_Up_Long.DN)</code>이다. 업센서 두 개가 10초(PRE 10000) 계속 켜지면 DN이 되고, 센서가 켜져 있는 동안 그 DN은 안 풀린다. 그때 <code>i_WG_XUP</code>을 눌러도 솔은 안 나간다.</p>
-<p>자동은 그 10초 동안 리모콘이 없어도 <code>uWGZUD.op_UP</code>을 스스로 유지해서 솔을 연다. 5초(<code>tm_WG_Up_LS</code>, PRE 5000)는 스텝만 넘긴다. 솔은 10초까지 열려 있으니 센서보다 위, 행정 끝까지 민다. 수동은 그 10초가 지난 뒤에 리모콘으로 남은 높이를 못 채운다. 그래서 자동보다 낮고, 그 상태로 두면 더 처져 보인다. 센서가 이미 10초 이상 켜져 있으면 리모콘 상승은 누르자마자 안 먹는다.</p>
+<p>자동은 스텝 3에서 <code>uWGZUD.op_UP</code>을 켜 두고, <code>tm_WG_Up_Long</code>이 끝나기 전에는 그 요청을 유지한다. 업센서가 닿아도 솔 <code>q_WGUP_Sol</code>은 바로 안 닫힌다. 5초(<code>tm_WG_Up_LS</code>, PRE 5000)는 스텝만 넘긴다. 솔은 10초(<code>tm_WG_Up_Long</code>, PRE 10000)까지 열려서 남은 행정을 더 올린다.</p>
+<p>수동 상승 <code>i_WG_XUP</code>도 71번에서 같은 <code>XIO(tm_WG_Up_Long.DN)</code>을 통과해야 솔이 열린다. 센서에 닿은 직후 10초가 되기 전에는, 리모콘을 누르고 있으면 솔이 아직 열린다. 두 센서가 10초 계속 켜져 DN이 되면 그 뒤로는 리모콘을 눌러도 상승이 안 된다. 센서가 켜져 있는 동안 이 차단은 안 풀린다. 자동은 그 10초를 프로그램이 이미 써서 더 올려 둔 상태다. 그래서 수동이 더 낮다.</p>
 
 <h2 id="pump">펌프는 원래 그 태그임</h2>
 <p>펌프 태그는 새로 안 만든다. 웨건 유압모터를 켜는 출력은 원래 있는 <code>q_WGHY_Run_CMD</code>다. 115번이 짧게 상승하는 동안만 그 출력을 다시 켠다.</p>
