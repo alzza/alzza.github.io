@@ -101,6 +101,7 @@
 <nav class="toc">
   <a href="#when">언제 동작하나</a>
   <a href="#pump">기존 펌프</a>
+  <a href="#spec">밸브 사양</a>
   <a href="#why">이렇게 한 이유</a>
   <a href="#how">순서</a>
   <a href="#time">시간</a>
@@ -168,6 +169,38 @@
 <p>이 짧은 상승에는 기존 <code>tm_WG_HYD_RunOk</code>를 안 씀. 77번이 115번보다 앞에서 펌프를 봐서, 115번이 펌프를 켜도 그 타이머는 같은 스캔에 안 쌓임. 그래서 110번이 2초를 따로 셈. 그게 <code>tm_WG_AntiSag_Lead</code>임.</p>
 </div>
 <p><code>uWG_HYD</code>는 태그로만 있고 렁에서는 안 씀. <code>q_HY1_CMD</code>부터 <code>q_HY4_CMD</code>는 공장 공통 펌프임. 웨건 유압 거는 비트는 <code>q_WGHY_Run_CMD</code> 하나임.</p>
+
+<h2 id="spec">도면에 적힌 밸브 사양</h2>
+<p>아래 거리는 감으로 잡은 값이 아님. 도면 1901-51-3630A에 적힌 부품이랑 유량으로 계산한 거임. 온산 APM 웨건 유압회로, 2014 AS BUILT.</p>
+<table>
+<thead><tr><th>도면 번호</th><th>이름</th><th>사양</th><th>몇 개</th></tr></thead>
+<tbody>
+<tr><td>10</td><td>방향밸브 Sol V/V</td><td>Vickers DG4V-5-6H. DC24V. 상승 솔 1개, 하강 솔 1개</td><td>1</td></tr>
+<tr><td>11</td><td>파일럿 체크</td><td>Vickers DGMPC-5S-ABK-BAK. 분배기 앞 공통 입구만 잠금</td><td>1</td></tr>
+<tr><td>12</td><td>스피드 컨트롤</td><td>Vickers DGMFN-5S-Y-A2W-B2W</td><td>1</td></tr>
+<tr><td>8</td><td>솔 릴리프</td><td>Bosch DBW-20. 설정 140bar</td><td>1</td></tr>
+<tr><td>18</td><td>분배기</td><td>ASADA SAP-14-14. 한 블록에 두 대</td><td>2</td></tr>
+<tr><td>17</td><td>실린더</td><td>TAIYO ø140×80×40ST. 4본이 솔 하나에 묶임</td><td>4</td></tr>
+<tr><td>6</td><td>펌프</td><td>Vickers 25V12. 도면 표기 토출 65.9 L/min</td><td>1</td></tr>
+<tr><td>5</td><td>모터</td><td>18.5kW, 4P. 유압오일 40~50°C</td><td>1</td></tr>
+</tbody>
+</table>
+<p>방향밸브가 하나라 실린더 네 대가 같이 움직임. 펌프 65.9 L/min를 네 대가 나누면 한 대당 약 16.5 L/min임. 도면이 이 조건으로 적어 둔 속도가 상승 17mm/s, 하강 26mm/s임. 올라갈 때 면적이 더 커서 하강보다 느림. 아래 거리는 이 17mm/s를 시간으로 곱한 이론값임.</p>
+<h3>솔 연 시간만큼 이론상 얼마나 올라가나</h3>
+<p>유량 자체는 시간이 길어져도 같음. 펌프는 계속 65.9 L/min, 실린더 한 대는 16.5 L/min임. 길어지는 건 그 시간에 들어간 유압오일 양이랑, 로드가 밀려 올라가는 거리임. 밸브가 방향 바꾸는 짧은 시간은 여기 안 뺐음.</p>
+<table>
+<thead><tr><th>Sol V/V 가동</th><th>이론 상승</th><th>실린더 1대에 들어간 양</th><th>펌프가 그 사이 토출한 양</th></tr></thead>
+<tbody>
+<tr><td>0.3초</td><td>약 5mm</td><td>0.08 L</td><td>0.33 L</td></tr>
+<tr><td>0.5초</td><td>약 9mm</td><td>0.14 L</td><td>0.55 L</td></tr>
+<tr><td>0.8초</td><td>약 14mm</td><td>0.22 L</td><td>0.88 L</td></tr>
+<tr><td>1.0초</td><td>약 17mm</td><td>0.27 L</td><td>1.10 L</td></tr>
+</tbody>
+</table>
+<p>계산은 17mm/s × 초임. 0.3초면 5.1mm, 1초면 17mm. 표는 반올림임.</p>
+<div class="card note">
+<p>이건 실린더가 행정 중간에 있고, 들어온 오일이 전부 로드를 밀 때 이야기임. 이미 끝이면 이 mm만큼 더 안 올라가고 140bar 릴리프를 탐. 처짐이 5mm 안이면 0.3초로 거의 따라오고, 그 이상이면 30초마다 몇 mm씩 더 올라와서 끝에 닿음. 1초로 늘리면 한 번에 약 17mm라 더 잘 따라오지만, 끝에서 릴리프 타는 시간도 길어짐.</p>
+</div>
 
 <h2 id="why">이렇게 한 이유</h2>
 <p>실린더는 네 대, 상승 솔은 하나임. 유압오일은 펌프에서 나와 릴리프, 방향밸브를 지나고, 파일럿 체크 하나에서 공통 입구가 잠긴 다음 분배기 두 개로 갈라짐.</p>
