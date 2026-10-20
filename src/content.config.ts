@@ -12,6 +12,7 @@ const notes = defineCollection({
     excerpt: z.string(),
     kicker: z.string().optional(),
     tags: z.array(z.string()).default([]),
+    redirect: z.string().optional(),
   }),
 });
 

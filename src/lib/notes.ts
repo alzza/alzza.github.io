@@ -39,7 +39,7 @@ const extra: NoteItem[] = [
 export async function listNotes(): Promise<NoteItem[]> {
   const md = await getCollection("notes");
   const fromFiles: NoteItem[] = md.map((n) => ({
-    href: `/notes/${n.id}/`,
+    href: n.data.redirect ?? `/notes/${n.id}/`,
     title: n.data.title,
     date: n.data.date,
     excerpt: n.data.excerpt,

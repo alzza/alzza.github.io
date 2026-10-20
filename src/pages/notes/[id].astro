@@ -14,8 +14,24 @@ export async function getStaticPaths() {
 
 const { note } = Astro.props;
 const { Content } = await render(note);
+const redirect = note.data.redirect;
 ---
-
+{redirect && (
+  <html lang="ko">
+    <head>
+      <meta charset="utf-8" />
+      <meta http-equiv="refresh" content={`0;url=${redirect}`} />
+      <link rel="canonical" href={redirect} />
+      <title>{note.data.title}</title>
+      <script is:inline define:vars={{ redirect }}>location.replace(redirect);</script>
+    </head>
+    <body>
+      <p><a href={redirect}>조업설명으로 이동합니다.</a></p>
+    </body>
+  </html>
+)}
+{!redirect && (
+<>
 <Base title={`${note.data.title} · alzza`} description={note.data.excerpt}>
   <Header links={[{ href: "/notes/", label: "노트" }, { href: "/info/", label: "정보" }]} />
   <div class:list={["wrap", "prose", { "prose-plc": note.data.tags.includes("PLC"), "prose-finger-retry": note.id === "sc1-sm12-finger-retry-onoff", "prose-grade-timing": note.id === "csm-r1-vision-grade-timing-check" }]}>
@@ -83,4 +99,6 @@ const { Content } = await render(note);
     });
   </script>
   </>
+)}
+</>
 )}
