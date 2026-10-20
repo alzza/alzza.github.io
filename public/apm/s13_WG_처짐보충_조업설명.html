@@ -150,7 +150,7 @@
 <h2 id="height">수동이 더 낮아 보이는 이유</h2>
 <p>밸브는 자동이든 수동이든 DG4V-5-6H 하나다. 높이 설정값은 없다. 자동은 업센서에 닿아도 프로그램이 솔을 10초 더 연다. 수동은 업센서가 10초 켜진 뒤부터 리모콘 상승이 안 먹는다. 닿는 즉시가 아니다.</p>
 <div class="cyl-demo">
-<svg class="scheme" id="cyl-svg" viewBox="0 0 920 700" role="img" aria-label="자동은 센서 뒤에도 솔이 열리고 수동은 10초 뒤 리모콘이 막힘">
+<svg class="scheme" id="cyl-svg" viewBox="0 160 920 540" role="img" aria-label="자동은 센서 뒤에도 솔이 열리고 수동은 10초 뒤 리모콘이 막힘">
   <text x="250" y="24" text-anchor="middle" font-size="18" font-weight="700">자동</text>
   <text x="670" y="24" text-anchor="middle" font-size="18" font-weight="700">수동</text>
   <g id="cyl-auto"></g>
@@ -174,10 +174,10 @@
     var bx = cx - barrelW / 2;
     var rodW = 26;
     var rx = cx - rodW / 2;
-    var px = Math.max(0, Math.min(EXTRA, extend)) / EXTRA * 360;
+    var px = Math.max(0, Math.min(EXTRA, extend)) / EXTRA * 151;
     var rodTop = barrelTop - 70 - px;
     var dogY = rodTop + 8;
-    var sensorY = 74;
+    var sensorY = 287;
     var led = (dogY < sensorY + 28 && dogY + 14 > sensorY) ? "#3ddc84" : "#8b93a0";
     var glandL = rx - (bx - 6);
     var glandR = (bx + barrelW + 6) - (rx + rodW);
