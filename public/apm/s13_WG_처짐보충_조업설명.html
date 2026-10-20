@@ -42,6 +42,14 @@
   .no { background: var(--amber-bg); border-color: #edd3a4; }
   .note { background: #fff8ee; border-color: #edd3a4; }
   .ok { background: var(--green-bg); border-color: #b7dfc6; }
+  .calc label { display: block; margin: 12px 0 4px; font-weight: 700; }
+  .calc input[type="number"] { font: inherit; width: 7em; padding: 6px 8px; }
+  .calc input[type="range"] { width: 100%; margin: 6px 0 0; }
+  .calc .presets { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .calc button { font: inherit; padding: 6px 10px; border: 1px solid var(--line); background: #fff; border-radius: 8px; }
+  .calc .out { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .calc .out div { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .calc .out strong { display: block; font-size: 26px; line-height: 1.2; }
   table { width: 100%; border-collapse: collapse; background: #fff; margin: 12px 0 18px; }
   th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
   th { background: #f3eee4; }
@@ -197,6 +205,75 @@
 <tr><td>1.0초</td><td>약 17mm</td><td>0.27 L</td><td>1.10 L</td></tr>
 </tbody>
 </table>
+<div class="card calc" id="lift-calc">
+  <h3>Sol V/V 시간 넣으면 이동거리가 나옴</h3>
+  <p>도면 상승 속도 17mm/s. 행정 40mm. 중간에 오일이 로드를 밀 때 기준이고, 밸브가 방향 바꾸는 시간은 안 뺐다.</p>
+  <label for="sol-sec">Sol V/V 가동시간</label>
+  <input id="sol-sec" type="number" min="0" max="5" step="0.1" value="0.3"> 초
+  <input id="sol-range" type="range" min="0" max="3" step="0.1" value="0.3" aria-label="Sol V/V 가동시간 슬라이더">
+  <div class="presets">
+    <button type="button" data-sol="0.3">0.3초</button>
+    <button type="button" data-sol="0.5">0.5초</button>
+    <button type="button" data-sol="0.8">0.8초</button>
+    <button type="button" data-sol="1">1초</button>
+  </div>
+  <label for="dist-mm">실린더 전진 거리. 여기 넣어도 시간이 다시 계산됨</label>
+  <input id="dist-mm" type="number" min="0" max="40" step="0.1" value="5.1"> mm
+  <div class="out">
+    <div>이론 상승 시간<strong id="rise-sec">0.30초</strong></div>
+    <div>이동거리<strong id="rise-mm">5.1 mm</strong></div>
+    <div>실린더 1대에 들어간 양<strong id="vol-one">0.08 L</strong></div>
+    <div>펌프가 토출한 양<strong id="vol-all">0.33 L</strong></div>
+  </div>
+  <p id="pre-line">Sol V/V PRE에 넣으면 <strong id="pre-ms">300</strong> ms.</p>
+  <p id="cap-note" hidden>40mm 행정 끝이다. 이론 상승 시간은 거기서 멈추고, 솔을 더 열어 둔 시간은 릴리프다.</p>
+</div>
+<script>
+(function () {
+  var SPEED = 17;
+  var FLOW = 65.9;
+  var STROKE = 40;
+  var sol = document.getElementById("sol-sec");
+  var range = document.getElementById("sol-range");
+  var dist = document.getElementById("dist-mm");
+  function show(t) {
+    if (!(t >= 0)) t = 0;
+    var mm = SPEED * t;
+    var rise = t;
+    var capped = mm > STROKE;
+    if (capped) {
+      mm = STROKE;
+      rise = STROKE / SPEED;
+    }
+    sol.value = (Math.round(t * 100) / 100).toString();
+    range.value = Math.min(3, t).toString();
+    dist.value = (Math.round(mm * 10) / 10).toString();
+    document.getElementById("rise-sec").textContent = (Math.round(rise * 100) / 100).toFixed(2) + "초";
+    document.getElementById("rise-mm").textContent = (Math.round(mm * 10) / 10).toFixed(1) + " mm";
+    var moved = FLOW * rise / 60;
+    var pumped = FLOW * t / 60;
+    document.getElementById("vol-one").textContent = (moved / 4).toFixed(2) + " L";
+    document.getElementById("vol-all").textContent = pumped.toFixed(2) + " L";
+    document.getElementById("pre-ms").textContent = String(Math.round(t * 1000));
+    document.getElementById("cap-note").hidden = !capped;
+  }
+  sol.addEventListener("input", function () { show(parseFloat(sol.value)); });
+  range.addEventListener("input", function () { show(parseFloat(range.value)); });
+  dist.addEventListener("input", function () {
+    var mm = parseFloat(dist.value);
+    if (!(mm >= 0)) mm = 0;
+    if (mm > STROKE) mm = STROKE;
+    show(mm / SPEED);
+  });
+  var buttons = document.querySelectorAll("[data-sol]");
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", function () {
+      show(parseFloat(this.getAttribute("data-sol")));
+    });
+  }
+  show(0.3);
+})();
+</script>
 <p>계산은 17mm/s에 초를 곱한 거다. 0.3초는 5.1mm, 1초는 17mm. 표는 반올림했다.</p>
 <div class="card note">
 <p>실린더가 행정 중간에 있고 들어온 오일이 전부 로드를 밀 때 기준이다. 이미 끝이면 이 mm만큼 더 안 올라가고 140bar 릴리프를 탄다. 처짐이 5mm 안이면 0.3초로 거의 따라온다. 그보다 많이 내려앉아 있으면 한 번에 다 못 올린다. 1초로 늘리면 한 번에 약 17mm라 더 잘 따라오지만 끝에서 릴리프 타는 시간도 길어진다.</p>
