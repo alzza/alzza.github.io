@@ -108,6 +108,7 @@
 
 <nav class="toc">
   <a href="#when">언제 동작하나</a>
+  <a href="#height">자동과 수동 높이</a>
   <a href="#pump">기존 펌프</a>
   <a href="#spec">밸브 사양</a>
   <a href="#why">이렇게 한 이유</a>
@@ -142,6 +143,33 @@
 <div class="card note">
   <p><code>hmi_enable</code>이 0이면 자동이어도 이 짧은 상승은 안 나간다. 114번, 115번이 솔이랑 펌프를 안 잡고 그 출력을 강제로 끄지도 않는다. 다운로드 확인 전에는 0으로 둔다. 부품 갈아 넣은 뒤에도 0으로 두고 105번부터 115번만 지우면 수정 전이랑 같다.</p>
 </div>
+
+<h2 id="height">수동이 더 낮아 보이는 이유</h2>
+<p>리프트 업, 다운은 방향밸브 DG4V-5-6H 하나다. 자동이랑 수동이 높이를 따로 저장해 둔 값은 없다. 상승 솔 <code>q_WGUP_Sol</code>을 얼마나 오래 여느냐만 다르다.</p>
+<svg class="scheme" viewBox="0 0 920 460" role="img" aria-label="자동과 수동 상승 높이 비교">
+  <text x="230" y="28" text-anchor="middle" font-size="16" font-weight="700">자동</text>
+  <text x="690" y="28" text-anchor="middle" font-size="16" font-weight="700">수동, 리모콘</text>
+  <rect x="170" y="50" width="120" height="250" rx="8" fill="#fff" stroke="#1c1915" stroke-width="2"/>
+  <rect x="630" y="50" width="120" height="250" rx="8" fill="#fff" stroke="#1c1915" stroke-width="2"/>
+  <rect x="174" y="54" width="112" height="242" rx="6" fill="#1d6b45"/>
+  <rect x="634" y="168" width="112" height="128" rx="6" fill="#c4a15a"/>
+  <path d="M150 170 H310 M610 170 H770" stroke="#8a5a12" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="150" y="162" text-anchor="end" font-size="13" fill="#8a5a12">업센서 들어옴</text>
+  <text x="610" y="162" text-anchor="end" font-size="13" fill="#8a5a12">업센서 들어옴</text>
+  <text x="230" y="78" text-anchor="middle" font-size="13" fill="#fff">행정 끝</text>
+  <text x="690" y="150" text-anchor="middle" font-size="13" fill="#5c564c">여기까지 빈칸</text>
+  <text x="230" y="320" text-anchor="middle" font-size="14">센서 뒤에도 솔을 10초 더 염</text>
+  <text x="690" y="320" text-anchor="middle" font-size="14">센서 불 보고 손을 떼면 솔이 닫힘</text>
+  <text x="40" y="372" font-size="14">업센서가 들어온 시각을 0초로 보면</text>
+  <rect x="40" y="404" width="480" height="28" rx="4" fill="#1d6b45"/>
+  <path d="M280 396 V440" stroke="#1c1915" stroke-width="2"/>
+  <text x="280" y="396" text-anchor="middle" font-size="13">5초. 스텝만 이동. 솔은 켜져 있음</text>
+  <text x="400" y="423" text-anchor="middle" font-size="13" fill="#fff">10초. 자동 솔 닫힘</text>
+  <rect x="560" y="404" width="320" height="28" rx="4" fill="#fff4df" stroke="#8a5a12"/>
+  <text x="720" y="423" text-anchor="middle" font-size="13">수동은 손을 떼는 순간 솔이 닫힘</text>
+</svg>
+<p>자동은 스텝 3에서 <code>uWGZUD.op_UP</code>을 켜고, <code>tm_WG_Up_Long</code>이 끝나기 전에는 그 비트를 유지한다. 업센서 5초(<code>tm_WG_Up_LS</code>, PRE 5000)는 스텝만 3에서 4로 넘긴다. 솔은 10초(<code>tm_WG_Up_Long</code>, PRE 10000)가 돼야 닫힌다. 센서가 행정 끝보다 먼저 들어와도 그 10초 안에 끝까지 밀린다.</p>
+<p>수동은 리모콘 상승 <code>i_WG_XUP</code>을 누르고 있는 동안만 솔이 열린다. 유지를 안 한다. 센서 불을 보고 떼면 그 스캔에 솔이 닫히고, 그림의 빈칸만큼 낮게 남는다. 그 상태로 두면 분배기에서 새는 쪽이 더 처져 보인다. 리모콘을 10초가 끝날 때까지 계속 누르고 있으면 끝 높이는 자동이랑 같아진다. 그보다 오래 눌러도 같은 타이머가 수동 솔도 끊는다.</p>
 
 <h2 id="pump">펌프는 원래 그 태그임</h2>
 <p>펌프 태그는 새로 안 만든다. 웨건 유압모터를 켜는 출력은 원래 있는 <code>q_WGHY_Run_CMD</code>다. 115번이 짧게 상승하는 동안만 그 출력을 다시 켠다.</p>
