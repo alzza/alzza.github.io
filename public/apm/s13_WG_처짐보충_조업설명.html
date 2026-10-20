@@ -170,13 +170,13 @@
   var SPEED = 17;
   var EXTRA = 10 * SPEED;
   function cylinder(cx, extend, blocked) {
-    var barrelW = 108, barrelH = 156, barrelTop = 230;
+    var barrelW = 108, barrelH = 150, barrelTop = 246;
     var bx = cx - barrelW / 2;
     var rodW = 26;
     var rx = cx - rodW / 2;
-    var px = Math.max(0, Math.min(EXTRA, extend)) / EXTRA * 78;
-    var rodTop = barrelTop - 52 - px;
-    var dogY = barrelTop - 40;
+    var px = Math.max(0, Math.min(EXTRA, extend)) / EXTRA * 70;
+    var rodTop = barrelTop - 96 - px;
+    var dogY = barrelTop - 86;
     var led = "#3ddc84";
     var glandL = rx - (bx - 6);
     var glandR = (bx + barrelW + 6) - (rx + rodW);
