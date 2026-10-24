@@ -8,3 +8,4 @@ XIC(tm_WG_AntiSag_Pulse.DN)OTU(zWG_AntiSag_Pump)RES(tm_WG_AntiSag_Lead)RES(tm_WG
 XIO(zWG_AntiSag_Run)OTU(zWG_AntiSag_Pump)RES(tm_WG_AntiSag_Lead)RES(tm_WG_AntiSag_Pulse);
 XIC(hmi_enable)XIO(cWG.Mode_Man)XIC(zWG_AntiSag_Run)XIC(zWG_AntiSag_Pump)XIC(tm_WG_AntiSag_Lead.DN)XIO(tm_WG_AntiSag_Pulse.DN)XIO(q_WGDOWN_Sol)XIO(zWG_Down_Req)OTL(q_WGUP_Sol);
 XIC(hmi_enable)XIO(cWG.Mode_Man)XIC(zWG_AntiSag_Run)XIC(zWG_AntiSag_Pump)XIO(q_WGDOWN_Sol)XIO(zWG_Down_Req)OTL(q_WGHY_Run_CMD);
+MUL(ai_WG_Oil_Temp,10,dHMI_Rep[35]);
