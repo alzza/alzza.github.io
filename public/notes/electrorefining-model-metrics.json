@@ -1,0 +1,1333 @@
+{
+  "schema_version": "1.0",
+  "synthetic": true,
+  "horizons_hours": [
+    24,
+    48,
+    72,
+    96,
+    120,
+    144,
+    168
+  ],
+  "seeds": [
+    7,
+    17,
+    27
+  ],
+  "models": [
+    {
+      "id": "mean_baseline",
+      "name": "Train mean baseline"
+    },
+    {
+      "id": "catboost_raw",
+      "name": "Independent CatBoost: observed summaries"
+    },
+    {
+      "id": "catboost_physics",
+      "name": "Independent CatBoost: physics augmented"
+    },
+    {
+      "id": "shared_mlp_physics",
+      "name": "Shared multioutput MLP: physics augmented"
+    }
+  ],
+  "targets": {
+    "efficiency_pct": {
+      "name": "전류효율",
+      "unit": "percentage points",
+      "priority": 1
+    },
+    "s_grade_pct": {
+      "name": "Vision S등급률",
+      "unit": "percentage points",
+      "priority": 2
+    },
+    "cu_out_g_l": {
+      "name": "주기 말 출구 Cu",
+      "unit": "g/L",
+      "priority": 3
+    },
+    "as_out_g_l": {
+      "name": "주기 말 출구 As",
+      "unit": "g/L",
+      "priority": 4
+    }
+  },
+  "results": [
+    {
+      "horizon_hours": 24,
+      "model_id": "mean_baseline",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 1.1534580017728804,
+          "mae_min": 1.0014890064891113,
+          "mae_max": 1.4107216407839573,
+          "rmse_mean": 1.534343444402105
+        },
+        "s_grade_pct": {
+          "mae_mean": 5.272860897553431,
+          "mae_min": 4.713572915663606,
+          "mae_max": 6.119036419218812,
+          "rmse_mean": 6.76040052133139
+        },
+        "cu_out_g_l": {
+          "mae_mean": 2.6252814820218426,
+          "mae_min": 2.2190588888683243,
+          "mae_max": 2.879648734006331,
+          "rmse_mean": 3.2876868256034086
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.7645925140249313,
+          "mae_min": 0.6741451500516565,
+          "mae_max": 0.8657433009358616,
+          "rmse_mean": 0.9359866335144583
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 102.83468306113564,
+        "mae_min": 97.31531403355773,
+        "mae_max": 110.4224707923914,
+        "rmse_mean": 135.53875534498454
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 24,
+      "model_id": "catboost_raw",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 1.0385249519030555,
+          "mae_min": 0.8610122962926638,
+          "mae_max": 1.2906405051294068,
+          "rmse_mean": 1.3906690996840787
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.54024510857017,
+          "mae_min": 4.094055555638863,
+          "mae_max": 5.3414425994875625,
+          "rmse_mean": 6.012848625854193
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.41322637540623824,
+          "mae_min": 0.26296940432218496,
+          "mae_max": 0.5657694206723544,
+          "rmse_mean": 0.7173324042540306
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.090383632777799,
+          "mae_min": 0.06319611531626958,
+          "mae_max": 0.1279426013020397,
+          "rmse_mean": 0.14704079932040756
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 99.72849206766394,
+        "mae_min": 93.21316755992456,
+        "mae_max": 107.411681090392,
+        "rmse_mean": 129.7213439178839
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 24,
+      "model_id": "catboost_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9866900272238407,
+          "mae_min": 0.8674296385195344,
+          "mae_max": 1.167480522603674,
+          "rmse_mean": 1.3094437193081852
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.451744813620009,
+          "mae_min": 3.9932120006096166,
+          "mae_max": 5.1373918637630664,
+          "rmse_mean": 5.831143605222784
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.3482511332022486,
+          "mae_min": 0.2262855987701912,
+          "mae_max": 0.4149479734286726,
+          "rmse_mean": 0.6283755902400773
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.0818017684670817,
+          "mae_min": 0.07022962428742252,
+          "mae_max": 0.10057595585232569,
+          "rmse_mean": 0.12780248774694672
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 96.22608190365771,
+        "mae_min": 91.62914288510325,
+        "mae_max": 98.55685685438375,
+        "rmse_mean": 125.71998454131904
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 24,
+      "model_id": "shared_mlp_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 1.0585318549961205,
+          "mae_min": 1.0060359303240622,
+          "mae_max": 1.1403869860689182,
+          "rmse_mean": 1.3470771471849925
+        },
+        "s_grade_pct": {
+          "mae_mean": 5.194207926331709,
+          "mae_min": 4.722676780371442,
+          "mae_max": 5.710641552969355,
+          "rmse_mean": 6.671415527110532
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.4378721127197191,
+          "mae_min": 0.40137821073540997,
+          "mae_max": 0.47034849047421895,
+          "rmse_mean": 0.5850453780672829
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.11050278745267038,
+          "mae_min": 0.09388508751537669,
+          "mae_max": 0.1230318245098562,
+          "rmse_mean": 0.15005984676236325
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 99.52082312082929,
+        "mae_min": 94.97829848561135,
+        "mae_max": 107.98537534693793,
+        "rmse_mean": 126.52453390124863
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 48,
+      "model_id": "mean_baseline",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 1.1534580017728804,
+          "mae_min": 1.0014890064891113,
+          "mae_max": 1.4107216407839573,
+          "rmse_mean": 1.534343444402105
+        },
+        "s_grade_pct": {
+          "mae_mean": 5.272860897553431,
+          "mae_min": 4.713572915663606,
+          "mae_max": 6.119036419218812,
+          "rmse_mean": 6.76040052133139
+        },
+        "cu_out_g_l": {
+          "mae_mean": 2.6252814820218426,
+          "mae_min": 2.2190588888683243,
+          "mae_max": 2.879648734006331,
+          "rmse_mean": 3.2876868256034086
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.7645925140249313,
+          "mae_min": 0.6741451500516565,
+          "mae_max": 0.8657433009358616,
+          "rmse_mean": 0.9359866335144583
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 104.87850823895519,
+        "mae_min": 95.22905675874505,
+        "mae_max": 122.33351631271601,
+        "rmse_mean": 138.34646825766023
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 48,
+      "model_id": "catboost_raw",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 1.010792938507855,
+          "mae_min": 0.8537240674929714,
+          "mae_max": 1.2074404898489546,
+          "rmse_mean": 1.3529976078335129
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.56775240407631,
+          "mae_min": 4.14314427143921,
+          "mae_max": 5.301293361728207,
+          "rmse_mean": 5.995886690828439
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.3438386429032762,
+          "mae_min": 0.2419816981981052,
+          "mae_max": 0.4070872468640045,
+          "rmse_mean": 0.6367302651759866
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.07498651792031119,
+          "mae_min": 0.0661792443484864,
+          "mae_max": 0.0919854884436171,
+          "rmse_mean": 0.12251145717532187
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 99.15640509793674,
+        "mae_min": 91.40308937306942,
+        "mae_max": 112.70774908462971,
+        "rmse_mean": 131.01196242425496
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 48,
+      "model_id": "catboost_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9352792223885702,
+          "mae_min": 0.8117856311809937,
+          "mae_max": 1.1119962434349153,
+          "rmse_mean": 1.2450700004684299
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.355547856612109,
+          "mae_min": 3.974345739601272,
+          "mae_max": 5.079302277585098,
+          "rmse_mean": 5.676627504809513
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.3602749031862618,
+          "mae_min": 0.25674492765452644,
+          "mae_max": 0.4249631157227272,
+          "rmse_mean": 0.6529646290274579
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.08266980121325603,
+          "mae_min": 0.07066269909267303,
+          "mae_max": 0.1028432546780526,
+          "rmse_mean": 0.12776538658478628
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 94.27017740804338,
+        "mae_min": 86.5676279663236,
+        "mae_max": 107.22305604043184,
+        "rmse_mean": 125.5208793645865
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 48,
+      "model_id": "shared_mlp_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9691326765555983,
+          "mae_min": 0.910299265901076,
+          "mae_max": 1.028333126684634,
+          "rmse_mean": 1.2300997425491689
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.663806195747197,
+          "mae_min": 3.7907964067618063,
+          "mae_max": 5.172916969942002,
+          "rmse_mean": 5.884229111958128
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.35220514070252945,
+          "mae_min": 0.29689700613925923,
+          "mae_max": 0.38824355754095563,
+          "rmse_mean": 0.46236483593189615
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.11474146936638734,
+          "mae_min": 0.10377475098111792,
+          "mae_max": 0.13612999139745588,
+          "rmse_mean": 0.16002625078712449
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 95.07047827075856,
+        "mae_min": 90.70767015042799,
+        "mae_max": 101.44836800309086,
+        "rmse_mean": 122.87685370255275
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 72,
+      "model_id": "mean_baseline",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 1.1534580017728804,
+          "mae_min": 1.0014890064891113,
+          "mae_max": 1.4107216407839573,
+          "rmse_mean": 1.534343444402105
+        },
+        "s_grade_pct": {
+          "mae_mean": 5.272860897553431,
+          "mae_min": 4.713572915663606,
+          "mae_max": 6.119036419218812,
+          "rmse_mean": 6.76040052133139
+        },
+        "cu_out_g_l": {
+          "mae_mean": 2.6252814820218426,
+          "mae_min": 2.2190588888683243,
+          "mae_max": 2.879648734006331,
+          "rmse_mean": 3.2876868256034086
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.7645925140249313,
+          "mae_min": 0.6741451500516565,
+          "mae_max": 0.8657433009358616,
+          "rmse_mean": 0.9359866335144583
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 102.7287403660298,
+        "mae_min": 91.85451604221375,
+        "mae_max": 120.15510730147896,
+        "rmse_mean": 137.37792566104335
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 72,
+      "model_id": "catboost_raw",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9913534382686496,
+          "mae_min": 0.839417801204911,
+          "mae_max": 1.194296749099972,
+          "rmse_mean": 1.3355306312259205
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.411825649945425,
+          "mae_min": 4.0687337069049745,
+          "mae_max": 5.093958677815844,
+          "rmse_mean": 5.85383114031033
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.33653322007335623,
+          "mae_min": 0.23212423671979796,
+          "mae_max": 0.40482998131439946,
+          "rmse_mean": 0.6319491454099265
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.07533056097731564,
+          "mae_min": 0.06730224059916849,
+          "mae_max": 0.09014276376287159,
+          "rmse_mean": 0.12237219460368476
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 96.0837108342868,
+        "mae_min": 87.12898578987942,
+        "mae_max": 111.39265337096631,
+        "rmse_mean": 128.80799980542722
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 72,
+      "model_id": "catboost_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.93206992459478,
+          "mae_min": 0.7853744890806842,
+          "mae_max": 1.126512122476207,
+          "rmse_mean": 1.2473001853301575
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.250254870649325,
+          "mae_min": 3.9093320228430124,
+          "mae_max": 4.9246458587832835,
+          "rmse_mean": 5.541865582517549
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.3472567720870732,
+          "mae_min": 0.25277211395797394,
+          "mae_max": 0.40210769779046784,
+          "rmse_mean": 0.6416917881290605
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.07637563256846776,
+          "mae_min": 0.06686409811209565,
+          "mae_max": 0.08969545916951671,
+          "rmse_mean": 0.12470410548337607
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 92.70754366687508,
+        "mae_min": 83.77749189914563,
+        "mae_max": 107.50690893981283,
+        "rmse_mean": 124.38687194630565
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 72,
+      "model_id": "shared_mlp_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9809063698608004,
+          "mae_min": 0.8951873457132532,
+          "mae_max": 1.0601559504651816,
+          "rmse_mean": 1.2389149053133075
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.881363016589465,
+          "mae_min": 4.674432040605325,
+          "mae_max": 5.080927380897132,
+          "rmse_mean": 6.071252681139396
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.42485411774429505,
+          "mae_min": 0.3892395345300251,
+          "mae_max": 0.450726003330319,
+          "rmse_mean": 0.5710009827965142
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.11914694818850848,
+          "mae_min": 0.11183942216919848,
+          "mae_max": 0.128487404346366,
+          "rmse_mean": 0.1569818842852955
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 89.70417070717987,
+        "mae_min": 88.01060075087567,
+        "mae_max": 92.47279497881475,
+        "rmse_mean": 117.4912030903759
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 96,
+      "model_id": "mean_baseline",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 1.1534580017728804,
+          "mae_min": 1.0014890064891113,
+          "mae_max": 1.4107216407839573,
+          "rmse_mean": 1.534343444402105
+        },
+        "s_grade_pct": {
+          "mae_mean": 5.272860897553431,
+          "mae_min": 4.713572915663606,
+          "mae_max": 6.119036419218812,
+          "rmse_mean": 6.76040052133139
+        },
+        "cu_out_g_l": {
+          "mae_mean": 2.6252814820218426,
+          "mae_min": 2.2190588888683243,
+          "mae_max": 2.879648734006331,
+          "rmse_mean": 3.2876868256034086
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.7645925140249313,
+          "mae_min": 0.6741451500516565,
+          "mae_max": 0.8657433009358616,
+          "rmse_mean": 0.9359866335144583
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 94.45294754835645,
+        "mae_min": 84.2940681923739,
+        "mae_max": 113.44008984547354,
+        "rmse_mean": 128.55221324654215
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 96,
+      "model_id": "catboost_raw",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9880700930336389,
+          "mae_min": 0.807444141290803,
+          "mae_max": 1.1903559522372504,
+          "rmse_mean": 1.336162009538966
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.38821704975381,
+          "mae_min": 3.9777168184025338,
+          "mae_max": 4.981888336119107,
+          "rmse_mean": 5.795196962298454
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.33914414572160084,
+          "mae_min": 0.2188750568766856,
+          "mae_max": 0.4055943998396293,
+          "rmse_mean": 0.6349553810117744
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.07233675675054167,
+          "mae_min": 0.06416039936092359,
+          "mae_max": 0.0880742594177584,
+          "rmse_mean": 0.11979455157780106
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 87.86536056024336,
+        "mae_min": 77.97568820291566,
+        "mae_max": 103.99222440887361,
+        "rmse_mean": 119.64274409861805
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 96,
+      "model_id": "catboost_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9320670777145118,
+          "mae_min": 0.7926095663449393,
+          "mae_max": 1.096852403759058,
+          "rmse_mean": 1.2405876354774783
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.156003900891842,
+          "mae_min": 3.788992915295313,
+          "mae_max": 4.737984571517131,
+          "rmse_mean": 5.409501912195917
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.3406640037725081,
+          "mae_min": 0.24382524433141317,
+          "mae_max": 0.3913750398234837,
+          "rmse_mean": 0.623744850242531
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.07500277786823359,
+          "mae_min": 0.06261103458397028,
+          "mae_max": 0.09345383611095551,
+          "rmse_mean": 0.12248576609318639
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 84.64649597693608,
+        "mae_min": 76.4543174022209,
+        "mae_max": 98.35118504197908,
+        "rmse_mean": 114.4410189229058
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 96,
+      "model_id": "shared_mlp_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9271520815576716,
+          "mae_min": 0.8377625126593179,
+          "mae_max": 0.9844497820064558,
+          "rmse_mean": 1.1695342216191489
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.469730110269644,
+          "mae_min": 4.043862992507552,
+          "mae_max": 4.754012180355167,
+          "rmse_mean": 5.612393576050238
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.37654610216154966,
+          "mae_min": 0.3551943537208067,
+          "mae_max": 0.4067546760305893,
+          "rmse_mean": 0.5259500631522975
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.09950916394970259,
+          "mae_min": 0.0908887854150166,
+          "mae_max": 0.1096413940041103,
+          "rmse_mean": 0.13490405086245993
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 77.99403945210175,
+        "mae_min": 75.4693395244405,
+        "mae_max": 79.93014054220431,
+        "rmse_mean": 100.95514092242689
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 120,
+      "model_id": "mean_baseline",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 1.1534580017728804,
+          "mae_min": 1.0014890064891113,
+          "mae_max": 1.4107216407839573,
+          "rmse_mean": 1.534343444402105
+        },
+        "s_grade_pct": {
+          "mae_mean": 5.272860897553431,
+          "mae_min": 4.713572915663606,
+          "mae_max": 6.119036419218812,
+          "rmse_mean": 6.76040052133139
+        },
+        "cu_out_g_l": {
+          "mae_mean": 2.6252814820218426,
+          "mae_min": 2.2190588888683243,
+          "mae_max": 2.879648734006331,
+          "rmse_mean": 3.2876868256034086
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.7645925140249313,
+          "mae_min": 0.6741451500516565,
+          "mae_max": 0.8657433009358616,
+          "rmse_mean": 0.9359866335144583
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 88.6766674644847,
+        "mae_min": 78.7065410043578,
+        "mae_max": 106.62575852628218,
+        "rmse_mean": 120.96702150945835
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 120,
+      "model_id": "catboost_raw",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9932829566154645,
+          "mae_min": 0.8094381637655129,
+          "mae_max": 1.194952590986452,
+          "rmse_mean": 1.3444139499567678
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.295553465148196,
+          "mae_min": 3.8665708324277275,
+          "mae_max": 5.1236155291119365,
+          "rmse_mean": 5.689084000941915
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.32113737875138476,
+          "mae_min": 0.2250341976729402,
+          "mae_max": 0.3896799388973109,
+          "rmse_mean": 0.620432290899327
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.07470631976120322,
+          "mae_min": 0.06907419208421262,
+          "mae_max": 0.08378497536067182,
+          "rmse_mean": 0.1252217745090494
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 79.98447918352771,
+        "mae_min": 67.1859366101529,
+        "mae_max": 94.67212127539428,
+        "rmse_mean": 110.69485209387528
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 120,
+      "model_id": "catboost_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9314264036948353,
+          "mae_min": 0.7940610901860147,
+          "mae_max": 1.1015148853030123,
+          "rmse_mean": 1.2441579266237526
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.143971842197174,
+          "mae_min": 3.743718513953914,
+          "mae_max": 4.842250021926191,
+          "rmse_mean": 5.41284816187558
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.3396274633741423,
+          "mae_min": 0.25483113788010375,
+          "mae_max": 0.4032523503973688,
+          "rmse_mean": 0.6202814284693762
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.07550598162660858,
+          "mae_min": 0.06483135459038034,
+          "mae_max": 0.09101957312493568,
+          "rmse_mean": 0.12150813378090798
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 76.34501067507183,
+        "mae_min": 65.80238113129353,
+        "mae_max": 89.00094764785848,
+        "rmse_mean": 104.63729788420828
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 120,
+      "model_id": "shared_mlp_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9589962361363075,
+          "mae_min": 0.8675774395523969,
+          "mae_max": 1.0064736399277536,
+          "rmse_mean": 1.2028566565989145
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.912967112518738,
+          "mae_min": 4.488515369611861,
+          "mae_max": 5.251674560922067,
+          "rmse_mean": 6.042192828077424
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.37553677924375434,
+          "mae_min": 0.3655219452971848,
+          "mae_max": 0.38194991648698906,
+          "rmse_mean": 0.5159037029675752
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.11516753378204592,
+          "mae_min": 0.09644505745761708,
+          "mae_max": 0.1276062252049622,
+          "rmse_mean": 0.1564213292622166
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 75.44782067181781,
+        "mae_min": 70.62543226070893,
+        "mae_max": 79.6328461605293,
+        "rmse_mean": 98.56078891946743
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 144,
+      "model_id": "mean_baseline",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 1.1534580017728804,
+          "mae_min": 1.0014890064891113,
+          "mae_max": 1.4107216407839573,
+          "rmse_mean": 1.534343444402105
+        },
+        "s_grade_pct": {
+          "mae_mean": 5.272860897553431,
+          "mae_min": 4.713572915663606,
+          "mae_max": 6.119036419218812,
+          "rmse_mean": 6.76040052133139
+        },
+        "cu_out_g_l": {
+          "mae_mean": 2.6252814820218426,
+          "mae_min": 2.2190588888683243,
+          "mae_max": 2.879648734006331,
+          "rmse_mean": 3.2876868256034086
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.7645925140249313,
+          "mae_min": 0.6741451500516565,
+          "mae_max": 0.8657433009358616,
+          "rmse_mean": 0.9359866335144583
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 84.31566905494476,
+        "mae_min": 71.93527087737326,
+        "mae_max": 99.66022437692511,
+        "rmse_mean": 112.1716245722494
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 144,
+      "model_id": "catboost_raw",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9851590941789287,
+          "mae_min": 0.8052494294443808,
+          "mae_max": 1.1775790957489647,
+          "rmse_mean": 1.3364991233435053
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.138616902954244,
+          "mae_min": 3.5748874821094816,
+          "mae_max": 4.95462524452724,
+          "rmse_mean": 5.533180857820839
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.326529511246652,
+          "mae_min": 0.2323479932728917,
+          "mae_max": 0.39854958647368033,
+          "rmse_mean": 0.6199207896093042
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.07326858659552171,
+          "mae_min": 0.06305209015100577,
+          "mae_max": 0.08506598218046792,
+          "rmse_mean": 0.12234403640633128
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 73.33485620346042,
+        "mae_min": 59.31564192037519,
+        "mae_max": 84.5730118196893,
+        "rmse_mean": 100.66985092423847
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 144,
+      "model_id": "catboost_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9278384546600904,
+          "mae_min": 0.7847825430580001,
+          "mae_max": 1.1002180084040936,
+          "rmse_mean": 1.2448998755510863
+        },
+        "s_grade_pct": {
+          "mae_mean": 3.938582947260457,
+          "mae_min": 3.505546052101162,
+          "mae_max": 4.649816808662504,
+          "rmse_mean": 5.178448690863586
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.34660952619013957,
+          "mae_min": 0.24902776121239725,
+          "mae_max": 0.40962365107968124,
+          "rmse_mean": 0.631693052146897
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.07451691806043198,
+          "mae_min": 0.0645386831214544,
+          "mae_max": 0.08942401448343647,
+          "rmse_mean": 0.12326722016554921
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 69.46895787949308,
+        "mae_min": 57.231623175491045,
+        "mae_max": 79.67187378412409,
+        "rmse_mean": 94.14265473559442
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 144,
+      "model_id": "shared_mlp_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9654868639937031,
+          "mae_min": 0.8505047493884893,
+          "mae_max": 1.1708624178604765,
+          "rmse_mean": 1.234635515992462
+        },
+        "s_grade_pct": {
+          "mae_mean": 4.261687795792992,
+          "mae_min": 3.99318779364033,
+          "mae_max": 4.630674100778661,
+          "rmse_mean": 5.394405908715676
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.41063798715849115,
+          "mae_min": 0.33582794017506196,
+          "mae_max": 0.4556702444247254,
+          "rmse_mean": 0.5757205336693852
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.11390702821392429,
+          "mae_min": 0.10438483800466551,
+          "mae_max": 0.12266460563071876,
+          "rmse_mean": 0.15397632398889063
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 72.98614714358747,
+        "mae_min": 64.74638937001438,
+        "mae_max": 85.85229730333569,
+        "rmse_mean": 92.59702155700154
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 168,
+      "model_id": "mean_baseline",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 1.1534580017728804,
+          "mae_min": 1.0014890064891113,
+          "mae_max": 1.4107216407839573,
+          "rmse_mean": 1.534343444402105
+        },
+        "s_grade_pct": {
+          "mae_mean": 5.272860897553431,
+          "mae_min": 4.713572915663606,
+          "mae_max": 6.119036419218812,
+          "rmse_mean": 6.76040052133139
+        },
+        "cu_out_g_l": {
+          "mae_mean": 2.6252814820218426,
+          "mae_min": 2.2190588888683243,
+          "mae_max": 2.879648734006331,
+          "rmse_mean": 3.2876868256034086
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.7645925140249313,
+          "mae_min": 0.6741451500516565,
+          "mae_max": 0.8657433009358616,
+          "rmse_mean": 0.9359866335144583
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 77.77592323743357,
+        "mae_min": 64.50225625092612,
+        "mae_max": 98.19235891655552,
+        "rmse_mean": 106.75952771220432
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 168,
+      "model_id": "catboost_raw",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.987818082180781,
+          "mae_min": 0.8212553611613338,
+          "mae_max": 1.1827576084193931,
+          "rmse_mean": 1.3337582744747358
+        },
+        "s_grade_pct": {
+          "mae_mean": 3.9944603285384055,
+          "mae_min": 3.394278225172125,
+          "mae_max": 4.900235802716139,
+          "rmse_mean": 5.382184960789843
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.3211213910831771,
+          "mae_min": 0.20976774532341333,
+          "mae_max": 0.3945189747588044,
+          "rmse_mean": 0.6183103301261544
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.07227992395960971,
+          "mae_min": 0.058248209767172154,
+          "mae_max": 0.08838868154016984,
+          "rmse_mean": 0.122751762435595
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 67.12218110513297,
+        "mae_min": 53.722780027667454,
+        "mae_max": 82.79681392046105,
+        "rmse_mean": 94.17758003445475
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 168,
+      "model_id": "catboost_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9291867631628582,
+          "mae_min": 0.8048440663317659,
+          "mae_max": 1.1014016200734085,
+          "rmse_mean": 1.2498258640259465
+        },
+        "s_grade_pct": {
+          "mae_mean": 3.832744712172815,
+          "mae_min": 3.3261305194708246,
+          "mae_max": 4.627674774627159,
+          "rmse_mean": 5.121863860791181
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.34288461175271295,
+          "mae_min": 0.23219284184558261,
+          "mae_max": 0.4137236548193806,
+          "rmse_mean": 0.633488239198154
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.07383248463972525,
+          "mae_min": 0.06335893719117977,
+          "mae_max": 0.0889940229173722,
+          "rmse_mean": 0.1252021668169709
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 62.96265202832283,
+        "mae_min": 52.51801131202168,
+        "mae_max": 76.86805125397186,
+        "rmse_mean": 87.82962386482369
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    },
+    {
+      "horizon_hours": 168,
+      "model_id": "shared_mlp_physics",
+      "targets": {
+        "efficiency_pct": {
+          "mae_mean": 0.9812324364320402,
+          "mae_min": 0.8480558688732355,
+          "mae_max": 1.064097978775964,
+          "rmse_mean": 1.2476928767546414
+        },
+        "s_grade_pct": {
+          "mae_mean": 3.87507664578984,
+          "mae_min": 3.8515501049471186,
+          "mae_max": 3.907507111900323,
+          "rmse_mean": 4.987965930551746
+        },
+        "cu_out_g_l": {
+          "mae_mean": 0.31033569881582457,
+          "mae_min": 0.2684725698640007,
+          "mae_max": 0.38072426796354397,
+          "rmse_mean": 0.4435457569321282
+        },
+        "as_out_g_l": {
+          "mae_mean": 0.10631994105814292,
+          "mae_min": 0.09484560997306918,
+          "mae_max": 0.11468548327455629,
+          "rmse_mean": 0.14548366404820637
+        }
+      },
+      "conditional_mass_kg": {
+        "mae_mean": 65.40119911063698,
+        "mae_min": 54.77194222156954,
+        "mae_max": 70.99560169222,
+        "rmse_mean": 84.35420494116447
+      },
+      "n_train": 246,
+      "n_validation": 65,
+      "n_test": 120,
+      "out_of_bounds_rate": {
+        "efficiency_pct": 0.0,
+        "s_grade_pct": 0.0,
+        "cu_out_g_l": 0.0,
+        "as_out_g_l": 0.0
+      }
+    }
+  ],
+  "uncertainty_note": "min/max are three independent synthetic dataset seed means, not confidence intervals",
+  "limitations": [
+    "synthetic DGP only; no field validity or causal effect demonstrated",
+    "168h is end-cycle explanation, not early warning",
+    "conditional mass depends on remaining planned current scenario"
+  ],
+  "generated_at_utc": "2026-10-25T05:30:22.470952+00:00",
+  "effective_campaign_counts": {
+    "train": 9,
+    "validation": 3,
+    "test": 4
+  },
+  "group_note": "test has four campaign groups; 120 cell-cycles are not 120 independent experiments"
+}
