@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="전해정련의 한 가상 작업을 따라 SHAP, PDP, ICE, CatBoost, AdaBoost, LSTM, Attention을 직접 계산하며 배우는 한국어 해설입니다.">
+<meta name="theme-color" content="#a44929">
+<link rel="canonical" href="https://alzza.github.io/notes/electrorefining-ml-terms.html">
+<title>예측은 어떻게 만들고, 설명은 어떻게 읽을까? | 전해정련 모델 용어 실험실</title>
+<style>
+:root{color-scheme:light;--bg:#f7f8fa;--paper:#fff;--ink:#17212b;--muted:#53616d;--line:#d5dde3;--soft:#edf1f4;--copper:#a44929;--copperink:#913d21;--wash:#fbede7;--blue:#226283;--bluewash:#e8f2f8;--green:#246146;--mark:#e9d5c5;--plot:#53616d}
+:root[data-theme=dark]{color-scheme:dark;--bg:#12171c;--paper:#1b2229;--ink:#edf1f4;--muted:#b2bec8;--line:#46515b;--soft:#27323c;--copper:#eea181;--copperink:#ffc1a5;--wash:#392b25;--blue:#8cc6e7;--bluewash:#213642;--green:#92d0af;--mark:#79513d;--plot:#b2bec8}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;word-break:keep-all;overflow-wrap:anywhere}a{color:var(--copperink);text-underline-offset:4px}button,input,select{font:inherit}button,select{min-height:44px;max-width:100%;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink);padding:7px 13px}button{cursor:pointer;font-weight:650}button:hover{border-color:var(--copper)}button.primary{color:var(--paper);background:var(--copperink);border-color:var(--copperink)}[data-theme=dark] button.primary{color:#17212b}button:disabled,input:disabled{opacity:.5;cursor:not-allowed}input[type=range]{width:100%;accent-color:var(--copper);min-height:38px}input[type=checkbox],input[type=radio]{accent-color:var(--copper);width:20px;height:20px;vertical-align:middle}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--blue);outline-offset:4px}.wrap{width:calc(100% - 48px);max-width:1040px;margin-inline:auto}.skip{position:absolute;left:12px;top:-100px;padding:10px 15px;background:var(--paper);z-index:9}.skip:focus{top:12px}.mast{border-bottom:1px solid var(--line);background:var(--paper)}.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:13px}.brand{font-size:14px;font-weight:750;color:var(--ink);text-decoration:none}.tools{display:flex;gap:14px;align-items:center;font-size:14px}h1,h2,h3,h4{line-height:1.4;letter-spacing:-.025em}h1{font-size:clamp(34px,4.8vw,54px);margin:0 0 22px;max-width:920px}h1 span{color:var(--copperink)}h2{font-size:clamp(27px,3.2vw,36px);margin:0 0 20px}h3{font-size:22px;margin:30px 0 13px}h4{font-size:18px;margin:20px 0 9px}p{margin:0 0 17px}.hero{padding-block:60px 37px}.kicker{font-size:14px;font-weight:750;color:var(--copperink);margin-bottom:18px}.lead{font-size:20px;line-height:1.85}.caption,.small{font-size:14px;line-height:1.8;color:var(--muted)}.caption{margin-top:10px}.section{padding-block:53px;border-top:1px solid var(--line)}.section-title{display:flex;gap:18px;align-items:baseline}.num{font:500 20px/1.3 ui-monospace,monospace;color:var(--copperink);flex-shrink:0}.intro{font-size:19px}.rolemap{display:grid;grid-template-columns:1.1fr 1.1fr .9fr;gap:0;border-block:2px solid var(--ink);margin:28px 0 20px}.rolemap article{padding:22px 24px 23px 0}.rolemap article+article{border-left:1px solid var(--line);padding-left:24px}.rolemap h3{font-size:19px;margin:0 0 12px}.rolemap p{font-size:15px;margin:0 0 10px}.term-links{display:flex;flex-wrap:wrap;gap:8px 18px;font-weight:700}.contents{display:flex;flex-wrap:wrap;gap:7px 22px;font-size:14px;padding:15px 0}.notice{border-left:4px solid var(--copper);background:var(--wash);padding:18px 22px;margin:22px 0}.notice p:last-child{margin-bottom:0}.note{border-left:3px solid var(--blue);padding:5px 0 5px 18px;margin:22px 0}.scenario{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:25px 0}.scenario div{border-top:3px solid var(--copper);padding-top:14px}.scenario strong{display:block;margin-bottom:6px}.scenario p{font-size:15px}.scenario .arrow{color:var(--copperink);font-weight:700}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:32px}.twocol>*{min-width:0}.lab{background:var(--paper);border:1px solid var(--line);padding:27px;margin:26px 0}.lab h3{margin-top:0}.labhead{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between;margin-bottom:20px}.labhead h3{margin:0}.labtag{font-size:13px;font-weight:650;color:var(--copperink)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.control label{display:block;font-size:15px;font-weight:650}.control output{font-variant-numeric:tabular-nums;color:var(--copperink);float:right}.control select{width:100%;margin-top:7px}.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0}.actions label{font-size:15px}.metrics{display:flex;flex-wrap:wrap;gap:18px 32px;margin:22px 0}.metric{min-width:130px}.metric span{display:block;font-size:13px;color:var(--muted)}.metric strong{font:650 30px/1.5 ui-monospace,SFMono-Regular,monospace;color:var(--copperink)}.equation{background:var(--soft);padding:14px 18px;margin:18px 0;font:15px/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:normal;overflow-wrap:anywhere}.equation .line{display:block}.terms{display:grid;grid-template-columns:auto 1fr;gap:7px 17px;margin:18px 0;font-size:15px}.terms dt{font-weight:750;white-space:nowrap}.terms dd{margin:0}.scroll{overflow-x:auto;overscroll-behavior-inline:contain;margin:20px 0;border:1px solid var(--line)}table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}caption{text-align:left;font-weight:700;padding:10px 13px;background:var(--soft)}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:10px 13px}th{background:var(--soft);font-weight:700}tr:last-child td{border-bottom:0}.tight{white-space:nowrap}.selected td{background:var(--wash)}.pos{color:var(--copperink)}.neg{color:var(--blue)}.neutral{color:var(--muted)}.signed{font-variant-numeric:tabular-nums;font-weight:700}.contrib{display:grid;grid-template-columns:95px 1fr 90px;gap:14px;align-items:center;font-size:15px;margin:12px 0}.bartrack{height:20px;position:relative;background:linear-gradient(90deg,transparent 49.7%,var(--line) 49.7%,var(--line) 50.3%,transparent 50.3%)}.bar{height:15px;position:absolute;top:3px;background:var(--copper)}.bar.negative{background:var(--blue)}.chart{margin:20px 0 10px}.chart svg{display:block;width:100%;height:auto;min-width:570px}.diagram{margin:24px 0;background:var(--soft);padding:20px}.diagram svg{display:block;width:100%;height:auto;min-width:600px}.diagram-scroll{overflow-x:auto}.diagram text,.chart text{fill:var(--ink);font-family:inherit}.flow{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;margin:20px 0}.flow .node{flex:1;min-width:130px;border:1px solid var(--line);background:var(--paper);padding:14px;text-align:center}.flow .node strong{display:block;color:var(--copperink)}.flow .arr{align-self:center;font-weight:750;color:var(--copperink)}details{border-top:1px solid var(--line);padding:14px 0;margin-top:16px}summary{cursor:pointer;font-weight:700;min-height:36px}details[open] summary{margin-bottom:14px}.learn{color:var(--muted);font-size:15px;margin-top:22px}.pitfall{padding-top:14px;border-top:1px dashed var(--line);margin-top:22px}.pitfall strong{color:var(--copperink)}ul,ol{padding-left:24px}li{margin:7px 0}.gategrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.gate{border-top:3px solid var(--blue);padding:12px 8px;background:var(--soft)}.gate span{display:block;font-size:14px}.gate strong{font:650 23px/1.8 ui-monospace,monospace;color:var(--blue)}.attrows{display:grid;gap:0}.attrow{display:grid;grid-template-columns:65px minmax(90px,1fr) 65px 90px;gap:12px;align-items:center;border-top:1px solid var(--line);padding:7px 0;font-size:14px}.attrow .weight{font-weight:700;font-variant-numeric:tabular-nums;color:var(--copperink)}.attrow.unavailable{color:var(--muted);background:var(--soft)}.weightviz{height:9px;background:var(--soft);margin-top:4px}.weightviz span{display:block;background:var(--copper);height:9px}.quiz{margin:24px 0;border-bottom:1px solid var(--line);padding-bottom:22px}.quiz h3{font-size:19px}.quiz .answers{display:flex;flex-wrap:wrap;gap:10px}.feedback{min-height:32px;margin:14px 0 0;font-size:15px}.references li{margin-bottom:15px}.references strong{display:block}.footer{border-top:1px solid var(--line);padding-block:30px 45px;font-size:14px;color:var(--muted)}.status{padding:10px 14px;background:var(--soft);font-size:14px;min-height:44px}noscript{display:block;background:var(--wash);border:2px solid var(--copper);padding:20px;margin:25px 0}.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.wide-table{min-width:620px}
+@media(max-width:720px){.wrap{width:calc(100% - 32px)}body{font-size:16px;line-height:1.85}.hero{padding-top:36px}.lead{font-size:18px}h1{font-size:35px}.tools a{display:none}.rolemap{grid-template-columns:1fr}.rolemap article{padding:18px 0}.rolemap article+article{border-left:0;border-top:1px solid var(--line);padding-left:0}.twocol{grid-template-columns:1fr;gap:10px}.scenario{grid-template-columns:1fr 1fr;gap:18px}.section{padding-block:37px}.lab{padding:18px}.controls{grid-template-columns:1fr}.metrics{gap:16px 22px}.metric strong{font-size:26px}.section-title{gap:12px}.contrib{grid-template-columns:68px 1fr 76px;gap:8px;font-size:13px}.attrow{grid-template-columns:47px minmax(65px,1fr) 46px 70px;gap:7px;font-size:12px}.gategrid{grid-template-columns:1fr 1fr}.terms{grid-template-columns:1fr;gap:3px}.terms dd{margin:0 0 10px}.labhead{display:block}.labtag{display:block;margin-top:6px}.mast .wrap{gap:8px}.brand{font-size:12px}.tools{gap:8px}th,td{padding:9px 10px}.equation{font-size:13px;padding:12px}.metric{min-width:115px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+@media print{body{background:white;color:#17212b}.mast,.contents,.skip{display:none}.wrap{width:100%;max-width:none}.lab,.notice{break-inside:avoid}.section{padding-block:24px}.scroll,.diagram-scroll{overflow:visible}a{color:inherit}.chart svg,.diagram svg{min-width:0}}
+</style>
+<style id="reading-style">
+.reading-toc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 24px;margin:24px 0;border-block:2px solid var(--ink);padding:16px 0}.reading-toc a{padding:8px 0;line-height:1.6;font-size:15px}.lesson{margin:24px 0 0;border:1px solid var(--line);background:var(--paper);padding:0}.lesson>summary{padding:24px 28px;list-style-position:inside}.lesson>summary h3{display:inline;margin:0;font-size:24px}.lesson[open]>summary{border-bottom:1px solid var(--line);margin:0;background:var(--soft)}.reading-kicker{display:block;font-size:13px;font-weight:600;letter-spacing:0;color:var(--copperink);margin-bottom:9px}.lesson-body{padding:24px 28px 30px}.lesson-body p{line-height:1.95;margin-bottom:20px}.back-demo{display:inline-block;font-size:14px;font-weight:700;margin:0 0 24px}.lesson-body>.back-demo:last-child{margin:18px 0 0}.reading-provenance{margin:28px 0}.reading pre{max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;border:1px solid var(--line);padding:18px;background:var(--soft);font:14px/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre}.reading code{font-size:.92em;overflow-wrap:anywhere}.reading pre code{font-size:inherit;overflow-wrap:normal}.reading-table{min-width:560px}.reading-table.compact{min-width:0}.reading-table.compact th:first-child,.reading-table.compact td:first-child{width:50%}.reading-table th{min-width:90px}.reading-table td{line-height:1.85}.lesson-jump{font-size:14px;font-weight:700;margin:0 0 22px}.lesson:target{border-color:var(--copper);box-shadow:0 0 0 2px var(--copper)}.lesson-body a[href^="#"]{text-decoration-style:dotted}.reading-provenance p{font-size:15px;color:var(--muted)}
+@media(max-width:720px){.reading-toc{grid-template-columns:1fr 1fr;gap:0 18px}.reading-toc a{font-size:14px}.lesson>summary{padding:20px 18px}.lesson>summary h3{font-size:22px}.lesson-body{padding:20px 18px 24px}.reading pre{font-size:12px;padding:12px}.reading-table{min-width:560px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="mast"><div class="wrap"><a class="brand" href="#main">전해정련 연구 · 모델 용어 실험실</a><div class="tools"><a href="/notes/">노트 목록</a><a href="#sources">근거와 한계</a><button id="theme" type="button" aria-pressed="false">어두운 화면</button></div></div></header>
+<main id="main" class="wrap">
+<header class="hero">
+<p class="kicker">숫자를 바꾸며 배우는 일곱 가지 개념</p>
+<h1>예측은 어떻게 만들고,<br><span>설명은 어떻게 읽을까?</span></h1>
+<p class="lead">한 가상 전해정련 작업을 따라갑니다. 기록으로 결과를 예상하고, 예상이 달라진 이유를 읽고, 현장에서 무엇을 더 확인해야 하는지 배웁니다.</p>
+<p class="small">처음 읽는 분을 위한 한국어 해설 · 모든 체험은 교육용 가상 계산 · 회사 실측자료를 사용하지 않습니다.</p>
+</header>
+<noscript><strong>JavaScript가 꺼져 있습니다.</strong> 해설·수식·고정 예시는 그대로 읽을 수 있습니다. 슬라이더, 단계 실행, 그래프와 퀴즈 응답은 JavaScript를 켜면 동작합니다. 기본 SHAP 예시의 합은 94.010 + 0.257 − 0.240 + 0.325 = 94.352%입니다.</noscript>
+<section id="map" aria-labelledby="map-title">
+<h2 id="map-title">먼저, 서로 다른 역할을 구분합니다</h2>
+<p>일곱 용어가 모두 같은 일을 하는 것은 아닙니다. <strong>예측기</strong>는 입력에서 결과를 계산하고, <strong>설명 방법</strong>은 이미 정해진 예측기의 반응을 조사합니다. <strong>Attention</strong>은 신경망 안에서 정보를 가중해 모으는 부품입니다.</p>
+<div class="rolemap">
+<article><h3>결과를 예상하는 모델</h3><p>작업 요약표를 읽거나 시간 이력을 읽습니다.</p><div class="term-links"><a href="#catboost">CatBoost</a><a href="#adaboost">AdaBoost</a><a href="#lstm">LSTM</a></div></article>
+<article><h3>예측을 들여다보는 방법</h3><p>한 예측을 나누어 보거나 입력을 바꿔 반응을 봅니다.</p><div class="term-links"><a href="#shap">SHAP</a><a href="#pdp">PDP</a><a href="#ice">ICE</a></div></article>
+<article><h3>정보를 모으는 계산</h3><p>여러 시점·표현에 비중을 주어 하나로 모읍니다.</p><div class="term-links"><a href="#attention">Attention</a></div></article>
+</div>
+<nav class="contents" aria-label="학습 목차"><a href="#story">공통 사례</a><a href="#toy">가상 함수와 자료</a><a href="#shap">SHAP 체험</a><a href="#pdp">PDP·ICE 체험</a><a href="#catboost">트리 보정</a><a href="#adaboost">표본 재가중</a><a href="#lstm">기억 갱신</a><a href="#attention">시간 정보 집계</a><a href="#reading">처음부터 읽는 상세 해설</a><a href="#compare">비교표</a><a href="#self-check">이해 확인</a></nav>
+<div class="notice"><p><strong>이 페이지의 숫자는 실제 학습한 합성 모델의 결과와도 다릅니다.</strong> 기존 <code>synthetic_model_v1</code>은 요약·물리 입력의 CatBoost와 공유 MLP를 학습했습니다. 이 페이지는 원리가 보이는 작은 계산을 새로 만들었습니다. 기존 모델의 SHAP·PDP·ICE를 계산했거나 AdaBoost·LSTM·Attention을 추가 학습한 결과가 아닙니다.</p></div>
+</section>
+
+<div class="note"><strong>체험 사이의 숫자는 하나의 학습된 파이프라인이 아닙니다.</strong> SHAP·PDP·ICE만 같은 함수 F를 공유합니다. 트리, 분류 AdaBoost, 고정 계수 LSTM, 수동 점수 Attention은 각각 독립된 예입니다. F의 94.352%와 LSTM 출력 94.231391%, 무차원 context 0.485614가 같아질 이유는 없습니다. <a href="#lesson-basics">공통 말과 계산의 관계를 읽습니다.</a></div>
+<section class="section" id="story" aria-labelledby="story-title">
+<h2 id="story-title">가상 작업 A의 72시간째에 서 봅니다</h2>
+<p>168시간 뒤 끝나는 가상 작업입니다. 지금까지 공개된 온도·전류·액 분석으로 <strong>종료 후 전류효율</strong>을 예상하고 싶습니다. 연구의 첫 번째 목표는 전류효율, 두 번째는 Vision S등급률입니다. 이 페이지의 수치 체험은 첫 번째 목표만 다룹니다.</p>
+<div class="scenario">
+<div><strong>1. 이력을 준비합니다</strong><p>72시간까지의 측정과 그때 도착한 분석값만 씁니다. 뒤늦게 나온 실제 중량·효율·최종 Vision은 넣지 않습니다.</p><span class="arrow">기록 →</span></div>
+<div><strong>2. 결과를 예상합니다</strong><p>요약표면 트리를, 충분한 시간 이력이 있으면 LSTM 등을 비교합니다. 예측값은 정답과 다를 수 있습니다.</p><span class="arrow">예측 →</span></div>
+<div><strong>3. 반응을 살핍니다</strong><p>SHAP으로 이 작업의 기여를 나누고 PDP·ICE로 입력 변화에 대한 모델 반응을 봅니다.</p><span class="arrow">설명 →</span></div>
+<div><strong>4. 확인 후 대응합니다</strong><p>측정·결측·단락 기록·작업 조건을 점검합니다. 조건 변경의 효과는 별도 비교나 실험으로 확인합니다.</p><span class="arrow">검증된 판단</span></div>
+</div>
+<p>전류효율은 같은 회로·기간의 실제 Cu 순석출량을 이론 석출량과 비교한 비율입니다. S등급률은 정한 검사 대상에서 S로 판정된 비율이며 전류효율과 같은 값이 아닙니다. 둘 다 분모와 측정 범위를 먼저 정해야 합니다.</p>
+<div class="note"><strong>예측 → 설명 → 조치 효과는 각각 확인해야 합니다.</strong> 모델이 낮게 예상한 작업에서 온도 기여가 음수여도, 온도를 바꾸면 효율이 그만큼 개선된다는 결론은 나오지 않습니다. 공정 제약과 실제 비교가 필요합니다.</div>
+</section>
+
+<section class="section" id="toy" aria-labelledby="toy-title">
+<h2 id="toy-title">계산이 모두 보이는 작은 가상 세계</h2>
+<p>검은 상자 대신 직접 정한 함수를 씁니다. 온도 <strong>T(°C)</strong>, 평균 전류밀도 <strong>J(A/m²)</strong>, 액 중 Cu 농도 <strong>C(g/L)</strong>가 입력입니다. 가상 작업 A의 초기값은 <strong>T=64, J=340, C=46</strong>입니다. 단위와 범위는 학습을 위해 정했으며 권장 조업 범위가 아닙니다.</p>
+<div class="equation"><span class="line">u=(T−60)/5, v=(J−300)/50, w=(C−42)/5</span><span class="line">F(T,J,C)=94 + 0.3u − 0.4v + 0.5w − 0.2u² + 0.25uw</span></div>
+<p><strong>F의 출력은 전류효율을 흉내 낸 % 값</strong>입니다. 예를 들어 94.352는 94.352%를 뜻합니다. <code>u²</code> 때문에 온도 반응이 곡선이 되고, <code>uw</code> 때문에 온도 반응이 Cu 농도에 따라 달라집니다. 이런 관계를 각각 비선형과 상호작용이라고 부릅니다. 계수는 모두 임의이며 전기화학식이나 현장 추정값이 아닙니다.</p>
+<div class="scroll" tabindex="0" role="region" aria-label="가상 참조 자료 표를 가로로 스크롤"><table><caption>두 배경자료의 모든 행 · 각 행에 같은 비중을 줍니다</caption><thead><tr><th scope="col">집합 / 작업</th><th scope="col">T · °C</th><th scope="col">J · A/m²</th><th scope="col">C · g/L</th></tr></thead><tbody><tr><td>기본 B₁ / B1</td><td>56</td><td>280</td><td>40</td></tr><tr><td>기본 B₁ / B2</td><td>58</td><td>300</td><td>42</td></tr><tr><td>기본 B₁ / B3</td><td>62</td><td>320</td><td>44</td></tr><tr><td>기본 B₁ / B4</td><td>64</td><td>340</td><td>46</td></tr><tr><td>다른 B₂ / B1</td><td>60</td><td>300</td><td>43</td></tr><tr><td>다른 B₂ / B2</td><td>62</td><td>320</td><td>45</td></tr><tr><td>다른 B₂ / B3</td><td>64</td><td>340</td><td>47</td></tr><tr><td>다른 B₂ / B4</td><td>66</td><td>360</td><td>49</td></tr></tbody></table></div>
+<p class="small">배경의 평균행 하나를 넣지 않고 각 행의 함수 출력을 평균합니다.</p>
+<p>배경자료는 비교의 출발점을 정할 작은 작업 집합입니다. <strong>입력의 평균을 함수에 넣는 것과 각 행의 출력 평균은 비선형 함수에서 다릅니다.</strong> 이후 SHAP과 PDP·ICE는 선택한 같은 집합 B₁ 또는 B₂를 함께 사용합니다.</p>
+</section>
+
+<section class="section" id="shap" aria-labelledby="shap-title">
+<div class="section-title"><span class="num">01</span><h2 id="shap-title">SHAP · 한 예측을 기준과 기여로 나눕니다</h2></div>
+<p class="lesson-jump"><a href="#lesson-shap">SHAP 설명을 처음부터 자세히 읽습니다 →</a></p>
+<p class="intro">“이 작업은 비교 작업들의 평균 예상보다 왜 높게 나왔을까?”에 답합니다. 예측을 기준값에서 출발해 각 입력의 <strong>부호 있는 기여</strong>로 설명합니다. 높은 예상에 보탠 기여는 +, 낮춘 기여는 −입니다.</p>
+<p>SHAP은 <span lang="en">SHapley Additive exPlanations</span>의 약자입니다. 공동 결과를 참여자에게 배분하는 Shapley 값의 생각을 모델 입력에 적용합니다. 온도를 먼저 알려 줬을 때와 Cu를 먼저 알려 줬을 때의 추가 기여가 다를 수 있으므로, 가능한 입력 순서를 모두 고려합니다. 상호작용도 이 규칙으로 나누어 받습니다.</p>
+<div class="lab" id="shap-lab">
+<div class="labhead"><h3>세 입력을 바꾸며 합을 확인합니다</h3><span class="labtag">8개 부분집합을 전부 계산 · 근사 표본추출 없음</span></div>
+<div class="controls">
+<div class="control"><label for="sample">가상 작업 불러오기</label><select id="sample"><option value="a">작업 A · 64 / 340 / 46</option><option value="b">작업 B · 58 / 300 / 42</option><option value="c">작업 C · 66 / 360 / 48</option></select></div>
+<div class="control"><label for="background">SHAP·PDP·ICE 공통 배경</label><select id="background"><option value="0">B₁ · 기본 가상 작업 4개</option><option value="1">B₂ · 다른 가상 작업 4개</option></select></div>
+<div class="control"><label for="shap-t">온도 T <output id="shap-t-out" for="shap-t">64°C</output></label><input id="shap-t" type="range" min="52" max="68" step="0.5" value="64"></div>
+<div class="control"><label for="shap-j">전류밀도 J <output id="shap-j-out" for="shap-j">340 A/m²</output></label><input id="shap-j" type="range" min="250" max="380" step="5" value="340"></div>
+<div class="control"><label for="shap-c">Cu 농도 C <output id="shap-c-out" for="shap-c">46 g/L</output></label><input id="shap-c" type="range" min="36" max="50" step="0.5" value="46"></div>
+</div>
+<div class="metrics" aria-live="polite" aria-atomic="true"><div class="metric"><span>배경 출력의 평균 · 기준값</span><strong id="shap-base">94.010%</strong></div><div class="metric"><span>이 작업의 함수 출력</span><strong id="shap-pred">94.352%</strong></div><div class="metric"><span>기여 합 · 기준 대비 차이</span><strong id="shap-diff">+0.342%p</strong></div></div>
+<div id="shap-bars" role="group" aria-label="세 입력의 부호 있는 기여"></div>
+<p class="small">막대 중심은 0입니다. 오른쪽은 + 기여, 왼쪽은 − 기여이며 숫자에도 부호를 표시합니다.</p>
+<div id="shap-equality" class="equation" role="status">94.010 + 0.257 − 0.240 + 0.325 = 94.352%</div>
+<details><summary>모든 부분집합의 v(S)와 기여 계산을 펼칩니다</summary><p>선택된 입력 집합 S의 값은 현재 작업에서, 나머지 입력은 배경의 한 행에서 가져옵니다. 이 조합의 F를 계산한 뒤 배경 4행에 대해 평균합니다.</p><div class="scroll" tabindex="0" role="region" aria-label="부분집합 계산표"><table><thead><tr><th scope="col">알려 준 입력 S</th><th scope="col">배경으로 대체한 입력</th><th scope="col">v(S) · %</th></tr></thead><tbody id="shap-subsets"></tbody></table></div><div id="shap-terms" class="small"></div></details>
+</div>
+<h3>“입력이 없다”는 뜻을 먼저 정해야 합니다</h3>
+<p>여기서 온도를 모른다는 것은 온도를 0으로 놓는다는 뜻이 아닙니다. <strong>배경행의 온도로 바꾸어 평균</strong>한다는 뜻입니다. 선택한 입력과 나머지 입력의 원래 연관성을 끊는 marginal/interventional 방식의 작은 게임입니다. 나머지 입력끼리는 같은 배경행의 조합을 유지합니다. 실제 조건부 분포를 추정한 계산은 아닙니다.</p>
+<div class="equation"><span class="line">v(S) = (1/m) Σᵦ F(x<sub>S</sub>, b<sub>−S</sub>)</span><span class="line">φᵢ = Σ<sub>S⊆N∖{i}</sub> [ |S|! (n−|S|−1)! / n! ] × [v(S∪{i})−v(S)]</span><span class="line">F(x) = v(∅) + φ<sub>T</sub> + φ<sub>J</sub> + φ<sub>C</sub></span></div>
+<dl class="terms"><dt>x / b / m</dt><dd>설명할 작업 / 배경의 한 작업 / 배경 작업 수 4입니다.</dd><dt>N / n / S</dt><dd>전체 입력 집합 {T,J,C} / 입력 수 3 / 이미 알려 준 입력의 부분집합입니다.</dd><dt>v / φᵢ</dt><dd>해당 조합의 평균 예측 / 입력 i가 받는 Shapley 기여입니다. ∅는 아무 입력도 알려 주지 않은 경우입니다.</dd><dt>|S| / ! / Σ</dt><dd>집합의 원소 수 / 팩토리얼(예: 3!=6, 0!=1) / 모두 더하라는 기호입니다. 부분집합 크기 0·1·2의 가중치는 각각 1/3·1/6·1/3입니다.</dd></dl>
+<p>기본 예시는 <strong>94.010 + 0.257 − 0.240 + 0.325 = 94.352%</strong>입니다. 온도 기여 +0.257은 <strong>0.257%p(퍼센트포인트)</strong>이며 0.257% 상대 증가와 다릅니다. 90%에서 92%로 가면 2%p 증가이고 상대 증가는 약 2.22%입니다. 이 페이지는 회귀 출력 %를 직접 설명합니다. 분류 모델의 log-odds 기여를 같은 단위로 읽으면 안 됩니다.</p>
+<p><strong>프로젝트에서는</strong> 정해진 예측 시점과 목표별로 학습 모델의 예측을 설명하고, 설명이 시기·계통·배경 선택에 안정적인지 확인합니다. 실제 CatBoost에는 지원 조건·출력 공간·배경 가정을 정한 TreeSHAP 등을 검토할 수 있습니다. 이 체험은 작은 사용자 함수의 정확한 Shapley 계산이며 <strong>CatBoost TreeSHAP 실행 결과가 아닙니다.</strong> <a href="https://arxiv.org/abs/1705.07874">SHAP 원논문</a>과 <a href="https://shap.readthedocs.io/en/latest/generated/shap.ExactExplainer.html">공식 정확 열거 설명</a>을 함께 볼 수 있습니다.</p>
+<div class="pitfall"><strong>자주 생기는 오해:</strong> 기여가 크면 원인이라고 여기거나, 배경을 바꾼 두 기여를 그대로 비교하는 것입니다. 상관된 온도·농도를 따로 바꾸면 드문 조합이 생기며 기여 배분도 의존 가정에 따라 달라집니다. 여러 작업에서 |φ|를 평균한 전역 순위는 부호를 버리므로 예측을 올렸는지 내렸는지나 인과 방향을 알려 주지 않습니다. 여기서 “interventional”은 실제 조업 개입 효과가 증명됐다는 말이 아닙니다.</div>
+<p class="learn">배우는 순서: 기본 합을 읽습니다 → 온도만 바꿉니다 → 배경을 바꿔 예측값은 같고 배분은 달라지는지 봅니다 → 부분집합 표를 확인합니다.</p>
+</section>
+
+<section class="section" id="pdp" aria-labelledby="pdp-title">
+<div class="section-title"><span class="num">02</span><h2 id="pdp-title">PDP · 같은 입력을 바꾼 뒤 평균합니다</h2></div>
+<p class="lesson-jump"><a href="#lesson-pdp">PDP 설명을 처음부터 자세히 읽습니다 →</a></p>
+<p class="intro">“선택한 작업들에서 온도만 같은 값으로 바꾸면 모델의 평균 예상은 어떻게 변할까?”를 봅니다. PDP는 <span lang="en">Partial Dependence Plot</span>, 부분 의존도 그림입니다.</p>
+<p>온도를 60°C로 고정해 배경의 각 작업을 다시 계산합니다. 전류밀도·Cu 농도는 각 작업의 값 그대로 둡니다. 네 예측을 평균하면 60°C의 PDP 값입니다. 이를 온도 격자의 모든 점에서 반복하면 평균 곡선이 됩니다. 실제 온도를 바꾸고 재관측한 결과가 아니라 <strong>고정된 모델에 바꾼 입력을 넣은 결과</strong>입니다.</p>
+<div id="ice">
+<div class="section-title"><span class="num">03</span><h3 id="ice-title">ICE · 평균 안에 숨은 개별 작업을 봅니다</h3></div>
+<p class="lesson-jump"><a href="#lesson-ice">ICE 설명을 처음부터 자세히 읽습니다 →</a></p>
+<p>ICE는 <span lang="en">Individual Conditional Expectation</span>입니다. <strong>한 작업의 나머지 입력을 고정</strong>한 채 선택 입력만 바꾸어 그립니다. 각 작업에 한 곡선이 생깁니다. 이름의 “Conditional”은 다른 입력을 조건부 분포에서 새로 뽑는다는 뜻이 아닙니다. 같은 온도라도 Cu 농도에 따라 반응이 다르면 곡선의 기울기가 달라집니다. 평균만 보면 이런 차이를 놓칩니다.</p>
+</div>
+<div class="lab" id="pdp-lab">
+<div class="labhead"><h3>개별 곡선과 평균 곡선을 겹쳐 봅니다</h3><span class="labtag">SHAP과 같은 F · 같은 배경 4행 · 33개 공통 격자</span></div>
+<div class="controls"><div class="control"><label for="pdp-feature">바꿀 입력</label><select id="pdp-feature"><option value="0">온도 T · °C</option><option value="1">전류밀도 J · A/m²</option><option value="2">Cu 농도 C · g/L</option></select></div><div class="control"><label for="ice-row">강조할 ICE 작업</label><select id="ice-row"><option value="0">배경 작업 B1</option><option value="1">배경 작업 B2</option><option value="2">배경 작업 B3</option><option value="3">배경 작업 B4</option></select></div><div class="control"><label for="pdp-point">곡선에서 읽을 값 <output id="pdp-point-out" for="pdp-point">60°C</output></label><input id="pdp-point" type="range" min="0" max="32" value="16" step="1"></div></div>
+<div class="actions"><label><input id="pdp-average" type="checkbox" checked> 평균 PDP를 표시합니다</label><span id="pdp-background" class="small">배경 B₁ · 4개 작업</span></div>
+<div class="scroll chart" tabindex="0" role="region" aria-label="PDP와 ICE 그래프, 작은 화면에서는 가로 스크롤"><svg id="pdp-svg" viewBox="0 0 780 340" role="img" aria-labelledby="pdp-svg-title pdp-svg-desc"><title id="pdp-svg-title">같은 가상 함수의 PDP와 ICE</title><desc id="pdp-svg-desc">옅은 선은 각 작업의 ICE, 파란 실선은 선택 작업, 구리색 굵은 점선은 평균 PDP입니다. 아래 표에서 현재 지점의 숫자를 읽을 수 있습니다.</desc><g id="pdp-drawing"></g></svg></div>
+<p id="pdp-range" class="small"></p><p class="small">파란 실선은 선택한 ICE, 구리색 굵은 점선은 PDP입니다. 아래 작은 선은 원래 관측값의 분포를 나타냅니다. 배경의 최소·최대 밖은 음영으로 표시합니다.</p>
+<div class="scroll" tabindex="0" role="region" aria-label="현재 격자점의 ICE와 평균"><table><thead><tr><th scope="col">배경 작업</th><th scope="col">원래 T / J / C</th><th scope="col">현재 지점 ICE · %</th></tr></thead><tbody id="ice-values"></tbody><tfoot><tr><th scope="row" colspan="2">같은 4개 ICE의 평균 = PDP</th><td id="pdp-value" class="signed"></td></tr></tfoot></table></div>
+<div id="pdp-equality" class="equation" role="status"></div>
+</div>
+<div class="equation"><span class="line">ICEᵦ(z) = F(z, b<sub>−j</sub>)</span><span class="line">PDPⱼ(z) = (1/m) Σᵦ ICEᵦ(z)</span></div>
+<dl class="terms"><dt>j / z</dt><dd>바꿀 입력의 번호 / 그 입력에 시험해 넣을 값입니다.</dd><dt>b<sub>−j</sub> / m</dt><dd>한 배경행에서 나머지 입력값들 / 참조 작업 수 4입니다.</dd><dt>ICEᵦ / PDPⱼ</dt><dd>작업 b의 개별 반응 / 그 반응들의 평균입니다. 여기서는 세로축을 중심화하지 않은 절대 예측 %로 표시합니다.</dd></dl>
+<p>기본 배경에서 온도 60°C를 넣으면 ICE는 <strong>93.960, 94.000, 94.040, 94.080%</strong>이고 PDP는 <strong>94.020%</strong>입니다. 같은 참조행·모델·격자를 쓰므로 PDP는 각 지점에서 ICE 평균과 정확히 일치합니다. 선택 작업만 바꾸면 강조 선만 달라지고 평균은 변하지 않습니다.</p>
+<p>이 함수의 온도 축에서는 PDP가 나머지 입력을 평균한 한 줄의 예측과 같습니다. 차이를 보려면 <a href="#pdp-feature">바꿀 입력</a>을 전류밀도로 두고 격자 16(315 A/m²)을 읽습니다. ICE 평균은 <strong>93.970%</strong>이고 F(60,315,43)은 <strong>93.980%</strong>입니다. Cu 43 g/L에서는 <strong>93.940%</strong>와 <strong>94.020%</strong>로 갈라집니다. <a href="#lesson-pdp">평균 순서가 달라지는 이유를 상세 해설에서 읽습니다.</a></p>
+<p><strong>프로젝트에서는</strong> 농도·온도 구간별 모델 반응과 작업 간 차이를 살피고, 실측 작업이 충분한 구간에서 조건 후보를 검토할 수 있습니다. 온도와 Cu가 함께 변하는 자료에서 온도만 바꾸면 실제로 없는 조합이 됩니다. 음영 밖 외삽뿐 아니라 <strong>단일 변수 범위 안의 드문 조합</strong>도 확인해야 합니다. ALE나 변수군 분석을 추가 비교할 수 있지만 인과 문제를 자동 해결하지는 않습니다. <a href="https://scikit-learn.org/stable/modules/partial_dependence.html">공식 PDP·ICE 설명</a>, <a href="https://arxiv.org/abs/1309.6392">ICE 원논문</a>을 참고합니다.</p>
+<div class="pitfall"><strong>자주 생기는 오해:</strong> 평균 곡선의 꼭대기를 최적 온도로 정하는 것입니다. 이 함수의 곡선과 표본 범위는 임의이며 조업 최적화 근거가 없습니다. 온도·Cu 상관, 유량·첨가제 누락, 결측 대체, 모델 오차에 따라 그림도 달라집니다.</div>
+<p class="learn">배우는 순서: 온도 지점을 움직입니다 → B1과 B4를 번갈아 강조합니다 → 평균 표시를 껐다 켭니다 → 입력을 J로 바꾸어 평행한 ICE와 비교합니다.</p>
+</section>
+
+<section class="section" id="catboost" aria-labelledby="catboost-title">
+<div class="section-title"><span class="num">04</span><h2 id="catboost-title">CatBoost · 작은 트리의 보정을 쌓습니다</h2></div>
+<p class="lesson-jump"><a href="#lesson-catboost">CatBoost 설명을 처음부터 자세히 읽습니다 →</a></p>
+<p class="intro">판단 규칙 하나가 부족하면 다음 규칙이 남은 오차를 줄이게 합니다. “온도가 이 값 이하인가?” 같은 분기와 끝의 숫자들을 가진 <strong>결정트리</strong>를 여러 개 더한 예측기입니다.</p>
+<p>트리의 맨 끝을 <strong>잎(leaf)</strong>이라고 부릅니다. 한 작업이 분기를 따라 도착한 잎의 값이 그 트리의 출력입니다. Gradient boosting은 손실을 줄이는 방향으로 새 트리를 학습합니다. 제곱오차 회귀에서는 실제값에서 현재 예측을 뺀 <strong>잔차</strong>를 맞추는 모습으로 쉽게 이해할 수 있습니다. 다른 손실에서는 일반적인 음의 기울기를 사용합니다.</p>
+<div class="lab" id="catboost-lab">
+<div class="labhead"><h3>작은 트리 한 개씩 학습합니다</h3><span class="labtag">단순 gradient boosting 회귀 · CatBoost 전체 재현 아님</span></div>
+<p class="small">가상 온도 54·58·62·66°C, 가상 정답 90·92·95·95%로 시작합니다. 초기 예측은 평균 93%입니다. 매 단계 잔차에 대해 가능한 세 분할의 제곱오차를 비교하고 가장 작은 깊이 1 트리(stump)를 고릅니다.</p>
+<div class="controls"><div class="control"><label for="tree-lr">학습률 η <output id="tree-lr-out" for="tree-lr">0.50</output></label><input id="tree-lr" type="range" min="0.1" max="1" step="0.1" value="0.5"></div></div>
+<div class="actions"><button id="tree-step" class="primary" type="button">트리 1개 학습</button><button id="tree-reset" type="button">처음으로</button><span id="tree-count" class="small">0 / 최대 6개</span></div>
+<div class="diagram diagram-scroll" tabindex="0" role="region" aria-label="현재 잔차 트리 그림을 가로로 스크롤"><svg viewBox="0 0 720 225" role="img" aria-labelledby="tree-fig-title"><title id="tree-fig-title">온도 분기에서 두 잎의 잔차 보정으로 이어지는 트리</title><path d="M360 70 L185 140 M360 70 L535 140" fill="none" stroke="var(--plot)" stroke-width="2"/><rect x="235" y="10" width="250" height="60" fill="var(--paper)" stroke="var(--copper)"/><text x="360" y="47" text-anchor="middle" font-size="20" id="tree-root">아직 트리가 없습니다</text><rect x="75" y="140" width="220" height="65" fill="var(--paper)" stroke="var(--line)"/><rect x="425" y="140" width="220" height="65" fill="var(--paper)" stroke="var(--line)"/><text x="185" y="170" text-anchor="middle" font-size="16" id="tree-left">왼쪽 잎</text><text x="535" y="170" text-anchor="middle" font-size="16" id="tree-right">오른쪽 잎</text><text x="185" y="193" text-anchor="middle" font-size="13">조건이 참인 작업</text><text x="535" y="193" text-anchor="middle" font-size="13">조건이 거짓인 작업</text></svg></div>
+<div id="tree-status" class="status" role="status">초기 예측의 평균 제곱오차 MSE는 4.500입니다.</div>
+<div class="scroll" tabindex="0" role="region" aria-label="트리 학습 결과표"><table><thead><tr><th scope="col">온도 · °C</th><th scope="col">정답 · %</th><th scope="col">누적 예측 · %</th><th scope="col">남은 잔차 · %p</th></tr></thead><tbody id="tree-values"></tbody></table></div>
+<details><summary>누적한 트리의 분기와 잎 값을 봅니다</summary><ol id="tree-history"><li>아직 추가한 트리가 없습니다.</li></ol></details>
+</div>
+<div class="equation"><span class="line">rᵢ = yᵢ − F<sub>m−1</sub>(xᵢ)</span><span class="line">Fₘ(x) = F<sub>m−1</sub>(x) + η hₘ(x)</span></div>
+<dl class="terms"><dt>xᵢ / yᵢ / rᵢ</dt><dd>학습 작업의 입력 / 실제 정답 / 현재 잔차입니다.</dd><dt>m / Fₘ / hₘ</dt><dd>몇 번째 트리인지 / m개까지 쌓은 전체 예측 / 이번에 학습한 트리의 출력입니다. F₀는 초기 예측입니다.</dd><dt>η / MSE</dt><dd>보정을 한 번에 얼마나 반영할지 정한 학습률 / 잔차 제곱의 평균입니다. 학습률을 바꾸면 체험을 처음부터 다시 시작합니다.</dd></dl>
+<p>기본 첫 단계는 <strong>T≤60°C</strong>로 나누고 잔차 평균 <strong>−2, +2%p</strong>를 잎에 둡니다. η=0.5이므로 보정은 −1, +1%p입니다. 누적 예측은 <strong>92,92,94,94%</strong>가 되고 학습 MSE는 4.5에서 1.5로 줄어듭니다. 이 학습 오차 감소가 미래 작업의 정확도 향상을 보장하지는 않습니다.</p>
+<h3>학습과 예측은 다른 시간에 일어납니다</h3>
+<p><strong>학습</strong>에서는 정답을 보고 분기·잎·트리 개수를 정합니다. <strong>추론</strong>에서는 정답을 보지 않고 저장된 분기를 따라 각 잎 값을 구해 더합니다. 새 작업의 정답으로 그 자리에서 잔차를 수정하는 것이 아닙니다. 검증 자료로 트리 수와 깊이를 정하고, 마지막 미래 시험은 선택에 사용하지 않습니다.</p>
+<p>CatBoost의 특징에는 <strong>범주형 변수 처리</strong>와 <strong>ordered boosting</strong>이 있습니다. 설비·원료 종류 같은 범주를 수치로 바꿀 때 정답 누출을 줄이는 기법을 제공합니다. 그렇다고 범주형 입력이 있어야만 쓸 수 있는 모델은 아닙니다. 모든 설정이 Ordered 모드인 것도 아니며, 자료의 시간순 누출을 자동으로 막아 주지도 않습니다. 분할·설정은 따로 확인해야 합니다. <a href="https://arxiv.org/abs/1706.09516">CatBoost 원논문</a>과 <a href="https://catboost.ai/docs/en/concepts/algorithm-main-stages">공식 학습 과정</a>을 참고합니다.</p>
+<p><strong>프로젝트에서는</strong> 온도·농도·전하량·첨가제 기록을 작업 단위로 요약한 표에서 먼저 비교할 유용한 기준 후보입니다. 시간 이력을 전부 읽는 모델보다 준비와 검산이 간단하고, 비선형·변수 조합을 다룰 수 있습니다. 시간순으로 쌓인 상세 이력을 같은 요약값으로 압축하면 잃는 정보도 있습니다.</p>
+<div class="pitfall"><strong>자주 생기는 오해:</strong> 트리가 많으면 무조건 좋다고 여기거나 ordered라는 말만으로 미래 누출이 없다고 보는 것입니다. 과적합·계통 변화·잘못 연결된 정답·범위 밖 입력이 모두 문제를 만듭니다. CatBoost와 AdaBoost 중 어느 쪽이 우세한지는 같은 미래 시험으로 비교해야 합니다.</div>
+<p class="learn">배우는 순서: 첫 트리의 잎을 읽습니다 → 잔차가 줄어드는지 봅니다 → 학습률을 낮춰 다시 실행합니다 → 미래 시험 오차가 왜 별도로 필요한지 생각합니다.</p>
+</section>
+
+<section class="section" id="adaboost" aria-labelledby="adaboost-title">
+<div class="section-title"><span class="num">05</span><h2 id="adaboost-title">AdaBoost · 어려운 작업에 학습 비중을 줍니다</h2></div>
+<p class="lesson-jump"><a href="#lesson-adaboost">AdaBoost 설명을 처음부터 자세히 읽습니다 →</a></p>
+<p class="intro">앞 모델이 틀린 작업이 다음 모델을 학습할 때 더 눈에 띄도록 합니다. 핵심은 <strong>작업마다 붙는 학습 가중치의 변화</strong>입니다. 잔차를 새 정답으로 맞추는 gradient boosting과 구분합니다.</p>
+<p>처음에는 모든 작업을 같은 비중으로 봅니다. 약한 분류기 하나를 학습한 뒤 틀린 작업의 상대 비중을 높입니다. 다음 분류기는 바뀐 비중에서 좋은 규칙을 찾습니다. 마지막에는 신뢰도가 다른 여러 분류기의 표를 모읍니다. “작업 가중치”와 “분류기 투표 가중치”는 서로 다른 숫자입니다.</p>
+<div class="lab" id="adaboost-lab">
+<div class="labhead"><h3>여섯 가상 작업을 다시 보게 만듭니다</h3><span class="labtag">고전 이진 분류 AdaBoost · 효율 회귀가 아님</span></div>
+<p class="small">순서형 입력 x=1…6, 정답 y=(−1,−1,+1,+1,+1,−1)을 사용합니다. +1은 임의의 가상 양호 판정, −1은 그 외입니다. 실제 효율·Vision 판정 기준이 아닙니다. 가능한 분할과 방향을 모두 비교해 가중 오분류율이 가장 작은 stump를 고릅니다.</p>
+<div class="controls"><div class="control"><label for="ada-focus">F의 초기 상대 비중 <output id="ada-focus-out" for="ada-focus">1.0배</output></label><input id="ada-focus" type="range" min="0.5" max="3" value="1" step="0.5"></div></div>
+<div class="actions"><button id="ada-step" type="button" class="primary">분류기 1개 학습</button><button id="ada-reset" type="button">처음으로</button><span id="ada-count" class="small">0 / 최대 3개</span></div>
+<div id="ada-status" class="status" role="status">처음에는 모든 작업의 가중치가 1/6입니다.</div>
+<div class="scroll" tabindex="0" role="region" aria-label="AdaBoost 작업 가중치 표"><table><thead><tr><th scope="col">작업 · 정답</th><th scope="col">이번 예측</th><th scope="col">이번 학습 전 → 다음 비중</th><th scope="col">누적 투표 → 판정</th></tr></thead><tbody id="ada-values"></tbody></table></div>
+<details><summary>분류기의 규칙과 투표 가중치를 봅니다</summary><ol id="ada-history"><li>아직 학습하지 않았습니다.</li></ol></details>
+</div>
+<div class="equation"><span class="line">εₘ = Σᵢ pᵢ · 1[yᵢ ≠ hₘ(xᵢ)]</span><span class="line">αₘ = ½ ln((1−εₘ)/εₘ)</span><span class="line">pᵢ′ = pᵢ exp(−αₘ yᵢ hₘ(xᵢ)) / Z</span><span class="line">최종 분류 = sign(Σₘ αₘ hₘ(x))</span></div>
+<dl class="terms"><dt>pᵢ / εₘ</dt><dd>합이 1인 작업별 학습 비중 / 그 비중으로 계산한 오분류율입니다. 1[조건]은 참이면 1, 거짓이면 0입니다.</dd><dt>hₘ / αₘ</dt><dd>이번 분류기의 −1 또는 +1 예측 / 그 분류기의 투표 가중치입니다. 0&lt;ε&lt;0.5이면 α가 양수입니다.</dd><dt>exp / ln / Z</dt><dd>자연지수 / 자연로그 / 새 작업 비중의 합을 1로 만드는 정규화 합입니다.</dd><dt>sign</dt><dd>투표 합이 양수면 +1, 음수면 −1로 판정합니다. 이 체험은 0이면 동률로 표시합니다.</dd></dl>
+<p>기본 첫 분류기는 x≤2.5이면 −1, 아니면 +1입니다. F 하나를 틀려 <strong>ε=1/6, α≈0.804719</strong>가 됩니다. 갱신 후 맞힌 A~E는 각각 <strong>0.1</strong>, 틀린 F는 <strong>0.5</strong>의 비중을 받습니다. 다음 학습은 F를 훨씬 크게 고려합니다. 이 0.5는 다음 분류기의 학습 비중이며 SHAP의 %p 기여도, R2 회귀기 결합 비중 aₘ도 아닙니다. 이 0.5는 다음 분류기의 학습 비중이며 SHAP의 %p 기여도, R2 회귀기 결합 비중 aₘ도 아닙니다. 이 0.5는 다음 분류기의 학습 비중이며 SHAP의 %p 기여도, R2 회귀기 결합 비중 aₘ도 아닙니다. 이 0.5는 다음 분류기의 학습 비중이며 SHAP의 %p 기여도, R2 회귀기 결합 비중 aₘ도 아닙니다. 이 0.5는 다음 분류기의 학습 비중이며 SHAP의 %p 기여도, R2 회귀기 결합 비중 aₘ도 아닙니다. 오분류율이 0이면 종료하고, 0.5 이상이면 유용한 약한 분류기로 받아들이지 않는 처리도 필요합니다.</p>
+<p>여기 α의 1/2는 고전 이진 AdaBoost의 관례입니다. scikit-learn 1.9.1의 SAMME는 이진 분류·학습률 1에서 두 배인 ln((1−ε)/ε)를 저장합니다. 그러나 SAMME는 오분류 지시함수로 갱신하므로, 같은 약한 분류기라면 정규화 후 작업 비중은 같습니다. 첫 예시는 두 방식 모두 (0.1,0.1,0.1,0.1,0.1,0.5)입니다. <a href="#lesson-adaboost">식의 동등성과 R2의 차이를 자세히 읽습니다.</a> <a href="https://github.com/scikit-learn/scikit-learn/blob/1.9.1/sklearn/ensemble/_weight_boosting.py#L558-L572">SAMME 공식 소스</a>와 <a href="https://www.sciencedirect.com/science/article/pii/S002200009791504X">Freund·Schapire(1997)의 원논문</a>을 함께 참고합니다.</p>
+<h3>전류효율처럼 연속값이면 AdaBoost.R2를 구분합니다</h3>
+<p>이진 분류는 정답이 두 종류이지만 효율 93.7%는 연속값입니다. <strong>AdaBoost.R2</strong>는 회귀기별 오차를 정규화해 작업 비중을 바꾸고, 최종 회귀값을 <strong>가중 중앙값</strong>으로 모읍니다. 위 분류 체험을 R2로 읽으면 안 됩니다. 다음은 선형 손실·학습률 1인 R2 설명식입니다.</p>
+<div class="equation"><span class="line">eᵢ=|yᵢ−hₘ(xᵢ)|, Lᵢ=eᵢ/maxⱼ eⱼ</span><span class="line">Eₘ=Σᵢ pᵢLᵢ, βₘ=Eₘ/(1−Eₘ)</span><span class="line">pᵢ′=pᵢ βₘ^(1−Lᵢ) / Z, aₘ=ln(1/βₘ)</span><span class="line">최종 회귀 = {hₘ(x)}를 {aₘ}로 가중한 중앙값</span></div>
+<p><strong>eᵢ</strong>는 절대오차, <strong>Lᵢ</strong>는 0~1로 정규화한 손실, <strong>Eₘ</strong>은 그 손실의 가중 평균입니다. <strong>βₘ</strong>는 비중 갱신에, <strong>aₘ</strong>은 회귀기 결합에 씁니다. 0&lt;E&lt;0.5인 유효 단계의 식입니다. 모든 오차가 0이면 완벽 적합으로 끝내고, E≥0.5이면 그 회귀기를 버리고 중단하는 등의 경계 처리가 필요합니다. 손실 변형과 학습률 설정이 달라지면 식의 세부도 바뀝니다.</p>
+<p>작업 비중 (0.6,0.3,0.1), 정규화 손실 (0,0.5,1)이면 E=0.25, β=1/3입니다. 정규화 전 새 비중은 (0.2,0.173205,0.1)이고, 나누면 약 <strong>(0.422650,0.366025,0.211325)</strong>입니다. 가장 틀린 세 번째 작업의 <em>상대 비중</em>이 0.1에서 약 0.211로 커집니다. 회귀기 예측이 (91,93,99), 결합 비중이 (1,3,1)이면 가중 중앙값은 <strong>93</strong>입니다. 가중 평균 93.8과 다릅니다.</p>
+<p><strong>프로젝트에서는</strong> Cheng의 방법에서 참고할 트리 회귀 비교 후보입니다. 출구 Cu·As와 우리 효율·S등급률은 다른 정답입니다. 같은 입력·미래 분할·튜닝 조건에서 CatBoost 등과 비교해야 합니다. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html">공식 AdaBoost.R2 문서</a>와 <a href="https://dl.acm.org/doi/10.5555/645526.657132">Drucker(1997)의 원전</a>을 참고합니다.</p>
+<div class="pitfall"><strong>자주 생기는 오해:</strong> 틀린 작업을 더 보면 언제나 좋아진다는 것입니다. 센서 오류·정답 오기·대표성이 낮은 이상값을 계속 강조하면 일반화가 나빠집니다. 높은 작업 비중은 “중요한 물리 원인”이라는 표시가 아닙니다.</div>
+<p class="learn">배우는 순서: 첫 단계에서 F의 비중을 확인합니다 → 두 번째 규칙이 어떻게 달라지는지 봅니다 → 초기 F 비중을 바꿔 다시 실행합니다 → R2의 작업 비중과 회귀기 비중을 구분합니다.</p>
+</section>
+
+<section class="section" id="lstm" aria-labelledby="lstm-title">
+<div class="section-title"><span class="num">06</span><h2 id="lstm-title">LSTM · 기록을 읽을 때마다 기억을 갱신합니다</h2></div>
+<p class="lesson-jump"><a href="#lesson-lstm">LSTM 설명을 처음부터 자세히 읽습니다 →</a></p>
+<p class="intro">평균 온도 하나만 보면 “초기에 높고 나중에 낮았는지”를 잃습니다. LSTM은 시간순으로 기록을 읽으며 이전 정보를 새 정보와 섞는 신경망입니다. 이름은 <span lang="en">Long Short-Term Memory</span>입니다.</p>
+<p>두 상태를 구분합니다. <strong>c(cell state)</strong>는 시간 사이에 전달하는 기억이고, <strong>h(hidden state)</strong>는 그 기억에서 현재 밖으로 내보내는 표현입니다. <strong>forget gate f</strong>는 이전 c를 얼마나 유지할지, <strong>input gate i</strong>는 새 후보 g를 얼마나 더할지, <strong>output gate o</strong>는 c에서 h로 얼마나 내보낼지 정하는 0~1의 숫자입니다. 실제 모델은 이 숫자를 입력과 이전 h에서 학습해 계산합니다.</p>
+<div class="flow" role="group" aria-label="LSTM의 기억 흐름"><div class="node"><strong>이전 c</strong>보존할 기억</div><span class="arr" aria-hidden="true">× f →</span><div class="node"><strong>+ i × g</strong>새 기억 추가</div><span class="arr" aria-hidden="true">→</span><div class="node"><strong>현재 c</strong>갱신한 기억</div><span class="arr" aria-hidden="true">tanh × o →</span><div class="node"><strong>현재 h</strong>출력층으로 전달</div></div>
+<div class="equation"><span class="line">fₜ=σ(W<sub>f</sub>xₜ+U<sub>f</sub>hₜ₋₁+b<sub>f</sub>), iₜ=σ(W<sub>i</sub>xₜ+U<sub>i</sub>hₜ₋₁+b<sub>i</sub>)</span><span class="line">gₜ=tanh(W<sub>g</sub>xₜ+U<sub>g</sub>hₜ₋₁+b<sub>g</sub>), oₜ=σ(W<sub>o</sub>xₜ+U<sub>o</sub>hₜ₋₁+b<sub>o</sub>)</span><span class="line">cₜ=fₜ⊙cₜ₋₁+iₜ⊙gₜ, hₜ=oₜ⊙tanh(cₜ)</span></div>
+<dl class="terms"><dt>t / xₜ</dt><dd>시점 번호 / 그 시점의 입력 벡터입니다. 벡터는 여러 숫자를 묶은 것이며 여기 체험은 한 숫자만 씁니다.</dd><dt>W / U / b</dt><dd>현재 입력에 곱할 계수 / 이전 h에 곱할 계수 / 더해 주는 편향입니다. 아래 첨자는 어느 gate나 후보의 계수인지 표시합니다. 실제 학습에서 정합니다.</dd><dt>σ / tanh</dt><dd>σ(z)=1/(1+exp(−z))는 0~1, tanh(z)는 −1~1로 값을 바꾸는 함수입니다.</dd><dt>⊙ / cₜ₋₁ / hₜ₋₁</dt><dd>같은 위치 원소끼리 곱함 / 직전 기억 / 직전 출력 표현입니다. c와 h의 단위가 °C나 %인 것은 아닙니다.</dd></dl>
+<div class="lab" id="lstm-lab">
+<div class="labhead"><h3>새 입력 하나를 읽고 실제 상태를 계산합니다</h3><span class="labtag">상태 1개 · 계수는 임의로 고정 · 학습하지 않은 LSTM</span></div>
+<p class="small">x=(가상 온도−60)/5로 정규화합니다. c₀=h₀=0에서 시작합니다. 각 단계는 24시간 관측 하나를 추가하는 교육 예시이며 불규칙 시간·결측은 모사하지 않습니다.</p>
+<div class="controls"><div class="control"><label for="lstm-x">다음에 읽을 x <output id="lstm-x-out" for="lstm-x">0.50 · 62.5°C</output></label><input id="lstm-x" type="range" min="-1" max="1" step="0.1" value="0.5"></div></div>
+<div class="equation"><span class="line">f=σ(0.5x+0.2h이전+0.5), i=σ(0.7x+0.1h이전−0.2)</span><span class="line">g=tanh(0.8x+0.2h이전), o=σ(0.4x+0.1h이전+0.1)</span><span class="line">가상 출력층: ŷ=94+2h (%)</span></div>
+<div class="actions"><button id="lstm-step" type="button" class="primary">24시간 기록 1개 읽기</button><button id="lstm-reset" type="button">기억 초기화</button><span id="lstm-count" class="small">0 / 최대 7단계</span></div>
+<div class="gategrid" role="group" aria-label="현재 gate와 후보 값"><div class="gate"><span>유지 f</span><strong id="gate-f">계산 전</strong></div><div class="gate"><span>추가 i</span><strong id="gate-i">계산 전</strong></div><div class="gate"><span>후보 g</span><strong id="gate-g">계산 전</strong></div><div class="gate"><span>출력 o</span><strong id="gate-o">계산 전</strong></div></div>
+<div id="lstm-status" class="equation" role="status">c₀=0, h₀=0, 가상 예측=94.000%</div>
+<div class="scroll" tabindex="0" role="region" aria-label="LSTM 상태 변화표"><table><thead><tr><th scope="col">시점 · x</th><th scope="col">기억 c</th><th scope="col">표현 h</th><th scope="col">출력층 ŷ · %</th></tr></thead><tbody id="lstm-values"><tr><td>초기</td><td>0</td><td>0</td><td>94.000</td></tr></tbody></table></div>
+</div>
+<p>처음 x=0.5를 넣으면 f≈0.679179, i≈0.537430, g≈0.379949, o≈0.574443입니다. c₁≈0.204196, h₁≈0.115695이고 가상 출력층은 약 <strong>94.231391%</strong>를 내놓습니다. <strong>h=0.115695 자체가 효율 11.57%라는 뜻은 아닙니다.</strong> 최종 결과로 바꾸는 출력층이 따로 있습니다.</p>
+<h3>기억은 학습되지만 완벽히 보존되지는 않습니다</h3>
+<p>실제 학습에서는 예측 오차를 시간 방향으로 거슬러 전달하여 W·U·b와 출력층 계수를 조정합니다. 긴 기억 경로는 장기 의존 학습을 돕지만, 어떤 사건이든 영원히 기억한다는 보장은 없습니다. gate를 “물리적으로 중요한 조건을 완벽히 골라내는 스위치”로 읽어서도 안 됩니다. 이 페이지의 gate는 수동 조작값이 아니라 고정 계수와 입력·이전 h로 실제 계산한 값입니다. <a href="https://doi.org/10.1162/neco.1997.9.8.1735">LSTM의 1997년 원전</a>과 <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.LSTM.html">현대 forget-gate 수식의 공식 문서</a>를 구분해 참고합니다.</p>
+<p><strong>프로젝트에서는</strong> 같은 평균 온도를 가진 작업이라도 시간 경로가 다른지 비교하는 후속 후보입니다. 예측 당시까지의 분석 공개 시각·시간 간격·정지·결측을 표현하고, 작업별 묶음으로 미래 시험해야 합니다. Correa의 LSTM Encoder–Decoder+Attention은 불량률 예측의 참고이며 우리 효율·S등급률 모델을 검증한 결과가 아닙니다.</p>
+<div class="pitfall"><strong>자주 생기는 오해:</strong> 앞뒤 순서만 넣으면 누출이 사라진다고 생각하는 것입니다. 사후 효율·최종 Vision, 나중에 공개된 분석이 섞이면 LSTM도 미래를 미리 보게 됩니다. 데이터가 적고 잡음이 크면 요약표 모델보다 나쁠 수 있습니다.</div>
+<p class="learn">배우는 순서: 첫 x=0.5를 계산합니다 → 다음 x를 −0.5로 바꿔 기억의 변화를 봅니다 → 초기화한 뒤 입력 순서를 반대로 넣습니다 → c와 h, 출력층 숫자를 구분합니다.</p>
+</section>
+
+<section class="section" id="attention" aria-labelledby="attention-title">
+<div class="section-title"><span class="num">07</span><h2 id="attention-title">Attention · 여러 정보를 비중을 주어 모읍니다</h2></div>
+<p class="lesson-jump"><a href="#lesson-attention">Attention 설명을 처음부터 자세히 읽습니다 →</a></p>
+<p class="intro">LSTM이 만든 시점별 표현이 여러 개 남았다면, 마지막 표현 하나 대신 여러 표현을 모아 쓸 수 있습니다. 이 페이지가 계산하는 Attention은 각 표현의 점수를 softmax로 바꿔 <strong>합이 1인 가중치</strong>를 만들고 정보를 가중 합산합니다. 모든 Attention이 그렇지는 않습니다. CBAM의 채널·공간 gate는 sigmoid를 쓰며 각 값은 0에서 1이고 합이 1일 필요가 없습니다.</p>
+<p>높은 가중치는 해당 계산에서 더 큰 비중으로 정보를 전달한다는 뜻입니다. 정보 자체의 부호·내용도 결과에 영향을 줍니다. 가중치가 0.7이라고 해서 “불량 원인 70%”나 “단락 확률 70%”라는 뜻은 아닙니다. 같은 비중으로도 전달할 정보가 달라지면 결과가 달라집니다.</p>
+<div class="diagram" id="qkv-diagram">
+<div class="flow"><div class="node"><strong>Q · Query</strong>무엇과 맞출지 묻는 표현</div><span class="arr" aria-hidden="true">×</span><div class="node"><strong>K · Key</strong>각 기록의 매칭 표현</div><span class="arr" aria-hidden="true">→</span><div class="node"><strong>점수 → softmax</strong>이 체험과 scaled dot-product에서 가중치 α의 합은 1</div><span class="arr" aria-hidden="true">×</span><div class="node"><strong>V · Value</strong>실제로 전달할 정보</div><span class="arr" aria-hidden="true">→</span><div class="node"><strong>문맥 context</strong>가중해 모은 표현</div></div>
+<p class="caption">Q·K·V는 보통 원래 입력에서 학습한 변환으로 만듭니다. 온도·농도 원자료끼리의 상관계수를 그대로 쓰는 계산이 아닙니다.</p>
+</div>
+<div class="equation"><span class="line">Attention(Q,K,V) = softmax(QKᵀ / √d<sub>k</sub>) V</span><span class="line">교육 체험: αₜ = exp(sₜ/τ) / Σ<sub>j∈관측</sub> exp(sⱼ/τ)</span><span class="line">context = Σ<sub>t∈관측</sub> αₜ Vₜ</span></div>
+<dl class="terms"><dt>Q / K / V</dt><dd>질의 / 키 / 값 표현을 모은 행렬입니다. 행렬은 숫자를 행·열로 배열한 것입니다. Kᵀ는 K의 행과 열을 바꾼 것이며 QKᵀ는 내적으로 매칭 점수를 만듭니다.</dd><dt>d<sub>k</sub> / softmax</dt><dd>키 표현의 차원 수 / 여러 점수의 지수값을 그 합으로 나누는 함수입니다. √d<sub>k</sub>는 내적 점수의 규모를 조절합니다.</dd><dt>sₜ / αₜ / Vₜ</dt><dd>시점 t의 스케일 조정 후 점수 / 그 시점의 가중치 / 전달할 표현입니다. V는 벡터일 수 있고 이 체험은 한 숫자입니다.</dd><dt>τ / context</dt><dd>softmax 온도라고 부르는 양수 조절값 / 모아서 얻은 표현입니다. τ는 전해액 온도 T(°C)와 전혀 다른 무차원 값입니다. τ가 작으면 점수 차이가 더 크게 반영됩니다.</dd></dl>
+<div class="lab" id="attention-lab">
+<div class="labhead"><h3>관측 시점과 점수를 바꾸어 모읍니다</h3><span class="labtag">수동 점수 실험 · 학습한 QK나 논문 성능 재현 아님</span></div>
+<div class="controls"><div class="control"><label for="att-cutoff">현재 예측 시점</label><select id="att-cutoff"><option value="24">24시간</option><option value="48">48시간</option><option value="72" selected>72시간</option><option value="96">96시간</option><option value="120">120시간</option><option value="144">144시간</option><option value="168">168시간</option></select></div><div class="control"><label for="att-temp">softmax 온도 τ <output id="att-temp-out" for="att-temp">1.00</output></label><input id="att-temp" type="range" min="0.25" max="2" step="0.25" value="1"></div></div>
+<p class="small">가상 값 V=(0.2,0.8,0.4,−0.1,0.6,0.9,0.3)은 무차원 표현입니다. 점수 s의 초기값은 (0,0.5,1,−0.3,0.7,1.2,0.4)입니다. 미래 슬롯은 관측 시점이 도달하기 전 계산에서 제외합니다.</p>
+<div class="attrow" aria-hidden="true"><strong>시점</strong><strong>점수 s 조절</strong><strong>s 값</strong><strong>가중치 α</strong></div>
+<div id="attention-sliders" class="attrows"></div>
+<div class="metrics" aria-live="polite" aria-atomic="true"><div class="metric"><span>관측 가중치의 합</span><strong id="att-sum">1.000000</strong></div><div class="metric"><span>가중한 context · 무차원</span><strong id="att-context">0.485614</strong></div><div class="metric"><span>관측 / 전체 슬롯 수</span><strong id="att-count">3 / 7</strong></div></div>
+<div id="attention-status" class="status" role="status"></div>
+<div id="att-equation" class="equation"></div>
+<div class="actions"><button id="att-reset" type="button">점수와 τ 초기화</button></div>
+</div>
+<h3>미래를 가리는 것과 삼각 마스크는 다릅니다</h3>
+<p>72시간 예상에는 96시간 이후 실제 기록이 아직 없습니다. 이 체험은 그 슬롯의 가중치를 <strong>0</strong>으로 두고 분모에서도 제외합니다. 실제 구현에서는 허용하지 않는 점수를 −∞로 가린 뒤 softmax하거나, 유효 관측만으로 계산합니다. 아직 도착하지 않은 분석과 패딩도 포함하지 않아야 합니다.</p>
+<p>관측한 0~72시간 전체로 한 번 예측하는 Encoder는 그 <strong>관측 범위 안에서 양방향</strong>으로 정보를 교환할 수 있습니다. 모든 Encoder에 삼각 causal mask가 필수인 것은 아닙니다. 여러 과거 시점의 예측을 한꺼번에 계산하거나 다음 값을 순차 생성하는 Decoder라면, 각 출력이 그때의 미래를 보지 않도록 추가 마스크를 확인합니다. 168시간에 작업이 끝나는 예시는 마지막 시점을 <strong>종료 시점 해석</strong>으로 보며 조기경보라고 부르지 않습니다. 정답 공개는 실제 종료 뒤로 늦어질 수 있어 종료 시각과 따로 기록해야 합니다.</p>
+<div class="scroll" tabindex="0" role="region" aria-label="세 Attention 구조 비교"><table><thead><tr><th scope="col">구조</th><th scope="col">무엇을 모으는가?</th><th scope="col">우리 연구에서의 위치</th></tr></thead><tbody><tr><td>LSTM 시간 Attention</td><td>순서대로 만든 시점별 h를 가중해 모읍니다.</td><td>Correa의 LSTM Encoder–Decoder+Attention을 후속 비교에 참고합니다. Transformer는 아닙니다.</td></tr><tr><td>Transformer Self-Attention</td><td>같은 입력 집합에서 Q·K·V를 만들고 각 표현을 갱신합니다.</td><td>위치·시간 정보와 Feed Forward 등도 함께 필요합니다. Attention 한 번만으로 전체 Transformer가 되지 않습니다.</td></tr><tr><td>CBAM</td><td>특징맵의 채널과 공간에 가중치를 적용합니다.</td><td>Liu가 결합한 모듈입니다. sigmoid gate는 칸마다 0~1이며 합 1 제약이 없습니다. 시점 softmax와 구분합니다.</td></tr></tbody></table></div>
+<p>Self-Attention은 Q·K·V의 출처가 같은 입력 집합이고, Cross-Attention은 Q의 출처와 K·V의 출처가 다릅니다. 여러 head는 서로 다른 학습 표현에서 관계를 계산해 모읍니다. 어떤 축이 시간인지 변수인지도 모델 설계에 따라 다릅니다. <a href="https://arxiv.org/abs/1409.0473">Bahdanau의 Encoder–Decoder Attention</a>, <a href="https://arxiv.org/abs/1706.03762">Transformer 원논문</a>, <a href="https://arxiv.org/abs/1807.06521">CBAM 원논문</a>을 구분해 참고합니다.</p>
+<p><strong>프로젝트에서는</strong> 같은 LSTM의 균등 요약과 Attention 요약을 비교해 이 가중 집계가 미래 오차를 실제로 줄이는지 확인합니다. Liu의 36시료 무작위 분할 결과나 Correa의 불량률 결과를 우리 조기경보 검증으로 옮기지 않습니다. 가중치 그림은 점검 단서이며 SHAP의 부호 있는 기여와 다른 숫자입니다.</p>
+<div class="pitfall"><strong>자주 생기는 오해:</strong> 큰 Attention 가중치를 가장 큰 인과효과로 읽는 것입니다. V의 내용·다른 층·여러 head·상관된 기록에 따라 해석이 달라집니다. 미래 정보가 들어가거나 유효하지 않은 슬롯이 남으면 보기 좋은 그림도 잘못된 계산입니다.</div>
+<p class="learn">배우는 순서: 24시간에서 가중치 1을 봅니다 → 72시간으로 늘립니다 → τ를 낮춥니다 → 한 점수를 바꿔 context의 변화를 확인합니다 → 168시간 결과와 조기경보를 구분합니다.</p>
+</section>
+
+<section class="section" id="compare" aria-labelledby="compare-title">
+<h2 id="compare-title">질문에 맞는 용어를 고릅니다</h2>
+<div class="scroll" tabindex="0" role="region" aria-label="일곱 용어 비교표를 가로로 스크롤"><table class="wide-table"><thead><tr><th scope="col">용어 / 역할</th><th scope="col">답하는 질문</th><th scope="col">숫자의 뜻</th><th scope="col">혼동하지 않을 것</th></tr></thead><tbody><tr><td><a href="#shap">SHAP</a> / 설명</td><td>이 작업이 기준보다 왜 높거나 낮은가?</td><td>기준 대비 부호 있는 예측 기여</td><td>실제 조건 변경의 인과효과</td></tr><tr><td><a href="#pdp">PDP</a> / 설명</td><td>입력을 바꾸면 평균 모델 반응은?</td><td>같은 지점의 ICE 평균</td><td>최적 조업 조건·실험 효과</td></tr><tr><td><a href="#ice">ICE</a> / 설명</td><td>개별 작업의 반응은 서로 다른가?</td><td>나머지를 고정한 개별 곡선</td><td>관측되지 않은 조합의 실측값</td></tr><tr><td><a href="#catboost">CatBoost</a> / 예측기</td><td>작업 요약 입력으로 결과를 어떻게 예상할까?</td><td>초기값과 여러 트리 출력의 합</td><td>모든 실행이 Ordered 모드라는 주장</td></tr><tr><td><a href="#adaboost">AdaBoost</a> / 예측기</td><td>어려운 작업을 더 고려하며 모델을 모을까?</td><td>작업 비중과 모델 결합 비중</td><td>분류 AdaBoost와 R2, 잔차 맞춤</td></tr><tr><td><a href="#lstm">LSTM</a> / 시간 모델</td><td>순서대로 기록을 읽으며 무엇을 기억할까?</td><td>학습된 기억 c와 표현 h</td><td>h 자체가 전류효율이라는 해석</td></tr><tr><td><a href="#attention">Attention</a> / 부품</td><td>여러 표현을 어떤 비중으로 모을까?</td><td>가중치와 그 값들의 가중 합</td><td>SHAP·원인·경보 확률</td></tr></tbody></table></div>
+<h3>전해정련 연구에서의 순서</h3>
+<p>과거 가용 자료의 단순 평균·선형 기준을 마련하고, Cheng 방향의 트리·조건 해석과 Liu 방향의 계산 가능한 물리 입력·다중 결과를 중심으로 비교합니다. 시간 이력이 충분하면 Correa 방향의 LSTM±Attention을 후속 비교합니다. 복잡한 모델을 모두 완성해야 조건 점검을 시작할 수 있는 것은 아닙니다.</p>
+<p>모든 비교는 <strong>같은 예측 시점, 같은 가용 입력, 같은 미래 시험</strong>에서 합니다. 전류효율 오차(%p)를 먼저 보고 S등급률 오차와 계통별 실패 사례를 따로 확인합니다. 경보를 만들면 적중·미탐·헛경보·실제 대응 가능한 선행시간을 추가 검증합니다. 좋은 설명 그림이 정확한 예측이나 효과적인 대응을 대신하지는 않습니다.</p>
+</section>
+
+<section class="section" id="self-check" aria-labelledby="self-check-title">
+<h2 id="self-check-title">짧게 확인해 봅니다</h2>
+<p>답을 선택하면 이유를 보여 줍니다. 점수를 매기기보다 헷갈리는 구분을 다시 확인하는 문제입니다.</p>
+<div class="quiz" data-answer="1" data-explanation="기준값과 기여의 합은 해당 모델의 예측입니다. 실제 정답과 예측의 차이는 별도로 측정해야 합니다. SHAP 합이 맞아도 모델은 틀릴 수 있습니다."><h3>1. SHAP 기준값과 기여를 더하면 무엇이 되나요?</h3><div class="answers"><button type="button" data-choice="0">실제 측정 효율</button><button type="button" data-choice="1">설명한 모델의 예측</button><button type="button" data-choice="2">확인된 개선 효과</button></div><p class="feedback" role="status"></p></div>
+<div class="quiz" data-answer="0" data-explanation="같은 함수·참조행·격자와 같은 비중을 사용한 이 체험에서는 PDP가 ICE 평균입니다. 평균 입력행 한 개의 예측과는 일반적으로 다릅니다."><h3>2. 네 ICE를 같은 온도에서 평균하면 이 체험의 PDP와 같나요?</h3><div class="answers"><button type="button" data-choice="0">네, 같은 참조행이면 같습니다</button><button type="button" data-choice="1">아니요, 별개 모델입니다</button></div><p class="feedback" role="status"></p></div>
+<div class="quiz" data-answer="1" data-explanation="이 체험은 고전 이진 분류 AdaBoost입니다. 연속 효율을 예측하는 AdaBoost.R2는 정규화 손실·beta로 작업 비중을 바꾸고 회귀기 예측의 가중 중앙값을 사용합니다."><h3>3. 위 AdaBoost 분류 체험의 ±1 투표를 그대로 효율 회귀식으로 쓰나요?</h3><div class="answers"><button type="button" data-choice="0">네, 부호만 %로 바꿉니다</button><button type="button" data-choice="1">아니요, R2 회귀를 구분합니다</button></div><p class="feedback" role="status"></p></div>
+<div class="quiz" data-answer="0" data-explanation="72시간 이후의 미공개 실제 기록을 배제해야 합니다. 관측한 0~72시간 전체로 한 번 예측하는 Encoder는 관측 범위 안에서 양방향 attention을 사용할 수 있습니다."><h3>4. 72시간의 관측 전체로 한 번 예측하는 Encoder의 필수 조건은?</h3><div class="answers"><button type="button" data-choice="0">미공개 미래 입력을 제외합니다</button><button type="button" data-choice="1">모든 관계에 삼각 마스크를 씁니다</button></div><p class="feedback" role="status"></p></div>
+<div class="quiz" data-answer="2" data-explanation="h는 학습한 표현이고 별도 출력층이 효율을 계산합니다. Attention 0.7은 해당 정보 집계의 비중이며 인과효과나 확률이 아닙니다. 조치 효과는 별도로 확인합니다."><h3>5. h=0.2, Attention=0.7이라면 무엇을 말할 수 있나요?</h3><div class="answers"><button type="button" data-choice="0">효율이 20%입니다</button><button type="button" data-choice="1">그 시점이 원인의 70%입니다</button><button type="button" data-choice="2">표현과 집계 비중입니다</button></div><p class="feedback" role="status"></p></div>
+<div class="quiz" data-answer="1" data-explanation="실제 정답을 보며 잎과 분기를 정하는 것은 학습입니다. 새 작업을 예측하는 추론에서는 저장한 트리들을 통과한 값만 더합니다. 학습 MSE 감소와 미래 성능도 구분해야 합니다."><h3>6. 저장한 트리로 새 작업을 예측할 때 정답을 미리 알아야 하나요?</h3><div class="answers"><button type="button" data-choice="0">네, 잔차 보정에 필요합니다</button><button type="button" data-choice="1">아니요, 저장한 트리를 씁니다</button></div><p class="feedback" role="status"></p></div>
+</section>
+
+<!-- FULL-LESSON:START -->
+<section class="section reading" id="reading" aria-labelledby="reading-title"><p class="kicker">Grok의 상세 해설 · Codex의 계산과 화면</p><h2 id="reading-title">한 문장부터 손계산까지, 처음부터 읽습니다</h2><p class="intro">각 용어의 비유, 기호, 실제 숫자, 조작 순서, 현장에서 필요한 자료와 한계를 모두 담았습니다. 아래 제목을 눌러 해당 해설로 이동하고, 각 제목을 접거나 펼칠 수 있습니다. 체험 옆의 기본 설명은 항상 읽을 수 있습니다.</p><nav class="reading-toc" aria-label="상세 해설 목차"><a href="#lesson-basics">한 작업으로 기본 말을 먼저 익힌다</a><a href="#lesson-times">학습할 때, 예측할 때, 나중에 설명할 때</a><a href="#lesson-shap">SHAP</a><a href="#lesson-pdp">PDP</a><a href="#lesson-ice">ICE</a><a href="#lesson-catboost">CatBoost</a><a href="#lesson-adaboost">AdaBoost</a><a href="#lesson-lstm">LSTM</a><a href="#lesson-attention">Attention</a><a href="#lesson-controls">화면 조작을 이름 그대로 따라가기</a><a href="#lesson-record">한 작업을 적을 때 필요한 칸</a><a href="#lesson-cycle">24시간부터 168시간까지 한 주기를 읽는 법</a><a href="#lesson-notebook">72시간 화면을 노트로 받아 적으면</a><a href="#lesson-compare">일곱 용어를 한 표로 비교</a><a href="#lesson-order">어떤 순서로 보면 덜 헤매는가</a><a href="#lesson-faq">자주 나오는 질문과 스스로 확인</a><a href="#lesson-papers">논문은 방법의 자리만 빌려 온다</a><a href="#lesson-references">이 글이 기대고 있는 자료</a></nav><div class="actions"><button id="reading-expand" type="button">상세 해설 모두 펼치기</button><button id="reading-collapse" type="button">상세 해설 모두 접기</button><span id="reading-status" class="small" role="status">해설 18편을 모두 펼쳤습니다.</span></div><div class="reading-provenance"><p>이 글은 같은 페이지의 체험과 오가며 읽는 상세 해설이다. Grok이 출처를 검토하며 본문을 작성했고, Codex가 계산과 화면을 만들고 이 글을 통합했다. Grok은 같은 식을 Python으로 다시 계산해 본문의 합을 맞췄다. Grok의 출처 검토에는 브라우저 버튼 시험이 포함되지 않으며, Codex의 화면·계산 검증과 구분한다.</p>
+<p>페이지의 숫자는 회사 실측이 아니고, 이미 학습해 둔 <code>synthetic_model_v1</code>의 출력도 아니다. 그 모델은 요약 입력과 물리 입력의 CatBoost, 그리고 공유 MLP를 학습한 별도의 시험이다. 이 페이지는 원리가 보이게 만든 여러 독립적인 교육 계산이다. SHAP·PDP·ICE만 같은 함수 F를 공유한다. 트리 학습, 분류 AdaBoost, 고정 계수 LSTM, 수동 점수 Attention은 각각 별도 자료와 계산을 쓰며 하나의 학습된 파이프라인이 아니다. 전류효율이 1순위, Vision S등급률이 2순위인 연구 순서는 유지하되, 숫자 체험은 효율만 다룬다. Cheng(2026)과 Liu(2026)가 방법의 중심이고, Correa(2021)는 그다음의 시간 모형 비교다.</p>
+</div><details class="lesson" id="lesson-basics" open><summary><span class="reading-kicker">연결해서 읽기</span><h3>한 작업으로 기본 말을 먼저 익힌다</h3></summary><div class="lesson-body"><a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a><p>가상 작업 A는 168시간 뒤에 끝나는 전해정련 작업이다. 지금 시계는 72시간이다. 그때 손에 있는 숫자는 세 개다. 온도 T는 64°C, 평균 전류밀도 J는 340 A/m², 액 중 Cu 농도 C는 46 g/L이다. 알고 싶은 것은 작업이 끝난 뒤의 전류효율이다. 화면은 이 셋을 넣어 94.352%를 보여 준다.</p>
+<p>이 94.352%를 만들기 위해 페이지가 쓰는 함수는 아래와 같다. 계수는 설명을 위해 임의로 정한 값이고, 전기화학식도 현장 추정값도 아니다. 권장 조업 범위도 아니다.</p>
+<pre aria-label="한 작업으로 기본 말을 먼저 익힌다의 수식과 계산" role="region" tabindex="0"><code class="language-text">u = (T − 60) / 5
+v = (J − 300) / 50
+w = (C − 42) / 5
+F(T, J, C) = 94 + 0.3u − 0.4v + 0.5w − 0.2u² + 0.25uw
+</code></pre>
+<p>작업 A를 그대로 넣으면 u, v, w가 모두 0.8이다.</p>
+<pre aria-label="한 작업으로 기본 말을 먼저 익힌다의 수식과 계산" role="region" tabindex="0"><code class="language-text">0.3×0.8 = 0.24
+−0.4×0.8 = −0.32
+0.5×0.8 = 0.40
+−0.2×0.64 = −0.128
+0.25×0.64 = 0.16
+94 + 0.24 − 0.32 + 0.40 − 0.128 + 0.16 = 94.352
+</code></pre>
+<p><code>u²</code> 때문에 온도를 올리는 효과가 직선이 아니다. <code>uw</code> 때문에 같은 온도 변화라도 Cu 농도가 다르면 효율 변화가 달라진다. 앞의 성질을 비선형, 뒤의 성질을 상호작용이라고 부른다.</p>
+<p>여기서 말을 고정한다. 일곱 용어는 같은 전해정련 연구 질문에 연결하지만, 수치 체험은 서로 다른 작은 예다. F의 94.352%, LSTM 출력층의 94.231391%, Attention의 무차원 context 0.485614가 같아질 이유는 없다.</p>
+<p>입력, 영어로는 feature, 읽기는 피처다. 예측하는 시점에 이미 알 수 있는 숫자다. 작업 A의 72시간 시점에서는 T, J, C가 입력이다. 72시간 이후에 도착하는 분석, 종료 후 음극 중량, 종료 후 효율, 최종 Vision 등급은 아직 입력이 아니다. 그것을 미리 넣으면 모델이 미래를 보고 답을 맞힌 것이 된다.</p>
+<p>정답, 영어로는 target 또는 label, 읽기는 타깃, 라벨이다. 모델이 맞추려고 하는 결과다. 전류효율 94%처럼 연속적인 숫자를 맞추면 회귀(regression, 리그레션)다. 양호와 그 외처럼 종류를 맞추면 분류(classification, 클래시피케이션)다. 이 페이지의 F, 트리 체험, LSTM 출력층, R2 설명은 회귀다. AdaBoost 버튼 체험만 분류다. 그 분류의 +1과 −1은 설명을 위한 가짜 판정이고, 현장의 Vision S등급 규칙이 아니다.</p>
+<p>모델(model, 모델)은 입력을 받아 예측을 내놓는 저장된 절차다. 트리의 분기와 잎, LSTM의 계수, Attention의 가중치를 만드는 변환이 거기에 해당한다. 학습(training, 트레이닝)은 과거 작업의 정답을 보고 그 절차의 숫자와 규칙을 고르는 시간이다. 예측(prediction, 프리딕션)은 새 작업의 정답을 보지 않은 채, 저장된 절차만으로 숫자를 내는 시간이다. 작업 A의 94.352%는 이 페이지에서는 함수 계산이라 학습이 필요 없다. CatBoost와 AdaBoost 체험으로 내려가면 학습과 예측이 갈라진다.</p>
+<p>시험(test, 테스트)은 규칙을 고를 때 쓰지 않은 나중 작업으로 오차를 재는 일이다. 학습 중의 오차가 줄었다는 사실과, 다음 달 작업에서도 오차가 작다는 사실은 다르다. 같은 작업의 앞시간을 학습하고 뒷시간을 시험이라고 부르면, 같은 작업 안의 정보가 새어 나갈 수 있다. 비교는 같은 예측 시점, 같은 가용 입력, 같은 미래 작업 묶음에서 한다.</p>
+<p>퍼센트포인트(%p)는 퍼센트 값의 차이다. 90%에서 92%로 바뀌면 2%p다. 상대 증가는 2/90, 약 2.22%다. SHAP 기여 +0.257은 0.257%p다. 효율이 0.257%만큼 곱해져 커졌다는 뜻이 아니다. 화면의 F는 % 단위의 회귀 출력이다. 분류 모델이 내는 log-odds 기여를 이 %와 같은 눈금으로 읽으면 안 된다.</p>
+<a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-times" open><summary><span class="reading-kicker">연결해서 읽기</span><h3>학습할 때, 예측할 때, 나중에 설명할 때</h3></summary><div class="lesson-body"><a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a><p>세 시간은 자료가 다르다.</p>
+<p>학습할 때는 이미 끝난 작업의 정답을 본다. 트리 체험의 정답 90, 92, 95, 95%가 그 예다. 분기를 고르고 잎의 숫자를 정하는 데 정답이 쓰인다. 끝난 뒤에야 알 수 있는 효율을, 72시간 예측의 입력으로 넣지는 않는다.</p>
+<p>예측할 때는 그 작업의 정답을 보지 않는다. 72시간 예측이라면 24, 48, 72시간에 이미 공개된 측정만 본다. 96시간 이후의 온도나 뒤늦게 도착한 분석은 빼야 한다. 저장해 둔 트리나 계수를 통과시켜 숫자를 낸다. 새 작업의 잔차를 그 자리에서 다시 학습하는 것이 아니다.</p>
+<p>설명은 예측이 끝난 뒤에 한다. SHAP, PDP, ICE는 모델을 만드는 방법이 아니다. 이미 정해진 함수나 모델이 입력을 바꿨을 때 어떻게 반응하는지를 조사한다. 설명이 깔끔해도 예측이 맞다는 뜻은 아니다. 작업 A의 SHAP 합이 94.352%로 닫혀도, 실제 종료 효율이 94.352%였는지는 별도로 재야 한다. Attention은 설명 도구가 아니라, 여러 시점의 표현을 한 벡터로 모으는 계산 부품이다. 모은 결과는 다시 출력층을 거쳐야 효율이 된다.</p>
+<p>현장 질문은 대개 한 걸음 더 나간다. “온도를 내리면 효율이 오를까?”는 예측 분해만으로 끝나지 않는다. 모델이 학습한 관계, 실제로 가능한 조작, 같이 움직이는 다른 변수, 조치 이후의 비교가 따로 필요하다. <a href="https://shap.readthedocs.io/en/latest/example_notebooks/overviews/Be%20careful%20when%20interpreting%20predictive%20models%20in%20search%20of%20causal%20insights.html" rel="noopener noreferrer">SHAP 공식 문서의 인과 해석 주의</a>도 같은 선을 긋는다. 설명된 예측 관계를 조작 효과로 옮기려면 별도의 가정과 검증이 필요하다.</p>
+<a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-shap" open><summary><span class="reading-kicker">용어 상세 해설</span><h3>SHAP (SHapley Additive exPlanations)</h3></summary><div class="lesson-body"><a class="back-demo" href="#shap">SHAP 체험으로 돌아갑니다 ↑</a><p>한 문장으로 말하면, SHAP은 한 작업의 예측을 기준값과 각 입력의 부호 있는 기여로 나누는 방법이다.</p>
+<p>답하는 질문은 “작업 A는 비교 작업들의 평균적인 예상보다 왜 0.342%p 높게 나왔는가?”다. “온도를 4°C 내리면 실제 효율이 얼마나 오르는가?”에는 답하지 못한다.</p>
+<p>비유는 공동 작업의 수당 배분이다. 온도, 전류밀도, Cu 농도가 함께 94.352%를 만들었다. 누가 먼저 알려졌는지에 따라 추가로 붙는 양이 달라질 수 있다. Shapley 값은 가능한 순서를 모두 평균해 그 추가분을 나눈다. Lundberg와 Lee(2017)는 이 배분을 예측 설명에 옮기면서, 기준값과 기여의 합이 그 예측과 같게 만드는 가산 설명을 제시했다. <a href="https://arxiv.org/abs/1705.07874" rel="noopener noreferrer">원논문</a>. 한계도 분명하다. 배분은 게임의 규칙, 곧 배경을 어떻게 채울지에 의존한다. 기여가 크다는 것은 이 규칙에서 예측을 많이 밀었다는 뜻이지, 현장에서 그 변수를 돌리면 효율이 그렇게 변한다는 증거가 아니다.</p>
+<p>화면에서 이렇게 확인한다.</p>
+<ol>
+<li><a href="#sample">「가상 작업 불러오기」</a>에서 <code>작업 A · 64 / 340 / 46</code>을 고른다.</li>
+<li><a href="#background">「SHAP·PDP·ICE 공통 배경」</a>에서 <code>B₁ · 기본 가상 작업 4개</code>를 고른다.</li>
+<li><a href="#shap-t">「온도 T」</a>는 64°C, <a href="#shap-j">「전류밀도 J」</a>는 340 A/m², <a href="#shap-c">「Cu 농도 C」</a>는 46 g/L로 둔다. 범위는 각각 52에서 68°C(0.5 간격), 250에서 380 A/m²(5 간격), 36에서 50 g/L(0.5 간격)다.</li>
+<li>기준값 <a href="#shap-base">「배경 출력의 평균 · 기준값」</a>, 예측 <a href="#shap-pred">「이 작업의 함수 출력」</a>, 차이 <a href="#shap-diff">「기여 합 · 기준 대비 차이」</a>, 등식 <a href="#shap-equality">「기준값과 기여의 등식」</a>를 읽는다.</li>
+</ol>
+<p>기본 등식은 다음이다.</p>
+<pre aria-label="SHAP (SHapley Additive exPlanations)의 수식과 계산" role="region" tabindex="0"><code class="language-text">94.010 + 0.257 − 0.240 + 0.325 = 94.352%
+</code></pre>
+<p>94.010%는 배경 네 행의 출력 평균이다. 배경행은 (56, 280, 40), (58, 300, 42), (62, 320, 44), (64, 340, 46)이고, 각 행의 F는 93.672, 93.848, 94.168, 94.352%다. 평균은 94.010%다. 입력의 평균행 (60, 310, 43)을 F에 넣으면 94.020%가 나온다. 비선형 함수에서는 출력의 평균과 평균 입력의 출력이 다르다. 이 페이지의 기준값은 전자, 곧 배경 네 행의 출력 평균 94.010%다. 배경 네 행을 평균 입력 한 줄로 줄인 값이 아니다. <a href="https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html" rel="noopener noreferrer">TreeExplainer 문서</a>도 배경자료와 변수 의존 가정, 출력 공간을 설정하게 되어 있다. 배경이 있느냐에 따라 방식이 갈린다. 라이브러리 기본값을 이 교육 계산과 같은 것으로 단정하지 않는다.</p>
+<p>“입력을 모른다”는 0으로 둔다는 뜻이 아니다. 배경행의 그 칸으로 바꿔 평균한다는 뜻이다. 선택된 입력은 작업 A의 값을 쓰고, 나머지는 같은 배경행의 조합을 유지한다. 이렇게 남은 변수를 실제 조건부 분포에서 다시 뽑지 않고 배경행으로 끼워 넣는 방식을 marginal 또는 interventional 게임이라고 부른다. 여기서 interventional은 조업 개입 실험이 끝났다는 말이 아니다. 온도만 작업 A의 64°C로 알리고 나머지 두 칸은 배경행을 쓰면, 64°C와 280 A/m², 40 g/L처럼 원래 배경에는 없던 조합이 생긴다. 상관된 입력을 따로 바꾸면 기여도 그 가정에 따라 움직인다.</p>
+<p>기호는 이렇다. x는 설명할 작업, b는 배경의 한 행, m은 배경 행 수 4, N은 {T, J, C}, n은 3, S는 이미 알려 준 입력의 부분집합이다. v(S)는 그 조합으로 만든 F를 배경 4행에 대해 평균한 값이다. φᵢ는 입력 i의 Shapley 기여다. |S|는 원소 수, !는 팩토리얼, Σ는 합이다.</p>
+<pre aria-label="SHAP (SHapley Additive exPlanations)의 수식과 계산" role="region" tabindex="0"><code class="language-text">v(S) = (1/m) Σ_b F(x_S, b_{−S})
+φᵢ = Σ_{S⊆N∖{i}} [ |S|! (n−|S|−1)! / n! ] × [v(S∪{i}) − v(S)]
+F(x) = v(∅) + φ_T + φ_J + φ_C
+</code></pre>
+<p>n=3일 때 부분집합 크기 0, 1, 2의 가중치는 1/3, 1/6, 1/3이다. 크기 0인 부분집합은 하나, 크기 1은 두 개, 크기 2는 하나라서 가중치를 모두 더하면 1이 된다. 페이지는 8개 부분집합을 전부 계산하고 표본추출로 근사하지 않는다. 입력 3개라 가능한 일이다. 입력이 수십 개면 2의 입력 수만큼 조합이 늘어 exact 열거가 부담이 되고, 그때는 다른 근사나 트리 전용 알고리즘을 검토한다. 그 결과는 이 페이지의 숫자와 자동으로 같지 않다.</p>
+<p>작업 A, 배경 B₁의 v(S)는 다음과 같다. 단위는 %다.</p>
+<div aria-label="SHAP (SHapley Additive exPlanations)의 표를 가로로 스크롤" class="scroll" role="region" tabindex="0"><table class="reading-table compact">
+<thead>
+<tr>
+<th scope="col">알려 준 입력</th>
+<th scope="col">v(S)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>없음</td>
+<td>94.010</td>
+</tr>
+<tr>
+<td>T</td>
+<td>94.172</td>
+</tr>
+<tr>
+<td>J</td>
+<td>93.770</td>
+</tr>
+<tr>
+<td>C</td>
+<td>94.240</td>
+</tr>
+<tr>
+<td>T와 J</td>
+<td>93.932</td>
+</tr>
+<tr>
+<td>T와 C</td>
+<td>94.592</td>
+</tr>
+<tr>
+<td>J와 C</td>
+<td>94.000</td>
+</tr>
+<tr>
+<td>셋 모두</td>
+<td>94.352</td>
+</tr>
+</tbody>
+</table></div>
+<p>온도를 아무것도 모를 때 알리면 94.172−94.010 = +0.162%p다. J와 C를 이미 안 뒤에 온도를 알리면 94.352−94.000 = +0.352%p다. 순서가 다르면 온도의 추가분이 다르다. <code>uw</code> 상호작용 때문이다. 온도만의 주효과인 <code>u²</code>는 다른 입력을 이미 알았는지와 무관하게 같은 온도 추가분을 주므로, 이 순서 의존성을 만들지 않는다. 여섯 가지 순서를 가중 평균하면 φ_T = +0.257%p, φ_C = +0.325%p가 된다.</p>
+<p>전류밀도는 이 함수에서 다른 변수와 곱해지지 않고 −0.4v로만 들어간다. 그래서 어느 순서에서 알리든 추가분이 −0.240%p로 같다. φ_J = −0.240%p다. 한 예시에 상호작용이 없다고 해서, 현장 모델의 전류밀도도 상호작용이 없다고 읽을 수는 없다.</p>
+<p>여섯 순서를 표로 남기면 평균이 어디서 나오는지 보인다. 각 칸은 그 입력을 새로 알렸을 때의 v 차이다. 단위는 %p다.</p>
+<div aria-label="SHAP (SHapley Additive exPlanations)의 표를 가로로 스크롤" class="scroll reading-wide-scroll" role="region" tabindex="0"><table class="reading-table">
+<thead>
+<tr>
+<th scope="col">알게 되는 순서</th>
+<th scope="col">온도</th>
+<th scope="col">전류밀도</th>
+<th scope="col">Cu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T, J, C</td>
+<td>+0.162</td>
+<td>−0.240</td>
+<td>+0.420</td>
+</tr>
+<tr>
+<td>T, C, J</td>
+<td>+0.162</td>
+<td>−0.240</td>
+<td>+0.420</td>
+</tr>
+<tr>
+<td>J, T, C</td>
+<td>+0.162</td>
+<td>−0.240</td>
+<td>+0.420</td>
+</tr>
+<tr>
+<td>J, C, T</td>
+<td>+0.352</td>
+<td>−0.240</td>
+<td>+0.230</td>
+</tr>
+<tr>
+<td>C, T, J</td>
+<td>+0.352</td>
+<td>−0.240</td>
+<td>+0.230</td>
+</tr>
+<tr>
+<td>C, J, T</td>
+<td>+0.352</td>
+<td>−0.240</td>
+<td>+0.230</td>
+</tr>
+</tbody>
+</table></div>
+<p>온도의 여섯 칸을 더하면 1.542이고, 6으로 나누면 +0.257이다. Cu는 1.950을 6으로 나눈 +0.325다. 전류밀도는 여섯 칸이 모두 −0.240이라 평균도 −0.240이다. 부분집합 공식의 가중치 1/3, 1/6, 1/3은 이 여섯 순서를 묶은 것과 같다. 예를 들어 온도를 아무것도 모를 때 알리는 순서는 두 개라 가중치가 2/6 = 1/3이고, 그때의 추가분은 +0.162다. 온도를 J만 안 상태에서 알리는 순서는 한 개라 가중치 1/6, 추가분도 +0.162다. C만 안 상태는 1/6과 +0.352, J와 C를 모두 안 상태는 1/3과 +0.352다. (1/3)×0.162 + (1/6)×0.162 + (1/6)×0.352 + (1/3)×0.352 = 0.257. 페이지의 등식은 이 평균을 기준값에 더한 것이다.</p>
+<p>화면에서 순서를 버튼으로 고르지는 못한다. <a href="#shap">「SHAP · 한 예측을 기준과 기여로 나눕니다」</a>의 펼침 표는 부분집합 v(S)까지 보여 주고, 순서 평균은 그 표로 위와 같이 손으로 확인할 수 있다. 입력이 3개를 넘기면 순서가 24, 120개로 늘어 이 표처럼 전부 적는 일은 교육용으로만 가능하다.</p>
+<p><a href="#background">「SHAP·PDP·ICE 공통 배경」</a>를 B₂로 바꾸면 예측 94.352%는 그대로다. F는 배경을 보지 않기 때문이다. 기준값과 기여는 바뀐다. B₂의 기준값은 94.398%이고 기여는 온도 +0.059, 전류밀도 −0.080, Cu −0.025%p다. 94.398+0.059−0.080−0.025 = 94.352. 배경이 다른데 기여 숫자만 나란히 비교하면 의미가 어긋난다.</p>
+<p>여러 작업의 |φ|를 평균한 값은 전역 중요도로 자주 그린다. 부호를 버리므로 “평균적으로 예측을 올렸는가, 내렸는가”는 사라진다. 작업 A만 봐도 |φ| 순서는 C, T, J다. J는 예측을 낮춘 항인데, 절댓값 순위에서는 그 방향이 없다. 그 순위는 인과 방향이 아니다.</p>
+<p>프로젝트에서는 예측 시점과 목표를 고정한 뒤, 학습된 모델의 한 예측을 설명할 때 검토한다. 실제 CatBoost에는 지원 조건과 출력 공간, 배경 가정을 정한 TreeSHAP을 볼 수 있다. 이 체험은 사용자 함수의 exact Shapley이고 CatBoost TreeSHAP 실행 결과가 아니다. 필요한 자료는 예측 시점까지 공개된 입력, 그 시점에 모델이 내는 출력, 비교 기준으로 쓸 배경 작업의 정의다. 배경을 어느 계통, 어느 시즌에서 뽑았는지가 기여를 바꾼다.</p>
+<p>자주 어긋나는 읽기는 이런 것이다. 막대가 길다고 원인을 확정한다. %p를 상대 %로 읽는다. 배경을 바꾼 두 그림을 같은 눈금으로 비교한다. 분류 모델의 확률 기여와 이 회귀 % 기여를 섞는다. 여러 작업의 절댓값 평균을 부호 있는 방향처럼 말한다.</p>
+<p>SHAP이 답할 수 있는 질문과 없는 질문을 나누면 이렇다. “이 예측이 이 배경보다 높은 데 각 입력이 얼마나 보탰는가?”는 답할 수 있다. “모델이 실제 효율을 맞혔는가?”, “내일 온도 설정을 바꾸면 효율이 오르는가?”, “S등급 비율이 왜 떨어졌는가?”는 이 합만으로 답할 수 없다.</p>
+<a class="back-demo" href="#shap">SHAP 체험으로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-pdp" open><summary><span class="reading-kicker">용어 상세 해설</span><h3>PDP (피디피, Partial Dependence Plot)</h3></summary><div class="lesson-body"><a class="back-demo" href="#pdp">PDP 체험으로 돌아갑니다 ↑</a><p>한 문장으로 말하면, PDP는 같은 참조 작업들에서 한 입력만 같은 격자로 바꾼 뒤, 그 예측들의 평균을 그린 곡선이다.</p>
+<p>답하는 질문은 “이 네 작업을 놓고 온도만 60°C로 바꾸면, 모델의 평균 출력은 얼마인가?”다. “현장에서 온도가 60°C였던 날의 평균 효율은 얼마였는가?”가 아니다. 관측된 y의 평균 곡선이 아니다.</p>
+<p>비유는 같은 네 장의 작업 카드를 복사해, 온도 칸만 지우고 같은 숫자를 적어 넣은 뒤 모델에 다시 묻는 일이다. 전류밀도와 Cu는 카드에 적힌 그대로다. 한계는 그 복사본이 현실에 없던 조합일 수 있다는 점이다. scikit-learn의 <a href="https://scikit-learn.org/stable/modules/partial_dependence.html" rel="noopener noreferrer">부분 의존도 설명</a>은 같은 격자와 같은 참조행에 대한 PDP를 개별 곡선의 평균으로 둔다. 다른 입력의 평균을 한 줄로 만들어 넣는 예측과는 다를 수 있다고 적혀 있다.</p>
+<p>화면의 PDP와 ICE는 한 실험실 <a href="#pdp-lab">「개별 곡선과 평균 곡선을 겹쳐 봅니다」</a>에 있다. <a href="#pdp-feature">「바꿀 입력」</a>로 바꿀 입력을 고르고, <a href="#pdp-point">「곡선에서 읽을 값」</a>로 33개 격자 중 하나를 고른다. 격자는 인덱스 i=0…32에 대해 아래 구간의 등간격이다. <a href="#pdp-average">「평균 PDP를 표시합니다」</a>를 끄면 평균 곡선만 숨기고, 개별 곡선의 평균값 자체는 바뀌지 않는다. 배경은 SHAP과 같은 <a href="#background">「SHAP·PDP·ICE 공통 배경」</a>를 쓴다.</p>
+<div aria-label="PDP (피디피, Partial Dependence Plot)의 표를 가로로 스크롤" class="scroll reading-wide-scroll" role="region" tabindex="0"><table class="reading-table">
+<thead>
+<tr>
+<th scope="col">입력</th>
+<th scope="col">격자</th>
+<th scope="col">기본 인덱스 16의 값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>온도</td>
+<td>52°C에서 68°C</td>
+<td>60°C</td>
+</tr>
+<tr>
+<td>전류밀도</td>
+<td>250에서 380 A/m²</td>
+<td>315 A/m²</td>
+</tr>
+<tr>
+<td>Cu 농도</td>
+<td>36에서 50 g/L</td>
+<td>43 g/L</td>
+</tr>
+</tbody>
+</table></div>
+<p>기본 화면은 온도, 인덱스 16, 60°C다. 배경 B₁의 네 ICE는 93.960, 94.000, 94.040, 94.080%다. 평균인 PDP는 94.020%다. 각 행에서 온도만 60°C로 바꾼 결과다.</p>
+<pre aria-label="PDP (피디피, Partial Dependence Plot)의 수식과 계산" role="region" tabindex="0"><code class="language-text">ICE_b(z) = F(z, b_{−j})
+PDP_j(z) = (1/m) Σ_b ICE_b(z)
+</code></pre>
+<p>j는 바꿀 입력 번호, z는 시험 값, b_{−j}는 그 배경행의 나머지 입력, m은 4, ICE_b는 작업 b의 개별 예측, PDP_j는 그 평균이다. 세로축은 중심화하지 않은 예측 %다.</p>
+<p>이 기본 숫자만 보면 함정이 있다. 나머지 입력의 평균 (J=310, C=43)을 넣어 F(60, 310, 43)을 계산해도 94.020%가 된다. 온도에 대해서는 이 함수의 PDP와 “나머지 입력을 평균한 한 줄의 예측”이 모든 격자에서 같다. v와 w가 F 안에서 1차식으로만 들어가고, 제곱항은 u에만 있기 때문이다. z를 고정하면 평균과 함수의 순서를 바꿔도 온도 축에서는 차이가 사라진다. 그래서 60°C의 94.020%는 “PDP는 평균 입력 예측과 다르다”는 문장을 보여 주는 숫자가 아니다.</p>
+<p>차이를 보려면 <a href="#pdp-feature">「바꿀 입력」</a>를 전류밀도로 바꾸고 <a href="#pdp-point">「곡선에서 읽을 값」</a>를 16, 곧 315 A/m²로 둔다. 네 ICE는 93.392, 93.728, 94.208, 94.552%다. PDP는 93.970%다. 나머지 입력을 평균한 한 줄 F(60, 315, 43)은 93.980%다. 0.010%p 낮다. Cu 농도 인덱스 16, 곧 43 g/L에서는 ICE 평균 PDP가 93.940%이고, F(60, 310, 43)은 94.020%다. 차이는 0.080%p다. Cu 축의 −0.080%p는 −0.2×Var(u)에서 온다. 전류밀도 축에서는 온도와 Cu의 상호작용 평균도 남아 −0.2×Var(u)+0.25×Cov(u,w)=−0.080+0.070=−0.010%p가 된다. 평균을 낸 뒤 제곱하거나 곱하는 것과, 먼저 제곱·곱을 계산한 뒤 평균하는 것은 이처럼 다르다. 페이지의 퀴즈 문장 “평균 입력행 한 개의 예측과는 일반적으로 다릅니다”는 맞다. 다만 처음 보이는 온도 곡선은 그 일반 경우를 보여 주지 않는다.</p>
+<p>배경 관측 범위 밖은 음영이다. 음영 안이라고 조합이 현실적이라는 뜻은 아니다. 온도만 범위 안에 있어도 Cu와의 짝이 배경에 없던 짝일 수 있다. ALE나 변수군을 같이 계산해도 인과가 자동으로 해결되지는 않는다.</p>
+<p>프로젝트에서는 학습이 끝난 모델이 농도나 온도 구간에서 어떻게 반응하는지, 작업마다 그 반응이 어떻게 다른지 볼 때 쓴다. 조건 후보를 적기 전에, 실측 작업이 충분한 구간인지와 입력이 함께 움직이는지를 본다. 필요한 자료는 참조로 쓸 작업의 입력 행, 고정된 모델, 시험할 격자의 단위와 범위다. 격자를 현장 센서 범위 밖으로 넓히면 그림은 그려지지만 외삽이다.</p>
+<p>곡선의 꼭대기를 최적 온도로 정하는 것이 가장 비싼 오해다. 이 함수와 표본 범위는 임의다. 결측을 채운 방식, 빼먹은 유량과 첨가제, 모델 오차가 바뀌면 곡선도 바뀐다.</p>
+<p>PDP가 답할 수 있는 것은 “이 참조행들 위에서 모델 평균이 격자를 따라 어떻게 움직이는가”이다. 답할 수 없는 것은 “그 온도의 실제 평균 효율”, “그 점이 조업 최적점인지”, “그 조작의 실험 효과”이다.</p>
+<a class="back-demo" href="#pdp">PDP 체험으로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-ice" open><summary><span class="reading-kicker">용어 상세 해설</span><h3>ICE (아이스, Individual Conditional Expectation)</h3></summary><div class="lesson-body"><a class="back-demo" href="#ice">ICE 체험으로 돌아갑니다 ↑</a><p>한 문장으로 말하면, ICE는 참조 작업 하나의 나머지 입력을 고정한 채 선택 입력만 바꿔 그린 곡선이다. PDP는 그 곡선들을 같은 z에서 평균한 것이다.</p>
+<p>답하는 질문은 “같은 온도라도 작업마다 모델 반응이 다른가?”다. 평균이 평평해도 어떤 작업은 올라가고 어떤 작업은 내려갈 수 있다. Goldstein 등의 ICE 논문은 개별 곡선의 차이와 상호작용, 곡선을 중심화하는 방법, 자료 분포 밖 평가를 다룬다. <a href="https://arxiv.org/abs/1309.6392" rel="noopener noreferrer">공개 preprint</a>.</p>
+<p>이름의 Conditional을 조건부 분포에서 다른 변수를 다시 뽑는다는 뜻으로 읽으면 안 된다. 이 페이지는 배경행 b의 j번째 칸만 z로 바꿔 계산한다. 나머지 칸은 그 행의 원래 값이다. 재표본은 없다.</p>
+<p>비유는 평균 성적 옆에 학생별 성적표를 두는 일이다. 평균만 보면 서로 다른 기울기가 사라진다. 한계는 카드가 네 장뿐이라는 점이고, 네 곡선의 차이가 현장의 모든 상호작용을 대표하지 않는다. 또 한 장의 카드 안에서 온도만 바꾸는 동안, 그 카드의 전류밀도와 Cu는 실제로 온도가 그 값일 때 같이 나타났던 값이 아닐 수 있다.</p>
+<p>조작은 <a href="#ice-row">「강조할 ICE 작업」</a>다. 배경 작업 B1, B2, B3, B4 중 하나를 고르면 파란 실선만 바뀐다. 구리색 PDP는 그대로다. 60°C에서 B1은 93.960%, B4는 94.080%다. B1의 나머지 값은 J=280, C=40이고 B4는 J=340, C=46이다. 60°C에서는 u=0이라 <code>uw</code>도 두 행 모두 0이다. 이 지점의 높이 차이는 전류밀도와 Cu의 주효과에서 온다. 온도를 움직일 때 Cu에 따라 기울기가 달라지는 것이 <code>uw</code> 상호작용이다. 실제로 60°C에서 온도 기울기는 B1이 +0.040%p/°C, B4가 +0.100%p/°C다. <a href="#pdp-average">「평균 PDP를 표시합니다」</a>를 꺼도 이 차이는 남는다.</p>
+<p>기호는 PDP 절과 같다. 추가로, 이 화면은 곡선을 중심화하지 않는다. 중심화 ICE는 각 곡선에서 기준점의 값을 빼 기울기 차이만 보게 만든 변형이다. 페이지는 절대 예측 %를 유지하므로, 93.960과 94.080의 높이 차이도 같이 보인다.</p>
+<p>프로젝트에서는 PDP로 평균 반응을 본 뒤, 평균에 가려진 작업 그룹이 있는지 확인할 때 쓴다. 필요한 자료는 PDP와 같다. 작업 식별자가 있어야 “어느 곡선이 어느 계통인가”를 말할 수 있다. 곡선이 갈라진다는 사실만으로 첨가제를 바꾸자는 결론은 나오지 않는다.</p>
+<p>흔한 실수는 강조한 한 곡선을 전체 평균으로 착각하는 것, Conditional이라는 단어 때문에 조건부 재표본이라고 설명하는 것, 범위 안의 격자라고 그 조합이 관측됐다고 말하는 것이다.</p>
+<p>ICE가 답할 수 있는 것은 “이 참조행의 나머지 입력을 고정했을 때 모델이 z에 어떻게 반응하는가”이다. 답할 수 없는 것은 “그 조합을 실제로 운전하면 측정될 효율”과 “조건부 분포에서 다른 변수를 다시 뽑으면 무슨 일이 생기는가”이다.</p>
+<a class="back-demo" href="#ice">ICE 체험으로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-catboost" open><summary><span class="reading-kicker">용어 상세 해설</span><h3>CatBoost (캣부스트, Categorical Boosting)</h3></summary><div class="lesson-body"><a class="back-demo" href="#catboost">CatBoost 체험으로 돌아갑니다 ↑</a><p>한 문장으로 말하면, CatBoost는 결정트리를 여러 개 더해 예측을 만드는 gradient boosting 계열의 모델이다. 페이지의 버튼 체험은 그 전체 구현이 아니다. 제곱오차의 잔차를 깊이 1 트리, 곧 stump에 맞추는 작은 회귀 시연이다.</p>
+<p>답하는 질문은 “작업 요약표의 숫자로 종료 효율을 어떻게 예상할 규칙을 쌓는가?”다. “이 페이지의 트리가 우리 공장 CatBoost와 같은가?”에는 아니오가 답이다.</p>
+<p>비유는 거친 밑그림 위에 수정 붓질을 얹는 일이다. 첫 예측이 모든 학습 작업에 93%라면, 각 작업에 남은 오차가 있다. 다음 트리는 그 오차를 두 덩어리로 나눠 조금씩 보정한다. 학습률은 붓질을 한 번에 얼마나 반영할지의 조절값이다. 한계는 붓질이 학습 종이 위의 오차만 줄인다는 점이다. 다음 달 작업의 오차가 같이 준다는 보장은 없다.</p>
+<p>결정트리의 맨 끝을 잎(leaf)이라고 한다. 작업은 분기 질문에 따라 잎 하나로 가고, 그 잎의 숫자가 그 트리의 출력이다. Gradient boosting은 손실을 줄이는 방향으로 새 트리를 맞춘다. 제곱오차에서는 그 방향이 “정답에서 현재 예측을 뺀 잔차”와 같다. 다른 손실에서는 잔차 대신 손실의 음의 기울기를 맞추는 방향으로 새 트리를 학습한다. 이 체험은 제곱오차만 다룬다.</p>
+<p>화면 <a href="#catboost-lab">「작은 트리 한 개씩 학습합니다」</a>의 학습 자료는 온도 54, 58, 62, 66°C와 정답 90, 92, 95, 95%다. 작업 A의 64°C와는 다른, 트리 학습용 네 점이다. 초기 예측 F₀는 정답의 평균 93%다. 잔차는 −3, −1, +2, +2%p다. 제곱의 평균 MSE는 (9+1+4+4)/4 = 4.5다. 화면의 <a href="#tree-status">「현재 학습 MSE」</a>가 이 4.500을 보여 준다.</p>
+<p>조작은 이렇다.</p>
+<ol>
+<li><a href="#tree-lr">「학습률 η」</a>를 0.50으로 둔다. 범위는 0.1에서 1.0, 간격 0.1이다. 학습률을 바꾸면 체험이 처음부터 다시 시작된다.</li>
+<li><a href="#tree-step">「트리 1개 학습」</a> “트리 1개 학습”을 한 번 누른다. <a href="#tree-count">「학습한 트리 수」</a>는 최대 6개다.</li>
+<li>그림의 <a href="#tree-root">「트리의 온도 분기」</a>, <a href="#tree-left">「왼쪽 잎의 잔차 평균」</a>, <a href="#tree-right">「오른쪽 잎의 잔차 평균」</a>와 표 <a href="#tree-values">「트리 학습 결과표」</a>를 읽는다.</li>
+<li>처음으로 되돌릴 때는 <a href="#tree-reset">「처음으로」</a>을 누른다.</li>
+</ol>
+<p>첫 트리는 가능한 분할 56, 60, 64°C의 제곱오차를 비교해 T≤60을 고른다. 잔차 −3, −1, +2, +2에서 56°C 이하면 왼쪽 평균이 −3, 오른쪽 평균이 +1이고 제곱오차 합은 6이다. 64°C 이하면 왼쪽 평균이 −2/3, 오른쪽 평균이 +2이고 제곱오차 합은 114/9=38/3, 약 12.667이다. 60°C 이하면 왼쪽 −2, 오른쪽 +2이고 제곱오차 합은 2로 가장 작다. 그래서 잎은 −2와 +2%p다. 학습률 η=0.5이므로 실제로 더해지는 보정은 −1과 +1%p다. 누적 예측은 92, 92, 94, 94%가 되고 MSE는 1.5가 된다. 92%로 맞춘 두 점은 정답 90, 92와 아직 다르고, 94%로 맞춘 두 점은 정답 95와 1%p 차이가 남는다.</p>
+<p><a href="#tree-lr">「학습률 η」</a>를 0.1로 바꾸면 같은 잎 −2, +2에 0.1만 곱한다. 보정은 −0.2, +0.2%p이고 누적 예측은 92.8, 92.8, 93.2, 93.2%다. MSE는 4.5에서 3.74로만 줄어 0.5일 때보다 천천히 움직인다. 슬라이더를 내리는 일이 트리를 더 똑똑하게 만드는 일은 아니다. 한 걸음의 크기를 줄일 뿐이다. 값을 바꾸는 즉시 이전 단계는 사라지므로, 0.5의 결과와 0.1의 결과를 비교하려면 각각 첫 단계의 표부터 다시 적는다.</p>
+<p>한 번 더 누르면 잔차 −2, 0, +1, +1을 맞춘다. 이번 분할은 T≤56이다. 잎은 −2와 +2/3%p, η=0.5이면 보정은 −1과 +1/3%p다. 누적 예측은 91, 92.333, 94.333, 94.333%이고 MSE는 0.5다. 학습 오차가 줄었다. 이 네 점 밖의 온도, 예를 들어 작업 A의 64°C에 이 트리를 적용하는 일은 별도이고, 그 예측이 실제 효율과 가까운지는 이 네 점의 MSE가 보장하지 않는다.</p>
+<p>식은 다음과 같다.</p>
+<pre aria-label="CatBoost (캣부스트, Categorical Boosting)의 수식과 계산" role="region" tabindex="0"><code class="language-text">rᵢ = yᵢ − F_{m−1}(xᵢ)
+Fₘ(x) = F_{m−1}(x) + η hₘ(x)
+</code></pre>
+<p>xᵢ는 학습 작업의 입력, yᵢ는 그 정답, rᵢ는 현재 잔차, m은 트리 번호, Fₘ은 m개까지 쌓은 예측, hₘ은 이번 트리의 출력, η는 학습률, F₀는 초기 예측이다. MSE는 잔차 제곱의 평균이다.</p>
+<p>학습과 추론을 구분한다. 학습은 정답을 보고 분기와 잎, 트리 개수를 정한다. 추론은 정답을 보지 않고 저장된 분기를 따라 잎 값을 더한다. 새 작업의 정답으로 그 자리에서 잔차를 고치지 않는다. 트리 개수와 깊이를 고를 때 본 검증 작업은, 마지막 미래 시험에 다시 쓰면 안 된다. 그 시험은 선택을 끝낸 뒤에 한 번 재는 자리다.</p>
+<p>CatBoost라는 이름이 붙는 이유는 범주형 변수 처리와 ordered boosting 때문이다. Prokhorenkova 등(NeurIPS 2018, 첫 preprint 2017)은 범주를 수치로 바꿀 때의 정답 누출을 줄이는 방법과 ordered boosting을 제시했다. <a href="https://arxiv.org/abs/1706.09516" rel="noopener noreferrer">원논문</a>. <a href="https://catboost.ai/docs/en/concepts/algorithm-main-stages" rel="noopener noreferrer">공식 학습 단계 문서</a>는 순차적으로 트리를 만드는 gradient boosted decision trees와 훈련, 검증의 구분을 설명한다. 범주형 입력이 없어도 CatBoost를 쓸 수 있다. 모든 실행이 Ordered 모드인 것도 아니다. Plain과 Ordered는 설정으로 갈린다. Ordered라는 단어가 시계열 누수를 자동으로 막지도 않는다. 72시간 예측에 종료 효율이나 나중에 공개된 분석을 넣으면, Ordered 모드라도 그 입력 자체가 미래를 담고 있다. 시간 분할은 알고리즘 이름 밖에서 확인한다.</p>
+<p>프로젝트에서 CatBoost는 온도, 농도, 전하량, 첨가제 기록을 작업 단위로 요약한 표의 비교 후보다. 준비와 검산이 시간 이력 모델보다 단순하고, 비선형과 변수 조합을 다룰 수 있다. 요약을 만드는 순간 시간 경로의 일부는 사라진다. Cheng(2026)은 CatBoost와 AdaBoost, 물질수지, SHAP, PDP, ICE를 출구 Cu와 As에 쓴 논문이다. <a href="https://doi.org/10.1016/j.jclepro.2026.147643" rel="noopener noreferrer">DOI 10.1016/j.jclepro.2026.147643</a>. 전문과 Table S1은 이 글을 쓰는 시점에 없다. 공개된 소개와 기존 검토 기록에 기대므로, 우리 전류효율이나 S등급률이 그 논문에서 검증됐다고 쓰지 않는다.</p>
+<p>필요한 자료는 작업 하나의 요약 입력, 그 작업의 정답이 언제 공개되는지, 학습과 시험을 가를 시간 경계다. 트리가 많다고 무조건 좋은 것은 아니다. 계통이 바뀌거나 정답 연결이 잘못되면 학습 MSE만 좋아 보인다.</p>
+<p>이 체험이 답할 수 있는 것은 “제곱오차 잔차를 stump로 쌓으면 학습 예측과 MSE가 어떻게 바뀌는가”이다. 답할 수 없는 것은 “우리 공장 모델의 미래 오차”, “Ordered라서 누수가 없다”, “이 stump가 CatBoost 전체다”이다.</p>
+<a class="back-demo" href="#catboost">CatBoost 체험으로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-adaboost" open><summary><span class="reading-kicker">용어 상세 해설</span><h3>AdaBoost (아다부스트, Adaptive Boosting)</h3></summary><div class="lesson-body"><a class="back-demo" href="#adaboost">AdaBoost 체험으로 돌아갑니다 ↑</a><p>한 문장으로 말하면, AdaBoost는 앞에서 틀린 학습 작업의 비중을 올리고, 그렇게 만든 여러 약한 모델의 표를 모아 최종 예측을 만드는 방법이다. 잔차를 새 정답으로 맞추는 gradient boosting과는 다른 절차다.</p>
+<p>페이지에는 두 층이 있다. <a href="#adaboost-lab">「여섯 가상 작업을 다시 보게 만듭니다」</a>의 버튼은 고전 이진 분류다. 그 아래 수식은 연속 효율을 위한 AdaBoost.R2다. 같은 식으로 읽으면 안 된다. scikit-learn 1.9.1 문서도 분류기는 SAMME, 회귀는 R2로 갈라 적는다. <a href="https://scikit-learn.org/stable/modules/ensemble.html#adaboost" rel="noopener noreferrer">ensemble 설명</a>.</p>
+<p>답하는 질문은 “어려운 작업을 다음 학습에서 더 크게 보고, 모델들을 어떻게 합칠까?”다. “비중이 큰 작업이 물리 원인인가?”는 다른 질문이다.</p>
+<p>비유는 오답 노트다. 맞힌 문제는 다음 연습에서 비중을 낮추고, 틀린 문제는 비중을 높인다. 시험 채점에서는 각 연습 문제가 아니라, 각 채점관의 신뢰도를 다르게 반영한다. 작업에 붙는 학습 비중과 모델에 붙는 결합 비중은 다른 숫자다. 한계는 오답이 센서 오류나 라벨 오기, 이상한 하루일 수 있다는 점이다. 그 작업을 계속 키우면 일반화가 나빠진다.</p>
+<h4>화면의 분류 체험</h4>
+<p>자료는 x=1, 2, 3, 4, 5, 6이고 정답 y=(−1, −1, +1, +1, +1, −1)이다. 작업 이름은 A부터 F다. +1은 가짜 양호, −1은 그 외다. 처음 비중은 모두 1/6이다. <a href="#ada-focus">「F의 초기 상대 비중」</a>는 F의 초기 상대 비중이고 기본은 1.0배, 범위는 0.5에서 3.0, 간격 0.5다. 이 슬라이더를 바꾸면 처음부터 다시 시작한다.</p>
+<p><a href="#ada-step">「분류기 1개 학습」</a> “분류기 1개 학습”을 한 번 누른다. 최대 3개다. 처음으로 되돌릴 때는 <a href="#ada-reset">「처음으로」</a>이다.</p>
+<p>첫 stump는 x≤2.5이면 −1, 아니면 +1이다. A와 B는 맞고 C, D, E도 맞는다. F만 틀려 예측이 +1, 정답이 −1이다. 가중 오분류율 ε는 1/6이다. 투표 가중치는 페이지가 인쇄한 고전 식 그대로다.</p>
+<pre aria-label="AdaBoost (아다부스트, Adaptive Boosting)의 수식과 계산" role="region" tabindex="0"><code class="language-text">εₘ = Σᵢ pᵢ · 1[yᵢ ≠ hₘ(xᵢ)]
+αₘ = (1/2) ln((1−εₘ) / εₘ)
+pᵢ′ = pᵢ exp(−αₘ yᵢ hₘ(xᵢ)) / Z
+최종 분류 = sign(Σₘ αₘ hₘ(x))
+</code></pre>
+<p>pᵢ는 합이 1인 작업 비중, εₘ은 그 비중으로 계산한 오분류율, 1[조건]은 참이면 1이고 거짓이면 0이다. hₘ은 이번 분류기의 −1 또는 +1, αₘ은 그 분류기의 투표 가중치, exp는 자연지수, ln은 자연로그, Z는 새 비중의 합을 1로 만드는 정규화 합이다. sign은 투표 합이 양수면 +1, 음수면 −1이다. 이 체험은 0이면 동률로 표시한다.</p>
+<p>ε=1/6이면 α = (1/2) ln(5) ≈ 0.804719다. 갱신 뒤 A부터 E는 각각 0.1, F는 0.5다. 맞힌 작업의 비중이 줄고 틀린 F가 커진다. 이 0.5는 SHAP의 φ가 아니다. 다음 학습에서 F를 더 크게 보라는 학습 비중이다. 예측을 기준 대비 몇 %p 올렸는지와는 단위도 역할도 다르다.</p>
+<p>한 번 더 누르면 비중 0.1이 다섯 개, 0.5가 F인 상태에서 학습한다. 이번 규칙은 x≤5.5이면 +1, 아니면 −1이다. F는 맞히고 A와 B를 틀린다. ε=0.1+0.1=0.2, α=(1/2) ln(4) ≈ 0.693147이다. 갱신 비중은 A와 B가 0.25, C·D·E가 0.0625, F가 0.3125다. 화면의 “이번 학습 전 → 다음 비중” 칸이 이 이동을 보여 준다. 오분류율이 0이면 그 분류기에서 멈추고, 0.5 이상이면 쓸모 있는 약한 분류기로 받지 않는 처리가 필요하다.</p>
+<p>이 α의 1/2는 원 논문 계열의 이진 AdaBoost 식이다. sklearn 문서가 가리키는 <code>AdaBoostClassifier</code>는 SAMME다. 클래스가 2개이면 SAMME의 log(K−1)은 0이라, 학습률 1에서 저장되는 가중치는 ln((1−ε)/ε), 곧 페이지 α의 두 배가 된다. 첫 단계만 보면 약 1.609438이다. 다만 저장한 α가 두 배라고 해서 다음 작업 비중이 달라지는 것은 아니다. 학습률 1의 이진 분류에서 같은 약한 분류기를 쓰면, 고전 갱신 p·exp(−αyh)는 SAMME의 p·exp(2α·1[오분류])와 공통 인자 exp(−α)만 다르다. 정규화하면 두 방식 모두 (0.1, 0.1, 0.1, 0.1, 0.1, 0.5)가 된다. 동등한 약한 학습기라면 다음 단계의 학습 비중도 같다. 이 동등성을 다중 분류나 R2의 다른 식에 그대로 옮기지는 않는다. 화면 숫자 0.804719는 페이지 식과 코드에 맞고, 현재 sklearn 분류기의 <code>estimator_weights_</code>와 같은 수치 관례는 아니다. <a href="https://github.com/scikit-learn/scikit-learn/blob/1.9.1/sklearn/ensemble/_weight_boosting.py#L558-L572" rel="noopener noreferrer">scikit-learn 1.9.1 공식 소스</a>에서 저장하는 계수와 오분류 지시함수 갱신을 함께 확인할 수 있다. 분류 원전의 출발점은 Freund와 Schapire의 1995년 발표, 1997년 논문이다. sklearn 문서의 FS1995 항목이 그 문헌을 가리킨다.</p>
+<h4>연속 효율이면 R2</h4>
+<p>효율 93.7%는 +1이나 −1이 아니다. Drucker(1997)의 AdaBoost.R2는 회귀기의 절대오차를 정규화해 작업 비중을 바꾸고, 최종 예측은 가중 평균이 아니라 가중 중앙값으로 모은다. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html" rel="noopener noreferrer">공식 AdaBoostRegressor 설명</a>. 원전 전문은 이 페이지 제작 때 직접 재검증하지 않았고, 공식 구현 문서의 식과 대조했다. <a href="https://dl.acm.org/doi/10.5555/645526.657132" rel="noopener noreferrer">Drucker 항목</a>. 아래는 선형 손실, 학습률 1인 설명식이다. 버튼 체험과는 별도의 숫자 예다.</p>
+<pre aria-label="AdaBoost (아다부스트, Adaptive Boosting)의 수식과 계산" role="region" tabindex="0"><code class="language-text">eᵢ = |yᵢ − hₘ(xᵢ)|
+Lᵢ = eᵢ / maxⱼ eⱼ
+Eₘ = Σᵢ pᵢ Lᵢ
+βₘ = Eₘ / (1 − Eₘ)
+pᵢ′ = pᵢ βₘ^(1−Lᵢ) / Z
+aₘ = ln(1 / βₘ)
+최종 회귀 = {hₘ(x)}를 {aₘ}로 가중한 중앙값
+</code></pre>
+<p>eᵢ는 절대오차, Lᵢ는 0에서 1로 맞춘 손실, Eₘ은 Lᵢ의 가중 평균, βₘ은 작업 비중 갱신에 쓰는 값, aₘ은 회귀기 결합 비중, Z는 다시 합을 1로 만드는 합이다. 0&lt;E&lt;0.5인 단계를 가정한다. 오차가 전부 0이면 완벽 적합으로 끝내고, E≥0.5이면 그 회귀기를 버리고 멈추는 경계가 있다. 손실 종류나 학습률이 바뀌면 지수도 바뀐다.</p>
+<p>예시로 p=(0.6, 0.3, 0.1), L=(0, 0.5, 1)이면 E=0.25, β=1/3이다. 정규화 전 새 비중은 0.2, 0.173205, 0.1이고, Z로 나누면 약 0.422650, 0.366025, 0.211325다. 가장 틀린 세 번째 작업의 상대 비중이 0.1에서 0.211로 커진다. 회귀기 예측이 91, 93, 99이고 결합 비중이 1, 3, 1이면 누적 비중은 예측이 작은 순으로 1, 4, 5다. 전체 비중 5의 절반인 2.5를 넘는 자리는 93이다. 가중 평균은 (91+279+99)/5 = 93.8이다. 중앙값과 평균은 다르다. 큰 예측값 99가 평균은 끌어올리지만, 중앙값은 비중이 쌓인 93에 머문다.</p>
+<p>프로젝트에서 AdaBoost.R2는 Cheng이 트리 회귀 비교에 포함한 계열을 이해할 때 후보가 된다. 그 논문의 정답은 출구 Cu·As이고 우리 정답은 효율과 S등급률이다. 같은 입력, 같은 미래 분할, 같은 튜닝 한도에서 CatBoost와 비교해야 어느 쪽이 나은지 말할 수 있다. 필요한 자료는 연속 정답, 예측 시점까지의 입력, 작업 비중과 모델 비중을 따로 저장한 학습 기록이다. 분류 체험의 ±1 표를 효율 %로 바꿔 쓰지 않는다.</p>
+<p>높은 작업 비중을 SHAP 막대처럼 읽거나, 틀린 작업을 더 보면 언제나 좋아진다고 보는 것이 자주 있는 오해다. 라벨 오류와 이상점이 어려움 안에 포함된다.</p>
+<p>분류 체험이 답할 수 있는 것은 “오분류율로 stump와 α, 다음 작업 비중이 어떻게 갱신되는가”이다. R2 문단이 답할 수 있는 것은 “정규화 손실과 가중 중앙값이 평균과 어떻게 다른가”이다. 둘 다 “이 비중이 전류효율의 원인”이나 “화면의 ±1 모델이 우리 효율 모델”에는 답하지 못한다.</p>
+<a class="back-demo" href="#adaboost">AdaBoost 체험으로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-lstm" open><summary><span class="reading-kicker">용어 상세 해설</span><h3>LSTM (엘에스티엠, Long Short-Term Memory)</h3></summary><div class="lesson-body"><a class="back-demo" href="#lstm">LSTM 체험으로 돌아갑니다 ↑</a><p>한 문장으로 말하면, LSTM은 시간 순서대로 기록을 읽으며 기억 c와 바깥으로 내보내는 표현 h를 갱신하는 신경망이다. 평균 온도 하나는 “처음에 높았다가 나중에 낮아졌는지”를 잃는다. LSTM은 그 경로를 상태로 남기려는 구조다.</p>
+<p>답하는 질문은 “지금까지의 기록을 어떤 기억으로 압축하고, 그 기억에서 지금 어떤 표현을 꺼내는가?”다. “h가 0.12이니 효율이 12%인가?”는 틀린 질문이다.</p>
+<p>비유는 공책과 발표 메모다. c는 페이지를 넘기며 고치는 공책이고, h는 그 공책에서 지금 꺼낸 메모다. forget gate f는 공책의 이전 문장을 얼마나 남길지, input gate i는 새 문장 후보 g를 얼마나 받아 적을지, output gate o는 공책에서 메모로 얼마나 베낄지를 정하는 0에서 1 사이의 숫자다. 한계는 이 문이 물리 법칙의 스위치가 아니라는 점이다. 학습이 예측 오차를 줄이려고 계수를 맞춘 결과일 뿐, 온도의 물리 메커니즘을 골라 냈다는 보장이 없다.</p>
+<p>Hochreiter와 Schmidhuber의 1997년 논문은 긴 시간 간격을 학습하기 위한 LSTM의 출발점이다. <a href="https://doi.org/10.1162/neco.1997.9.8.1735" rel="noopener noreferrer">DOI 10.1162/neco.1997.9.8.1735</a>. 지금 널리 쓰는 forget gate가 그 원형에 같은 식으로 들어 있었다고 말하면 안 된다. 페이지의 식은 PyTorch가 문서화한 현대 LSTM 형태를 스칼라 하나로 줄인 것이다. <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.LSTM.html" rel="noopener noreferrer">공식 LSTM 문서</a>.</p>
+<pre aria-label="LSTM (엘에스티엠, Long Short-Term Memory)의 수식과 계산" role="region" tabindex="0"><code class="language-text">fₜ = σ(W_f xₜ + U_f hₜ₋₁ + b_f)
+iₜ = σ(W_i xₜ + U_i hₜ₋₁ + b_i)
+gₜ = tanh(W_g xₜ + U_g hₜ₋₁ + b_g)
+oₜ = σ(W_o xₜ + U_o hₜ₋₁ + b_o)
+cₜ = fₜ cₜ₋₁ + iₜ gₜ
+hₜ = oₜ tanh(cₜ)
+</code></pre>
+<p>t는 시점, xₜ는 그 시점의 입력이다. 벡터가 아니라 이 체험은 숫자 하나다. W는 현재 입력에 곱하는 계수, U는 이전 h에 곱하는 계수, b는 편향이다. 아래 첨자는 어느 문 또는 후보의 계수인지 표시한다. σ(z)=1/(1+exp(−z))는 0에서 1, tanh는 −1에서 1로 눌러 주는 함수다. 실제 다차원 LSTM에서 ⊙는 같은 위치끼리의 곱이다. 여기에는 칸이 하나라 보통 곱과 같다. cₜ₋₁과 hₜ₋₁은 직전 기억과 직전 표현이다. c와 h의 단위는 °C도 %도 아니다.</p>
+<p>화면은 계수를 고정해 두었다. 학습하지 않은 교육용 LSTM이다.</p>
+<pre aria-label="LSTM (엘에스티엠, Long Short-Term Memory)의 수식과 계산" role="region" tabindex="0"><code class="language-text">f = σ(0.5x + 0.2 h_이전 + 0.5)
+i = σ(0.7x + 0.1 h_이전 − 0.2)
+g = tanh(0.8x + 0.2 h_이전)
+o = σ(0.4x + 0.1 h_이전 + 0.1)
+ŷ = 94 + 2h
+</code></pre>
+<p>x는 (가상 온도−60)/5다. <a href="#lstm-x">「다음에 읽을 x」</a>의 기본 0.50은 62.5°C로 표시된다. 슬라이더 범위는 −1에서 1, 간격 0.1, 온도로는 55°C에서 65°C다. c₀=h₀=0이고, 이때 출력층은 94.000%다. 각 <a href="#lstm-step">「24시간 기록 1개 읽기」</a>은 24시간 기록 하나를 더하는 교육 예시이고 최대 7단계다. 불규칙한 간격과 결측은 만들지 않는다. <a href="#lstm-reset">「기억 초기화」</a>은 기억을 0으로 되돌린다.</p>
+<p>처음 x=0.5를 넣으면 f≈0.679179, i≈0.537430, g≈0.379949, o≈0.574443이다. c₁≈0.204196, h₁≈0.115695, 출력층 ŷ≈94.231391%다. h=0.115695를 효율 11.57%로 읽으면 안 된다. 94에 2h를 더하는 출력층이 따로 있고, 그 층도 학습되어야 할 계수다. 이 페이지는 2와 94를 고정해 두었다.</p>
+<p>실제 학습에서는 예측 오차를 시간 반대 방향으로 보내 W, U, b와 출력층 계수를 조정한다. 긴 기억 경로는 장기 의존을 돕는 장치이지, 어떤 사건이든 168시간 뒤까지 보존된다는 약속은 아니다. gate 숫자는 사람이 슬라이더로 정하는 점수가 아니다. 고정 계수와 입력, 이전 h로 계산된다.</p>
+<p>프로젝트에서 LSTM은 같은 평균 온도라도 시간 경로가 다른 작업을 비교할 때의 후속 후보다. 예측 시각까지 공개된 분석, 시간 간격, 정지, 결측을 어떻게 넣을지 먼저 정하고, 작업 단위로 미래를 시험한다. Correa 등(2021)은 LSTM Encoder-Decoder에 Attention을 붙여 cathode rejection rate를 예측했다. <a href="https://doi.org/10.1109/ACCESS.2021.3074780" rel="noopener noreferrer">DOI 10.1109/ACCESS.2021.3074780</a>. Transformer가 아니고, 우리 Vision S등급률의 검증도 아니다. 연구 비중은 Cheng과 Liu 다음이다.</p>
+<p>필요한 자료는 시점별 입력, 각 값의 공개 시각, 작업 시작과 끝, 종료 후 정답이다. 순서를 넣었다는 이유만으로 누수가 사라지지는 않는다. 사후 효율, 최종 Vision, 나중에 도착한 분석이 xₜ에 섞이면 LSTM도 미래를 본다. 자료가 적고 잡음이 크면 요약표의 CatBoost보다 못할 수 있다.</p>
+<p>이 체험이 답할 수 있는 것은 “고정 계수에서 c, h, 출력층이 한 단계에 어떻게 갱신되는가”이다. 답할 수 없는 것은 “gate가 물리적 원인이다”, “이 계수가 현장 데이터로 학습되었다”, “1997년 원형이 이 forget gate 식과 같다”이다.</p>
+<a class="back-demo" href="#lstm">LSTM 체험으로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-attention" open><summary><span class="reading-kicker">용어 상세 해설</span><h3>Attention (어텐션, Attention)</h3></summary><div class="lesson-body"><a class="back-demo" href="#attention">Attention 체험으로 돌아갑니다 ↑</a><p>한 문장으로 말하면, 이 페이지가 체험하는 Attention은 관측된 시점의 점수를 softmax로 바꿔 합이 1인 가중치를 만들고, 그 가중치로 값 V를 모아 context를 만드는 계산이다. 모든 Attention 모듈이 합 1인 것은 아니다.</p>
+<p>답하는 질문은 “여러 시점의 표현을 어떤 비중으로 한 덩어리로 모을까?”다. “가중치 0.51인 시점이 불량의 51% 원인인가?”는 다른 질문이다.</p>
+<p>비유는 회의록에서 문단마다 붙임쪽지를 달고, 쪽지 점수에 비례해 발췌문을 섞는 일이다. 쪽지가 커도 그 문단의 내용이 비어 있으면 섞은 결과는 크게 움직이지 않는다. 한계는 쪽지 점수를 사람이 슬라이더로 밀었다는 점이다. 학습된 Query, Key, Value의 성능 검증이 아니다.</p>
+<p>Bahdanau 등(ICLR 2015)은 Encoder-Decoder에서 입력 쪽 정보를 가중해 모으는 soft alignment를 썼다. <a href="https://arxiv.org/abs/1409.0473" rel="noopener noreferrer">논문</a>. Vaswani 등(2017)의 scaled dot-product는 다음 형태다. <a href="https://arxiv.org/abs/1706.03762" rel="noopener noreferrer">Attention Is All You Need</a>.</p>
+<pre aria-label="Attention (어텐션, Attention)의 수식과 계산" role="region" tabindex="0"><code class="language-text">Attention(Q, K, V) = softmax(Q Kᵀ / √d_k) V
+</code></pre>
+<p>Q는 무엇과 맞출지 묻는 표현, K는 각 기록의 맞춤용 표현, V는 실제로 전달할 내용이다. Kᵀ는 K의 행과 열을 바꾼 것이고, QKᵀ는 내적으로 매칭 점수를 만든다. d_k는 키의 차원 수이고 √d_k는 내적 점수의 크기를 누른다. softmax는 지수값을 그 합으로 나눠 합이 1이 되게 한다. 여러 head는 서로 다른 학습 변환으로 이 계산을 여러 번 하고 이어 붙인다. Self-Attention은 Q, K, V가 같은 입력 집합에서 나오고, Cross-Attention은 Q의 출처와 K, V의 출처가 다르다. 시간 축에 쓸지 변수 축에 쓸지는 설계가 정한다.</p>
+<p>교육 체험은 QK를 계산하지 않는다. 사람이 점수를 준다.</p>
+<pre aria-label="Attention (어텐션, Attention)의 수식과 계산" role="region" tabindex="0"><code class="language-text">αₜ = exp(sₜ / τ) / Σ_{j는 관측} exp(sⱼ / τ)
+context = Σ_{t는 관측} αₜ Vₜ
+</code></pre>
+<p>sₜ는 시점 t의 점수, τ는 softmax 온도, αₜ는 가중치, Vₜ는 전달할 값, context는 가중 합이다. 미래 시점은 합의 분모에 넣지 않고 α를 0으로 둔다. 구현은 허용되지 않는 점수를 −∞로 가린 뒤 softmax하는 방식과 같다. 아직 도착하지 않은 분석과 패딩도 빼야 한다.</p>
+<p>τ는 전해액 온도 T와 다르다. 단위가 없는 양의 조절값이고, 점수 차이를 얼마나 날카롭게 반영할지의 값이다. τ가 작으면 가장 큰 점수로 가중치가 몰리고, 크면 관측 시점들로 넓게 퍼진다. <a href="#att-temp">「softmax 온도 τ」</a>의 범위는 0.25에서 2, 간격 0.25, 기본은 1이다.</p>
+<p>V의 초기값은 (0.2, 0.8, 0.4, −0.1, 0.6, 0.9, 0.3)이다. 효율 %가 아니라 무차원 표현이다. 점수 s의 초기값은 (0, 0.5, 1, −0.3, 0.7, 1.2, 0.4)이고 슬롯은 24, 48, 72, 96, 120, 144, 168시간이다. <a href="#att-score-0">「24h 점수 s」</a>부터 <a href="#att-score-6">「168h 점수 s」</a>까지 각 점수를 −2에서 2, 간격 0.1로 바꾼다. <a href="#att-cutoff">「현재 예측 시점」</a>가 현재 예측 시각이다. <a href="#att-reset">「점수와 τ 초기화」</a>은 점수와 τ를 초기값으로 되돌린다.</p>
+<p>72시간, τ=1이면 관측은 세 칸이다. 가중치는 약 0.186324, 0.307196, 0.506480이고 96시간 이후는 0이다. 합은 1, context는 약 0.485614다. 24시간이면 첫 칸만 남아 가중치 1, context는 V 첫 값 0.2다. τ를 0.25로 낮추고 72시간을 유지하면 가중치가 약 0.015876, 0.117310, 0.866813으로 세 번째 칸에 몰리고 context는 약 0.443749가 된다. 168시간, τ=1이면 일곱 칸이 모두 관측이다. context는 약 0.554846이다. 이 168시간 그림은 작업이 끝난 뒤의 해석이다. 72시간에 울린 조기경보가 아니다.</p>
+<p>관측한 0시간부터 72시간까지로 한 번 예측하는 Encoder는, 그 관측 범위 안에서는 앞뒤를 모두 볼 수 있다. 모든 Encoder에 삼각 causal mask가 필수인 것은 아니다. 여러 과거 시점의 예측을 한 번에 만들거나 다음 값을 순서대로 생성하는 Decoder라면, 각 출력이 자신의 미래를 보지 않는지 마스크를 따로 확인한다. 미래 제외, 결측·패딩 마스크, Decoder의 causal mask는 이름이 비슷해도 역할이 다르다.</p>
+<p>CBAM은 이 softmax와 다르다. Woo 등(2018) 3절의 채널 gate와 공간 gate는 sigmoid를 쓴다. 각 값은 0에서 1이고, 합이 1이어야 한다는 제약이 없다. <a href="https://arxiv.org/abs/1807.06521" rel="noopener noreferrer">CBAM 논문</a>. Liu(2026)가 결합한 CBAM을 이 페이지의 시간 softmax와 같은 그림으로 읽으면 안 된다. Liu의 모델은 GCN과 Transformer, CBAM, 다중 과제를 다루고 SHAP은 후속 과제로 남아 있다. 시료 36개의 무작위 분할 성적을 미래 조기경보의 검증으로 쓰지 않는다. <a href="https://doi.org/10.1016/j.matdes.2026.116175" rel="noopener noreferrer">DOI 10.1016/j.matdes.2026.116175</a>. Transformer는 Attention, 위치 또는 시간 정보, Feed Forward, 잔차 연결과 정규화 등을 조합하고 보통 여러 층으로 쌓는 구조다. Encoder와 Decoder, 모델 변형에 따라 조합과 배치가 다르다. Attention 블록 하나가 Transformer는 아니다. Correa의 시간 Attention은 LSTM Encoder-Decoder 안의 집계이고, 이것도 Transformer가 아니다.</p>
+<p>프로젝트에서는 같은 LSTM의 균등 평균과 Attention 요약을 같은 미래 시험에서 비교해, 가중 집계가 오차를 실제로 줄이는지 본다. 필요한 자료는 시점별 표현이 예측 시각에 계산 가능한지, 어떤 슬롯이 미공개인지, 출력층이 context를 효율로 어떻게 바꾸는지다. 가중치 그림은 점검 단서다. SHAP의 부호 있는 %p도 아니고, 확률도 아니고, 원인 비율도 아니다.</p>
+<p>이 체험이 답할 수 있는 것은 “손 점수와 τ, 예측 시각이 softmax 가중치와 context를 어떻게 바꾸는가”이다. 답할 수 없는 것은 “학습된 QKV의 성능”, “τ가 액온이다”, “큰 가중치가 원인이다”, “CBAM도 합이 1이다”, “168시간 그림이 조기경보다”이다.</p>
+<a class="back-demo" href="#attention">Attention 체험으로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-controls" open><summary><span class="reading-kicker">연결해서 읽기</span><h3>화면 조작을 이름 그대로 따라가기</h3></summary><div class="lesson-body"><a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a><p>처음 파일을 열면 JavaScript가 기본값을 계산한다. 슬라이더를 건드리지 않은 상태에서 적어야 할 숫자는 이미 정해져 있다. 아래 링크는 그 기본 화면을 재현할 때 쓰는 실제 조작 이름이다. 누르면 같은 페이지의 해당 조작이나 결과로 이동한다.</p>
+<p>SHAP 실험실 <a href="#shap-lab">「세 입력을 바꾸며 합을 확인합니다」</a>에서는 <a href="#sample">「가상 작업 불러오기」</a>이 작업 A, B, C를 불러온다. A는 (64, 340, 46), B는 (58, 300, 42), C는 (66, 360, 48)이다. B는 배경 B₁의 두 번째 행과 같고 F는 93.848%다. C는 배경 행과 같지 않으며 F는 94.552%다. <a href="#background">「SHAP·PDP·ICE 공통 배경」</a>는 B₁과 B₂를 SHAP, PDP, ICE가 함께 쓰게 한다. 샘플을 바꾸지 않고 배경만 바꾸면 함수 출력은 유지되고 기준값과 기여, PDP만 바뀐다. <a href="#shap-t">「온도 T」</a>, <a href="#shap-j">「전류밀도 J」</a>, <a href="#shap-c">「Cu 농도 C」</a>는 불러온 작업을 미세하게 밀어 볼 때 쓴다. 막대는 <a href="#shap-bars">「입력별 부호 있는 기여 막대」</a>에 그려지고, 가운데가 0이다. 오른쪽이 예측을 올린 기여, 왼쪽이 내린 기여다.</p>
+<p>PDP 실험실 <a href="#pdp-lab">「개별 곡선과 평균 곡선을 겹쳐 봅니다」</a>의 <a href="#pdp-feature">「바꿀 입력」</a>는 온도, 전류밀도, Cu 중 하나를 고른다. <a href="#pdp-point">「곡선에서 읽을 값」</a>는 0부터 32까지 33칸이다. 기본 16은 각 축의 한가운데라 온도 60°C, 전류밀도 315 A/m², Cu 43 g/L이다. <a href="#ice-row">「강조할 ICE 작업」</a>는 파란 선만 고르고 평균은 그대로 둔다. <a href="#pdp-average">「평균 PDP를 표시합니다」</a>는 구리색 평균 곡선의 표시만 끈다. 그래프가 좁은 화면에서 잘리면 문서 전체가 늘어나는 것이 아니라 그래프 영역 안에서 가로로 움직인다. 음영은 그 입력의 배경 최소와 최대 밖이다. 음영 안에서도 다른 입력과의 짝은 비현실적일 수 있다.</p>
+<p>트리 실험실 <a href="#catboost-lab">「작은 트리 한 개씩 학습합니다」</a>의 <a href="#tree-step">「트리 1개 학습」</a>은 잔차 stump를 하나 더한다. <a href="#tree-lr">「학습률 η」</a>를 움직이면 쌓아 둔 트리가 사라지고 평균 93%에서 다시 시작한다. <a href="#tree-reset">「처음으로」</a>도 같은 초기 상태다. 최대 6개에서 버튼이 멈춘다. 이 버튼이 하는 일은 CatBoost 라이브러리를 호출하는 일이 아니다. 페이지 안의 <code>boostStep</code>이 세 후보 분할의 제곱오차를 비교해 깊이 1 트리를 고른다.</p>
+<p>AdaBoost 실험실 <a href="#adaboost-lab">「여섯 가상 작업을 다시 보게 만듭니다」</a>의 <a href="#ada-step">「분류기 1개 학습」</a>은 분류 stump를 하나 더한다. <a href="#ada-focus">「F의 초기 상대 비중」</a>는 F의 시작 비중만 바꾸고, 값을 움직이는 즉시 학습을 되돌린다. 최대 3개다. 표의 마지막 열은 누적 투표와 그 부호다. 0이면 동률이라고 적는다. 이 표의 비중 열을 SHAP 막대와 나란히 놓지 않는다. 분류 체험 아래의 R2 문단은 슬라이더가 없다. 91, 93, 99와 비중 1, 3, 1은 글로 적힌 고정 예다.</p>
+<p>LSTM 실험실 <a href="#lstm-lab">「새 입력 하나를 읽고 실제 상태를 계산합니다」</a>의 <a href="#lstm-x">「다음에 읽을 x」</a>는 다음에 읽을 정규화 입력이다. 0.50 옆의 62.5°C는 (60 + 5×0.50)을 풀어 쓴 것이다. <a href="#lstm-step">「24시간 기록 1개 읽기」</a>을 누를 때마다 현재 x로 c와 h가 갱신되고, 슬라이더를 나중에 바꿔도 이미 지난 단계의 x는 바뀌지 않는다. 순서를 뒤집으려면 <a href="#lstm-reset">「기억 초기화」</a>으로 c와 h를 0으로 만든 뒤 다른 x를 먼저 넣어야 한다. 최대 7단계인 이유는 Attention과 같이 24시간 간격 일곱 칸을 의식한 교육 한도다. 일곱 번 눌렀다고 168시간의 현장 모델이 된 것은 아니다.</p>
+<p>Attention 실험실 <a href="#attention-lab">「관측 시점과 점수를 바꾸어 모읍니다」</a>의 <a href="#att-cutoff">「현재 예측 시점」</a>는 24, 48, 72, 96, 120, 144, 168시간 중 하나다. 그 시각 이하의 슬롯만 softmax 분모에 들어간다. <a href="#att-temp">「softmax 온도 τ」</a>는 τ다. <a href="#att-score-0">「24h 점수 s」</a>부터 <a href="#att-score-6">「168h 점수 s」</a>은 각 시각의 점수 s다. 미래 슬롯은 슬라이더가 비활성화되고 가중치는 0이다. <a href="#att-reset">「점수와 τ 초기화」</a>의 버튼 글자는 “점수와 τ 초기화”다. 코드도 <a href="#att-score-0">「24h 점수 s」</a>부터 <a href="#att-score-6">「168h 점수 s」</a>을 초기 점수로 되돌리고 <a href="#att-temp">「softmax 온도 τ」</a>만 1로 둔다. <a href="#att-cutoff">「현재 예측 시점」</a>는 바꾸지 않는다. 168시간을 본 뒤 초기화를 눌러도 시각은 168시간인 채 점수만 돌아온다. 72시간 기본 예로 돌아가려면 드롭다운을 다시 72시간으로 고른다.</p>
+<p>테마 버튼 <a href="#theme">「밝은 화면·어두운 화면 전환」</a>은 계산을 바꾸지 않는다. 밝은 화면과 어두운 화면은 같은 식을 다른 색으로 보여 준다. JavaScript를 끈 상태에서는 슬라이더와 단계 버튼, 그래프가 반응하지 않는다. 본문과 고정 등식은 남는다. 스크립트가 꺼져 있을 때 페이지가 미리 적어 둔 SHAP 합은 94.010 + 0.257 − 0.240 + 0.325 = 94.352%다. 버튼을 눌러 본 결과와 이 고정 문장이 어긋나면, 슬라이더가 기본값인지부터 본다.</p>
+<a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-record" open><summary><span class="reading-kicker">연결해서 읽기</span><h3>한 작업을 적을 때 필요한 칸</h3></summary><div class="lesson-body"><a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a><p>모델 용어를 현장에 가져가기 전에, 작업 한 줄에 어떤 칸이 있어야 하는지부터 고정한다. 아래는 칸의 이름과 시각이다. 숫자는 이 페이지의 교육 가정을 예로 든 것이고, 공장 측정값이 아니다.</p>
+<p>작업 식별과 시작 시각, 동 또는 서, 대목이 있어야 서로 다른 조의 기록을 한 행으로 붙이지 않는다. 예측 시각을 72시간으로 적으면, 입력 칸에는 그 시각까지 공개된 온도, 전류 또는 전류밀도, 분석값, 첨가제, 단락이나 정지 기록만 들어간다. 분석의 채취 시각과 성적 공개 시각이 다르면 공개 시각을 따른다. 72시간에 아직 성적표가 없으면 그 Cu 농도는 72시간 모델의 입력이 아니다.</p>
+<p>정답 칸은 입력이 끝난 뒤에 연다. 전류효율은 종료 후 석출 중량과 그 구간을 통과한 전하로 계산하는 연속값이라 회귀 목표다. Vision S등급 여부는 종류라 분류 목표에 가깝고, 이 페이지의 ±1 체험과 같은 규칙은 아니다. S등급률은 정한 검사 대상 중 S등급으로 판정된 비율인 연속값이다. 작업 단위나 Section-Cycle 단위로 정의한 S등급률을 직접 예측하면 회귀로 다룰 수 있고, 낱장 등급 분류와는 단위가 다르다. 연구에서는 두 번째 평가로 둔다. 효율 오차를 먼저 보고, 등급 오차는 따로 본다. 종료 중량, 종료 효율, 최종 등급을 입력 칸으로 복사하지 않는다.</p>
+<p>학습 묶음과 시험 묶음은 시각으로 가른다. 규칙을 고를 때 본 작업은 마지막 시험에 넣지 않는다. 같은 작업의 24시간을 학습 행으로, 72시간을 시험 행으로 두면 같은 작업의 뒤 정보가 앞으로 샐 수 있다. 행의 단위를 작업으로 두고, 그 작업의 예측 시각을 고정하는 편이 안전하다. 무작위 행 분할은 Liu(2026)의 36시료 평가를 읽을 때 이미 한계로 적혀 있다. 우리 경보 시험에 그 분할을 그대로 쓰지 않는다.</p>
+<p>설명 칸은 예측 칸 다음에 둔다. SHAP을 적는다면 배경이 B₁인지 B₂인지, 또는 현장에서는 어느 기간의 어느 작업 집합인지 같이 적는다. 기여의 단위는 %p다. PDP를 적는다면 참조행 수, 바꾼 입력, 격자 값, 평균과 개별 값을 같이 적는다. “60°C에서 94.020%”만 적으면, 그것이 네 ICE의 평균인지 평균 입력 한 줄의 예측인지 나중에 구분이 안 된다. 이 함수의 온도에서는 둘이 같으므로, 전류밀도나 Cu에서 둘이 갈라지는 예도 한 줄 옆에 적어 두는 것이 좋다.</p>
+<p>Attention을 적는다면 cutoff, τ, 관측 슬롯 수, 가중치 합이 1인지, context의 단위가 %가 아님을 적는다. 168시간 행에는 “종료 해석”이라고 적고, 72시간 행에는 “이 시각에 낼 수 있는 예측”이라고 적는다. 두 행의 오차를 한 칸에서 빼지 않는다.</p>
+<p>이 칸이 비어 있으면 일곱 용어는 계산 연습으로 남는다. 칸이 채워져도 설명 그림이 조치의 효과를 대신하지는 않는다. 온도를 바꾸자는 제안은 예측 분해 옆에, 실제로 비교할 작업 쌍이나 시험 조업을 따로 적어야 한다.</p>
+<a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-cycle" open><summary><span class="reading-kicker">연결해서 읽기</span><h3>24시간부터 168시간까지 한 주기를 읽는 법</h3></summary><div class="lesson-body"><a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a><p>작업 A는 168시간짜리 한 주기다. 예측을 내리는 시계와, 설명을 하는 시계를 따로 적는다.</p>
+<p>24시간에는 첫 측정만 공개됐다고 본다. Attention 체험은 가중치 1로 첫 V=0.2만 모은다. LSTM 체험은 <a href="#lstm-step">「24시간 기록 1개 읽기」</a>을 한 번 누른 상태다. x=0.5라면 c≈0.204, h≈0.116, 출력층은 약 94.231%다. 이 출력은 고정 계수의 교육 숫자이지 작업 A의 효율 예측이 아니다. 작업 A의 요약 함수 F는 시간 경로를 받지 않고 T, J, C 세 숫자만 받는다. 24시간의 요약이 아직 64°C, 340 A/m², 46 g/L이 아니라면 F(64, 340, 46)을 24시간 예측이라고 부르면 안 된다.</p>
+<p>72시간이 이 글의 기본 시계다. 공개된 것은 24, 48, 72시간 슬롯이다. Attention은 세 가중치 0.186, 0.307, 0.506과 context 0.486이다. 96시간 이후 점수가 슬라이더에 남아 있어도 분모에 들어가지 않는다. 요약 모델은 72시간까지 확정된 T, J, C만으로 F를 계산한다. 기본 예시가 94.352%인 것은 “72시간에 그 세 값이 이미 64, 340, 46으로 확정되었다”는 교육 가정이다. SHAP은 그 94.352%를 배경 94.010%와 기여 +0.257, −0.240, +0.325%p로 나눈다. PDP와 ICE는 그 함수가 온도나 전류밀도, Cu를 바꿀 때 어떻게 반응하는지를 참조 네 행에서 본다. 설명은 예측 다음이다. 설명에 종료 후 중량을 넣지 않는다.</p>
+<p>96, 120, 144시간은 중간 점검이다. cutoff를 그 값으로 옮기면 관측 슬롯이 4, 5, 6개로 늘고, 그 시각 이후만 0이 된다. 72시간 모델과 144시간 모델의 오차를 한 표에 넣고 “144시간이 더 정확하니 더 좋은 경보”라고 말하면 안 된다. 144시간은 정보를 72시간 더 본 것이다. 조기경보의 가치는 같은 선행 시간에서 비교한다.</p>
+<p>168시간은 종료 시점이다. 일곱 슬롯을 모두 쓴 Attention은 작업을 끝낸 뒤 어느 시점이 표현을 많이 전달했는지 읽는 자리다. 경보를 72시간에 울릴 수 있었는지는 72시간 제한 모델의 미래 시험으로만 말한다. 이 체험에서는 설명 편의를 위해 168시간에 정답을 공개한다고 가정한다. 실제 종료 효율과 최종 Vision의 공개 시각은 종료 뒤로 늦어질 수 있으므로 따로 기록해야 한다. 프로젝트의 기존 합성 파이프라인도 24~96시간의 정답 공개 지연을 두며, 그 지연 범위가 현장 확인값이라는 뜻은 아니다. 입력으로 되돌리지 않는다.</p>
+<p>한 주기를 읽을 때의 최소 확인은 이렇다. 예측 시각을 적었는가. 그 시각 이후 측정과 미공개 분석이 입력에서 빠졌는가. 정답은 종료 후에만 쓰는가. 비교 모델이 같은 시각, 같은 입력을 보는가. 효율 오차(%p)를 먼저 보고, S등급률은 다음 표로 따로 보는가. 설명 그림이 예쁜 것과 오차가 작은 것을 다른 문장으로 적었는가. 24시간 행과 72시간 행과 168시간 행을 한 줄로 평균하지 않았는가. 앞의 행은 정보가 더 적은 예측이고, 168시간 행은 끝난 뒤의 해석이다. 세 행의 context나 예측을 평균하면 어느 시계의 숫자인지 사라진다.</p>
+<a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-notebook" open><summary><span class="reading-kicker">연결해서 읽기</span><h3>72시간 화면을 노트로 받아 적으면</h3></summary><div class="lesson-body"><a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a><p>옆에 빈 종이를 두고, 슬라이더를 기본값에 둔 채 아래 문장만 채운다. 숫자는 이 글에서 다시 계산한 기본 예와 같다. 화면 반올림이 마지막 자리 하나에서 달라 보여도, 합이 예측과 맞는지를 먼저 본다.</p>
+<p>작업과 시각을 적는다. 가상 작업 A, 예측 시각 72시간, 입력 T=64°C, J=340 A/m², C=46 g/L. 이 세 값은 72시간에 이미 확정됐다는 교육 가정이다. 종료 효율과 최종 Vision은 입력란에 쓰지 않는다. 함수 출력은 94.352%다. 회귀로 맞추는 연속 목표의 예측이고, 측정값이라고 적지 않는다.</p>
+<p>설명을 적는다. 배경은 B₁ 네 행, 기준값은 그 출력의 평균 94.010%다. 평균 입력 (60, 310, 43)의 출력 94.020%는 기준값이 아니다. 기여는 온도 +0.257%p, 전류밀도 −0.240%p, Cu +0.325%p다. 셋을 더하면 +0.342%p이고, 기준값에 더하면 94.352%다. 전류밀도는 이 예측을 낮춘 항이다. 절댓값만 나열하면 C, T, J 순서가 되지만, 그 순서는 방향이 아니다. 배경을 B₂로 바꾸면 같은 94.352%가 기준 94.398%와 기여 +0.059, −0.080, −0.025%p로 다시 나뉜다. 어느 배경인지를 문장에 남기지 않으면 두 기여를 나중에 섞게 된다.</p>
+<p>반응 곡선을 적는다. 온도 60°C에서 ICE는 93.960, 94.000, 94.040, 94.080%이고 평균 PDP는 94.020%다. 이 온도에서는 나머지 입력을 평균한 한 줄의 예측도 94.020%라서, 둘의 차이를 보여 주는 예로는 약하다. 같은 노트에 전류밀도 315 A/m²를 한 줄 더 적는다. ICE 평균 PDP는 93.970%이고, 평균 나머지 입력의 예측은 93.980%다. Cu 43 g/L에서는 93.940%와 94.020%다. ICE는 재표본이 아니라 각 배경행의 나머지 칸을 고정한 곡선이다. B1과 B4를 바꿔도 평균이 같은지 확인했다고 적으면, 강조 선과 평균을 구분했다는 기록이 된다.</p>
+<p>예측기를 만드는 쪽은 작업 A의 94.352%와 자료를 섞지 않고 따로 적는다. 트리 학습용 네 점의 정답은 90, 92, 95, 95%이고 초기 예측은 93%다. 첫 stump는 T≤60, 잎 −2와 +2, 학습률 0.5라서 보정은 −1과 +1%p다. 학습 예측은 92, 92, 94, 94%이고 MSE는 4.5에서 1.5다. 이 1.5는 네 점의 학습 오차다. 작업 A의 미래 오차라고 옮기지 않는다. 이 계산은 잔차 stump이지 CatBoost의 ordered boosting 전체가 아니다. 시간 누수를 막는 일은 모드 이름이 아니라, 72시간 이후에 열린 칸을 입력에서 뺐는지로 확인한다.</p>
+<p>분류 AdaBoost도 다른 표다. 첫 단계에서 F만 틀려 ε=1/6, α≈0.804719, 다음 비중은 A부터 E가 0.1, F가 0.5다. 합은 1이다. F의 0.5는 다음 학습의 작업 비중이지 SHAP 기여가 아니다. 연속 효율로 넘어가면 R2의 고정 예에서 결합 비중 1, 3, 1의 가중 중앙값은 93, 가중 평균은 93.8이다. 화면의 ±1 투표를 %로 바꿔 적지 않는다. 라벨이 잘못된 작업도 비중이 커질 수 있으므로, 큰 비중을 원인 순위처럼 적지 않는다.</p>
+<p>시간 상태를 적는다. 교육용 LSTM은 x=0.5, 곧 표시 온도 62.5°C, 초기 c=h=0에서 한 단계를 읽은 값이다. c≈0.204196, h≈0.115695, 출력층 ≈94.231391%다. h를 효율로 적는 칸을 만들지 않는다. 출력층 칸과 기억 칸을 나눈다. 계수는 고정되어 있고 현장 데이터로 학습하지 않았다. forget gate가 있는 이 식은 현대 구현의 형태이고, 1997년 원형과 같은 식이라고 적지 않는다. gate가 0.68이라는 이유로 그 시각의 온도가 물리적으로 중요하다고 적지도 않는다.</p>
+<p>집계를 적는다. 72시간, τ=1에서 가중치는 약 0.186324, 0.307196, 0.506480, 나머지 네 칸은 0, 합은 1, context는 약 0.485614다. context의 단위는 %가 아니다. τ는 액온이 아니다. 점수는 사람이 둔 초기값이라 학습된 Q, K, V의 결과가 아니다. 24시간으로 내리면 첫 칸 가중치 1, context 0.2다. τ를 0.25로 낮추면 72시간의 세 번째 칸으로 가중치가 몰린다. 168시간으로 올리면 일곱 칸이 모두 살아 있고, 그 행에는 종료 해석이라고 적는다. CBAM을 이 표에 넣을 때는 합이 1인 softmax가 아니라, 채널과 공간의 sigmoid gate라고 적는다. 각 gate는 0에서 1이고 합 1 제약이 없다.</p>
+<p>마지막 문장은 조치와 분리한다. “기여가 큰 입력을 내일 바꾸자”까지 이 노트에서 쓰지 않는다. 그 문장은 비교 실험이나, 최소한 같이 움직이는 변수를 통제한 관측 계획이 생긴 뒤에 따로 연다. 효율 오차를 1순위, S등급률을 2순위로 적는 칸만 비워 둔다. 이 교육 화면은 그 두 칸을 채워 주지 않는다.</p>
+<a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-compare" open><summary><span class="reading-kicker">연결해서 읽기</span><h3>일곱 용어를 한 표로 비교</h3></summary><div class="lesson-body"><a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a><div aria-label="일곱 용어를 한 표로 비교의 표를 가로로 스크롤" class="scroll reading-wide-scroll" role="region" tabindex="0"><table class="reading-table">
+<thead>
+<tr>
+<th scope="col">용어와 역할</th>
+<th scope="col">이 페이지에서 읽는 숫자</th>
+<th scope="col">작업 A에 대해 말할 수 있는 것</th>
+<th scope="col">말하지 말아야 할 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SHAP · 한 예측의 설명</td>
+<td>기준 94.010%와 기여 +0.257, −0.240, +0.325%p</td>
+<td>이 배경에서 94.352%가 어떻게 나뉘었는가</td>
+<td>절댓값 순위가 인과 방향이다. 온도를 바꾸면 0.257%p가 움직인다</td>
+</tr>
+<tr>
+<td>PDP · 참조행 평균 반응</td>
+<td>60°C에서 94.020%. J=315에서는 93.970%로, 평균 나머지 입력 예측 93.980%와 다르다</td>
+<td>같은 네 행에서 한 칸만 바꿨을 때의 모델 평균</td>
+<td>관측 효율의 평균 곡선. 최적 조업점</td>
+</tr>
+<tr>
+<td>ICE · 행마다의 반응</td>
+<td>60°C에서 93.960, 94.000, 94.040, 94.080%</td>
+<td>나머지 입력을 고정한 개별 곡선이 갈라지는가</td>
+<td>Conditional이라는 말이 재표본을 뜻한다</td>
+</tr>
+<tr>
+<td>CatBoost 체험 · 예측기를 쌓는 학습</td>
+<td>첫 보정 뒤 92, 92, 94, 94%, MSE 4.5에서 1.5</td>
+<td>잔차 stump와 학습률이 학습 오차를 어떻게 줄이는가</td>
+<td>이 stump가 CatBoost 전체다. Ordered가 시간 누수를 자동으로 막는다</td>
+</tr>
+<tr>
+<td>AdaBoost · 예측기를 모으는 학습</td>
+<td>분류 첫 α≈0.804719, F 비중 0.5. R2 예는 중앙값 93, 평균 93.8</td>
+<td>틀린 작업의 학습 비중과 모델 결합 비중</td>
+<td>그 비중이 SHAP이다. 분류 식을 효율 회귀로 쓴다</td>
+</tr>
+<tr>
+<td>LSTM · 시간 예측기의 상태</td>
+<td>x=0.5에서 c≈0.204, h≈0.116, ŷ≈94.231%</td>
+<td>기억, 표현, 출력층이 한 단계에서 어떻게 나뉘는가</td>
+<td>h가 효율 %다. gate가 물리 원인이다. 1997년 식이 이 forget gate와 같다</td>
+</tr>
+<tr>
+<td>Attention 체험 · 표현을 모으는 부품</td>
+<td>72시간, τ=1에서 가중치 0.186, 0.307, 0.506, context≈0.486</td>
+<td>관측 슬롯만으로 softmax 합과 context가 어떻게 나오는가</td>
+<td>τ가 액온이다. 가중치가 원인이나 확률이다. CBAM도 합이 1이다. 168시간이 조기경보다</td>
+</tr>
+</tbody>
+</table></div>
+<a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-order" open><summary><span class="reading-kicker">연결해서 읽기</span><h3>어떤 순서로 보면 덜 헤매는가</h3></summary><div class="lesson-body"><a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a><ol>
+<li><a href="#story">「가상 작업 A의 72시간째에 서 봅니다」</a>와 <a href="#toy">「계산이 모두 보이는 작은 가상 세계」</a>에서 작업 A, F, %와 %p를 읽는다. 회귀와 분류가 이 페이지에서 어디를 가리키는지 먼저 가른다.</li>
+<li><a href="#shap">「SHAP · 한 예측을 기준과 기여로 나눕니다」</a>에서 기본 등식이 94.352%로 닫히는지 보고, <a href="#background">「SHAP·PDP·ICE 공통 배경」</a>만 B₂로 바꿔 예측은 그대로이고 기여가 바뀌는지 본다.</li>
+<li><a href="#pdp">「PDP · 같은 입력을 바꾼 뒤 평균합니다」</a>에서 60°C의 네 ICE와 평균을 읽고, <a href="#ice-row">「강조할 ICE 작업」</a>로 B1과 B4를 바꿔 평균이 고정인지 확인한다. 그다음 <a href="#pdp-feature">「바꿀 입력」</a>를 전류밀도로 바꿔 PDP와 “평균 나머지 입력의 예측”이 어긋나는 경우를 본다.</li>
+<li><a href="#catboost">「CatBoost · 작은 트리의 보정을 쌓습니다」</a>에서 첫 트리의 잎과 η=0.5의 보정을 읽고, 학습 MSE와 미래 시험이 다른 이유까지 간다. Ordered는 그다음에 읽는다.</li>
+<li><a href="#adaboost">「AdaBoost · 어려운 작업에 학습 비중을 줍니다」</a>에서 F의 비중이 0.5가 되는 과정을 보고, 아래 R2의 중앙값 93과 평균 93.8을 비교한다.</li>
+<li><a href="#lstm">「LSTM · 기록을 읽을 때마다 기억을 갱신합니다」</a>에서 c, h, ŷ 세 칸을 한 번에 읽고, x를 바꿔 상태가 이어지는지 본다. 초기화한 뒤에야 순서를 뒤집는다.</li>
+<li><a href="#attention">「Attention · 여러 정보를 비중을 주어 모읍니다」</a>에서 24시간의 가중치 1, 72시간의 미래 0, τ를 0.25로 낮춘 변화, 168시간의 종료 해석을 순서대로 본다.</li>
+<li>마지막에 연구 질문으로 돌아온다. 효율이 1순위, S등급률이 2순위다. 설명 그림은 두 오차를 대신하지 않는다.</li>
+</ol>
+<p>순서를 건너뛰면 막대와 곡선과 가중치가 한 종류의 점수처럼 보인다. SHAP의 0.325%p, AdaBoost의 작업 비중 0.5, Attention의 가중치 0.506은 서로 더하거나 순위를 매길 수 없다. 단위와 기준이 다르기 때문이다. 각 절의 등식이 닫히는지만 먼저 확인하고, 그 다음에 연구 질문으로 단어를 옮긴다.</p>
+<a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-faq" open><summary><span class="reading-kicker">연결해서 읽기</span><h3>자주 나오는 질문과 스스로 확인</h3></summary><div class="lesson-body"><a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a><p><strong>기준값과 기여를 더하면 실제 효율인가?</strong> 아니다. 더한 값은 설명에 쓴 모델의 예측이다. 작업 A에서는 94.352%다. 종료 후 측정 효율이 그와 같은지는 중량과 전하로 따로 계산해야 한다. 합이 닫혀도 모델은 틀릴 수 있다.</p>
+<p><strong>배경의 평균 입력을 넣으면 기준값과 같은가?</strong> 이 배경 B₁에서는 아니다. 출력 평균은 94.010%이고, 평균 입력 (60, 310, 43)의 F는 94.020%다. 기준값은 출력 평균 쪽이다.</p>
+<p><strong>PDP는 항상 평균 입력 한 줄의 예측과 다른가?</strong> 일반적으로 다를 수 있다. 이 함수의 온도 축에서는 우연히 같다. 전류밀도 315 A/m²에서는 93.970%와 93.980%로 갈라지고, Cu 43 g/L에서는 93.940%와 94.020%로 갈라진다. 60°C 화면만 보고 둘이 같은 개념이라고 외우면 안 된다.</p>
+<p><strong>ICE의 Conditional은 다른 변수를 조건에 맞게 다시 뽑는다는 뜻인가?</strong> 아니다. 한 행의 나머지 칸을 고정한다.</p>
+<p><strong>첫 트리 이후 MSE가 4.5에서 1.5로 줄었으니 현장 오차도 줄었나?</strong> 아니다. 그 1.5는 학습에 쓴 네 온도의 오차다. 다음 작업, 다른 계통, 72시간 제한 입력에서의 오차는 따로 잰다.</p>
+<p><strong>CatBoost를 쓰면 시간 누수는 자동으로 없어지나?</strong> 아니다. Ordered boosting은 범주 처리와 부스팅 안의 특정 누출을 다루는 설정이고, 모든 실행의 기본도 아니다. 미래 측정이나 사후 정답이 이미 입력 행에 들어 있으면 시간순 분할만으로 해결되지 않는다. 먼저 각 예측 시점에 실제로 공개된 값만 모아 입력 스냅샷을 만든다. 그다음 같은 작업을 묶어 시간순 학습·검증·시험을 나누고, 결측 대체나 스케일링도 학습 묶음에서만 맞춘다.</p>
+<p><strong>AdaBoost에서 F의 비중 0.5는 중요한 원인 0.5인가?</strong> 아니다. 다음 분류기가 F의 오분류를 더 크게 감수하게 만드는 학습 비중이다. SHAP 기여도 아니고, R2의 회귀기 결합 비중 aₘ도 아니다. 정답 부호가 잘못 적힌 작업도 비중이 커질 수 있다.</p>
+<p><strong>R2는 예측 91, 93, 99를 평균해 93.8을 내는가?</strong> 기본 결합은 가중 중앙값이다. 비중 1, 3, 1이면 93이다.</p>
+<p><strong>LSTM의 h를 효율로 읽어도 되나?</strong> 안 된다. h는 기억에서 꺼낸 표현이고, ŷ=94+2h가 교육용 출력층이다. 계수 2와 94는 현장 데이터로 추정한 값이 아니다.</p>
+<p><strong>softmax 온도를 전해액 온도 슬라이더와 같이 움직여도 되나?</strong> 안 된다. τ는 점수 분포의 날카로움이고 단위가 없다. 액온은 T(°C)다. 둘 다 온도라는 한국어로 불리지만 같은 양이 아니다.</p>
+<p><strong>72시간 예측의 Encoder는 반드시 삼각 마스크를 써야 하나?</strong> 미래 입력을 빼는 것은 필수다. 이미 관측한 24시간부터 72시간 사이의 양방향 참조까지 금지해야 하는 것은 아니다. Decoder가 여러 시점의 출력을 한 번에 내면 그 출력의 causal mask를 따로 본다.</p>
+<p><strong>Attention 가중치가 0.506이면 그 시점이 원인의 절반인가?</strong> 아니다. 이번 softmax에서 V를 전달한 비중이다. V의 부호와 크기, 뒤의 출력층, 다른 head가 결과를 바꾼다. CBAM의 sigmoid gate는 이 합 1 규칙 밖에 있다.</p>
+<p><strong>168시간 모델이 72시간 모델보다 오차가 작으면 경보가 성공인가?</strong> 아니다. 168시간은 종료 해석에 가깝다. 경보는 조치를 할 선행 시간을 고정하고, 적중, 미탐, 헛경보를 따로 센다.</p>
+<p><strong>Cheng이나 Liu의 숫자를 우리 효율 목표로 가져와도 되나?</strong> 안 된다. Cheng은 출구 Cu·As이고 전문이 없다. Liu는 36시료 무작위 분할과 CBAM을 포함한 다른 구조이고 SHAP은 후속이다. Correa는 rejection rate의 LSTM Encoder-Decoder와 Attention이다. 방법의 후보는 가져오되, 성능 숫자는 우리 시간 분할에서 다시 잰다.</p>
+<p>스스로 확인할 짧은 계산이 더 있다. 작업 A의 φ 셋을 더하면 +0.342%p인가. 94.010에 그 값을 더하면 94.352인가. B₂로 바꿔도 예측만 같은가. 60°C ICE 네 개의 산술 평균이 94.020인가. 분류 AdaBoost의 갱신 비중 0.1이 다섯 개이고 0.5가 하나일 때 합이 1인가. R2 예시의 중앙값이 평균과 다른가. LSTM에서 ŷ−94가 2h와 같은가. 72시간 Attention 가중치 세 개와 0 네 개의 합이 1인가. 이 여덟 개가 막히면 해당 절의 식 정의로 돌아가면 된다.</p>
+<p>여덟 개가 풀려도 확인할 일이 남는다. 그 합이 종료 후 측정 효율과 같은지, 배경을 다른 기간으로 바꿔도 부호가 유지되는지, 72시간 이후에 열린 분석이 입력에 없는지, 학습 MSE의 감소를 다음 달 오차로 적지 않았는지다. 여기까지 통과해도 온도 설정을 바꾸자는 문장은 따로다. 교육 화면은 그 문장을 계산해 주지 않는다.</p>
+<a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-papers" open><summary><span class="reading-kicker">연결해서 읽기</span><h3>논문은 방법의 자리만 빌려 온다</h3></summary><div class="lesson-body"><a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a><p>Cheng(2026)은 구리 전해정련의 출구 Cu와 As를 CatBoost, AdaBoost, 물질수지와 함께 보고, SHAP과 PDP, ICE로 그 예측을 읽은 논문으로 연결한다. 우리 연구의 방법 후보를 고를 때 앞에 둔다. 다만 이 글을 쓰는 날까지 전문과 보충표 Table S1은 없다. 공개된 서론과 자료 설명, 결론의 일부와 기존 검토 기록만 있다. 공개 문장 안에 SHAP과 순열 중요도가 섞여 보이더라도, 그 문장을 SHAP의 정의로 가져오지 않는다. 정의는 Lundberg와 Lee, 그리고 SHAP 공식 문서를 따른다. Cheng의 성능 숫자와 운전 구간은 이 교육 페이지에 다시 적지 않는다. 출구 농도를 맞춘 결과로 우리 전류효율이나 S등급률이 확인된 것처럼 말하지 않는다.</p>
+<p>Liu(2026)는 GCN, Transformer, CBAM을 한 구조 안에서 여러 결과와 물리 관계에 연결한 논문으로 둔다. 시간 Attention과 CBAM은 같은 모듈이 아니다. CBAM의 채널 gate와 공간 gate는 sigmoid라서 값마다 0에서 1이고, 합이 1일 필요가 없다. 시료 36개를 무작위로 나눈 성적은 미래 시점의 조기경보 성능이 아니다. SHAP은 그 논문의 후속 과제로 남아 있으므로, Liu를 인용하면서 우리 SHAP 숫자가 그 논문에서 나왔다고 쓰면 안 된다. 물리 제약의 구현과 출력 표기 중 아직 확인할 부분이 있다는 기존 검토도 유지한다. 세부 모듈을 이 글에서 새로 검증하지는 않았다.</p>
+<p>Correa(2021)는 LSTM Encoder-Decoder에 Attention을 더해 cathode rejection rate를 예측한 사례다. 시간 이력을 읽는 후속 비교로 Cheng, Liu 다음에 둔다. Transformer 논문이 아니고, 우리 Vision S등급률과 같은 정답도 아니다. 불량률이 낮았다는 문장을 우리 S등급률의 증거로 옮기지 않는다.</p>
+<p>이미 저장소에 있는 <code>synthetic_model_v1</code>은 요약 입력과 물리 입력의 CatBoost, 공유 MLP를 실제로 학습한 시험이다. 이 HTML은 그 모델의 SHAP이나 PDP를 계산하지 않았고, AdaBoost나 LSTM, Attention을 그 데이터에 추가 학습하지도 않았다. 현장 MES로 맞춘 결과도 아니다. 교육 함수의 94.352%를 공장 효율의 예측치로 보고하지 않는다.</p>
+<a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a></div></details><details class="lesson" id="lesson-references" open><summary><span class="reading-kicker">연결해서 읽기</span><h3>이 글이 기대고 있는 자료</h3></summary><div class="lesson-body"><a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a><p>계산 숫자는 HTML의 <code>window.MLTerms</code>와 같은 식을 독립적으로 다시 계산한 결과다. 개념의 출처는 다음이다. SHAP는 Lundberg와 Lee(2017)와 SHAP 공식 문서. PDP·ICE는 scikit-learn 부분 의존도 문서와 Goldstein 등의 ICE 논문. CatBoost는 Prokhorenkova 등(2018)과 CatBoost 공식 알고리즘 문서. 분류 AdaBoost의 1/2 계수는 원 논문 계열이고, sklearn 1.9.1의 분류기 구현 이름은 SAMME다. R2는 Drucker(1997)와 <code>AdaBoostRegressor</code> 문서이며 원전 전문을 여기서 다시 열지는 않았다. LSTM의 forget gate 식은 현대 PyTorch 문서 기준이고 1997 원형과 동일하다고 쓰지 않았다. Attention의 softmax는 Bahdanau 등(2015)과 Vaswani 등(2017), CBAM의 sigmoid gate는 Woo 등(2018) 3절이다.</p>
+<p>전해정련 논문은 방법의 위치를 정하는 데만 썼다. Cheng(2026) 전문과 Table S1은 없다. Liu(2026)의 세부 모듈과 36시료 분할은 기존 로컬 검토를 넘어서 이 글에서 다시 검증하지 않았다. Correa(2021)는 rejection rate 예측의 후속 비교로만 인용했다. 공장 MES로 이 함수를 맞춘 일은 없다. 따라서 이 글의 94.352%와 0.257%p는 화면의 식을 검산한 교육 숫자로만 남긴다. 연구계획서의 수집 항목이나 모델 비교 순서를 이 숫자로 바꾸지는 않는다. 다음 확인은 예측 시각, 공개된 입력, 미래 작업으로 나눈 효율 오차와 S등급률 오차다. 그 오차를 내기 전에는 막대 길이, 곡선 높이, Attention 가중치의 크기로 모델의 우열을 정하지 않는다. 세 숫자는 서로 다른 절차의 출력일 뿐이며, 서로 비교할 수 없다.</p>
+<a class="back-demo" href="#reading">상세 해설 목차로 돌아갑니다 ↑</a></div></details></section>
+<!-- FULL-LESSON:END -->
+<section class="section" id="sources" aria-labelledby="sources-title">
+<h2 id="sources-title">근거와 교육용 가정</h2>
+<p>개념은 원저자 논문과 공식 문서에 연결했습니다. 본문의 함수·작업·계수·시점별 값은 이 페이지를 위해 만들었습니다. 실공정 데이터, 논문 원형 재현, 현장 개선 효과를 주장하지 않습니다.</p>
+<ol class="references">
+<li><strong>SHAP</strong><a href="https://arxiv.org/abs/1705.07874">Lundberg &amp; Lee(2017), A Unified Approach to Interpreting Model Predictions</a>. 가산 기여의 개념을 참고합니다. <a href="https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html">TreeExplainer 공식 설정</a>은 실제 모델 구현 시 확인하며, <a href="https://shap.readthedocs.io/en/latest/example_notebooks/overviews/Be%20careful%20when%20interpreting%20predictive%20models%20in%20search%20of%20causal%20insights.html">공식 인과 해석 주의</a>도 함께 읽습니다.</li>
+<li><strong>PDP·ICE</strong><a href="https://scikit-learn.org/stable/modules/partial_dependence.html">scikit-learn 공식 해설</a>, <a href="https://arxiv.org/abs/1309.6392">Goldstein 등, Peeking Inside the Black Box(논문 2015)</a>. 고정 모델의 반응·개별 곡선·상관된 조합의 한계를 참고합니다.</li>
+<li><strong>CatBoost</strong><a href="https://arxiv.org/abs/1706.09516">Prokhorenkova 등, CatBoost: unbiased boosting with categorical features(NeurIPS 2018)</a>, <a href="https://catboost.ai/docs/en/concepts/algorithm-main-stages">공식 알고리즘 문서</a>. 원논문과 이 페이지의 단순 잔차 stump 예제를 구분합니다.</li>
+<li><strong>AdaBoost</strong><a href="https://scikit-learn.org/stable/modules/ensemble.html#adaboost">공식 ensemble 해설</a>, <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html">AdaBoostRegressor와 R2</a>, <a href="https://dl.acm.org/doi/10.5555/645526.657132">Drucker(1997), Improving Regressors Using Boosting Techniques</a>. R2 원전 전문을 이 페이지에서 재검증한 것은 아니며 공식 구현 문서와 수학을 대조했습니다.</li>
+<li><strong>LSTM</strong><a href="https://doi.org/10.1162/neco.1997.9.8.1735">Hochreiter &amp; Schmidhuber(1997)</a>, <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.LSTM.html">PyTorch 공식 LSTM 수식</a>. 본문의 forget-gate 수식은 현대 구현을 기준으로 하며 1997 원형과 동일하다고 주장하지 않습니다.</li>
+<li><strong>Attention</strong><a href="https://arxiv.org/abs/1409.0473">Bahdanau 등(ICLR 2015)</a>, <a href="https://arxiv.org/abs/1706.03762">Vaswani 등(2017), Attention Is All You Need</a>, <a href="https://arxiv.org/abs/1807.06521">Woo 등(2018), CBAM</a>. 각각의 집계 대상과 구조를 구분합니다.</li>
+</ol>
+<h3>전해정련 논문을 연결한 범위</h3>
+<p><strong>Cheng(2026)</strong>의 <a href="https://doi.org/10.1016/j.jclepro.2026.147643">CatBoost/AdaBoost·물질수지·SHAP/PDP/ICE 연구</a>는 출구 Cu·As 농도를 다룹니다. 전문과 Table S1은 미확보이며 공개 초록·일부 소개와 프로젝트 검토 기록에 근거합니다. 우리 효율·S등급률의 검증 결과로 인용하지 않습니다.</p>
+<p><strong>Liu(2026)</strong>의 <a href="https://doi.org/10.1016/j.matdes.2026.116175">GCN–Transformer·CBAM 다중 과제 연구</a>는 주요 절을 프로젝트에서 검토했습니다. N=36 무작위 분할은 미래 조기경보 성능을 입증하지 않으며 SHAP은 후속 과제입니다. 물리 제약 구현과 출력 표기에는 확인할 부분이 남아 있습니다.</p>
+<p><strong>Correa(2021)</strong>는 LSTM Encoder–Decoder+Attention으로 cathode rejection rate를 예측한 후속 비교 근거입니다. Transformer 논문이나 우리 S등급률 검증으로 읽지 않습니다. <a href="https://doi.org/10.1109/ACCESS.2021.3074780">Correa 원문 DOI</a>를 함께 확인할 수 있습니다. 원문 검토와 현재 연구 범위는 프로젝트 기준 연구계획서를 따릅니다.</p>
+<div class="notice"><p><strong>다음에 실제 자료로 확인할 것:</strong> 정답의 범위와 공개 시각, 회로·작업 묶음, 시간순 분할, 결측·측정 지연, 모델 오차, 설명의 안정성, 현장 조치 효과입니다. 이 페이지는 그 검증을 대신하는 완성 모델이 아니라 용어와 계산을 익히는 학습 자료입니다.</p></div>
+</section>
+</main>
+<footer class="footer"><div class="wrap"><p>전해정련 모델 용어 실험실 · 2026-10-25 · 외부 라이브러리·CDN·서버 없이 동작합니다.</p><p><a href="/notes/electrorefining-attention.html">전해정련 연구 해설로 돌아가기</a> · <a href="/notes/">노트 목록</a></p><a href="#main">처음으로 돌아가기 ↑</a></div></footer>
+<script id="model-math">
+/* Transparent educational arithmetic. No fitted company/synthetic_model_v1 models. */
+window.MLTerms = (() => {
+ 'use strict';
+ const backgrounds=[[[56,280,40],[58,300,42],[62,320,44],[64,340,46]],[[60,300,43],[62,320,45],[64,340,47],[66,360,49]]];
+ const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
+ const toy=x=>{const u=(x[0]-60)/5,v=(x[1]-300)/50,w=(x[2]-42)/5;return 94+.3*u-.4*v+.5*w-.2*u*u+.25*u*w};
+ function shap(x,bg){const values=Array.from({length:8},(_,s)=>mean(bg.map(b=>toy(b.map((v,i)=>s&(1<<i)?x[i]:v)))));const fact=[1,1,2,6];const phi=x.map((_,i)=>{let p=0;for(let s=0;s<8;s++){if(s&(1<<i))continue;const k=s.toString(2).replace(/0/g,'').length;p+=fact[k]*fact[2-k]/6*(values[s|(1<<i)]-values[s])}return p});return {base:values[0],prediction:toy(x),phi,values}}
+ function ice(bg,j,z){return bg.map(b=>toy(b.map((v,i)=>i===j?z:v)))}
+ function fitStump(xs,targets,weights=null,classification=false){let best=null;const candidates=classification?[xs[0]-1,...xs.slice(0,-1).map((v,i)=>(v+xs[i+1])/2),xs[xs.length-1]+1]:xs.slice(0,-1).map((v,i)=>(v+xs[i+1])/2);for(const threshold of candidates){for(const polarity of classification?[1,-1]:[1]){let left,right,pred,error;if(classification){left=-polarity;right=polarity;pred=xs.map(x=>x<=threshold?left:right);error=pred.reduce((s,v,i)=>s+(v!==targets[i]?weights[i]:0),0)}else{left=mean(targets.filter((_,i)=>xs[i]<=threshold));right=mean(targets.filter((_,i)=>xs[i]>threshold));pred=xs.map(x=>x<=threshold?left:right);error=pred.reduce((s,v,i)=>s+(v-targets[i])**2,0)}if(!best||error<best.error-1e-12)best={threshold,left,right,pred,error,polarity}}}return best}
+ function boostStep(xs,y,pred,eta){const residual=y.map((v,i)=>v-pred[i]),tree=fitStump(xs,residual),next=pred.map((v,i)=>v+eta*tree.pred[i]);return {tree,pred:next,mse:mean(y.map((v,i)=>(v-next[i])**2))}}
+ function adaStep(xs,y,p){const tree=fitStump(xs,y,p,true),epsilon=tree.error;if(epsilon>=.5-1e-12||epsilon<=1e-12)return {tree,epsilon,stop:true};const alpha=.5*Math.log((1-epsilon)/epsilon),raw=p.map((v,i)=>v*Math.exp(-alpha*y[i]*tree.pred[i])),z=raw.reduce((s,v)=>s+v,0);return {tree,epsilon,alpha,p:raw.map(v=>v/z),stop:false}}
+ const sigmoid=x=>1/(1+Math.exp(-x));
+ function lstmStep(x,c,h){const f=sigmoid(.5*x+.2*h+.5),i=sigmoid(.7*x+.1*h-.2),g=Math.tanh(.8*x+.2*h),o=sigmoid(.4*x+.1*h+.1),nextC=f*c+i*g,nextH=o*Math.tanh(nextC);return {x,f,i,g,o,previousC:c,previousH:h,c:nextC,h:nextH,prediction:94+2*nextH}}
+ function attention(scores,values,count,tau){const active=scores.slice(0,count).map(s=>s/tau),max=Math.max(...active),exp=active.map(s=>Math.exp(s-max)),sum=exp.reduce((a,b)=>a+b,0),weights=scores.map((_,i)=>i<count?exp[i]/sum:0);return {weights,sum:weights.reduce((a,b)=>a+b,0),context:weights.reduce((s,a,i)=>s+a*values[i],0)}}
+ return {backgrounds,mean,toy,shap,ice,boostStep,adaStep,lstmStep,attention};
+})();
+</script>
+<script id="model-ui">
+(() => {
+ 'use strict';
+ const M=window.MLTerms,$=id=>document.getElementById(id),fmt=(v,n=3)=>Number(v).toFixed(n),sgn=(v,n=3)=>(v>=0?'+':'−')+fmt(Math.abs(v),n),names=['T','J','C'],labels=['온도 T','전류밀도 J','Cu 농도 C'],units=['°C',' A/m²',' g/L'];
+ let background=0;
+ const set=(id,value)=>{$(id).textContent=value};
+ function renderShap(){const x=['t','j','c'].map(k=>+$('shap-'+k).value),r=M.shap(x,M.backgrounds[background]);['t','j','c'].forEach((k,i)=>set('shap-'+k+'-out',x[i]+units[i]));set('shap-base',fmt(r.base)+'%');set('shap-pred',fmt(r.prediction)+'%');set('shap-diff',sgn(r.prediction-r.base)+'%p');const scale=Math.max(.5,...r.phi.map(Math.abs));$('shap-bars').innerHTML=r.phi.map((p,i)=>`<div class="contrib"><strong>${labels[i]}</strong><div class="bartrack" aria-hidden="true"><span class="bar ${p<0?'negative':''}" style="left:${p<0?50-Math.abs(p)/scale*47:50}%;width:${Math.abs(p)/scale*47}%"></span></div><span class="signed ${p<0?'neg':'pos'}">${sgn(p)}%p</span></div>`).join('');const sum=r.base+r.phi.reduce((a,b)=>a+b,0);set('shap-equality',fmt(r.base)+' '+r.phi.map(p=>(p<0?'− ': '+ ')+fmt(Math.abs(p))).join(' ')+' = '+fmt(sum)+'% · 합 오차 '+Math.abs(sum-r.prediction).toExponential(1));$('shap-subsets').innerHTML=r.values.map((v,s)=>`<tr><td>${names.filter((_,i)=>s&(1<<i)).join(', ')||'∅ (없음)'}</td><td>${names.filter((_,i)=>!(s&(1<<i))).join(', ')||'없음'}</td><td>${fmt(v,6)}</td></tr>`).join('');$('shap-terms').innerHTML=names.map((name,i)=>{let terms=[];for(let s=0;s<8;s++){if(s&(1<<i))continue;const k=s.toString(2).replace(/0/g,'').length;terms.push((k===1?'1/6':'1/3')+' × ('+fmt(r.values[s|(1<<i)],6)+' − '+fmt(r.values[s],6)+')')}return '<p>φ'+name+' = '+terms.join(' + ')+' = '+sgn(r.phi[i],6)+'%p</p>'}).join('')}
+ ['t','j','c'].forEach(k=>$('shap-'+k).addEventListener('input',renderShap));$('sample').addEventListener('change',()=>{const x={a:[64,340,46],b:[58,300,42],c:[66,360,48]}[$('sample').value];['t','j','c'].forEach((k,i)=>$('shap-'+k).value=x[i]);renderShap()});$('background').addEventListener('change',()=>{background=+$('background').value;renderShap();renderPdp()});
+ const gridRanges=[[52,68],[250,380],[36,50]];
+ function renderPdp(){const j=+$('pdp-feature').value,bg=M.backgrounds[background],selected=+$('ice-row').value,[lo,hi]=gridRanges[j],grid=Array.from({length:33},(_,i)=>lo+(hi-lo)*i/32),index=+$('pdp-point').value,z=grid[index],matrix=grid.map(t=>M.ice(bg,j,t)),pdp=matrix.map(M.mean),all=matrix.flat(),minY=Math.floor((Math.min(...all)-.2)*2)/2,maxY=Math.ceil((Math.max(...all)+.2)*2)/2,xp=x=>65+(x-lo)/(hi-lo)*680,yp=y=>278-(y-minY)/(maxY-minY)*235,obs=bg.map(b=>b[j]),omin=Math.min(...obs),omax=Math.max(...obs);set('pdp-point-out',fmt(z,j===1?2:3)+units[j]);set('pdp-background','배경 B'+(background+1)+' · 같은 4개 작업');set('pdp-range','현재 입력의 배경 관측값: '+obs.join(', ')+units[j]+' · 표시 범위 '+lo+'~'+hi+units[j]+(z<omin||z>omax?' · 현재 지점은 관측 최소·최대 밖입니다.':' · 현재 지점은 단일 변수의 관측 범위 안입니다.'));let svg=`<rect x="65" y="43" width="${xp(omin)-65}" height="235" fill="var(--wash)"/><rect x="${xp(omax)}" y="43" width="${745-xp(omax)}" height="235" fill="var(--wash)"/>`;for(let k=0;k<=4;k++){const y=minY+(maxY-minY)*k/4;svg+=`<path d="M65 ${yp(y)} H745" stroke="var(--line)"/><text x="56" y="${yp(y)+5}" font-size="12" text-anchor="end">${fmt(y,1)}</text>`}svg+='<text x="65" y="23" font-size="13">가상 예측 · %</text>';for(let k=0;k<=4;k++){const x=lo+(hi-lo)*k/4;svg+=`<text x="${xp(x)}" y="300" font-size="12" text-anchor="middle">${fmt(x,j===1?1:0)}</text>`}const path=ys=>ys.map((y,i)=>(i?'L':'M')+xp(grid[i]).toFixed(2)+' '+yp(y).toFixed(2)).join(' ');for(let row=0;row<4;row++){svg+=`<path d="${path(matrix.map(a=>a[row]))}" stroke="var(--plot)" opacity=".45" stroke-width="1.5" fill="none"/>`}svg+=`<path d="${path(matrix.map(a=>a[selected]))}" stroke="var(--blue)" stroke-width="3" fill="none"/>`;if($('pdp-average').checked)svg+=`<path d="${path(pdp)}" stroke="var(--copper)" stroke-width="4" stroke-dasharray="9 5" fill="none"/>`;svg+=`<path d="M${xp(z)} 43 V278" stroke="var(--ink)" stroke-dasharray="3 4"/>`;obs.forEach((v,i)=>{svg+=`<path d="M${xp(v)} 309 v10" stroke="${i===selected?'var(--blue)':'var(--plot)'}" stroke-width="3"/>`});svg+=`<circle cx="${xp(z)}" cy="${yp(matrix[index][selected])}" r="5" fill="var(--blue)"/><text x="400" y="337" text-anchor="middle" font-size="13">${labels[j]} · ${units[j].trim()}</text>`;$('pdp-drawing').innerHTML=svg;$('ice-values').innerHTML=bg.map((b,i)=>`<tr class="${i===selected?'selected':''}"><td>B${i+1}${i===selected?' · 강조':''}</td><td>${b.join(' / ')}</td><td>${fmt(matrix[index][i],6)}</td></tr>`).join('');set('pdp-value',fmt(pdp[index],6)+'%');set('pdp-equality','('+matrix[index].map(v=>fmt(v,6)).join(' + ')+') / 4 = '+fmt(pdp[index],6)+'% · PDP = mean ICE');}
+ ['pdp-feature','ice-row','pdp-average'].forEach(id=>$(id).addEventListener('change',renderPdp));$('pdp-point').addEventListener('input',renderPdp);
+ const tx=[54,58,62,66],ty=[90,92,95,95];let treePred=[93,93,93,93],trees=[];
+ function renderTree(){set('tree-lr-out',fmt(+$('tree-lr').value,2));set('tree-count',trees.length+' / 최대 6개');$('tree-step').disabled=trees.length>=6;$('tree-values').innerHTML=tx.map((x,i)=>`<tr><td>${x}</td><td>${ty[i]}</td><td>${fmt(treePred[i])}</td><td>${sgn(ty[i]-treePred[i])}</td></tr>`).join('');$('tree-history').innerHTML=trees.length?trees.map((r,i)=>`<li>트리 ${i+1}: T≤${r.tree.threshold}이면 ${sgn(r.tree.left)} 아니면 ${sgn(r.tree.right)}%p. 학습률 ${r.eta}. MSE ${fmt(r.mse,6)}.</li>`).join(''):'<li>아직 추가한 트리가 없습니다.</li>';const r=trees[trees.length-1];set('tree-root',r?'T ≤ '+r.tree.threshold+'°C ?':'아직 트리가 없습니다');set('tree-left',r?'잔차 평균 '+sgn(r.tree.left)+'%p':'왼쪽 잎');set('tree-right',r?'잔차 평균 '+sgn(r.tree.right)+'%p':'오른쪽 잎');set('tree-status',r?'이번 트리를 학습률 '+r.eta+'로 더했습니다. 현재 학습 MSE='+fmt(r.mse,6)+' (%p)²입니다.':'초기 예측은 93%, 학습 MSE는 4.500 (%p)²입니다.')}
+ function resetTree(){trees=[];treePred=[93,93,93,93];renderTree()}
+ $('tree-step').addEventListener('click',()=>{if(trees.length>=6)return;const eta=+$('tree-lr').value,r=M.boostStep(tx,ty,treePred,eta);treePred=r.pred;trees.push({...r,eta});renderTree()});$('tree-reset').addEventListener('click',resetTree);$('tree-lr').addEventListener('input',resetTree);
+ const ax=[1,2,3,4,5,6],ay=[-1,-1,1,1,1,-1];let adaP=[],adaHistory=[],adaBefore=[],adaVotes=[0,0,0,0,0,0],adaStopped=false;
+ function renderAda(){set('ada-focus-out',fmt(+$('ada-focus').value,1)+'배');set('ada-count',adaHistory.length+' / 최대 3개');$('ada-step').disabled=adaHistory.length>=3||adaStopped;const last=adaHistory[adaHistory.length-1];$('ada-values').innerHTML=ax.map((x,i)=>`<tr class="${last&&last.tree.pred[i]!==ay[i]?'selected':''}"><td>${'ABCDEF'[i]} · ${sgn(ay[i],0)}</td><td>${last?sgn(last.tree.pred[i],0)+(last.tree.pred[i]===ay[i]?' · 맞음':' · 틀림'):'학습 전'}</td><td>${fmt(adaBefore[i],6)} → <strong>${fmt(adaP[i],6)}</strong></td><td>${sgn(adaVotes[i],6)} → ${Math.abs(adaVotes[i])<1e-12?'동률':sgn(Math.sign(adaVotes[i]),0)}</td></tr>`).join('');$('ada-history').innerHTML=adaHistory.length?adaHistory.map((r,i)=>`<li>${i+1}번: x≤${r.tree.threshold}이면 ${sgn(r.tree.left,0)}, 아니면 ${sgn(r.tree.right,0)}. ε=${fmt(r.epsilon,6)}, α=${fmt(r.alpha,6)}.</li>`).join(''):'<li>아직 학습하지 않았습니다.</li>';if(!adaStopped)set('ada-status',last?'이번 가중 오분류율 ε='+fmt(last.epsilon,6)+', 투표 가중치 α='+fmt(last.alpha,6)+'입니다. 틀린 작업은 표에서 강조합니다.':'초기 비중을 합이 1이 되도록 정규화했습니다. F 상대 비중을 바꾸면 처음부터 다시 시작합니다.')}
+ function resetAda(){const raw=[1,1,1,1,1,+$('ada-focus').value],z=raw.reduce((a,b)=>a+b,0);adaP=raw.map(v=>v/z);adaBefore=[...adaP];adaHistory=[];adaVotes=[0,0,0,0,0,0];adaStopped=false;renderAda()}
+ $('ada-step').addEventListener('click',()=>{if(adaHistory.length>=3||adaStopped)return;const r=M.adaStep(ax,ay,adaP);if(r.stop){adaStopped=true;set('ada-status',r.epsilon<=1e-12?'완벽 분류한 약한 분류기를 찾아 종료했습니다.':'가중 오분류율이 0.5 이상이어서 이 분류기를 추가하지 않고 종료했습니다.');renderAda();return}adaBefore=[...adaP];adaP=r.p;adaVotes=adaVotes.map((v,i)=>v+r.alpha*r.tree.pred[i]);adaHistory.push(r);renderAda()});$('ada-reset').addEventListener('click',resetAda);$('ada-focus').addEventListener('input',resetAda);
+ let lstmHistory=[],lc=0,lh=0;
+ function renderLstm(){const x=+$('lstm-x').value;set('lstm-x-out',fmt(x,2)+' · '+fmt(60+5*x,1)+'°C');set('lstm-count',lstmHistory.length+' / 최대 7단계');$('lstm-step').disabled=lstmHistory.length>=7;const r=lstmHistory[lstmHistory.length-1];['f','i','g','o'].forEach(k=>set('gate-'+k,r?fmt(r[k],6):'계산 전'));if(r)set('lstm-status','c = '+fmt(r.f,6)+' × '+fmt(r.previousC,6)+' + '+fmt(r.i,6)+' × '+fmt(r.g,6)+' = '+fmt(r.c,6)+'; h = '+fmt(r.o,6)+' × tanh('+fmt(r.c,6)+') = '+fmt(r.h,6)+'; ŷ = '+fmt(r.prediction,6)+'%');else set('lstm-status','c₀=0, h₀=0, 가상 예측=94.000%');$('lstm-values').innerHTML='<tr><td>초기</td><td>0</td><td>0</td><td>94.000</td></tr>'+lstmHistory.map((r,i)=>`<tr><td>${(i+1)*24}h · ${fmt(r.x,1)}</td><td>${fmt(r.c,6)}</td><td>${fmt(r.h,6)}</td><td>${fmt(r.prediction,6)}</td></tr>`).join('')}
+ $('lstm-x').addEventListener('input',()=>{const x=+$('lstm-x').value;set('lstm-x-out',fmt(x,2)+' · '+fmt(60+5*x,1)+'°C')});$('lstm-step').addEventListener('click',()=>{if(lstmHistory.length>=7)return;const r=M.lstmStep(+$('lstm-x').value,lc,lh);lc=r.c;lh=r.h;lstmHistory.push(r);renderLstm()});$('lstm-reset').addEventListener('click',()=>{lc=lh=0;lstmHistory=[];renderLstm()});
+ const hours=[24,48,72,96,120,144,168],attInitial=[0,.5,1,-.3,.7,1.2,.4],attValues=[.2,.8,.4,-.1,.6,.9,.3];
+ $('attention-sliders').innerHTML=hours.map((h,i)=>`<div class="attrow" id="att-row-${i}"><label for="att-score-${i}">${h}h<span class="visually-hidden"> 점수 s, V=${attValues[i]}</span></label><input id="att-score-${i}" type="range" min="-2" max="2" step="0.1" value="${attInitial[i]}" aria-describedby="att-score-out-${i}"><output id="att-score-out-${i}" for="att-score-${i}">${attInitial[i]}</output><div><span class="weight" id="att-weight-${i}"></span><div class="weightviz" aria-hidden="true"><span id="att-bar-${i}"></span></div></div></div>`).join('');
+ function renderAttention(){const cutoff=+$('att-cutoff').value,count=cutoff/24,tau=+$('att-temp').value,scores=hours.map((_,i)=>+$('att-score-'+i).value),r=M.attention(scores,attValues,count,tau);set('att-temp-out',fmt(tau,2));hours.forEach((h,i)=>{const enabled=h<=cutoff;$('att-score-'+i).disabled=!enabled;$('att-row-'+i).classList.toggle('unavailable',!enabled);set('att-score-out-'+i,fmt(scores[i],1));set('att-weight-'+i,enabled?fmt(r.weights[i],4):'미관측 · 0');$('att-bar-'+i).style.width=(r.weights[i]*100)+'%'});set('att-sum',fmt(r.sum,6));set('att-context',fmt(r.context,6));set('att-count',count+' / 7');set('attention-status',cutoff===168?'168시간 종료 시점의 전체 관측을 모읍니다. 이 예시는 조기경보가 아닙니다.':cutoff+'시간까지 '+count+'개 관측만 사용합니다. 이후 '+(7-count)+'개 슬롯은 분모와 가중 합에서 모두 제외합니다.');set('att-equation',r.weights.slice(0,count).map((a,i)=>fmt(a,6)+' × '+attValues[i]).join(' + ')+' = '+fmt(r.context,6)+' (표시 반올림 전 계산)')}
+ hours.forEach((_,i)=>$('att-score-'+i).addEventListener('input',renderAttention));$('att-cutoff').addEventListener('change',renderAttention);$('att-temp').addEventListener('input',renderAttention);$('att-reset').addEventListener('click',()=>{hours.forEach((_,i)=>$('att-score-'+i).value=attInitial[i]);$('att-temp').value=1;renderAttention()});
+ document.querySelectorAll('.quiz').forEach(q=>q.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const correct=b.dataset.choice===q.dataset.answer;q.querySelectorAll('button').forEach(other=>other.setAttribute('aria-pressed',String(other===b)));q.querySelector('.feedback').textContent=(correct?'맞습니다. ':'다시 확인해 봅니다. ')+q.dataset.explanation})));
+ let theme;try{theme=localStorage.getItem('ml-terms-theme')}catch{}if(theme!=='dark'&&theme!=='light')theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';function applyTheme(){document.documentElement.dataset.theme=theme;$('theme').setAttribute('aria-pressed',String(theme==='dark'));set('theme',theme==='dark'?'밝은 화면':'어두운 화면')};$('theme').addEventListener('click',()=>{theme=theme==='dark'?'light':'dark';applyTheme();try{localStorage.setItem('ml-terms-theme',theme)}catch{}});applyTheme();renderShap();renderPdp();renderTree();resetAda();renderLstm();renderAttention();
+})();
+</script>
+<script id="reading-ui">
+(() => {
+ 'use strict';
+ const lessons=Array.from(document.querySelectorAll('details.lesson'));
+ const status=document.getElementById('reading-status');
+ function jump(){const target=document.getElementById(location.hash.slice(1));if(!target)return;const lesson=target.closest('details.lesson');if(lesson){lesson.open=true;requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}else if(target.matches('input,select,button')){target.focus({preventScroll:true});}}
+ document.getElementById('reading-expand').addEventListener('click',()=>{lessons.forEach(d=>d.open=true);status.textContent='해설 18편을 모두 펼쳤습니다.';});
+ document.getElementById('reading-collapse').addEventListener('click',()=>{lessons.forEach(d=>d.open=false);status.textContent='해설 18편을 접었습니다. 목차에서 고르면 해당 해설이 펼쳐집니다.';});
+ document.addEventListener('click',event=>{const link=event.target.closest('a[href^="#"]');if(!link)return;const target=document.getElementById(link.getAttribute('href').slice(1));const lesson=target?.closest('details.lesson');if(lesson)lesson.open=true;if(link.hash===location.hash)jump();});window.addEventListener('hashchange',jump);jump();
+})();
+</script>
+</body>
+</html>
