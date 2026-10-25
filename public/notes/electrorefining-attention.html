@@ -36,11 +36,11 @@
       <div><p class="eyebrow">전해정련을 배우는 사람을 위한 연구 설명</p><h1 id="page-title">Cheng·Liu를 중심으로<br><span>조업 기록을 읽는 방법</span></h1><p class="lead">성분 조건을 해석하는 Cheng, 물리량과 여러 결과를 함께 다루는 Liu를 연구의 중심에 둡니다. Correa는 시간 이력 모델을 비교하는 근거로 이어갑니다.</p><p class="subtle">수정일 2026.10.25 · 실제 MES 자료는 미확보입니다. 아래 합성 모델 시험은 현장 성능과 구분합니다.</p><a href="#cell">전해조 그림부터 보기 ↓</a></div>
       <aside class="hero-figure" aria-label="연구의 중심과 비교 순서"><h2>조건 해석 → 물리·공동 예측 → 시간 이력 비교</h2><dl class="research-order"><div><dt>Cheng · 핵심</dt><dd>CatBoost · 물질수지 · 조건 해석</dd></div><div><dt>Liu · 핵심</dt><dd>계산 가능한 물리량 · 다중 결과</dd></div><div><dt>Correa · 비교</dt><dd>LSTM·Attention의 추가 가치</dd></div></dl><p class="caption">이 순서는 사용자가 정한 연구 비중입니다. 논문 성능이나 완성도의 순위가 아닙니다.</p></aside>
     </section>
-    <aside class="opening" aria-label="어텐션을 앞에 둔 이유">
-      <p class="eyebrow">페이지를 열면 먼저 읽는 계산</p>
-      <p>어텐션(Attention) 메커니즘은 본래 언어의 문맥을 파악하기 위해 개발되었습니다. 하는 일은 수많은 데이터 가운데 지금 목표에 더 중요한 정보가 무엇인지 가중치를 매겨 집중하는 계산입니다. 그래서 언어뿐만 아니라, 여러 변수가 시간에 따라 변하는 시계열을 분석하고 이후를 예측하는 데도 씁니다.</p>
-      <p>과거의 모든 기록을 순서대로 같게 다루던 순환 신경망(RNN)과 달리, 어텐션은 이후의 특정 결과, 예를 들어 불량이나 시스템 장애를 예측할 때 점수가 높은 과거 시점과 변수에 더 큰 계산 비중을 둡니다.</p>
-      <p class="caption">그 비중은 예측에 기록을 섞는 비율입니다. 그 시점이나 변수가 원인이라는 판정은 아니고, 불량이 날 확률도 아닙니다. <a href="#attention">수식과 체험은 어텐션 원리로 이어집니다.</a></p>
+    <aside class="opening" aria-label="읽기 전에 알아두면 좋은 점">
+      <p class="eyebrow">읽기 전에 알아두면 좋은 점</p>
+      <p>어텐션(Attention)은 원래 글의 앞뒤를 읽으려고 만들었습니다. 많은 자료 가운데 지금 보려는 일에 더 중요한 정보에 가중치를 두고 집중하는 계산입니다. 글에만 쓰는 방법이 아닙니다. 여러 값이 시간에 따라 바뀌는 기록을 읽고, 앞으로의 결과를 예상할 때도 씁니다.</p>
+      <p>순환 신경망(RNN)은 지난 기록을 순서대로 지나며 대체로 같은 비중으로 넘깁니다. 어텐션은 앞으로의 결과, 예를 들어 불량이나 시스템 장애를 예상할 때 점수가 높은 과거 시점과 변수에 계산을 더 둡니다.</p>
+      <p class="caption">그 비중은 예측에 기록을 섞는 비율입니다. 그 시점이나 변수가 원인이라는 판정은 아니고, 불량이 날 확률도 아닙니다. <a href="#attention">수식과 체험은 아래 어텐션 원리에서 볼 수 있습니다.</a></p>
     </aside>
     <div class="summary"><p><strong>목표는 전류효율을 높게 유지하고, 좋은 표면 품질을 함께 얻는 것입니다.</strong><br>방정식으로 계산할 수 있는 양을 정리하고, 시간에 따라 쌓인 기록에서 예측에 도움이 되는 정보를 찾습니다.</p></div>
     <aside class="note"><p><strong>모델 용어부터 차근차근 배우려면</strong></p><p><a href="/notes/electrorefining-ml-terms.html">SHAP·PDP·ICE, CatBoost·AdaBoost, LSTM·Attention 인터랙티브 해설</a>에서 숫자와 곡선을 직접 바꿔 볼 수 있습니다. 각 용어의 초보자용 상세 해설도 함께 읽을 수 있습니다.</p></aside>
