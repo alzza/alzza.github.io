@@ -74,15 +74,6 @@ test('Manual single_cycle path retains its original behavior', () => {
   assert.equal(startCondition({ detected: false, single: true, robotClear: false }), false);
 });
 
-test('Other permit_cycle_after_unload paths remain independent of the filter', () => {
-  const latchRequest = (waitEdge, runEdge, mode, detected, sensorEdge) =>
-    waitEdge || runEdge || (mode && detected && sensorEdge);
-  assert.equal(latchRequest(false, false, true, false, true), false);
-  assert.equal(latchRequest(false, false, true, true, true), true);
-  assert.equal(latchRequest(true, false, true, false, false), true);
-  assert.equal(latchRequest(false, true, true, false, false), true);
-});
-
 // Sequence abstraction: main SFC consumes previous scan's permit;
 // index finishes after 400 ms in this model, independently of sensor release.
 function sequence(filtered, raw) {
@@ -109,6 +100,13 @@ test('Original can start on a short pulse; modified cannot', () => {
 
 test('Two real placements produce two starts with no restart in the empty interval', () => {
   const raw = now => !((now >= 100 && now < 400) || (now >= 1500 && now < 1800));
+  assert.deepEqual(sequence(true, raw).starts, [310, 1710]);
+});
+
+test('Post-index chatter creates an extra original cycle but no filtered cycle', () => {
+  const raw = now => !((now >= 100 && now < 400) ||
+    (now >= 900 && now < 1000) || (now >= 1500 && now < 1800));
+  assert.deepEqual(sequence(false, raw).starts, [110, 910, 1510]);
   assert.deepEqual(sequence(true, raw).starts, [310, 1710]);
 });
 
