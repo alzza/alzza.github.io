@@ -24,6 +24,7 @@
     @media(max-width:760px){.paper-path-three{grid-template-columns:1fr}.model-steps{grid-template-columns:1fr 1fr}.model-box{padding:16px}.model-controls{align-items:stretch}.split-strip{flex-direction:column}}
     @media(max-width:420px){.model-steps{grid-template-columns:1fr}}
   .diagram:focus-visible,.table-scroll:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+  .calc input[type="number"]{width:100%;min-width:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--sheet);color:var(--ink);font:inherit}.calc .results{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.calc .result strong{overflow-wrap:anywhere}.calc input:disabled{opacity:.5}@media(max-width:600px){.calc .results{grid-template-columns:1fr}.calc .controls{grid-template-columns:1fr}}
   </style>
   <script>try{const t=localStorage.getItem('electrorefining-theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.dataset.theme='dark';}catch{}</script>
 </head>
@@ -42,7 +43,7 @@
       <p>순환 신경망(RNN)은 지난 기록을 순서대로 지나며 대체로 같은 비중으로 넘깁니다. 어텐션은 앞으로의 결과, 예를 들어 불량이나 시스템 장애를 예상할 때 점수가 높은 과거 시점과 변수에 계산을 더 둡니다.</p>
       <p class="caption">그 비중은 예측에 기록을 섞는 비율입니다. 그 시점이나 변수가 원인이라는 판정은 아니고, 불량이 날 확률도 아닙니다. <a href="#attention">수식과 체험은 아래 어텐션 원리에서 볼 수 있습니다.</a></p>
     </aside>
-    <div class="summary"><p><strong>목표는 전류효율을 높게 유지하고, 좋은 표면 품질을 함께 얻는 것입니다.</strong><br>방정식으로 계산할 수 있는 양을 정리하고, 시간에 따라 쌓인 기록에서 예측에 도움이 되는 정보를 찾습니다.</p></div>
+    <div class="summary"><p><strong>목표는 조업 상태를 예측하고, 좋은 작업과 나쁜 작업에서 반복되는 미묘한 차이를 찾는 것입니다.</strong><br>방정식으로 계산할 수 있는 양을 정리하고, 시간에 따라 쌓인 기록에서 예측에 도움이 되는 정보를 찾습니다.</p></div>
     <aside class="note"><p><strong>모델 용어부터 차근차근 배우려면</strong></p><p><a href="/notes/electrorefining-ml-terms.html">SHAP·PDP·ICE, CatBoost·AdaBoost, LSTM·Attention 인터랙티브 해설</a>에서 숫자와 곡선을 직접 바꿔 볼 수 있습니다. 각 용어의 초보자용 상세 해설도 함께 읽을 수 있습니다.</p></aside>
   </div>
   <nav class="toc" aria-label="문서 목차"><div class="wrap"><a href="#goal">연구 목표</a><a href="#cell">전해조 그림</a><a href="#physics">석출량과 방정식</a><a href="#literature">Cheng·Liu 중심 설계</a><a href="#combine">물리량과 모델</a><a href="#data-needed">시험에 필요한 자료</a><a href="#synthetic-model">합성 모델 시험</a><a href="#attention">어텐션 원리</a><a href="#lab">비중 체험</a><a href="#operation">조업 적용</a><a href="#verify">현장 검증 순서</a></div></nav>
@@ -53,7 +54,7 @@
       <div class="two"><div class="priority"><div class="rank">1</div><div><h3>전류효율을 먼저 봅니다.</h3><p>공급한 전하로 만들 수 있는 이론상 구리량과 실제 순석출 구리량을 비교합니다. 전류효율은 전력량이나 열 손실의 비율과는 다른 값입니다.</p></div></div><div class="priority"><div class="rank">2</div><div><h3>Vision S등급률을 함께 봅니다.</h3><p>표면 검사에서 S등급을 받은 판의 비율을 확인합니다. 효율이 좋다고 반드시 S등급률도 높은 것은 아니므로 두 결과를 따로 보관합니다.</p></div></div></div>
       <h3>확인하고 싶은 질문도 달라집니다.</h3>
       <div class="flow"><div><strong>무슨 일이 있었나?</strong><p>Vision, 중량, 단락 기록으로 결과를 확인합니다.</p></div><div><strong>그전에 무엇이 달랐나?</strong><p>조동·전해액·첨가제와 작업 이력을 연결합니다.</p></div><div><strong>다음 결과는 어떨까?</strong><p>현재까지의 기록으로 이후 결과를 예상합니다.</p></div><div><strong>지금 무엇을 확인할까?</strong><p>검증된 신호를 바탕으로 점검 순서를 정합니다.</p></div></div>
-      <p>원인을 설명하는 일, 미래를 예측하는 일, 조치가 실제로 효과를 냈는지 확인하는 일은 서로 다른 검증이 필요합니다. 이 연구는 세 가지를 연결해 진행합니다.</p>
+      <p>원인을 설명하는 일, 미래를 예측하는 일, 조치가 실제로 효과를 냈는지 확인하는 일은 서로 다른 검증이 필요합니다. 현재 연구는 상태예측과 반복되는 조건 차이의 확인에 집중합니다. 발견한 차이가 원인인지는 별도의 현장 검증으로 확인합니다.</p>
     </section>
 
     <section class="section" id="cell" aria-labelledby="cell-title">
@@ -80,7 +81,39 @@
       <h2 id="physics-title">방정식은 각각 다른 질문에 답합니다.</h2>
       <p>하나의 식으로 전해조 안의 모든 현상과 Vision 등급을 계산할 수는 없습니다. 먼저 어떤 양을 구하려는지 정하고, 그 식에 필요한 측정값과 가정을 확인합니다.</p>
       <div class="eq-block"><span class="eq-label">석출량 · Faraday 법칙</span><h3>흘린 전하로 구리를 얼마나 만들 수 있을까요?</h3><div class="math" role="img" aria-label="이론 구리 질량은 구리 몰질량 나누기 2F 곱하기 누적 전하입니다.">Q = ∫ I(t) dt &nbsp;&nbsp; m<sub>th</sub> = <span>M<sub>Cu</sub> / (2F)</span> × Q</div><p>전류를 시간에 따라 더하면 누적 전하 Q를 얻습니다. 구리 한 원자를 석출하는 전체 반응에 전자 두 개가 필요하므로 2로 나눕니다. 실제 순석출량을 같은 대상의 이론량으로 나눈 값이 전류효율입니다.</p><p class="caption">M<sub>Cu</sub> = 0.063546 kg/mol, F ≈ 96,485.33 C/mol입니다. 전류 A와 시간 s를 쓰면 질량은 kg입니다.</p></div>
-      <div class="calc" role="region" aria-labelledby="calc-title"><span class="badgelabel">설명용 계산 · 실제 조업 예측이 아닙니다.</span><h3 id="calc-title">전류와 시간을 바꿔 보세요.</h3><p>하나의 Cell에서 전체 음극으로 흐르는 전류를 일정하게 유지한다고 가정합니다. 전류효율 슬라이더는 사용자가 정한 가정이며 모델이 예측한 값이 아닙니다. 통전 시간은 24~168시간을 하루 간격으로 고릅니다. 정지 시간이 있었다면 달력상의 경과 시간과 실제 통전 시간은 다릅니다.</p><div class="interactive"><div class="controls"><div class="control"><label for="calc-current">Cell 전류 <output id="current-out" for="calc-current">1,000 A</output></label><input id="calc-current" type="range" min="100" max="5000" step="100" value="1000"></div><div class="control"><label for="calc-hours">누적 통전 시간 <output id="hours-out" for="calc-hours">24 h</output></label><select id="calc-hours"><option value="24" selected>24시간 · 1일차 종료</option><option value="48">48시간 · 2일차 종료</option><option value="72">72시간 · 3일차 종료</option><option value="96">96시간 · 4일차 종료</option><option value="120">120시간 · 5일차 종료</option><option value="144">144시간 · 6일차 종료</option><option value="168">168시간 · 7일차 종료</option></select></div><div class="control"><label for="calc-eff">가정한 전류효율 <output id="eff-out" for="calc-eff">95%</output></label><input id="calc-eff" type="range" min="50" max="100" step="1" value="95"></div></div><div class="results" aria-live="polite"><div class="result"><span>이론상 구리량</span><strong id="mass-theory">28.45 kg</strong></div><div class="result"><span>가정한 효율을 적용한 구리량</span><strong id="mass-assumed">27.03 kg</strong></div></div><div class="bar-line"><span>이론상 구리량</span><span class="track"><span class="fill neutral" style="width:100%"></span></span><span>100%</span></div><div class="bar-line"><span>효율 적용량</span><span class="track"><span class="fill" id="mass-bar" style="width:95%"></span></span><span id="mass-percent">95%</span></div></div><p class="empty-js">전류 1,000 A, 통전 24시간이면 이론상 약 28.45 kg입니다. 전류효율을 95%로 가정하면 약 27.03 kg입니다. 자바스크립트를 켜면 값을 바꿔 볼 수 있습니다.</p><p class="caption">같은 Cell 전류를 음극 판마다 중복 적용하면 안 됩니다. 실제 효율을 계산할 때는 blank 무게 등을 제외한 순석출 구리량과 회로·기간을 맞춰야 합니다.</p></div>
+      <div class="calc" role="region" aria-labelledby="calc-title">
+<span class="badgelabel">패러데이 법칙 계산 · 전류효율은 입력한 가정입니다.</span>
+<h3 id="calc-title">Cathode 판 크기에 맞춰 석출량을 계산합니다.</h3>
+<p>한 Cell에 조동 <strong>50매</strong>, Cathode blank <strong>49매</strong>를 사용하는 구성입니다. Cathode 한 장의 양면에 구리가 고르게 석출되고, 49매에 전류가 균등하게 나뉜다고 가정합니다. blank 자체 무게는 구리 생산량에 포함하지 않습니다.</p>
+<div class="interactive">
+<div class="controls">
+<div class="control"><label for="calc-mode">전류 입력 방식</label><select id="calc-mode"><option value="current">Cell 전체 전류로 계산</option><option value="density">전류밀도 × 전착 면적으로 계산</option></select></div>
+<div class="control"><label for="calc-width">판 한 면의 실제 전착 폭 (mm)</label><input id="calc-width" type="number" min="1" max="5000" step="any" value="980" placeholder="실제 폭 입력" aria-describedby="geometry-help"></div>
+<div class="control"><label for="calc-height">판 한 면의 실제 침지 높이 (mm)</label><input id="calc-height" type="number" min="1" max="5000" step="any" value="1065" placeholder="실제 침지 높이 입력" aria-describedby="geometry-help"></div>
+<div class="control"><label for="calc-current">Cell 전체 전류 (A)</label><input id="calc-current" type="number" min="0" max="200000" step="any" value="1000"></div>
+<div class="control"><label for="calc-density">전착 면적 기준 전류밀도 (A/m²)</label><input id="calc-density" type="number" min="0" max="2000" step="any" placeholder="전류밀도 입력" disabled></div>
+<div class="control"><label for="calc-hours">실제 누적 통전 시간 (h)</label><input id="calc-hours" type="number" min="0" max="10000" step="any" value="24"></div>
+<div class="control"><label for="calc-eff">가정한 전류효율 <output id="eff-out" for="calc-eff">95%</output></label><input id="calc-eff" type="range" min="0" max="100" step="0.1" value="95"></div>
+</div>
+<p id="geometry-help" class="caption">폭·높이는 가장자리 절연부와 액면 위 부분을 제외한 실제 전착 면적의 치수입니다. 기본 침지 높이 1,065 mm는 사용자 예상 범위 1,050~1,080 mm의 중간값입니다. 기본 폭 980 mm는 교육자료의 MAX 치수를 임시로 사용한 값이며 실제 전착 폭은 미확인입니다. 실제 치수가 다르면 수정해 주세요. 초기 전류 1,000 A·24 h·95%는 설명용 입력이며 현장 설정값이 아닙니다.</p>
+<p id="calc-status" role="status"></p>
+<div class="results" aria-live="polite">
+<div class="result"><span>Cell 전체 이론 석출량 · 효율 100%</span><strong id="mass-theory">—</strong></div>
+<div class="result"><span>Cell 전체 석출량 · 입력 효율 적용</span><strong id="mass-assumed">—</strong></div>
+<div class="result"><span>Cathode 1장 · 양면 구리 합계</span><strong id="mass-plate">—</strong></div>
+<div class="result"><span>한쪽 면의 구리량 · 98면 평균</span><strong id="mass-face">—</strong></div>
+<div class="result"><span>한쪽 면의 평균 석출 두께</span><strong id="deposit-thickness">—</strong></div>
+<div class="result"><span>Cell 전체 전착 면적 · 49매 양면</span><strong id="active-area">—</strong></div>
+<div class="result"><span>계산에 사용한 Cell 전체 전류</span><strong id="effective-current">—</strong></div>
+<div class="result"><span>전체 전착 면적 기준 전류밀도</span><strong id="effective-density">—</strong></div>
+</div>
+<div class="bar-line"><span>이론 석출량</span><span class="track"><span class="fill neutral" style="width:100%"></span></span><span>100%</span></div>
+<div class="bar-line"><span>효율 적용량</span><span class="track"><span class="fill" id="mass-bar" style="width:95%"></span></span><span id="mass-percent">95%</span></div>
+</div>
+<noscript><p>입력값을 계산하려면 자바스크립트를 켜 주세요.</p></noscript>
+<p class="caption">전착 면적 A = 폭 × 침지 높이 × 2면 × 49매 (m²). 전류밀도 방식에서는 I = jA, 석출량 m = I × 통전시간 × 0.0011855 × 효율 (kg, 시간은 h, 효율은 0~1)입니다. 한쪽 면 평균 두께 = m ÷ (8,960 × A) × 1,000 (mm). 계산에는 패러데이 상수를 사용합니다.</p>
+<p class="caption">Cell 전류가 같으면 판 면적을 바꿔도 전체 구리량은 같고, 전류밀도와 평균 두께가 달라집니다. 전류밀도를 고정하면 면적에 비례해 전류와 구리량이 달라집니다. 조동 50매는 배열 구성 정보이며 생산량에 곱하지 않습니다. 결과는 균등 분배를 가정한 평균으로, 개별 판 중량·국부 혹 높이·실제 상태예측값은 아닙니다. 통전 시간에는 정지 시간을 제외합니다.</p>
+</div>
       <div class="two"><div class="eq-block"><span class="eq-label">평형 기준 · Nernst 식</span><h3>농도 상태가 달라지면 반응의 평형 기준은 어떻게 바뀔까요?</h3><div class="math">ΔE<sub>eq</sub> = (RT / 2F) ln(a₂ / a₁)</div><p>같은 온도의 Cu²⁺/Cu 평형을 비교하고 금속 Cu의 활동도를 1로 둔 식입니다. a는 단순 농도보다 엄밀한 ‘활동도’입니다. 활동도가 두 배면 65℃에서 평형전위 차이는 약 +10.1 mV입니다.</p><p class="caption">이 값은 Cell 전압 증가량이나 불량 위험도가 아닙니다. 벌크 Cu 분석값을 그대로 활동도로 넣으려면 추가 가정이 필요합니다. <a href="#ref-comsol-nernst">[2]</a></p></div><div class="eq-block"><span class="eq-label">표면 반응 · Butler–Volmer 식</span><h3>평형에서 벗어난 전위가 표면 반응을 얼마나 바꿀까요?</h3><div class="math">j = j₀ [e<sup>α<sub>a</sub>Fη/RT</sup> − e<sup>−α<sub>c</sub>Fη/RT</sup>]</div><p>η는 표면 반응의 과전압이고 j₀는 교환전류밀도입니다. 여기서는 단일 전자 전달의 기본 형태를 보여줍니다. 지수함수 e<sup>x</sup>는 x가 일정량 증가할 때 결과가 일정 배수로 변하는 함수입니다.</p><p class="caption">구리 전체 반응의 전자 수 2를 위 식의 지수에 자동으로 넣지 않습니다. 실제 구리 반응 단계·계수·표면 농도에 맞는 모델이 필요합니다. α<sub>a</sub>와 α<sub>c</sub>는 각 방향의 전하 이동을 나타내는 계수이며, 두 계수의 합을 2로 맞추는 것도 자동 규칙이 아닙니다. <a href="#ref-comsol-kinetics">[3]</a></p></div></div>
       <figure class="diagram" tabindex="0"><svg viewBox="0 0 960 270" role="img" aria-labelledby="bv-svg-title bv-svg-desc"><title id="bv-svg-title">과전압과 표면 반응 전류의 관계</title><desc id="bv-svg-desc">교환전류밀도와 온도를 고정한 단일 전자 전달의 대칭 Butler-Volmer 예시입니다. 과전압이 양이면 양극 방향 순전류가 증가하고 음이면 음극 방향 순전류의 절댓값이 증가합니다.</desc><line x1="90" y1="130" x2="565" y2="130" stroke="var(--plot)"/><line x1="326" y1="25" x2="326" y2="237" stroke="var(--plot)"/><path id="bv-curve" d="M95 228 C215 155 250 148 326 130 C400 112 438 105 555 32" fill="none" stroke="var(--accent)" stroke-width="4"/><text x="330" y="258" font-size="15" text-anchor="middle">과전압 η (V)</text><text x="100" y="153" font-size="13">−0.15</text><text x="333" y="153" font-size="13">0</text><text x="520" y="153" font-size="13">+0.15</text><text x="90" y="20" font-size="14">j / j₀</text><text x="635" y="68" font-size="21" font-weight="700">표면 반응은 방향도 봅니다.</text><text x="635" y="108" font-size="16">＋ 쪽: 양극 방향 순반응이 커집니다.</text><text x="635" y="143" font-size="16">− 쪽: 음극 방향 순반응이 커집니다.</text><text x="635" y="198" font-size="14">65℃, 두 전달계수가 각각 0.5인 예시입니다.</text><text x="635" y="225" font-size="14">실제 전해조의 측정 곡선이 아닙니다.</text></svg><figcaption>교환전류밀도와 온도를 고정한 단일 전자 전달 예시입니다. 온도가 바뀌면 교환전류밀도도 달라질 수 있습니다. 실제 조업에는 표면까지 이온을 공급하는 과정과 용액의 전압 강하 등도 함께 작용합니다.</figcaption></figure>
       <div class="two"><div class="eq-block"><span class="eq-label">이온 공급 · 물질 이동</span><h3>표면에서 필요한 구리를 액이 공급할 수 있을까요?</h3><div class="math">j<sub>lim</sub> ≈ 2F D c<sub>bulk</sub> / δ</div><p>표면 Cu²⁺가 거의 고갈되는 단순한 확산층 모형입니다. D는 확산계수, δ는 확산층 두께입니다. 같은 벌크 농도라도 유동과 표면 상태가 다르면 국부 공급 여유가 달라질 수 있습니다.</p><p class="caption">c는 mol/m³, D는 m²/s, δ는 m일 때 j는 A/m²입니다. 실제 전해액의 대류·이온 이동·혼합 성분을 모두 계산한 식은 아닙니다. <a href="#ref-comsol-kinetics">[3]</a></p></div><div class="eq-block"><span class="eq-label">온도와 속도 · Arrhenius 관계</span><h3>온도가 오르면 모든 결과가 좋아질까요?</h3><div class="math">k = A<sub>k</sub> e<sup>−Eₐ/RT</sup></div><p>같은 반응기구와 계수를 가정하면 온도에 따른 속도상수 변화를 비교할 수 있습니다. Eₐ를 설명용으로 50 kJ/mol로 두면 55→65℃에서 약 1.72배입니다. 실제 구리 석출이나 첨가제 분해의 측정 계수가 아닙니다.</p><p class="caption"><strong>정전류 조업에서는 온도만 올랐다고 총전류와 이론 생산량이 자동 증가하지 않습니다.</strong> 온도는 반응·물질 이동·첨가제 거동 등에 함께 영향을 줄 수 있습니다.</p></div></div>
@@ -217,12 +250,31 @@
   themeButton.addEventListener('click', () => { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = next; try { localStorage.setItem('electrorefining-theme', next); } catch {} syncTheme(); });
   syncTheme();
   function updateFaraday() {
-    const current = Number($('calc-current').value), hours = Number($('calc-hours').value), efficiency = Number($('calc-eff').value);
-    const mass = 0.063546 * current * hours * 3600 / (2 * 96485.33212);
-    $('current-out').textContent = current.toLocaleString('ko-KR') + ' A'; $('hours-out').textContent = hours + ' h'; $('eff-out').textContent = efficiency + '%';
-    $('mass-theory').textContent = mass.toFixed(2) + ' kg'; $('mass-assumed').textContent = (mass * efficiency / 100).toFixed(2) + ' kg'; $('mass-bar').style.width = efficiency + '%'; $('mass-percent').textContent = efficiency + '%';
+    const densityMode = $('calc-mode').value === 'density';
+    $('calc-current').disabled = densityMode;
+    $('calc-density').disabled = !densityMode;
+    const read = id => { const e = $(id); return e.value.trim() !== '' && e.validity.valid ? Number(e.value) : NaN; };
+    const width = read('calc-width'), height = read('calc-height');
+    const area = width * height / 1e6 * 2 * 49;
+    const geometryOK = Number.isFinite(area) && area > 0;
+    const hours = read('calc-hours'), efficiency = read('calc-eff');
+    const current = densityMode ? (geometryOK ? read('calc-density') * area : NaN) : read('calc-current');
+    const valid = [hours, efficiency, current].every(Number.isFinite);
+    const mass = valid ? 0.063546 * current * hours * 3600 / (2 * 96485.33212) : NaN;
+    const actual = mass * efficiency / 100;
+    const show = (id, value, unit, digits=2) => { $(id).textContent = Number.isFinite(value) ? value.toLocaleString('ko-KR', {minimumFractionDigits:digits, maximumFractionDigits:digits}) + ' ' + unit : '—'; };
+    show('mass-theory', mass, 'kg'); show('mass-assumed', actual, 'kg');
+    show('mass-plate', actual / 49, 'kg', 3); show('mass-face', actual / 98, 'kg', 3);
+    show('deposit-thickness', geometryOK ? actual / (8960 * area) * 1000 : NaN, 'mm', 3);
+    show('active-area', geometryOK ? area : NaN, 'm²', 3);
+    show('effective-current', current, 'A');
+    show('effective-density', geometryOK ? current / area : NaN, 'A/m²');
+    $('eff-out').textContent = efficiency + '%';
+    $('mass-bar').style.width = efficiency + '%'; $('mass-percent').textContent = efficiency + '%';
+    $('calc-status').textContent = !valid && !densityMode ? '통전 시간과 Cell 전류를 유효한 숫자로 입력해 주세요.' : !geometryOK ? (densityMode ? '전류밀도와 실제 전착 폭·침지 높이를 입력하면 계산됩니다.' : 'Cell 전체·판당 구리량은 계산되었습니다. 실제 폭·침지 높이를 입력하면 전류밀도와 두께도 계산됩니다.') : !valid ? '통전 시간과 선택한 방식의 전류 또는 전류밀도를 유효한 숫자로 입력해 주세요.' : 'Cathode 49매 · 양면 98면에 균등 석출되는 조건으로 계산했습니다.';
   }
-  ['calc-current','calc-eff'].forEach(id => $(id).addEventListener('input', updateFaraday)); $('calc-hours').addEventListener('change', updateFaraday); updateFaraday();
+  ['calc-mode','calc-width','calc-height','calc-current','calc-density','calc-hours','calc-eff'].forEach(id => $(id).addEventListener('input', updateFaraday));
+  $('calc-mode').addEventListener('change', updateFaraday); updateFaraday();
   const defaultScores = [0.2,0.4,1.8,0.8,0.1,0.3,0.6]; let scores = [...defaultScores];
   const values = [0.20,0.35,0.75,0.40,0.65,0.55,0.30];
   function syncDayOptions() {

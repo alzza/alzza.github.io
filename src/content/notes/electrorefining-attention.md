@@ -1,7 +1,7 @@
 ---
 title: Cheng·Liu를 중심으로 전해정련 조건과 품질을 연구하는 방법
-date: "2026-10-25"
-excerpt: 석출량 계산, Cheng·Liu 중심 설계, 시험 데이터 요청표와 실제 학습한 합성 모델을 비교합니다. 누르면 HTML 설명이 바로 열립니다.
+date: "2026-10-28"
+excerpt: 조업 상태를 예측하고 좋은 작업과 나쁜 작업의 반복되는 차이를 찾습니다. Cathode 49매와 판 크기를 반영한 석출량 계산기를 제공합니다.
 kicker: 전해정련
 tags: ["전해정련", "머신러닝", "전기화학", "연구"]
 redirect: /notes/electrorefining-attention.html
