@@ -68,6 +68,12 @@ const redirect = note.data.redirect;
       </>
     )
   }
+  {note.id === "csm-outfeed-sheet-filter" && (
+    <>
+      <link rel="stylesheet" href="/outfeed-index-guide.css?v=1" />
+      <script is:inline src="/outfeed-index-guide.js?v=1"></script>
+    </>
+  )}
 </Base>
 {note.id === "sc1-sm12-finger-retry-onoff" && (
   <>
