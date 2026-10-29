@@ -6,15 +6,20 @@ import Comments from "../../components/Comments.astro";
 
 export async function getStaticPaths() {
   const notes = await getCollection("notes");
-  return notes.map((note) => ({
+  const paths = notes.map((note) => ({
     params: { id: note.id },
     props: { note },
   }));
+  const outfeed = notes.find((note) => note.id === "csm-outfeed-sheet-filter");
+  if (outfeed) paths.push({ params: { id: "csm-outfeed-work-archive" }, props: { note: outfeed } });
+  return paths;
 }
 
 const { note } = Astro.props;
 const { Content } = await render(note);
-const redirect = note.data.redirect;
+const archiveView = Astro.params.id === "csm-outfeed-work-archive";
+const redirect = archiveView ? undefined : note.data.redirect;
+const noteTitle = archiveView ? "CSM Outfeed Blank 감지와 인덱스 동작 점검 · Rev.4 작업 절차" : note.data.title;
 ---
 {redirect && (
   <html lang="ko">
@@ -32,12 +37,12 @@ const redirect = note.data.redirect;
 )}
 {!redirect && (
 <>
-<Base title={`${note.data.title} · alzza`} description={note.data.excerpt}>
+<Base title={`${noteTitle} · alzza`} description={note.data.excerpt}>
   <Header links={[{ href: "/notes/", label: "노트" }, { href: "/info/", label: "정보" }]} />
   <div class:list={["wrap", "prose", { "prose-plc": note.data.tags.includes("PLC"), "prose-finger-retry": note.id === "sc1-sm12-finger-retry-onoff", "prose-grade-timing": note.id === "csm-r1-vision-grade-timing-check" }]}>
     <section class="hero">
       <span class="badge">노트</span>
-      <h1>{note.data.title}</h1>
+      <h1>{noteTitle}</h1>
       <p class="note-meta">{note.data.date}</p>
       {
         note.data.tags.length > 0 && (

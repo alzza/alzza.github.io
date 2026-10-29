@@ -1,7 +1,8 @@
 ---
-title: "CSM Outfeed Blank 감지와 인덱스 동작 점검 · Rev.4"
+title: "CSM Outfeed Blank 감지와 인덱스 동작 점검 · Rev.5"
 date: "2026-10-26"
 excerpt: "Blank 감지 필터의 현장 변경 이력과 Index Wheel 센서, 밸브 시간 및 체인 인덱스 순서를 정리한다."
+redirect: /notes/csm-outfeed-interactive.html
 kicker: PLC 변경안
 tags: ["CSM", "PLC", "Outfeed", "Robot2"]
 ---
