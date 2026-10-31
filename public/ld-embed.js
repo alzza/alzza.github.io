@@ -27,7 +27,6 @@
         host.className = "ld-rung-live";
         var img = fig.querySelector("img");
         if (img) {
-          img.hidden = true;
           img.insertAdjacentElement("afterend", host);
         } else {
           fig.appendChild(host);
@@ -35,7 +34,22 @@
       }
       try {
         var rr = L5XLadder.renderRung({ number: num, text: rll }, 0, w, false);
-        host.innerHTML = rr.svg;
+        // SVG <style> rules apply to the whole document unless selectors are scoped.
+        // Scope before inserting the SVG so names such as .block cannot affect the page.
+        var template = document.createElement("template");
+        template.innerHTML = rr.svg;
+        var svg = template.content.querySelector("svg");
+        if (!svg) throw new Error("Ladder renderer returned no SVG");
+        svg.querySelectorAll("style").forEach(function (style) {
+          style.textContent = style.textContent.replace(/([^{}]+)\{/g, function (_, selectors) {
+            return selectors.split(",").map(function (selector) {
+              return ".ld-rung-live svg " + selector.trim();
+            }).join(",") + "{";
+          });
+        });
+        host.replaceChildren(template.content);
+        var fallback = fig.querySelector("img");
+        if (fallback) fallback.hidden = true;
       } catch (e) {
         return;
       }
