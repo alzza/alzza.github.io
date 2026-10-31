@@ -1,11 +1,11 @@
-# CSM Outfeed 체인 인덱스와 빈 칸 원인 추적 {#outfeed}
+# CSM Outfeed 체인 인덱스와 빈 칸 원인 추적 · Rev.6 {#outfeed}
 
 한 칸 더 간 이유는 아직 확인되지 않았다. 먼저 **새 인덱스가 다시 시작됐는지**, 아니면 **한 번의 인덱스에서 체인이 더 이동했는지** 구분한다.
 
 - 현장에서는 200ms 필터에서 DN 채터링을 봤고, 600ms에서도 증상이 한 번 발생했다. 현재는 2초로 설정했다고 전달받았다.
 - Blank 감지 필터는 자동 인덱스의 시작 전 조건이다. Slowdown과 Home은 시작한 뒤 Index SFC의 진행 조건이다.
 - `param_valve_delay_time=30`과 `param_valve_bump_time=40`은 SFC Step Preset이며 단위는 ms다. 현장 Online 값을 확인한다.[](source:step)
-- 현장 Trend가 없어 Blank 센서, Index Wheel 센서, 밸브 또는 체인 중 어느 쪽이 원인인지 확정할 수 없다.
+- 10월 29일 Trend에서는 감지 후 약 600ms에 DN이 켜진 장면이 반복됐다. Index 시작과 Wheel 센서는 기록되지 않아 빈 칸의 원인은 확정할 수 없다.
 
 @answer scope="Outfeed 자동 인덱스 · 현장값 확인 중"
 @meta locale=ko
@@ -17,11 +17,57 @@
 | 설정 | 현장 경과 | 남은 확인 |
 | --- | --- | --- |
 | 200ms | 타이머 DN에 채터링이 나타났다. | 입력이 0으로 유지된 시간을 기록한다. |
-| 600ms | 빈 칸이 생기는 증상이 한 번 발생했다. | 실제 감지 지속시간은 아직 모른다. |
+| 600ms | 빈 칸이 생기는 증상이 한 번 발생했다고 전달받았다. | 확보한 Trend에는 600ms와 비슷한 DN 지연이 보이나, 해당 장면이 빈 칸 사건인지는 모른다. |
 | 2초 | 현재 현장에서 설정한 값이다. | Online의 TON Preset과 설정 후 발생 여부를 확인한다. |
 
 @callout level=warning title="2초를 넘는 감지는 시작 조건이 될 수 있다"
 | 입력이 연속 2초 감지되면 DN이 켜진다. 기존 허가도 맞으면 인덱스를 시작할 수 있다. 필터가 모든 원인을 해결했다고 단정하지 않는다. |
+
+## 실제 Trend에는 무엇이 찍혔나? {#field-trend}
+
+10월 29일 16:06:36.595부터 16:16:36.585까지 10분간 10ms 간격으로 수집된 실제 PLC Trend를 분석했다. 기록에 적힌 시각이며 PLC 시계가 현장 시계와 일치하는지는 확인하지 않았다. 원본 파일은 이 페이지에 올리지 않았다.
+
+| 항목 | 기록에서 확인한 값 |
+| --- | --- |
+| 샘플 | 60,000개이며 인접한 기록 시각은 모두 10ms 간격이다. |
+| 완료된 감지 구간 | 입력이 0이 됐다가 1로 돌아온 구간은 89회다. 마지막에 감지 중 끝난 구간 한 개는 제외했다. |
+| 필터 DN | 완료된 감지 구간 중 48회에서 DN이 켜졌다. 입력이 0으로 된 뒤 첫 DN ON은 45회가 600ms, 3회가 590ms 후에 관측됐다. |
+| 입력과 DN | 10ms 샘플에서는 입력이 1인 동안 DN이 1인 샘플은 없었다. 스캔 사이의 더 짧은 변화는 이 기록으로 확인할 수 없다. |
+
+Blank 감지 입력은 `i_sheet_not_at_conveyor=0`일 때 감지다. 590~600ms의 관측 간격은 600ms 설정 당시의 동작과 비슷하지만, 기록에 `.PRE`와 `.ACC`가 없으므로 당시 설정을 확정할 수 없다. 현재 2초 설정을 이 데이터가 검증하는 것도 아니다.
+
+6월 20일의 유휴 시간 Trend는 수집 날짜와 태그 구성이 다르다. 두 기록을 한 사건의 동시 파형처럼 합치지 않는다. 10월 Trend에 함께 들어 있는 `Sheet_Conveyor_1`의 `i_conveyor_index`와 `ic_conveyor_position`은 Outfeed Index Wheel의 Home·Slowdown 태그가 아니다.
+
+## DN이 두 번 켜진 구간은 어떻게 읽나? {#observed-event}
+
+아래는 10월 29일 16:09:30~16:09:40의 실제 Trend에서 뽑은 입력과 DN의 순서다. 그림의 각 상자를 누르면 해당 시점을 살펴볼 수 있다. 이 구간이 작업자가 본 빈 칸 사건인지는 확인되지 않았다.
+
+@workflow id=observed-flow title="16:09:30 이후 감지와 DN 전환"
+| detected | 감지 시작 | external |
+| dn-one | 첫 DN ON | backend |
+| released | 감지 해제 | external |
+| detected-again | 재감지 | external |
+| dn-two | 두 번째 DN ON | backend |
+| detected > dn-one | 600ms |
+| dn-one > released | 320ms |
+| released > detected-again | 50ms |
+| detected-again > dn-two | 600ms |
+
+@steps id=observed-walk
+| obs-one | 감지 시작 | 16:09:30.445에 입력이 0이 됐고 DN은 0이었다. | observed-flow | detected |
+| obs-two | 첫 DN ON | 16:09:31.045에 입력이 0인 상태에서 DN이 1로 바뀌었다. | observed-flow | dn-one |
+| obs-three | 감지 해제 | 16:09:31.365에 입력이 1로 돌아오며 DN이 0이 됐다. | observed-flow | released |
+| obs-four | 재감지 | 16:09:31.415에 입력이 다시 0이 됐다. 해제된 상태가 기록된 시간은 50ms다. | observed-flow | detected-again |
+| obs-five | 두 번째 DN ON | 16:09:32.015에 DN이 다시 1이 됐다. 첫 DN ON과의 간격은 970ms다. | observed-flow | dn-two |
+
+@callout level=warning title="DN 두 번은 인덱스 두 번의 증거가 아니다"
+| 시작 허가의 다른 조건, `permit_start`, `State_Auto_Index.X`, Outfeed 전진 출력과 Wheel 센서는 이 파일에 없다. 두 번째 DN이 실제 시작을 만들었는지, 체인이 움직였는지는 판단할 수 없다. 입력 변화가 제품 흔들림인지 센서·배선 문제인지도 확정하지 않는다. |
+
+## 2초 설정이면 정상 적재가 진행될까? {#two-second-check}
+
+600ms로 보이는 기록에서 DN이 켜진 48개 감지 구간 가운데 45개는 최종적으로 2초 전에 입력이 1로 돌아왔다. 나머지 3개 구간은 2초를 넘었다. 이것만으로 2초 설정에서 정상 적재가 실패한다고 계산하면 안 된다. 기존에는 DN이 켜진 뒤 설비가 움직이면서 입력이 바뀌었을 수 있어, 2초로 바꾸면 파형 자체가 달라질 수 있다.
+
+현재 설정에서 정상 Blank가 놓인 뒤 `ACC`가 2000까지 올라가는지, DN과 정상 인덱스가 이어지는지 확인한다. 적재 대기 시간이 조업 흐름에 미치는 영향도 함께 기록한다.
 
 ## R2 적재 뒤 체인은 어떻게 움직이나? {#index}
 
@@ -97,11 +143,11 @@ Home이 0이고 Bump DN도 0이면 두 전이 모두 기다린다. 반복 경로
 | 1 | `i_sheet_not_at_conveyor` | 디지털 |
 | 2 | `timer_sheet_present_filter.ACC` | 아날로그 |
 | 3 | `timer_sheet_present_filter.DN` | 디지털 |
-| 4 | `State_Idle.X` | 디지털 |
-| 5 | `State_Auto_Index.X` | 디지털 |
-| 6 | `o_conveyor_forward` | 디지털 |
-| 7 | `i_index_wheel_home` | 디지털 |
-| 8 | `i_index_wheel_slowdown` | 디지털 |
+| 4 | `timer_sheet_present_filter.PRE` | 아날로그 |
+| 5 | `State_Idle.X` | 디지털 |
+| 6 | `State_Auto_Index.X` | 디지털 |
+| 7 | `o_conveyor_forward` | 디지털 |
+| 8 | `i_index_wheel_home` | 디지털 |
 
 2차: Wheel과 인덱스 진행을 확인한다.
 
@@ -145,6 +191,7 @@ SBR()[XIC(z_System_Running.X)XIC(timer_sheet_present_filter.DN)XIC(z_permit_bcar
 ## 다음 근무 때 확인할 것 {#check}
 
 - [ ] 2초 설정 후 추가 빈 칸이 있었는지, 발생 시각과 로봇 동작을 기록한다.
+- [ ] 가능하면 10월 29일 16:09:31 전후가 실제 빈 칸 발생 시점인지 작업 기록과 대조한다. PLC 시계의 시간 차이도 확인한다.
 - [ ] Online에서 `timer_sheet_present_filter.PRE`, 두 밸브 시간값, `State_Additional_Move.PRE`를 확인한다.
 - [ ] 정상 사이클과 이상 사이클을 같은 8개 태그 구성으로 각각 저장한다.
 - [ ] Idle을 거친 재시작인지 한 번의 인덱스 중 과이동인지 비교한다.
