@@ -1,7 +1,7 @@
 {
-  "title": "차량 건강 주간 리포트 · 2026-11-01",
+  "title": "차량관리 주간 리포트 · 2026-11-01",
   "date": "2026-11-02",
-  "excerpt": "고출력–추정용량 상관 관찰 10주차. 출퇴근 위주로 주행 1033.3→270.4 km, 180kW+ 이벤트 4→2회지만 1000km당 3.9→7.4회로 높아졌고 200kW+ 1회(최고 218kW). 추정용량 56.1 kWh 유지(10월 표본 19회). 인과 단정 없음.",
+  "excerpt": "출퇴근 위주 주행 270.4 km(27회), 충전 90.0 kWh·약 10,082원(37.3원/km), 효율 145.9 Wh/km(전주 152.5). 100% 환산 주행가능거리 4주 평균 371.4 km로 안정 추세.",
   "week_start": "2026-10-26",
   "week_end": "2026-11-01",
   "risk_level": "caution",
@@ -326,10 +326,10 @@
     "TeslaMate",
     "차량관리",
     "주간리포트",
-    "고출력관찰",
-    "추정용량"
+    "충전비용",
+    "효율"
   ],
-  "observation_note": "목적: 고출력 습관과 추정 가용용량(SOH 대용) 추세를 주간으로 대조한다. 추정용량은 충전 세션 기반 추정치이며 실측 SOH가 아니고, 동시 변화는 관찰용일 뿐 원인 확정이 아니다. 전주 대비: 주행은 1033.3→270.4 km, 충전은 161.4→90.0 kWh, 180kW+ 이벤트 4→2회(3.9→7.4/1000km), 최고 출력 190→218kW, 추정용량 56.1→56.1 kWh. 이번 주 볼 점: 장거리 없이 출퇴근 위주로 달려 주행과 충전이 전주보다 크게 줄었다. 고출력 이벤트는 2회로 줄었지만 그중 1회가 218kW까지 올라가 200kW 이상 이벤트가 0→1회가 됐고, 두 이벤트 모두 시속 84~85km, SOC 76% 구간에서 기록됐다. 짧은 거리에서 이벤트가 나와 1000km당 빈도는 오히려 높아졌다. 10월 추정용량은 월말까지 표본 19회 기준 56.1 kWh로 전주와 같다. 11월은 하루치뿐이고 용량 표본이 없어 판단에서 뺐다. 12개월 비교 기준월이 2025-12(58.8 kWh)로 넘어가 변화율 -4.6%는 전주(-2.6%)와 직접 비교하기 어렵다. 고출력과 추정용량 변화를 인과로 해석하지 않으며, 200kW 이상 이벤트가 다시 나온 뒤 11월 추정용량이 어떻게 움직이는지 계속 지켜본다.",
+  "observation_note": "이번 주는 장거리 없이 출퇴근 위주로 달려 주행 1,033.4→270.4 km, 평균 속도 68.2→39.8 km/h로 줄었습니다. 효율은 152.5→145.9 Wh/km로 좋아졌지만, 주차 중 소모가 하루 약 6.8→9.0%로 늘어 감시모드 영향이 큰 주였습니다. 180 kW 이상 고출력 주행은 1회(최고 218 kW)였고 급속충전은 없었습니다. 100% 환산 주행가능거리 4주 평균은 371.4 km로 큰 변화가 없습니다. 관찰용 지표이며 원인을 단정하지 않습니다.",
   "week_compare": {
     "prior_week_end": "2026-10-25",
     "distance_km_delta": -762.9,
@@ -337,6 +337,152 @@
     "capacity_kwh_delta": 0.0,
     "events_180_delta": -2,
     "events_per_1000km_delta": 3.5,
-    "max_discharge_power_kw_delta": 28
+    "max_discharge_power_kw_delta": 28,
+    "wh_per_km_delta": -6.6,
+    "drive_count_delta": -6,
+    "cost_krw_delta": 3624
+  },
+  "report_version": "2026-11-05.1",
+  "drive_summary": {
+    "distance_km": 270.4,
+    "drive_count": 27,
+    "drive_time_min": 408,
+    "avg_speed_kmh": 39.8,
+    "max_speed_kmh": 142,
+    "longest_drive_km": 23.2,
+    "longest_drive_date": "2026-11-01"
+  },
+  "lifetime_totals": {
+    "as_of": "2026-11-01",
+    "odometer_km": 53065.3,
+    "drive_count": 4322,
+    "charge_count": 498,
+    "charged_kwh": 12013.9
+  },
+  "charging_cost": {
+    "week": {
+      "home_kwh": 27.6,
+      "home_cost_krw": 4561,
+      "work_kwh": 62.4,
+      "work_cost_krw": 5521,
+      "work_discount_krw": 12881,
+      "other_kwh": 0.0,
+      "other_cost_krw": null,
+      "total_kwh": 90.0,
+      "total_cost_krw": 10082,
+      "cost_per_km_krw": 37.3
+    },
+    "months": [
+      {
+        "month": "2026-10",
+        "home_kwh": 162.6,
+        "home_cost_krw": 26832,
+        "work_kwh": 117.6,
+        "work_cost_krw": 10406,
+        "work_discount_krw": 24280,
+        "work_discount_cap_krw": 30000,
+        "other_kwh": 216.6,
+        "other_cost_krw": null,
+        "known_cost_krw": 37238
+      },
+      {
+        "month": "2026-11",
+        "home_kwh": 0.0,
+        "home_cost_krw": 0,
+        "work_kwh": 0.0,
+        "work_cost_krw": 0,
+        "work_discount_krw": 0,
+        "work_discount_cap_krw": 30000,
+        "other_kwh": 0.0,
+        "other_cost_krw": null,
+        "known_cost_krw": 0
+      }
+    ],
+    "rates": {
+      "home_krw_per_kwh": 165,
+      "home_krw_per_kwh_from_2027_03": 280,
+      "work_krw_per_kwh": 295,
+      "work_card_discount_pct": 70,
+      "work_discount_cap_krw_per_month": 30000
+    },
+    "note": "배터리에 들어간 충전량(charge_energy_added) 기준 추정이라 실제 결제액은 5~10% 더 나올 수 있습니다. 외부(급속 등) 충전은 단가가 없어 비용에서 뺐습니다."
+  },
+  "efficiency": {
+    "wh_per_km": 145.9,
+    "prior_wh_per_km": 152.5,
+    "wh_per_km_delta": -6.6,
+    "parked_drain_pct_per_day": 9.0,
+    "prior_parked_drain_pct_per_day": 6.8,
+    "method": "정격 주행가능거리 사용량 × 차량 효율 ÷ 주행거리, 주차 소모는 2시간 이상·충전 없는 주차 구간 기준"
+  },
+  "battery_condition": {
+    "range_at_100_trend": [
+      {
+        "week_start": "2026-09-21",
+        "range_at_100_km": 367.8,
+        "ma4_km": null
+      },
+      {
+        "week_start": "2026-09-28",
+        "range_at_100_km": 372.0,
+        "ma4_km": 369.6
+      },
+      {
+        "week_start": "2026-10-05",
+        "range_at_100_km": 369.2,
+        "ma4_km": 369.1
+      },
+      {
+        "week_start": "2026-10-12",
+        "range_at_100_km": 372.8,
+        "ma4_km": 370.4
+      },
+      {
+        "week_start": "2026-10-19",
+        "range_at_100_km": 371.0,
+        "ma4_km": 371.2
+      },
+      {
+        "week_start": "2026-10-26",
+        "range_at_100_km": 372.6,
+        "ma4_km": 371.4
+      }
+    ],
+    "avg_charge_end_soc_pct": 100,
+    "high_power_drive_count": 1,
+    "high_power_threshold_kw": 180,
+    "high_power_peak_kw": 218,
+    "dc_fast_charge_count": 0,
+    "dc_fast_charge_threshold_kw": 25,
+    "note": "100% 환산 주행가능거리는 충전 종료 시점 값으로 계산한 추세 지표이며 온도·충전 조건에 따라 흔들립니다. 열화나 원인을 확정하지 않습니다."
+  },
+  "vehicle_info": {
+    "software_version": "2026.32.7",
+    "update_history": [
+      {
+        "version": "2026.32.7",
+        "date": "2026-10-13"
+      },
+      {
+        "version": "2026.26.6.1",
+        "date": "2026-09-22"
+      },
+      {
+        "version": "2026.20.6.1",
+        "date": "2026-07-22"
+      },
+      {
+        "version": "2026.2.6",
+        "date": "2026-03-20"
+      },
+      {
+        "version": "2025.44.25.3",
+        "date": "2025-12-19"
+      },
+      {
+        "version": "2025.44.3",
+        "date": "2025-12-02"
+      }
+    ]
   }
 }

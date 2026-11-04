@@ -1,0 +1,92 @@
+---
+// Report contract 2026-11-05.1+ sections. Rendered only when the JSON has these fields.
+const { data } = Astro.props as { data: any };
+const n = (v: number | null | undefined, unit = "", digits?: number) =>
+  v === null || v === undefined ? "데이터 부족" : `${digits !== undefined ? v.toFixed(digits) : v.toLocaleString("ko-KR")}${unit}`;
+const won = (v: number | null | undefined) => (v === null || v === undefined ? "—" : `${v.toLocaleString("ko-KR")}원`);
+const signed = (v: number | null | undefined, unit = "") => (v === null || v === undefined ? "" : `${v > 0 ? "+" : ""}${v}${unit}`);
+const ds = data.drive_summary; const lt = data.lifetime_totals; const cc = data.charging_cost;
+const ef = data.efficiency; const bc = data.battery_condition; const vi = data.vehicle_info;
+const hours = (m: number | null) => (m === null || m === undefined ? "데이터 부족" : `${Math.floor(m / 60)}시간 ${m % 60}분`);
+const trend = bc?.range_at_100_trend ?? [];
+const tv = trend.flatMap((t: any) => [t.range_at_100_km, t.ma4_km]).filter((v: any) => v !== null);
+const tMin = tv.length ? Math.floor(Math.min(...tv) - 2) : 0; const tMax = tv.length ? Math.ceil(Math.max(...tv) + 2) : 1;
+const W = 720, H = 200, L = 50, R = 16, T = 20, B = 34; const pw = W - L - R, ph = H - T - B;
+const tx = (i: number) => (trend.length <= 1 ? L + pw / 2 : L + (pw * i) / (trend.length - 1));
+const ty = (v: number) => T + ph - ((v - tMin) / Math.max(tMax - tMin, 1)) * ph;
+const ma = trend.map((t: any, i: number) => (t.ma4_km === null ? null : [tx(i), ty(t.ma4_km)])).filter(Boolean) as number[][];
+const maPath = ma.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
+---
+<section class="vehicle-v3" aria-label="주간 차량관리 요약">
+  {ds && <div class="v3-card"><h2>🚗 운행 요약</h2><dl class="v3-grid">
+    <div><dt>주행거리</dt><dd>{n(ds.distance_km, " km")}</dd></div>
+    <div><dt>운행 횟수</dt><dd>{n(ds.drive_count, "회")}</dd></div>
+    <div><dt>총 운행시간</dt><dd>{hours(ds.drive_time_min)}</dd></div>
+    <div><dt>평균 속도</dt><dd>{n(ds.avg_speed_kmh, " km/h")}</dd></div>
+    <div><dt>최고 속도</dt><dd>{n(ds.max_speed_kmh, " km/h")}</dd></div>
+    <div><dt>최장 운행</dt><dd>{n(ds.longest_drive_km, " km")}{ds.longest_drive_date && <small> ({ds.longest_drive_date})</small>}</dd></div>
+  </dl></div>}
+  {cc && <div class="v3-card"><h2>⚡ 충전과 비용</h2>
+    <dl class="v3-grid">
+      <div><dt>이번 주 충전</dt><dd>{n(cc.week.total_kwh, " kWh")}</dd></div>
+      <div><dt>이번 주 비용</dt><dd>{won(cc.week.total_cost_krw)}</dd></div>
+      <div><dt>1 km당 비용</dt><dd>{n(cc.week.cost_per_km_krw, "원")}</dd></div>
+    </dl>
+    <table><thead><tr><th>구분</th><th>충전량</th><th>비용</th><th>비고</th></tr></thead><tbody>
+      <tr><td>집</td><td>{n(cc.week.home_kwh, " kWh")}</td><td>{won(cc.week.home_cost_krw)}</td><td></td></tr>
+      <tr><td>회사</td><td>{n(cc.week.work_kwh, " kWh")}</td><td>{won(cc.week.work_cost_krw)}</td><td>카드 할인 {won(cc.week.work_discount_krw)}</td></tr>
+      <tr><td>외부</td><td>{n(cc.week.other_kwh, " kWh")}</td><td>{won(cc.week.other_cost_krw)}</td><td>단가 미설정</td></tr>
+    </tbody></table>
+    {cc.months?.length > 0 && <table><thead><tr><th>월</th><th>집</th><th>회사</th><th>회사 할인 한도</th><th>외부</th><th>비용 합계</th></tr></thead><tbody>
+      {cc.months.map((m: any) => <tr><td>{m.month}</td><td>{n(m.home_kwh, " kWh")}<br /><small>{won(m.home_cost_krw)}</small></td><td>{n(m.work_kwh, " kWh")}<br /><small>{won(m.work_cost_krw)}</small></td>
+        <td>{won(m.work_discount_krw)} / {won(m.work_discount_cap_krw)}<div class="v3-bar"><span style={`width:${Math.min(100, ((m.work_discount_krw ?? 0) / (m.work_discount_cap_krw || 1)) * 100)}%`}></span></div></td>
+        <td>{n(m.other_kwh, " kWh")}</td><td><strong>{won(m.known_cost_krw)}</strong></td></tr>)}
+    </tbody></table>}
+    {cc.note && <p class="chart-method-note">{cc.note}</p>}
+  </div>}
+  {ef && <div class="v3-card"><h2>🔋 효율</h2><dl class="v3-grid">
+    <div><dt>주간 효율</dt><dd>{n(ef.wh_per_km, " Wh/km")} <small>{signed(ef.wh_per_km_delta)} 전주 대비</small></dd></div>
+    <div><dt>전주 효율</dt><dd>{n(ef.prior_wh_per_km, " Wh/km")}</dd></div>
+    <div><dt>주차 중 소모</dt><dd>{n(ef.parked_drain_pct_per_day, "%/일")} <small>(전주 {n(ef.prior_parked_drain_pct_per_day, "%")})</small></dd></div>
+  </dl>{ef.method && <p class="chart-method-note">{ef.method}</p>}</div>}
+  {bc && <div class="v3-card"><h2>🩺 배터리 상태 (추세)</h2>
+    <dl class="v3-grid">
+      <div><dt>평균 충전 종료 SOC</dt><dd>{n(bc.avg_charge_end_soc_pct, "%")}</dd></div>
+      <div><dt>고출력 주행 ({bc.high_power_threshold_kw ?? 180} kW+)</dt><dd>{n(bc.high_power_drive_count, "회")} <small>최고 {n(bc.high_power_peak_kw, " kW")}</small></dd></div>
+      <div><dt>급속충전 (DC)</dt><dd>{n(bc.dc_fast_charge_count, "회")}</dd></div>
+    </dl>
+    {trend.length > 0 && <figure><figcaption><strong>100% 환산 주행가능거리</strong> <small>(점: 주간 값, 선: 4주 이동평균)</small></figcaption>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="100% 환산 주행가능거리 추세">
+        {[0, 1, 2].map((s) => <line x1={L} x2={W - R} y1={T + (ph * s) / 2} y2={T + (ph * s) / 2} class="chart-grid-line" />)}
+        {[tMax, (tMin + tMax) / 2, tMin].map((v, s) => <text x={L - 6} y={T + (ph * s) / 2 + 4} text-anchor="end" class="chart-axis-label">{Math.round(v)}</text>)}
+        <path d={maPath} class="chart-capacity-line" />
+        {trend.map((t: any, i: number) => t.range_at_100_km !== null && <circle class="chart-capacity-point" cx={tx(i)} cy={ty(t.range_at_100_km)} r="5"><title>{`${t.week_start} 주 · ${t.range_at_100_km} km · 4주평균 ${t.ma4_km ?? "—"} km`}</title></circle>)}
+        {trend.map((t: any, i: number) => <text x={tx(i)} y={H - 10} text-anchor="middle" class="chart-axis-label">{t.week_start.slice(5)}</text>)}
+      </svg></figure>}
+    <details class="vehicle-chart-table"><summary>주별 수치</summary><table><thead><tr><th>주 시작</th><th>100% 환산</th><th>4주 평균</th></tr></thead><tbody>{trend.map((t: any) => <tr><td>{t.week_start}</td><td>{n(t.range_at_100_km, " km")}</td><td>{n(t.ma4_km, " km")}</td></tr>)}</tbody></table></details>
+    {bc.note && <p class="chart-method-note">{bc.note}</p>}
+  </div>}
+  {lt && <div class="v3-card"><h2>📈 누적 기록 <small>({lt.as_of} 기준)</small></h2><dl class="v3-grid">
+    <div><dt>총 주행거리</dt><dd>{n(lt.odometer_km, " km")}</dd></div>
+    <div><dt>총 운행 횟수</dt><dd>{n(lt.drive_count, "회")}</dd></div>
+    <div><dt>총 충전 횟수</dt><dd>{n(lt.charge_count, "회")}</dd></div>
+    <div><dt>총 충전량</dt><dd>{n(lt.charged_kwh, " kWh")}</dd></div>
+  </dl></div>}
+  {vi && <div class="v3-card"><h2>🛠 차량 정보</h2><p>현재 소프트웨어: <strong>{vi.software_version ?? "데이터 부족"}</strong></p>
+    {vi.update_history?.length > 0 && <table><thead><tr><th>버전</th><th>업데이트 날짜</th></tr></thead><tbody>{vi.update_history.map((u: any) => <tr><td>{u.version}</td><td>{u.date}</td></tr>)}</tbody></table>}</div>}
+</section>
+<style>
+  .vehicle-v3 { display: grid; gap: 16px; margin: 26px 0; }
+  .v3-card { border: var(--border-thin); background: var(--surface); box-shadow: var(--shadow-sm); padding: 14px 16px; overflow-x: auto; }
+  .v3-card h2 { margin: 0 0 10px; font-size: 1.15rem; }
+  .v3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 10px; }
+  .v3-grid div { display: grid; gap: 2px; }
+  .v3-grid dt { color: var(--muted); font-size: .85rem; }
+  .v3-grid dd { margin: 0; font-weight: 700; font-size: 1.05rem; }
+  .v3-grid small, .v3-card h2 small { font-weight: 400; color: var(--muted); }
+  .v3-card table { width: 100%; margin: 8px 0; }
+  .v3-bar { height: 6px; background: var(--muted); opacity: .9; margin-top: 4px; position: relative; }
+  .v3-bar span { position: absolute; inset: 0 auto 0 0; background: var(--yellow, #e6b800); }
+  .v3-card svg { width: 100%; height: auto; min-width: 480px; }
+  @media (max-width: 720px) { .v3-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
