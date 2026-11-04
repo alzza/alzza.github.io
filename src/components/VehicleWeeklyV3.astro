@@ -35,12 +35,12 @@ const maPath = ma.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
     <table><thead><tr><th>구분</th><th>충전량</th><th>비용</th><th>비고</th></tr></thead><tbody>
       <tr><td>집</td><td>{n(cc.week.home_kwh, " kWh")}</td><td>{won(cc.week.home_cost_krw)}</td><td></td></tr>
       <tr><td>회사</td><td>{n(cc.week.work_kwh, " kWh")}</td><td>{won(cc.week.work_cost_krw)}</td><td>카드 할인 {won(cc.week.work_discount_krw)}</td></tr>
-      <tr><td>외부</td><td>{n(cc.week.other_kwh, " kWh")}</td><td>{won(cc.week.other_cost_krw)}</td><td>단가 미설정</td></tr>
+      <tr><td>급속충전</td><td>{n(cc.week.fast_kwh ?? cc.week.other_kwh, " kWh")}</td><td>{won(cc.week.fast_cost_krw ?? cc.week.other_cost_krw)}</td><td>{cc.rates?.fast_krw_per_kwh ? `${cc.rates.fast_krw_per_kwh}원/kWh 가정` : "단가 미설정"}</td></tr>
     </tbody></table>
-    {cc.months?.length > 0 && <table><thead><tr><th>월</th><th>집</th><th>회사</th><th>회사 할인 한도</th><th>외부</th><th>비용 합계</th></tr></thead><tbody>
+    {cc.months?.length > 0 && <table><thead><tr><th>월</th><th>집</th><th>회사</th><th>회사 할인 한도</th><th>급속충전</th><th>비용 합계</th></tr></thead><tbody>
       {cc.months.map((m: any) => <tr><td>{m.month}</td><td>{n(m.home_kwh, " kWh")}<br /><small>{won(m.home_cost_krw)}</small></td><td>{n(m.work_kwh, " kWh")}<br /><small>{won(m.work_cost_krw)}</small></td>
         <td>{won(m.work_discount_krw)} / {won(m.work_discount_cap_krw)}<div class="v3-bar"><span style={`width:${Math.min(100, ((m.work_discount_krw ?? 0) / (m.work_discount_cap_krw || 1)) * 100)}%`}></span></div></td>
-        <td>{n(m.other_kwh, " kWh")}</td><td><strong>{won(m.known_cost_krw)}</strong></td></tr>)}
+        <td>{n(m.fast_kwh ?? m.other_kwh, " kWh")}<br /><small>{won(m.fast_cost_krw ?? m.other_cost_krw)}</small></td><td><strong>{won(m.total_cost_krw ?? m.known_cost_krw)}</strong></td></tr>)}
     </tbody></table>}
     {cc.note && <p class="chart-method-note">{cc.note}</p>}
   </div>}
