@@ -6,7 +6,7 @@ const n = (v: number | null | undefined, unit = "", digits?: number) =>
 const won = (v: number | null | undefined) => (v === null || v === undefined ? "—" : `${v.toLocaleString("ko-KR")}원`);
 const signed = (v: number | null | undefined, unit = "") => (v === null || v === undefined ? "" : `${v > 0 ? "+" : ""}${v}${unit}`);
 const ds = data.drive_summary; const lt = data.lifetime_totals; const cc = data.charging_cost;
-const ef = data.efficiency; const bc = data.battery_condition; const vi = data.vehicle_info;
+const ge = data.gasoline_equivalent; const ef = data.efficiency; const bc = data.battery_condition; const vi = data.vehicle_info;
 const hours = (m: number | null) => (m === null || m === undefined ? "데이터 부족" : `${Math.floor(m / 60)}시간 ${m % 60}분`);
 const trend = bc?.range_at_100_trend ?? [];
 const tv = trend.flatMap((t: any) => [t.range_at_100_km, t.ma4_km]).filter((v: any) => v !== null);
@@ -42,8 +42,15 @@ const maPath = ma.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
         <td>{won(m.work_discount_krw)} / {won(m.work_discount_cap_krw)}<div class="v3-bar"><span style={`width:${Math.min(100, ((m.work_discount_krw ?? 0) / (m.work_discount_cap_krw || 1)) * 100)}%`}></span></div></td>
         <td>{n(m.fast_kwh ?? m.other_kwh, " kWh")}<br /><small>{won(m.fast_cost_krw ?? m.other_cost_krw)}</small>{m.fast_card_points_krw != null && <><br /><small>그린카드 적립 {won(m.fast_card_points_krw)} / {won(m.fast_card_points_cap_krw)}</small></>}</td><td><strong>{won(m.total_cost_krw ?? m.known_cost_krw)}</strong></td></tr>)}
     </tbody></table>}
+    {cc.monthly_history?.length > 0 && <table><thead><tr><th>월</th><th>충전비용</th><th>주행</th><th>원/km</th></tr></thead><tbody>{cc.monthly_history.map((h: any) => <tr><td>{h.month}</td><td>{won(h.total_cost_krw)}</td><td>{n(h.distance_km, " km")}</td><td>{n(h.cost_per_km_krw, "원")}</td></tr>)}</tbody></table>}
+    {cc.monthly_avg_cost_krw != null && <p>월평균 충전비용: <strong>{won(cc.monthly_avg_cost_krw)}</strong> <small>(최근 {cc.monthly_avg_months}개월)</small></p>}
     {cc.note && <p class="chart-method-note">{cc.note}</p>}
   </div>}
+  {ge && <div class="v3-card"><h2>⛽ 휘발유 환산</h2>
+    <table><thead><tr><th>기간</th><th>환산 연비</th><th>환산 L/100km</th><th>휘발유차({ge.reference_km_per_l} km/L) 주유비</th><th>실제 충전비</th><th>절감액</th></tr></thead><tbody>
+      {[["이번 주", ge.week], [ge.month?.month ?? "월", ge.month]].filter(([, v]) => v).map(([label, v]: any) => <tr><td>{label}</td><td>{n(v.km_per_l_equiv, " km/L")}</td><td>{n(v.l_per_100km_equiv, " L")}</td><td>{won(v.gasoline_car_cost_krw)}</td><td>{won(v.charging_cost_krw)}</td><td><strong>{won(v.savings_krw)}</strong></td></tr>)}
+    </tbody></table>
+    <p class="chart-method-note">{ge.price_source ?? "휘발유"} {n(ge.gasoline_price_krw_per_l, "원/L")} ({ge.price_date}) 기준. 환산 연비 = 휘발유 가격 ÷ 1 km당 충전비.</p></div>}
   {ef && <div class="v3-card"><h2>🔋 효율</h2><dl class="v3-grid">
     <div><dt>주간 효율</dt><dd>{n(ef.wh_per_km, " Wh/km")} <small>{signed(ef.wh_per_km_delta)} 전주 대비</small></dd></div>
     <div><dt>전주 효율</dt><dd>{n(ef.prior_wh_per_km, " Wh/km")}</dd></div>

@@ -384,9 +384,9 @@
         "work_discount_krw": 24280,
         "work_discount_cap_krw": 30000,
         "fast_kwh": 216.6,
-        "fast_cost_krw": 62308,
-        "total_cost_krw": 99546,
-        "fast_gross_krw": 82308,
+        "fast_cost_krw": 62293,
+        "total_cost_krw": 99531,
+        "fast_gross_krw": 82293,
         "fast_card_points_krw": 20000,
         "fast_card_points_cap_krw": 20000
       },
@@ -416,7 +416,29 @@
       "fast_card_points_pct": 40,
       "fast_card_points_cap_krw_per_month": 20000
     },
-    "note": "충전량(charge_energy_added) 기준 추정이라 실제 결제액은 5~10% 더 나올 수 있습니다. 집·회사 외 충전은 모두 급속충전(380원/kWh)으로 보고, 어디로든 그린카드 결제(전월실적 60만원 이상 가정) 에코머니 40% 적립(월 2만 포인트 한도)을 실질 할인으로 뺐습니다. 적립 대상이 아닌 충전소에서는 혜택이 없을 수 있습니다."
+    "note": "충전량(charge_energy_added) 기준 추정이라 실제 결제액은 5~10% 더 나올 수 있습니다. 집·회사 외 충전은 모두 급속충전(380원/kWh)으로 보고, 어디로든 그린카드 결제(전월실적 60만원 이상 가정) 에코머니 40% 적립(월 2만 포인트 한도)을 실질 할인으로 뺐습니다. 적립 대상이 아닌 충전소에서는 혜택이 없을 수 있습니다.",
+    "monthly_history": [
+      {
+        "month": "2026-08",
+        "total_cost_krw": 64240,
+        "distance_km": 1851.8,
+        "cost_per_km_krw": 34.7
+      },
+      {
+        "month": "2026-09",
+        "total_cost_krw": 35956,
+        "distance_km": 1212.2,
+        "cost_per_km_krw": 29.7
+      },
+      {
+        "month": "2026-10",
+        "total_cost_krw": 99531,
+        "distance_km": 2643.8,
+        "cost_per_km_krw": 37.6
+      }
+    ],
+    "monthly_avg_cost_krw": 66576,
+    "monthly_avg_months": 3
   },
   "efficiency": {
     "wh_per_km": 145.9,
@@ -495,5 +517,28 @@
         "date": "2025-12-02"
       }
     ]
+  },
+  "gasoline_equivalent": {
+    "gasoline_price_krw_per_l": 1855.28,
+    "price_date": "2026-11-05",
+    "price_source": "오피넷 전국 평균 보통휘발유",
+    "reference_km_per_l": 12,
+    "week": {
+      "distance_km": 270.4,
+      "charging_cost_krw": 10082,
+      "km_per_l_equiv": 49.8,
+      "l_per_100km_equiv": 2.01,
+      "gasoline_car_cost_krw": 41806,
+      "savings_krw": 31724
+    },
+    "month": {
+      "month": "2026-10",
+      "distance_km": 2643.8,
+      "charging_cost_krw": 99531,
+      "km_per_l_equiv": 49.3,
+      "l_per_100km_equiv": 2.03,
+      "gasoline_car_cost_krw": 408749,
+      "savings_krw": 309218
+    }
   }
 }
