@@ -340,9 +340,9 @@
     "max_discharge_power_kw_delta": 28,
     "wh_per_km_delta": -6.6,
     "drive_count_delta": -6,
-    "cost_krw_delta": -42835
+    "cost_krw_delta": -37169
   },
-  "report_version": "2026-11-05.2",
+  "report_version": "2026-11-05.3",
   "drive_summary": {
     "distance_km": 270.4,
     "drive_count": 27,
@@ -370,7 +370,9 @@
       "total_cost_krw": 10082,
       "cost_per_km_krw": 37.3,
       "fast_kwh": 0.0,
-      "fast_cost_krw": 0
+      "fast_cost_krw": 0,
+      "fast_gross_krw": 0,
+      "fast_card_points_krw": 0
     },
     "months": [
       {
@@ -382,8 +384,11 @@
         "work_discount_krw": 24280,
         "work_discount_cap_krw": 30000,
         "fast_kwh": 216.6,
-        "fast_cost_krw": 82308,
-        "total_cost_krw": 119546
+        "fast_cost_krw": 62308,
+        "total_cost_krw": 99546,
+        "fast_gross_krw": 82308,
+        "fast_card_points_krw": 20000,
+        "fast_card_points_cap_krw": 20000
       },
       {
         "month": "2026-11",
@@ -395,7 +400,10 @@
         "work_discount_cap_krw": 30000,
         "fast_kwh": 0.0,
         "fast_cost_krw": 0,
-        "total_cost_krw": 0
+        "total_cost_krw": 0,
+        "fast_gross_krw": 0,
+        "fast_card_points_krw": 0,
+        "fast_card_points_cap_krw": 20000
       }
     ],
     "rates": {
@@ -404,9 +412,11 @@
       "work_krw_per_kwh": 295,
       "work_card_discount_pct": 70,
       "work_discount_cap_krw_per_month": 30000,
-      "fast_krw_per_kwh": 380
+      "fast_krw_per_kwh": 380,
+      "fast_card_points_pct": 40,
+      "fast_card_points_cap_krw_per_month": 20000
     },
-    "note": "충전량(charge_energy_added) 기준 추정이라 실제 결제액은 5~10% 더 나올 수 있습니다. 집·회사 외 충전은 모두 급속충전으로 보고 국내 주요 사업자 회원가 평균 380원/kWh(2026-11-05 기준)를 적용했습니다."
+    "note": "충전량(charge_energy_added) 기준 추정이라 실제 결제액은 5~10% 더 나올 수 있습니다. 집·회사 외 충전은 모두 급속충전(380원/kWh)으로 보고, 어디로든 그린카드 결제(전월실적 60만원 이상 가정) 에코머니 40% 적립(월 2만 포인트 한도)을 실질 할인으로 뺐습니다. 적립 대상이 아닌 충전소에서는 혜택이 없을 수 있습니다."
   },
   "efficiency": {
     "wh_per_km": 145.9,
