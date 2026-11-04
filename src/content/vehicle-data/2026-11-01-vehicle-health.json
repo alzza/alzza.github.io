@@ -1,7 +1,7 @@
 {
   "title": "차량관리 주간 리포트 · 2026-11-01",
   "date": "2026-11-02",
-  "excerpt": "출퇴근 위주 주행 270.4 km(27회), 충전 90.0 kWh·약 10,082원(37.3원/km), 효율 145.9 Wh/km(전주 152.5). 100% 환산 주행가능거리 4주 평균 371.4 km로 안정 추세.",
+  "excerpt": "출퇴근 위주 주행 270.4 km(27회), 충전 90.0 kWh·실질 약 10,082원(37.3원/km), 효율 145.9 Wh/km. 휘발유 환산 49.8 km/L. 100% 환산 주행가능거리 4주 평균 371.4 km로 안정 추세.",
   "week_start": "2026-10-26",
   "week_end": "2026-11-01",
   "risk_level": "caution",
@@ -340,9 +340,9 @@
     "max_discharge_power_kw_delta": 28,
     "wh_per_km_delta": -6.6,
     "drive_count_delta": -6,
-    "cost_krw_delta": -37169
+    "cost_krw_delta": -42835
   },
-  "report_version": "2026-11-05.3",
+  "report_version": "2026-11-05.4",
   "drive_summary": {
     "distance_km": 270.4,
     "drive_count": 27,
@@ -362,48 +362,59 @@
   "charging_cost": {
     "week": {
       "home_kwh": 27.6,
+      "home_gross_krw": 4561,
+      "home_card_points_krw": 0,
       "home_cost_krw": 4561,
       "work_kwh": 62.4,
-      "work_cost_krw": 5521,
       "work_discount_krw": 12881,
+      "work_cost_krw": 5521,
+      "fast_kwh": 0,
+      "fast_gross_krw": 0,
+      "fast_card_points_krw": 0,
+      "fast_cost_krw": 0,
       "total_kwh": 90.0,
       "total_cost_krw": 10082,
-      "cost_per_km_krw": 37.3,
-      "fast_kwh": 0.0,
-      "fast_cost_krw": 0,
-      "fast_gross_krw": 0,
-      "fast_card_points_krw": 0
+      "green_points_krw": 0,
+      "cost_per_km_krw": 37.3
     },
     "months": [
       {
-        "month": "2026-10",
         "home_kwh": 162.6,
-        "home_cost_krw": 26832,
+        "home_gross_krw": 26832,
+        "home_card_points_krw": 5666,
+        "home_cost_krw": 21166,
         "work_kwh": 117.6,
-        "work_cost_krw": 10406,
         "work_discount_krw": 24280,
-        "work_discount_cap_krw": 30000,
+        "work_cost_krw": 10406,
         "fast_kwh": 216.6,
-        "fast_cost_krw": 62293,
-        "total_cost_krw": 99531,
         "fast_gross_krw": 82293,
-        "fast_card_points_krw": 20000,
-        "fast_card_points_cap_krw": 20000
+        "fast_card_points_krw": 14334,
+        "fast_cost_krw": 67959,
+        "total_kwh": 496.8,
+        "total_cost_krw": 99531,
+        "green_points_krw": 20000,
+        "month": "2026-10",
+        "work_discount_cap_krw": 30000,
+        "green_points_cap_krw": 20000
       },
       {
-        "month": "2026-11",
-        "home_kwh": 0.0,
+        "home_kwh": 0,
+        "home_gross_krw": 0,
+        "home_card_points_krw": 0,
         "home_cost_krw": 0,
-        "work_kwh": 0.0,
-        "work_cost_krw": 0,
+        "work_kwh": 0,
         "work_discount_krw": 0,
-        "work_discount_cap_krw": 30000,
-        "fast_kwh": 0.0,
-        "fast_cost_krw": 0,
-        "total_cost_krw": 0,
+        "work_cost_krw": 0,
+        "fast_kwh": 0,
         "fast_gross_krw": 0,
         "fast_card_points_krw": 0,
-        "fast_card_points_cap_krw": 20000
+        "fast_cost_krw": 0,
+        "total_kwh": 0,
+        "total_cost_krw": 0,
+        "green_points_krw": 0,
+        "month": "2026-11",
+        "work_discount_cap_krw": 30000,
+        "green_points_cap_krw": 20000
       }
     ],
     "rates": {
@@ -413,22 +424,22 @@
       "work_card_discount_pct": 70,
       "work_discount_cap_krw_per_month": 30000,
       "fast_krw_per_kwh": 380,
-      "fast_card_points_pct": 40,
-      "fast_card_points_cap_krw_per_month": 20000
+      "green_card_points_pct": 40,
+      "green_card_points_cap_krw_per_month": 20000
     },
-    "note": "충전량(charge_energy_added) 기준 추정이라 실제 결제액은 5~10% 더 나올 수 있습니다. 집·회사 외 충전은 모두 급속충전(380원/kWh)으로 보고, 어디로든 그린카드 X LOCA(롯데카드) 결제(전월실적 60만원 이상 가정) 에코머니 40% 적립(월 2만 포인트 한도)을 실질 할인으로 뺐습니다. 적립 대상이 아닌 충전소에서는 혜택이 없을 수 있습니다.",
+    "note": "충전량(charge_energy_added) 기준 추정이라 실제 결제액은 5~10% 더 나올 수 있습니다. 회사는 삼성 iD EV 카드 70% 결제일할인(월 3만원 한도), 집과 급속충전은 롯데 어디로든 그린카드 X LOCA 에코머니 40% 적립(집+급속 합산 월 2만 포인트 한도, 충전 순서대로 적용)을 실질 비용에서 뺐습니다. 두 카드 모두 전월실적 60만원 이상을 가정했고, 충전요금이 아파트 관리비에 포함돼 청구되면 적립되지 않습니다.",
     "monthly_history": [
       {
         "month": "2026-08",
-        "total_cost_krw": 64240,
+        "total_cost_krw": 60233,
         "distance_km": 1851.8,
-        "cost_per_km_krw": 34.7
+        "cost_per_km_krw": 32.5
       },
       {
         "month": "2026-09",
-        "total_cost_krw": 35956,
+        "total_cost_krw": 27049,
         "distance_km": 1212.2,
-        "cost_per_km_krw": 29.7
+        "cost_per_km_krw": 22.3
       },
       {
         "month": "2026-10",
@@ -437,8 +448,13 @@
         "cost_per_km_krw": 37.6
       }
     ],
-    "monthly_avg_cost_krw": 66576,
-    "monthly_avg_months": 3
+    "monthly_avg_cost_krw": 62271,
+    "monthly_avg_months": 3,
+    "cards": {
+      "home": "롯데 어디로든 그린카드 X LOCA (에코머니 40% 적립)",
+      "work": "삼성 iD EV 카드 (70% 결제일할인)",
+      "fast": "롯데 어디로든 그린카드 X LOCA (에코머니 40% 적립)"
+    }
   },
   "efficiency": {
     "wh_per_km": 145.9,

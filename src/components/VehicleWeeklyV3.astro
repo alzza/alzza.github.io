@@ -32,15 +32,16 @@ const maPath = ma.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
       <div><dt>이번 주 비용</dt><dd>{won(cc.week.total_cost_krw)}</dd></div>
       <div><dt>1 km당 비용</dt><dd>{n(cc.week.cost_per_km_krw, "원")}</dd></div>
     </dl>
-    <table><thead><tr><th>구분</th><th>충전량</th><th>비용</th><th>비고</th></tr></thead><tbody>
-      <tr><td>집</td><td>{n(cc.week.home_kwh, " kWh")}</td><td>{won(cc.week.home_cost_krw)}</td><td></td></tr>
-      <tr><td>회사</td><td>{n(cc.week.work_kwh, " kWh")}</td><td>{won(cc.week.work_cost_krw)}</td><td>카드 할인 {won(cc.week.work_discount_krw)}</td></tr>
-      <tr><td>급속충전</td><td>{n(cc.week.fast_kwh ?? cc.week.other_kwh, " kWh")}</td><td>{won(cc.week.fast_cost_krw ?? cc.week.other_cost_krw)}</td><td>{cc.rates?.fast_krw_per_kwh ? `${cc.rates.fast_krw_per_kwh}원/kWh 가정` : "단가 미설정"}{cc.week.fast_card_points_krw != null && ` · 그린카드 적립 −${won(cc.week.fast_card_points_krw)} 반영`}</td></tr>
+    <table><thead><tr><th>구분</th><th>결제 카드</th><th>충전량</th><th>실질 비용</th><th>카드 혜택</th></tr></thead><tbody>
+      <tr><td>집</td><td><small>{cc.cards?.home ?? "—"}</small></td><td>{n(cc.week.home_kwh, " kWh")}</td><td>{won(cc.week.home_cost_krw)}</td><td>{cc.week.home_card_points_krw != null ? `적립 ${won(cc.week.home_card_points_krw)}` : ""}</td></tr>
+      <tr><td>회사</td><td><small>{cc.cards?.work ?? "—"}</small></td><td>{n(cc.week.work_kwh, " kWh")}</td><td>{won(cc.week.work_cost_krw)}</td><td>할인 {won(cc.week.work_discount_krw)}</td></tr>
+      <tr><td>급속충전</td><td><small>{cc.cards?.fast ?? "—"}</small></td><td>{n(cc.week.fast_kwh ?? cc.week.other_kwh, " kWh")}</td><td>{won(cc.week.fast_cost_krw ?? cc.week.other_cost_krw)}</td><td>{cc.rates?.fast_krw_per_kwh ? `${cc.rates.fast_krw_per_kwh}원/kWh 가정` : "단가 미설정"}{cc.week.fast_card_points_krw != null && ` · 적립 ${won(cc.week.fast_card_points_krw)}`}</td></tr>
     </tbody></table>
-    {cc.months?.length > 0 && <table><thead><tr><th>월</th><th>집</th><th>회사</th><th>회사 할인 한도</th><th>급속충전</th><th>비용 합계</th></tr></thead><tbody>
+    {cc.months?.length > 0 && <table><thead><tr><th>월</th><th>집</th><th>회사</th><th>삼성 할인 한도</th><th>그린카드 적립 한도(집+급속)</th><th>급속충전</th><th>비용 합계</th></tr></thead><tbody>
       {cc.months.map((m: any) => <tr><td>{m.month}</td><td>{n(m.home_kwh, " kWh")}<br /><small>{won(m.home_cost_krw)}</small></td><td>{n(m.work_kwh, " kWh")}<br /><small>{won(m.work_cost_krw)}</small></td>
         <td>{won(m.work_discount_krw)} / {won(m.work_discount_cap_krw)}<div class="v3-bar"><span style={`width:${Math.min(100, ((m.work_discount_krw ?? 0) / (m.work_discount_cap_krw || 1)) * 100)}%`}></span></div></td>
-        <td>{n(m.fast_kwh ?? m.other_kwh, " kWh")}<br /><small>{won(m.fast_cost_krw ?? m.other_cost_krw)}</small>{m.fast_card_points_krw != null && <><br /><small>그린카드 적립 {won(m.fast_card_points_krw)} / {won(m.fast_card_points_cap_krw)}</small></>}</td><td><strong>{won(m.total_cost_krw ?? m.known_cost_krw)}</strong></td></tr>)}
+        <td>{m.green_points_krw != null ? <>{won(m.green_points_krw)} / {won(m.green_points_cap_krw)}<div class="v3-bar"><span style={`width:${Math.min(100, (m.green_points_krw / (m.green_points_cap_krw || 1)) * 100)}%`}></span></div></> : "—"}</td>
+        <td>{n(m.fast_kwh ?? m.other_kwh, " kWh")}<br /><small>{won(m.fast_cost_krw ?? m.other_cost_krw)}</small></td><td><strong>{won(m.total_cost_krw ?? m.known_cost_krw)}</strong></td></tr>)}
     </tbody></table>}
     {cc.monthly_history?.length > 0 && <table><thead><tr><th>월</th><th>충전비용</th><th>주행</th><th>원/km</th></tr></thead><tbody>{cc.monthly_history.map((h: any) => <tr><td>{h.month}</td><td>{won(h.total_cost_krw)}</td><td>{n(h.distance_km, " km")}</td><td>{n(h.cost_per_km_krw, "원")}</td></tr>)}</tbody></table>}
     {cc.monthly_avg_cost_krw != null && <p>월평균 충전비용: <strong>{won(cc.monthly_avg_cost_krw)}</strong> <small>(최근 {cc.monthly_avg_months}개월)</small></p>}
