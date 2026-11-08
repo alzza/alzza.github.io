@@ -1,0 +1,572 @@
+{
+  "title": "차량관리 주간 리포트 · 2026-11-08",
+  "date": "2026-11-09",
+  "excerpt": "출퇴근 위주 주행 281.7 km(28회), 충전 57.1 kWh·실질 약 5,472원(19.4원/km), 효율 156.0 Wh/km. 휘발유 환산 95.5 km/L. 100% 환산 주행가능거리 4주 평균 372.2 km로 안정 추세.",
+  "week_start": "2026-11-02",
+  "week_end": "2026-11-08",
+  "risk_level": "caution",
+  "distance_km": 281.7,
+  "charging_kwh": 57.1,
+  "capacity_kwh": 56.1,
+  "degradation_percent": -4.6,
+  "monthly_summary": [
+    {
+      "month": "2025-12",
+      "max_discharge_power_kw": 211,
+      "max_peak_power_speed_kmh": 106,
+      "capacity_kwh": 58.8,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-01",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 92,
+      "capacity_kwh": 58.6,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-02",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 161,
+      "capacity_kwh": 57.6,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-03",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 106,
+      "capacity_kwh": 57.6,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-04",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 95,
+      "capacity_kwh": 57.3,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-05",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 137,
+      "capacity_kwh": 57.5,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-06",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 113,
+      "capacity_kwh": 57.1,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-07",
+      "max_discharge_power_kw": null,
+      "max_peak_power_speed_kmh": 105,
+      "capacity_kwh": 54.1,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-08",
+      "max_discharge_power_kw": 217,
+      "max_peak_power_speed_kmh": 138,
+      "capacity_kwh": 56.1,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-09",
+      "max_discharge_power_kw": 220,
+      "max_peak_power_speed_kmh": 121,
+      "capacity_kwh": 55.8,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-10",
+      "max_discharge_power_kw": 218,
+      "max_peak_power_speed_kmh": 113,
+      "capacity_kwh": 56.1,
+      "data_quality": "available"
+    },
+    {
+      "month": "2026-11",
+      "max_discharge_power_kw": 182,
+      "max_peak_power_speed_kmh": 116,
+      "capacity_kwh": null,
+      "data_quality": "insufficient"
+    }
+  ],
+  "weekly_power_events": [
+    {
+      "event_no": 1,
+      "threshold_kw": 180,
+      "max_discharge_power_kw": 181,
+      "speed_at_peak_power_kmh": 93,
+      "battery_level_at_peak_pct": 94,
+      "data_quality": "available"
+    },
+    {
+      "event_no": 2,
+      "threshold_kw": 180,
+      "max_discharge_power_kw": 181,
+      "speed_at_peak_power_kmh": 93,
+      "battery_level_at_peak_pct": 72,
+      "data_quality": "available"
+    },
+    {
+      "event_no": 3,
+      "threshold_kw": 180,
+      "max_discharge_power_kw": 182,
+      "speed_at_peak_power_kmh": 116,
+      "battery_level_at_peak_pct": 55,
+      "data_quality": "available"
+    }
+  ],
+  "daily_metrics": [
+    {
+      "date": "2026-11-02",
+      "distance_km": 48.2,
+      "charging_kwh": 0
+    },
+    {
+      "date": "2026-11-03",
+      "distance_km": 24.4,
+      "charging_kwh": 16.7
+    },
+    {
+      "date": "2026-11-04",
+      "distance_km": 45.2,
+      "charging_kwh": 0
+    },
+    {
+      "date": "2026-11-05",
+      "distance_km": 63.3,
+      "charging_kwh": 0.56
+    },
+    {
+      "date": "2026-11-06",
+      "distance_km": 45.4,
+      "charging_kwh": 39.8
+    },
+    {
+      "date": "2026-11-07",
+      "distance_km": 31.7,
+      "charging_kwh": 0
+    },
+    {
+      "date": "2026-11-08",
+      "distance_km": 23.1,
+      "charging_kwh": 0
+    }
+  ],
+  "capacity_trend": [
+    {
+      "month": "2025-12",
+      "capacity_kwh": 58.8
+    },
+    {
+      "month": "2026-01",
+      "capacity_kwh": 58.6
+    },
+    {
+      "month": "2026-02",
+      "capacity_kwh": 57.6
+    },
+    {
+      "month": "2026-03",
+      "capacity_kwh": 57.6
+    },
+    {
+      "month": "2026-04",
+      "capacity_kwh": 57.3
+    },
+    {
+      "month": "2026-05",
+      "capacity_kwh": 57.5
+    },
+    {
+      "month": "2026-06",
+      "capacity_kwh": 57.1
+    },
+    {
+      "month": "2026-07",
+      "capacity_kwh": 54.1
+    },
+    {
+      "month": "2026-08",
+      "capacity_kwh": 56.1
+    },
+    {
+      "month": "2026-09",
+      "capacity_kwh": 55.8
+    },
+    {
+      "month": "2026-10",
+      "capacity_kwh": 56.1
+    },
+    {
+      "month": "2026-11",
+      "capacity_kwh": null
+    }
+  ],
+  "acceleration_week": {
+    "threshold_kw": 180,
+    "secondary_threshold_kw": 200,
+    "event_count": 3,
+    "secondary_event_count": 0,
+    "max_discharge_power_kw": 182,
+    "avg_peak_power_speed_kmh": 100.7,
+    "max_peak_power_speed_kmh": 116,
+    "covered_distance_km": 281.7,
+    "events_per_1000km": 10.6,
+    "data_quality": "available"
+  },
+  "acceleration_trend": [
+    {
+      "month": "2025-12",
+      "events_180kw": 14,
+      "events_200kw": 3,
+      "avg_peak_power_speed_kmh": 88.6,
+      "max_peak_power_speed_kmh": 106,
+      "covered_distance_km": 2360.5,
+      "events_per_1000km": 5.9
+    },
+    {
+      "month": "2026-01",
+      "events_180kw": 3,
+      "events_200kw": 1,
+      "avg_peak_power_speed_kmh": 90.3,
+      "max_peak_power_speed_kmh": 92,
+      "covered_distance_km": 1710.4,
+      "events_per_1000km": 1.8
+    },
+    {
+      "month": "2026-02",
+      "events_180kw": 13,
+      "events_200kw": 3,
+      "avg_peak_power_speed_kmh": 95.7,
+      "max_peak_power_speed_kmh": 161,
+      "covered_distance_km": 1372.4,
+      "events_per_1000km": 9.5
+    },
+    {
+      "month": "2026-03",
+      "events_180kw": 15,
+      "events_200kw": 3,
+      "avg_peak_power_speed_kmh": 93.1,
+      "max_peak_power_speed_kmh": 106,
+      "covered_distance_km": 2078.0,
+      "events_per_1000km": 7.2
+    },
+    {
+      "month": "2026-04",
+      "events_180kw": 5,
+      "events_200kw": 2,
+      "avg_peak_power_speed_kmh": 86.4,
+      "max_peak_power_speed_kmh": 95,
+      "covered_distance_km": 1273.7,
+      "events_per_1000km": 3.9
+    },
+    {
+      "month": "2026-05",
+      "events_180kw": 21,
+      "events_200kw": 4,
+      "avg_peak_power_speed_kmh": 98.9,
+      "max_peak_power_speed_kmh": 137,
+      "covered_distance_km": 3016.5,
+      "events_per_1000km": 7.0
+    },
+    {
+      "month": "2026-06",
+      "events_180kw": 22,
+      "events_200kw": 10,
+      "avg_peak_power_speed_kmh": 94.3,
+      "max_peak_power_speed_kmh": 113,
+      "covered_distance_km": 901.6,
+      "events_per_1000km": 24.4
+    },
+    {
+      "month": "2026-07",
+      "events_180kw": 9,
+      "events_200kw": 0,
+      "avg_peak_power_speed_kmh": 91.8,
+      "max_peak_power_speed_kmh": 105,
+      "covered_distance_km": 1036.5,
+      "events_per_1000km": 8.7
+    },
+    {
+      "month": "2026-08",
+      "events_180kw": 15,
+      "events_200kw": 5,
+      "avg_peak_power_speed_kmh": 122.1,
+      "max_peak_power_speed_kmh": 138,
+      "covered_distance_km": 1851.8,
+      "events_per_1000km": 8.1
+    },
+    {
+      "month": "2026-09",
+      "events_180kw": 8,
+      "events_200kw": 2,
+      "avg_peak_power_speed_kmh": 100.9,
+      "max_peak_power_speed_kmh": 121,
+      "covered_distance_km": 1212.2,
+      "events_per_1000km": 6.6
+    },
+    {
+      "month": "2026-10",
+      "events_180kw": 13,
+      "events_200kw": 5,
+      "avg_peak_power_speed_kmh": 96.5,
+      "max_peak_power_speed_kmh": 113,
+      "covered_distance_km": 2643.8,
+      "events_per_1000km": 4.9
+    },
+    {
+      "month": "2026-11",
+      "events_180kw": 3,
+      "events_200kw": 0,
+      "avg_peak_power_speed_kmh": 100.7,
+      "max_peak_power_speed_kmh": 116,
+      "covered_distance_km": 305.3,
+      "events_per_1000km": 9.8
+    }
+  ],
+  "tags": [
+    "TeslaMate",
+    "차량관리",
+    "주간리포트",
+    "충전비용",
+    "효율"
+  ],
+  "observation_note": "이번 주는 출퇴근 위주로 주행 270.4→281.7 km, 평균 속도 39.8→35.9 km/h였습니다. 효율은 145.9→156.0 Wh/km로 다소 늘었고(기온 등 조건에 따라 달라질 수 있음), 주차 중 소모는 하루 약 9.0→4.1%로 줄었습니다. 180 kW 이상 고출력 주행은 3회(최고 182 kW)였고 급속충전은 없었습니다. 100% 환산 주행가능거리 4주 평균은 372.2 km로 큰 변화가 없습니다. 관찰용 지표이며 원인을 단정하지 않습니다.",
+  "week_compare": {
+    "prior_week_end": "2026-11-01",
+    "distance_km_delta": 11.3,
+    "charging_kwh_delta": -32.9,
+    "capacity_kwh_delta": null,
+    "events_180_delta": 1,
+    "events_per_1000km_delta": 3.2,
+    "max_discharge_power_kw_delta": -36,
+    "wh_per_km_delta": 10.1,
+    "drive_count_delta": 1,
+    "cost_krw_delta": -4610
+  },
+  "report_version": "2026-11-05.4",
+  "drive_summary": {
+    "distance_km": 281.7,
+    "drive_count": 28,
+    "drive_time_min": 471,
+    "avg_speed_kmh": 35.9,
+    "max_speed_kmh": 143,
+    "longest_drive_km": 25.4,
+    "longest_drive_date": "2026-11-05"
+  },
+  "lifetime_totals": {
+    "as_of": "2026-11-08",
+    "odometer_km": 53346.7,
+    "drive_count": 4353,
+    "charge_count": 501,
+    "charged_kwh": 12071.0
+  },
+  "charging_cost": {
+    "week": {
+      "home_kwh": 40.4,
+      "home_gross_krw": 6659,
+      "home_card_points_krw": 2664,
+      "home_cost_krw": 3995,
+      "work_kwh": 16.7,
+      "work_discount_krw": 3449,
+      "work_cost_krw": 1477,
+      "fast_kwh": 0,
+      "fast_gross_krw": 0,
+      "fast_card_points_krw": 0,
+      "fast_cost_krw": 0,
+      "total_kwh": 57.1,
+      "total_cost_krw": 5472,
+      "green_points_krw": 2664,
+      "cost_per_km_krw": 19.4
+    },
+    "months": [
+      {
+        "home_kwh": 162.6,
+        "home_gross_krw": 26832,
+        "home_card_points_krw": 5666,
+        "home_cost_krw": 21166,
+        "work_kwh": 117.6,
+        "work_discount_krw": 24280,
+        "work_cost_krw": 10406,
+        "fast_kwh": 216.6,
+        "fast_gross_krw": 82293,
+        "fast_card_points_krw": 14334,
+        "fast_cost_krw": 67959,
+        "total_kwh": 496.8,
+        "total_cost_krw": 99531,
+        "green_points_krw": 20000,
+        "month": "2026-10",
+        "work_discount_cap_krw": 30000,
+        "green_points_cap_krw": 20000
+      },
+      {
+        "home_kwh": 40.4,
+        "home_gross_krw": 6659,
+        "home_card_points_krw": 2664,
+        "home_cost_krw": 3995,
+        "work_kwh": 16.7,
+        "work_discount_krw": 3449,
+        "work_cost_krw": 1477,
+        "fast_kwh": 0,
+        "fast_gross_krw": 0,
+        "fast_card_points_krw": 0,
+        "fast_cost_krw": 0,
+        "total_kwh": 57.1,
+        "total_cost_krw": 5472,
+        "green_points_krw": 2664,
+        "month": "2026-11",
+        "work_discount_cap_krw": 30000,
+        "green_points_cap_krw": 20000
+      }
+    ],
+    "rates": {
+      "home_krw_per_kwh": 165,
+      "home_krw_per_kwh_from_2027_03": 280,
+      "work_krw_per_kwh": 295,
+      "work_card_discount_pct": 70,
+      "work_discount_cap_krw_per_month": 30000,
+      "fast_krw_per_kwh": 380,
+      "green_card_points_pct": 40,
+      "green_card_points_cap_krw_per_month": 20000
+    },
+    "note": "충전량(charge_energy_added) 기준 추정이라 실제 결제액은 5~10% 더 나올 수 있습니다. 회사는 삼성 iD EV 카드 70% 결제일할인(월 3만원 한도), 집과 급속충전은 롯데 어디로든 그린카드 X LOCA 에코머니 40% 적립(집+급속 합산 월 2만 포인트 한도, 충전 순서대로 적용)을 실질 비용에서 뺐습니다. 두 카드 모두 전월실적 60만원 이상을 가정했고, 충전요금이 아파트 관리비에 포함돼 청구되면 적립되지 않습니다.",
+    "monthly_history": [
+      {
+        "month": "2026-08",
+        "total_cost_krw": 60233,
+        "distance_km": 1851.8,
+        "cost_per_km_krw": 32.5
+      },
+      {
+        "month": "2026-09",
+        "total_cost_krw": 27049,
+        "distance_km": 1212.2,
+        "cost_per_km_krw": 22.3
+      },
+      {
+        "month": "2026-10",
+        "total_cost_krw": 99531,
+        "distance_km": 2643.8,
+        "cost_per_km_krw": 37.6
+      }
+    ],
+    "monthly_avg_cost_krw": 62271,
+    "monthly_avg_months": 3,
+    "cards": {
+      "home": "롯데 어디로든 그린카드 X LOCA (에코머니 40% 적립)",
+      "work": "삼성 iD EV 카드 (70% 결제일할인)",
+      "fast": "롯데 어디로든 그린카드 X LOCA (에코머니 40% 적립)"
+    }
+  },
+  "efficiency": {
+    "wh_per_km": 156.0,
+    "prior_wh_per_km": 145.9,
+    "wh_per_km_delta": 10.1,
+    "parked_drain_pct_per_day": 4.1,
+    "prior_parked_drain_pct_per_day": 9.0,
+    "method": "정격 주행가능거리 사용량 × 차량 효율 ÷ 주행거리, 주차 소모는 2시간 이상·충전 없는 주차 구간 기준"
+  },
+  "battery_condition": {
+    "range_at_100_trend": [
+      {
+        "week_start": "2026-09-28",
+        "range_at_100_km": 372.0,
+        "ma4_km": 369.6
+      },
+      {
+        "week_start": "2026-10-05",
+        "range_at_100_km": 369.2,
+        "ma4_km": 369.1
+      },
+      {
+        "week_start": "2026-10-12",
+        "range_at_100_km": 372.8,
+        "ma4_km": 370.4
+      },
+      {
+        "week_start": "2026-10-19",
+        "range_at_100_km": 371.0,
+        "ma4_km": 371.2
+      },
+      {
+        "week_start": "2026-10-26",
+        "range_at_100_km": 372.6,
+        "ma4_km": 371.4
+      },
+      {
+        "week_start": "2026-11-02",
+        "range_at_100_km": 372.3,
+        "ma4_km": 372.2
+      }
+    ],
+    "avg_charge_end_soc_pct": 81.7,
+    "high_power_drive_count": 3,
+    "high_power_threshold_kw": 180,
+    "high_power_peak_kw": 182,
+    "dc_fast_charge_count": 0,
+    "dc_fast_charge_threshold_kw": 25,
+    "note": "100% 환산 주행가능거리는 충전 종료 시점 값으로 계산한 추세 지표이며 온도·충전 조건에 따라 흔들립니다. 열화나 원인을 확정하지 않습니다."
+  },
+  "vehicle_info": {
+    "software_version": "2026.38.3.2",
+    "update_history": [
+      {
+        "version": "2026.38.3.2",
+        "date": "2026-11-05"
+      },
+      {
+        "version": "2026.32.7",
+        "date": "2026-10-13"
+      },
+      {
+        "version": "2026.26.6.1",
+        "date": "2026-09-22"
+      },
+      {
+        "version": "2026.20.6.1",
+        "date": "2026-07-22"
+      },
+      {
+        "version": "2026.2.6",
+        "date": "2026-03-20"
+      },
+      {
+        "version": "2025.44.25.3",
+        "date": "2025-12-19"
+      },
+      {
+        "version": "2025.44.3",
+        "date": "2025-12-02"
+      }
+    ]
+  },
+  "gasoline_equivalent": {
+    "gasoline_price_krw_per_l": 1855.23,
+    "price_date": "2026-11-08",
+    "price_source": "오피넷 전국 평균 보통휘발유",
+    "reference_km_per_l": 12,
+    "week": {
+      "distance_km": 281.7,
+      "charging_cost_krw": 5472,
+      "km_per_l_equiv": 95.5,
+      "l_per_100km_equiv": 1.05,
+      "gasoline_car_cost_krw": 43552,
+      "savings_krw": 38080
+    },
+    "month": {
+      "month": "2026-10",
+      "distance_km": 2643.8,
+      "charging_cost_krw": 99531,
+      "km_per_l_equiv": 49.3,
+      "l_per_100km_equiv": 2.03,
+      "gasoline_car_cost_krw": 408738,
+      "savings_krw": 309207
+    }
+  }
+}
