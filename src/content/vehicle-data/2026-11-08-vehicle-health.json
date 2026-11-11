@@ -383,7 +383,12 @@
       "total_kwh": 57.1,
       "total_cost_krw": 5472,
       "green_points_krw": 2664,
-      "cost_per_km_krw": 19.4
+      "cost_per_km_krw": 19.4,
+      "super_kwh": 0,
+      "super_gross_krw": 0,
+      "super_credit_used_krw": 0,
+      "super_cost_krw": 0,
+      "other_ac_kwh": 0
     },
     "months": [
       {
@@ -394,16 +399,21 @@
         "work_kwh": 117.6,
         "work_discount_krw": 24280,
         "work_cost_krw": 10406,
-        "fast_kwh": 216.6,
-        "fast_gross_krw": 82293,
+        "fast_kwh": 161.2,
+        "fast_gross_krw": 61241,
         "fast_card_points_krw": 14334,
-        "fast_cost_krw": 67959,
-        "total_kwh": 496.8,
-        "total_cost_krw": 99531,
+        "fast_cost_krw": 46907,
+        "total_kwh": 499.4,
+        "total_cost_krw": 94646,
         "green_points_krw": 20000,
         "month": "2026-10",
         "work_discount_cap_krw": 30000,
-        "green_points_cap_krw": 20000
+        "green_points_cap_krw": 20000,
+        "super_kwh": 47.7,
+        "super_gross_krw": 16167,
+        "super_credit_used_krw": 0,
+        "super_cost_krw": 16167,
+        "other_ac_kwh": 10.3
       },
       {
         "home_kwh": 40.4,
@@ -422,7 +432,12 @@
         "green_points_krw": 2664,
         "month": "2026-11",
         "work_discount_cap_krw": 30000,
-        "green_points_cap_krw": 20000
+        "green_points_cap_krw": 20000,
+        "super_kwh": 0,
+        "super_gross_krw": 0,
+        "super_credit_used_krw": 0,
+        "super_cost_krw": 0,
+        "other_ac_kwh": 0
       }
     ],
     "rates": {
@@ -433,9 +448,10 @@
       "work_discount_cap_krw_per_month": 30000,
       "fast_krw_per_kwh": 380,
       "green_card_points_pct": 40,
-      "green_card_points_cap_krw_per_month": 20000
+      "green_card_points_cap_krw_per_month": 20000,
+      "supercharger_krw_per_kwh": 339
     },
-    "note": "충전량(charge_energy_added) 기준 추정이라 실제 결제액은 5~10% 더 나올 수 있습니다. 회사는 삼성 iD EV 카드 70% 결제일할인(월 3만원 한도), 집과 급속충전은 롯데 어디로든 그린카드 X LOCA 에코머니 40% 적립(집+급속 합산 월 2만 포인트 한도, 충전 순서대로 적용)을 실질 비용에서 뺐습니다. 두 카드 모두 전월실적 60만원 이상을 가정했고, 충전요금이 아파트 관리비에 포함돼 청구되면 적립되지 않습니다.",
+    "note": "슈퍼차저는 charge_energy_used × 339원/kWh로 추정하고, 테슬라 크레딧을 먼저 차감한 뒤 남은 금액만 현금 부담으로 봅니다. 2026-11-11 이전 슈퍼차저 세션은 현재 잔액에서 소급 차감하지 않습니다. 슈퍼차저에는 그린카드 적립을 적용하지 않습니다. 집과 급속충전은 충전량(charge_energy_added) 기준 추정이라 실제 결제액은 5~10% 더 나올 수 있습니다. 회사는 삼성 iD EV 카드 70% 결제일할인(월 3만원 한도), 집과 급속충전은 롯데 어디로든 그린카드 X LOCA 에코머니 40% 적립(집+급속 합산 월 2만 포인트 한도, 충전 순서대로 적용)을 실질 비용에서 뺐습니다. 두 카드 모두 전월실적 60만원 이상을 가정했고, 충전요금이 아파트 관리비에 포함돼 청구되면 적립되지 않습니다.",
     "monthly_history": [
       {
         "month": "2026-08",
@@ -451,18 +467,21 @@
       },
       {
         "month": "2026-10",
-        "total_cost_krw": 99531,
+        "total_cost_krw": 94646,
         "distance_km": 2643.8,
-        "cost_per_km_krw": 37.6
+        "cost_per_km_krw": 35.8
       }
     ],
-    "monthly_avg_cost_krw": 62271,
+    "monthly_avg_cost_krw": 60643,
     "monthly_avg_months": 3,
     "cards": {
       "home": "롯데 어디로든 그린카드 X LOCA (에코머니 40% 적립)",
       "work": "삼성 iD EV 카드 (70% 결제일할인)",
-      "fast": "롯데 어디로든 그린카드 X LOCA (에코머니 40% 적립)"
-    }
+      "fast": "롯데 어디로든 그린카드 X LOCA (에코머니 40% 적립)",
+      "supercharger": "테슬라 계정 (크레딧 선차감)"
+    },
+    "tesla_credit_balance_krw": 113148,
+    "tesla_credit_as_of": "2026-11-11"
   },
   "efficiency": {
     "wh_per_km": 156.0,
@@ -562,11 +581,11 @@
     "month": {
       "month": "2026-10",
       "distance_km": 2643.8,
-      "charging_cost_krw": 99531,
-      "km_per_l_equiv": 49.3,
-      "l_per_100km_equiv": 2.03,
+      "charging_cost_krw": 94646,
+      "km_per_l_equiv": 51.8,
+      "l_per_100km_equiv": 1.93,
       "gasoline_car_cost_krw": 408738,
-      "savings_krw": 309207
+      "savings_krw": 314092
     }
   }
 }
