@@ -59,16 +59,20 @@ const showBattery = !!bc || capTrend.some((t) => t.capacity_kwh != null);
     <table><thead><tr><th>구분</th><th>결제 카드</th><th>충전량</th><th>실질 비용</th><th>카드 혜택</th></tr></thead><tbody>
       <tr><td>집</td><td><small>{cc.cards?.home ?? "—"}</small></td><td>{n(cc.week.home_kwh, " kWh")}</td><td>{won(cc.week.home_cost_krw)}</td><td>{cc.week.home_card_points_krw != null ? `적립 ${won(cc.week.home_card_points_krw)}` : ""}</td></tr>
       <tr><td>회사</td><td><small>{cc.cards?.work ?? "—"}</small></td><td>{n(cc.week.work_kwh, " kWh")}</td><td>{won(cc.week.work_cost_krw)}</td><td>할인 {won(cc.week.work_discount_krw)}</td></tr>
+      {cc.week.super_kwh != null && <tr><td>슈퍼차저</td><td><small>{cc.cards?.supercharger ?? "테슬라 계정"}</small></td><td>{n(cc.week.super_kwh, " kWh")}</td><td>{won(cc.week.super_cost_krw)}</td><td>{cc.rates?.supercharger_krw_per_kwh ? `${cc.rates.supercharger_krw_per_kwh}원/kWh 가정` : ""}{cc.week.super_credit_used_krw != null && ` · 크레딧 차감 ${won(cc.week.super_credit_used_krw)}`}</td></tr>}
       <tr><td>급속충전</td><td><small>{cc.cards?.fast ?? "—"}</small></td><td>{n(cc.week.fast_kwh ?? cc.week.other_kwh, " kWh")}</td><td>{won(cc.week.fast_cost_krw ?? cc.week.other_cost_krw)}</td><td>{cc.rates?.fast_krw_per_kwh ? `${cc.rates.fast_krw_per_kwh}원/kWh 가정` : "단가 미설정"}{cc.week.fast_card_points_krw != null && ` · 적립 ${won(cc.week.fast_card_points_krw)}`}</td></tr>
     </tbody></table>
-    {cc.months?.length > 0 && <table><thead><tr><th>월</th><th>집</th><th>회사</th><th>삼성 할인 한도</th><th>그린카드 적립 한도(집+급속)</th><th>급속충전</th><th>비용 합계</th></tr></thead><tbody>
+    {cc.months?.length > 0 && <table><thead><tr><th>월</th><th>집</th><th>회사</th><th>삼성 할인 한도</th><th>그린카드 적립 한도(집+급속)</th><th>슈퍼차저</th><th>급속충전</th><th>비용 합계</th></tr></thead><tbody>
       {cc.months.map((m: any) => <tr><td>{m.month}</td><td>{n(m.home_kwh, " kWh")}<br /><small>{won(m.home_cost_krw)}</small></td><td>{n(m.work_kwh, " kWh")}<br /><small>{won(m.work_cost_krw)}</small></td>
         <td>{won(m.work_discount_krw)} / {won(m.work_discount_cap_krw)}<div class="v3-bar"><span style={`width:${Math.min(100, ((m.work_discount_krw ?? 0) / (m.work_discount_cap_krw || 1)) * 100)}%`}></span></div></td>
         <td>{m.green_points_krw != null ? <>{won(m.green_points_krw)} / {won(m.green_points_cap_krw)}<div class="v3-bar"><span style={`width:${Math.min(100, (m.green_points_krw / (m.green_points_cap_krw || 1)) * 100)}%`}></span></div></> : "—"}</td>
+        <td>{m.super_kwh != null ? <>{n(m.super_kwh, " kWh")}<br /><small>{won(m.super_cost_krw)}{m.super_credit_used_krw ? ` · 크레딧 ${won(m.super_credit_used_krw)}` : ""}</small></> : "—"}</td>
         <td>{n(m.fast_kwh ?? m.other_kwh, " kWh")}<br /><small>{won(m.fast_cost_krw ?? m.other_cost_krw)}</small></td><td><strong>{won(m.total_cost_krw ?? m.known_cost_krw)}</strong></td></tr>)}
     </tbody></table>}
     {cc.monthly_history?.length > 0 && <table><thead><tr><th>월</th><th>충전비용</th><th>주행</th><th>원/km</th></tr></thead><tbody>{cc.monthly_history.map((h: any) => <tr><td>{h.month}</td><td>{won(h.total_cost_krw)}</td><td>{n(h.distance_km, " km")}</td><td>{n(h.cost_per_km_krw, "원")}</td></tr>)}</tbody></table>}
     {cc.monthly_avg_cost_krw != null && <p>월평균 충전비용: <strong>{won(cc.monthly_avg_cost_krw)}</strong> <small>(최근 {cc.monthly_avg_months}개월)</small></p>}
+    {cc.tesla_credit_balance_krw != null && <p>테슬라 슈퍼차저 크레딧 잔액: <strong>{won(cc.tesla_credit_balance_krw)}</strong>{cc.tesla_credit_as_of && <small> ({cc.tesla_credit_as_of} 기준)</small>}</p>}
+    {cc.months?.some((m: any) => m.other_ac_kwh) && <p class="chart-method-note">급속이 아닌 기타 완속은 단가를 적용하지 않았습니다.{cc.months.filter((m: any) => m.other_ac_kwh).map((m: any) => ` ${m.month} ${n(m.other_ac_kwh, " kWh")}`).join(".")}.</p>}
     {cc.note && <p class="chart-method-note">{cc.note}</p>}
   </div>}
   {ge && <div class="v3-card"><h2>⛽ 휘발유 환산</h2>
