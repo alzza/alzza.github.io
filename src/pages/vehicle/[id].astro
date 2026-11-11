@@ -69,7 +69,7 @@ const number = (value: number | null, suffix: string) => value === null ? "Îç∞Ïù
     {isV3 && <VehicleWeeklyV3 data={data} />}
     <VehicleCharts
       dailyMetrics={data.daily_metrics.map((item) => ({ date: item.date, distanceKm: item.distance_km, chargingKwh: item.charging_kwh }))}
-      capacityTrend={data.capacity_trend.map((item) => ({ month: item.month, capacityKwh: item.capacity_kwh }))}
+      capacityTrend={data.capacity_trend.map((item) => ({ month: item.month, capacityKwh: item.capacity_kwh, ma3Kwh: item.ma3_kwh ?? null, sessionCount: item.session_count ?? null }))}
       accelerationWeek={{ thresholdKw: data.acceleration_week.threshold_kw, secondaryThresholdKw: data.acceleration_week.secondary_threshold_kw, eventCount: data.acceleration_week.event_count, secondaryEventCount: data.acceleration_week.secondary_event_count, maxDischargePowerKw: data.acceleration_week.max_discharge_power_kw, avgPeakPowerSpeedKmh: data.acceleration_week.avg_peak_power_speed_kmh, maxPeakPowerSpeedKmh: data.acceleration_week.max_peak_power_speed_kmh, coveredDistanceKm: data.acceleration_week.covered_distance_km, eventsPer1000Km: data.acceleration_week.events_per_1000km, dataQuality: data.acceleration_week.data_quality }}
       accelerationTrend={data.acceleration_trend.map((item) => ({ month: item.month, events180Kw: item.events_180kw, events200Kw: item.events_200kw, avgPeakPowerSpeedKmh: item.avg_peak_power_speed_kmh, maxPeakPowerSpeedKmh: item.max_peak_power_speed_kmh, coveredDistanceKm: item.covered_distance_km, eventsPer1000Km: item.events_per_1000km }))}
     />

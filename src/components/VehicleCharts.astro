@@ -8,6 +8,8 @@ interface DailyMetric {
 interface CapacityPoint {
   month: string;
   capacityKwh: number | null;
+  ma3Kwh?: number | null;
+  sessionCount?: number | null;
 }
 
 interface AccelerationWeek {
@@ -40,16 +42,15 @@ interface Props {
   accelerationTrend?: AccelerationPoint[];
 }
 
-const { dailyMetrics = [], capacityTrend = [], accelerationWeek, accelerationTrend = [] } = Astro.props;
+const { dailyMetrics = [], capacityTrend = [], accelerationWeek } = Astro.props;
 const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
 const dayLabel = (date: string) => weekDays[new Date(`${date}T00:00:00Z`).getUTCDay()] ?? date;
 const number = (value: number | null, suffix = "") => value === null ? "—" : `${value}${suffix}`;
 const hasDaily = dailyMetrics.some((item) => item.distanceKm !== null || item.chargingKwh !== null);
 const hasCapacity = capacityTrend.some((item) => item.capacityKwh !== null);
 const hasAcceleration = accelerationWeek?.dataQuality === "available" && accelerationWeek.eventCount !== null;
-const capacityByMonth = new Map(capacityTrend.map((item) => [item.month, item.capacityKwh]));
-const correlationPoints = accelerationTrend.map((item) => ({ ...item, capacityKwh: capacityByMonth.get(item.month) ?? null }));
-const hasCorrelation = correlationPoints.some((item) => item.eventsPer1000Km !== null) && correlationPoints.some((item) => item.capacityKwh !== null);
+const hasMa3 = capacityTrend.some((item) => item.ma3Kwh != null);
+const hasSessionCount = capacityTrend.some((item) => item.sessionCount != null);
 const chartWidth = 720;
 const chartHeight = 250;
 const left = 52;
@@ -62,7 +63,7 @@ const dailyDistanceMax = Math.max(...dailyMetrics.map((item) => item.distanceKm 
 const dailyChargeMax = Math.max(...dailyMetrics.map((item) => item.chargingKwh ?? 0), 1);
 const barSlot = dailyMetrics.length ? plotWidth / dailyMetrics.length : plotWidth;
 const barWidth = Math.max(8, Math.min(38, barSlot * 0.32));
-const capacityValues = capacityTrend.map((item) => item.capacityKwh).filter((value): value is number => value !== null);
+const capacityValues = capacityTrend.flatMap((item) => [item.capacityKwh, item.ma3Kwh ?? null]).filter((value): value is number => value !== null);
 const capacityMin = capacityValues.length ? Math.floor((Math.min(...capacityValues) - 0.5) * 2) / 2 : 0;
 const capacityMax = capacityValues.length ? Math.ceil((Math.max(...capacityValues) + 0.5) * 2) / 2 : 1;
 const capacityRange = Math.max(capacityMax - capacityMin, 1);
@@ -75,21 +76,12 @@ const capacityPath = capacityTrend.map((item, index) => {
   capacityStarted = true;
   return `${command}${capacityX(index)} ${capacityY(item.capacityKwh)}`;
 }).filter(Boolean).join(" ");
-const correlationRateMax = Math.max(...correlationPoints.map((item) => item.eventsPer1000Km ?? 0), 1);
-const correlationSlot = correlationPoints.length ? plotWidth / correlationPoints.length : plotWidth;
-const correlationBarWidth = Math.max(8, Math.min(34, correlationSlot * 0.58));
-const correlationCapacityValues = correlationPoints.map((item) => item.capacityKwh).filter((value): value is number => value !== null);
-const correlationCapacityMin = correlationCapacityValues.length ? Math.floor((Math.min(...correlationCapacityValues) - 0.5) * 2) / 2 : 0;
-const correlationCapacityMax = correlationCapacityValues.length ? Math.ceil((Math.max(...correlationCapacityValues) + 0.5) * 2) / 2 : 1;
-const correlationCapacityRange = Math.max(correlationCapacityMax - correlationCapacityMin, 1);
-const correlationX = (index: number) => correlationPoints.length <= 1 ? left + plotWidth / 2 : left + (plotWidth * index) / (correlationPoints.length - 1);
-const correlationCapacityY = (value: number) => top + plotHeight - ((value - correlationCapacityMin) / correlationCapacityRange) * plotHeight;
-let correlationStarted = false;
-const correlationCapacityPath = correlationPoints.map((item, index) => {
-  if (item.capacityKwh === null) return "";
-  const command = correlationStarted ? "L" : "M";
-  correlationStarted = true;
-  return `${command}${correlationX(index)} ${correlationCapacityY(item.capacityKwh)}`;
+let ma3Started = false;
+const ma3Path = capacityTrend.map((item, index) => {
+  if (item.ma3Kwh == null) return "";
+  const command = ma3Started ? "L" : "M";
+  ma3Started = true;
+  return `${command}${capacityX(index)} ${capacityY(item.ma3Kwh)}`;
 }).filter(Boolean).join(" ");
 ---
 
@@ -166,60 +158,32 @@ const correlationCapacityPath = correlationPoints.map((item, index) => {
 
     <figure class="vehicle-chart-card" data-chart-kind="estimated">
       <figcaption>
-        <strong>월간 참고 · 배터리 추정 가용용량</strong>
-        <span>최대 12개월의 충전 세션 기반 추정 추세입니다.</span>
+        <strong>월간 참고 · 추정 가용용량 추세</strong>
+        <span>충전 세션 기반 월별 추정값입니다. 2026-11-16 주간부터는 월 중앙값을 씁니다.</span>
       </figcaption>
       {
         hasCapacity ? (
           <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} role="img" aria-labelledby="capacity-chart-title capacity-chart-desc">
             <title id="capacity-chart-title">월별 배터리 추정 가용용량</title>
-            <desc id="capacity-chart-desc">초록 선은 최근 월별 추정 가용용량 킬로와트시입니다.</desc>
+            <desc id="capacity-chart-desc">초록 선은 월별 추정 가용용량 킬로와트시이고, 값이 있으면 점선은 3개월 이동 중앙값입니다.</desc>
             {[0, 1, 2, 3].map((step) => {
               const y = top + (plotHeight * step) / 3;
               const value = capacityMax - (capacityRange * step) / 3;
               return <g><line x1={left} x2={chartWidth - right} y1={y} y2={y} class="chart-grid-line" /><text x={left - 8} y={y + 4} text-anchor="end" class="chart-axis-label">{value.toFixed(1)}</text></g>;
             })}
             <path d={capacityPath} class="chart-capacity-line" />
-            {capacityTrend.map((item, index) => item.capacityKwh !== null && <g><circle cx={capacityX(index)} cy={capacityY(item.capacityKwh)} r="4" class="chart-capacity-point" tabindex="0" focusable="true" data-chart-tooltip={`${item.month} · 추정 가용용량: ${item.capacityKwh} kWh`} aria-label={`${item.month} 추정 가용용량 ${item.capacityKwh} kWh`} /><text x={capacityX(index)} y={chartHeight - 14} text-anchor="middle" class="chart-axis-label">{item.month.slice(5)}</text></g>)}
+            {hasMa3 && <path d={ma3Path} class="chart-capacity-line chart-ma3-line" />}
+            {capacityTrend.map((item, index) => item.capacityKwh !== null && <g><circle cx={capacityX(index)} cy={capacityY(item.capacityKwh)} r="4" class="chart-capacity-point" tabindex="0" focusable="true" data-chart-tooltip={`${item.month} · 추정 가용용량: ${item.capacityKwh} kWh${item.ma3Kwh != null ? ` · 3개월 이동 중앙값: ${item.ma3Kwh} kWh` : ""}`} aria-label={`${item.month} 추정 가용용량 ${item.capacityKwh} kWh`} /><text x={capacityX(index)} y={chartHeight - 14} text-anchor="middle" class="chart-axis-label">{item.month.slice(5)}</text></g>)}
           </svg>
         ) : <p class="vehicle-chart-empty">월별 용량 추세가 없어 그래프를 표시하지 않습니다.</p>
       }
+      {hasMa3 && <div class="chart-legend"><span><i class="legend-capacity"></i>월 추정값 (kWh)</span><span><i class="legend-ma3"></i>3개월 이동 중앙값</span></div>}
       {
-        hasCapacity && <details class="vehicle-chart-table"><summary>월별 수치 보기</summary><table><thead><tr><th>월</th><th>추정 가용용량</th></tr></thead><tbody>{capacityTrend.map((item) => <tr><td>{item.month}</td><td>{number(item.capacityKwh, " kWh")}</td></tr>)}</tbody></table></details>
+        hasCapacity && <details class="vehicle-chart-table"><summary>월별 수치 보기</summary><table><thead><tr><th>월</th><th>추정 가용용량</th>{hasMa3 && <th>3개월 이동 중앙값</th>}{hasSessionCount && <th>세션 수</th>}</tr></thead><tbody>{capacityTrend.map((item) => <tr><td>{item.month}</td><td>{number(item.capacityKwh, " kWh")}</td>{hasMa3 && <td>{number(item.ma3Kwh ?? null, " kWh")}</td>}{hasSessionCount && <td>{number(item.sessionCount ?? null, "회")}</td>}</tr>)}</tbody></table></details>
       }
+      <p class="chart-method-note">2026-11-16 주간부터는 SOC가 30%p 이상 오른 충전 세션의 월 중앙값입니다. 그 이전 월은 평균값일 수 있습니다. 한 달의 값만으로 상태를 확정하지 않습니다.</p>
     </figure>
 
-    <figure class="vehicle-chart-card" data-chart-kind="comparison">
-      <figcaption>
-        <strong>월간 참고 · 고출력 가속과 추정 가용용량</strong>
-        <span>막대는 기록 데이터(1,000 km당 180 kW 이상 이벤트), 선은 추정 데이터(kWh)입니다.</span>
-      </figcaption>
-      {
-        hasCorrelation ? (
-          <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} role="img" aria-labelledby="correlation-chart-title correlation-chart-desc">
-            <title id="correlation-chart-title">월별 고출력 가속 이벤트율과 배터리 추정 가용용량</title>
-            <desc id="correlation-chart-desc">파란 막대는 천 킬로미터당 180킬로와트 이상 고출력 가속 이벤트 수, 초록 선은 충전 세션 기반 추정 가용용량입니다. 두 값의 동시 변화는 인과관계를 뜻하지 않습니다.</desc>
-            {[0, 1, 2, 3].map((step) => {
-              const y = top + (plotHeight * step) / 3;
-              const rate = correlationRateMax - (correlationRateMax * step) / 3;
-              const capacity = correlationCapacityMax - (correlationCapacityRange * step) / 3;
-              return <g><line x1={left} x2={chartWidth - right} y1={y} y2={y} class="chart-grid-line" /><text x={left - 8} y={y + 4} text-anchor="end" class="chart-axis-label">{rate.toFixed(1)}</text><text x={chartWidth - right + 8} y={y + 4} class="chart-axis-label">{capacity.toFixed(1)}</text></g>;
-            })}
-            {correlationPoints.map((item, index) => {
-              const rate = item.eventsPer1000Km;
-              const height = rate === null ? 0 : (rate / correlationRateMax) * plotHeight;
-              return <g>{rate !== null && <rect class="chart-bar-distance" x={correlationX(index) - correlationBarWidth / 2} y={top + plotHeight - height} width={correlationBarWidth} height={height} rx="2" tabindex="0" focusable="true" data-chart-tooltip={`${item.month} · 이벤트율: ${rate}회/1,000 km`} aria-label={`${item.month} 이벤트율 ${rate}회/1,000 km`} />}<text x={correlationX(index)} y={chartHeight - 14} text-anchor="middle" class="chart-axis-label">{item.month.slice(5)}</text></g>;
-            })}
-            <path d={correlationCapacityPath} class="chart-capacity-line" />
-            {correlationPoints.map((item, index) => item.capacityKwh !== null && <circle cx={correlationX(index)} cy={correlationCapacityY(item.capacityKwh)} r="4" class="chart-capacity-point" tabindex="0" focusable="true" data-chart-tooltip={`${item.month} · 추정 가용용량: ${item.capacityKwh} kWh`} aria-label={`${item.month} 추정 가용용량 ${item.capacityKwh} kWh`} />)}
-            <text x={left} y={16} class="chart-axis-label">이벤트/1,000 km</text><text x={chartWidth - right} y={16} text-anchor="end" class="chart-axis-label">추정 kWh</text>
-          </svg>
-        ) : <p class="vehicle-chart-empty">월별 고출력 가속률과 추정 가용용량이 함께 쌓이면 비교 그래프를 표시합니다.</p>
-      }
-      <div class="chart-legend"><span><i class="legend-distance"></i>기록: 180 kW 이상 이벤트/1,000 km</span><span><i class="legend-capacity"></i>추정: 가용용량 (kWh)</span></div>
-      {hasCorrelation && <details class="vehicle-chart-table"><summary>월별 비교 수치 보기</summary><table><thead><tr><th>월</th><th>180 kW 이상</th><th>200 kW 이상</th><th>1,000 km당</th><th>이벤트 평균속도</th><th>이벤트 최고속도</th><th>추정 가용용량</th></tr></thead><tbody>{correlationPoints.map((item) => <tr><td>{item.month}</td><td>{number(item.events180Kw, "회")}</td><td>{number(item.events200Kw, "회")}</td><td>{number(item.eventsPer1000Km, "회")}</td><td>{number(item.avgPeakPowerSpeedKmh, " km/h")}</td><td>{number(item.maxPeakPowerSpeedKmh, " km/h")}</td><td>{number(item.capacityKwh, " kWh")}</td></tr>)}</tbody></table></details>}
-      <p class="chart-method-note">두 축의 동시 변화는 상관관계 관찰용이며, 열화의 원인 또는 기여도를 뜻하지 않습니다.</p>
-    </figure>
   </div>
 </section>
 
@@ -243,8 +207,12 @@ const correlationCapacityPath = correlationPoints.map((item, index) => {
     const estimated = section.querySelector<HTMLInputElement>('[data-chart-toggle="estimated"]')?.checked ?? true;
     section.querySelectorAll<HTMLElement>('[data-chart-kind="actual"]').forEach((item) => { item.hidden = !actual; });
     section.querySelectorAll<HTMLElement>('[data-chart-kind="estimated"]').forEach((item) => { item.hidden = !estimated; });
-    section.querySelectorAll<HTMLElement>('[data-chart-kind="comparison"]').forEach((item) => { item.hidden = !actual || !estimated; });
   };
   document.querySelectorAll<HTMLInputElement>("[data-chart-toggle]").forEach((toggle) => toggle.addEventListener("change", applyChartToggles));
   applyChartToggles();
 </script>
+
+<style>
+  .chart-ma3-line { stroke-dasharray: 6 5; opacity: .85; }
+  .legend-ma3 { display: inline-block; width: 16px; border-top: 2px dashed currentColor; vertical-align: middle; margin-right: 4px; }
+</style>

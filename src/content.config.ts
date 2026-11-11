@@ -37,6 +37,8 @@ const vehicleReports = defineCollection({
     capacity_trend: z.array(z.object({
       month: z.string(),
       capacity_kwh: z.number().nullable().default(null),
+      ma3_kwh: z.number().nullable().optional(),
+      session_count: z.number().nullable().optional(),
     })).default([]),
     acceleration_week: z.object({
       threshold_kw: z.number().nullable().default(null),
@@ -92,7 +94,7 @@ const vehicleData = defineCollection({
       data_quality: z.enum(["available", "insufficient", "sign_unverified"]).default("available"),
     })).default([]),
     daily_metrics: z.array(z.object({ date: z.string(), distance_km: z.number().nullable().default(null), charging_kwh: z.number().nullable().default(null) })).default([]),
-    capacity_trend: z.array(z.object({ month: z.string(), capacity_kwh: z.number().nullable().default(null) })).default([]),
+    capacity_trend: z.array(z.object({ month: z.string(), capacity_kwh: z.number().nullable().default(null), ma3_kwh: z.number().nullable().optional(), session_count: z.number().nullable().optional() })).default([]),
     acceleration_week: z.object({
       threshold_kw: z.number().nullable().default(null), secondary_threshold_kw: z.number().nullable().default(null),
       event_count: z.number().nullable().default(null), secondary_event_count: z.number().nullable().default(null),
@@ -118,6 +120,8 @@ const vehicleData = defineCollection({
       range_at_100_trend: z.array(z.object({ week_start: z.string(), range_at_100_km: z.number().nullable().default(null), ma4_km: z.number().nullable().default(null) })).default([]),
       avg_charge_end_soc_pct: z.number().nullable().default(null), high_power_drive_count: z.number().nullable().default(null), high_power_threshold_kw: z.number().nullable().default(null), high_power_peak_kw: z.number().nullable().default(null),
       dc_fast_charge_count: z.number().nullable().default(null), dc_fast_charge_threshold_kw: z.number().nullable().default(null), note: z.string().optional(),
+      capacity_median_kwh: z.number().nullable().optional(), baseline_capacity_kwh: z.number().nullable().optional(), baseline_month: z.string().nullable().optional(),
+      vs_baseline_pct: z.number().nullable().optional(), vs_prior_quarter_kwh: z.number().nullable().optional(), method: z.string().optional(),
     }).optional(),
     gasoline_equivalent: z.object({ gasoline_price_krw_per_l: z.number().nullable().default(null), price_date: z.string().nullable().default(null), price_source: z.string().optional(), reference_km_per_l: z.number().nullable().default(null),
       week: z.object({ distance_km: z.number().nullable().default(null), charging_cost_krw: z.number().nullable().default(null), km_per_l_equiv: z.number().nullable().default(null), l_per_100km_equiv: z.number().nullable().default(null), gasoline_car_cost_krw: z.number().nullable().default(null), savings_krw: z.number().nullable().default(null) }).nullable().optional(),

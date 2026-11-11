@@ -1,5 +1,5 @@
 ---
-// Report contract 2026-11-05.1+ sections. Rendered only when the JSON has these fields.
+// Report contract 2026-11-11.4: capacity median trend is the battery headline; high-power is driving stats only.
 const { data } = Astro.props as { data: any };
 const n = (v: number | null | undefined, unit = "", digits?: number) =>
   v === null || v === undefined ? "데이터 부족" : `${digits !== undefined ? v.toFixed(digits) : v.toLocaleString("ko-KR")}${unit}`;
@@ -8,14 +8,38 @@ const signed = (v: number | null | undefined, unit = "") => (v === null || v ===
 const ds = data.drive_summary; const lt = data.lifetime_totals; const cc = data.charging_cost;
 const ge = data.gasoline_equivalent; const ef = data.efficiency; const bc = data.battery_condition; const vi = data.vehicle_info;
 const hours = (m: number | null) => (m === null || m === undefined ? "데이터 부족" : `${Math.floor(m / 60)}시간 ${m % 60}분`);
-const trend = bc?.range_at_100_trend ?? [];
-const tv = trend.flatMap((t: any) => [t.range_at_100_km, t.ma4_km]).filter((v: any) => v !== null);
-const tMin = tv.length ? Math.floor(Math.min(...tv) - 2) : 0; const tMax = tv.length ? Math.ceil(Math.max(...tv) + 2) : 1;
+const capTrend = (data.capacity_trend ?? []) as { month: string; capacity_kwh: number | null; ma3_kwh?: number | null; session_count?: number | null }[];
+const capVals = capTrend.flatMap((t) => [t.capacity_kwh, t.ma3_kwh ?? null]).filter((v): v is number => v != null);
+const cMin = capVals.length ? Math.floor((Math.min(...capVals) - 0.5) * 2) / 2 : 0;
+const cMax = capVals.length ? Math.ceil((Math.max(...capVals) + 0.5) * 2) / 2 : 1;
 const W = 720, H = 200, L = 50, R = 16, T = 20, B = 34; const pw = W - L - R, ph = H - T - B;
+const cx = (i: number) => (capTrend.length <= 1 ? L + pw / 2 : L + (pw * i) / (capTrend.length - 1));
+const cy = (v: number) => T + ph - ((v - cMin) / Math.max(cMax - cMin, 1)) * ph;
+let capStarted = false;
+const capPath = capTrend.map((t, i) => {
+  if (t.capacity_kwh == null) return "";
+  const cmd = capStarted ? "L" : "M";
+  capStarted = true;
+  return `${cmd}${cx(i)} ${cy(t.capacity_kwh)}`;
+}).filter(Boolean).join(" ");
+let ma3Started = false;
+const ma3Path = capTrend.map((t, i) => {
+  if (t.ma3_kwh == null) return "";
+  const cmd = ma3Started ? "L" : "M";
+  ma3Started = true;
+  return `${cmd}${cx(i)} ${cy(t.ma3_kwh)}`;
+}).filter(Boolean).join(" ");
+const hasMa3 = capTrend.some((t) => t.ma3_kwh != null);
+const latestCap = [...capTrend].reverse().find((t) => t.capacity_kwh != null);
+const latestMa3 = [...capTrend].reverse().find((t) => t.ma3_kwh != null);
+const trend = bc?.range_at_100_trend ?? [];
+const tv = trend.flatMap((row: any) => [row.range_at_100_km, row.ma4_km]).filter((v: any) => v !== null);
+const tMin = tv.length ? Math.floor(Math.min(...tv) - 2) : 0; const tMax = tv.length ? Math.ceil(Math.max(...tv) + 2) : 1;
 const tx = (i: number) => (trend.length <= 1 ? L + pw / 2 : L + (pw * i) / (trend.length - 1));
 const ty = (v: number) => T + ph - ((v - tMin) / Math.max(tMax - tMin, 1)) * ph;
-const ma = trend.map((t: any, i: number) => (t.ma4_km === null ? null : [tx(i), ty(t.ma4_km)])).filter(Boolean) as number[][];
-const maPath = ma.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
+const ma = trend.map((row: any, i: number) => (row.ma4_km === null ? null : [tx(i), ty(row.ma4_km)])).filter(Boolean) as number[][];
+const maPath = ma.map((pt, i) => `${i ? "L" : "M"}${pt[0]} ${pt[1]}`).join(" ");
+const showBattery = !!bc || capTrend.some((t) => t.capacity_kwh != null);
 ---
 <section class="vehicle-v3" aria-label="주간 차량관리 요약">
   {ds && <div class="v3-card"><h2>🚗 운행 요약</h2><dl class="v3-grid">
@@ -57,22 +81,34 @@ const maPath = ma.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
     <div><dt>전주 효율</dt><dd>{n(ef.prior_wh_per_km, " Wh/km")}</dd></div>
     <div><dt>주차 중 소모</dt><dd>{n(ef.parked_drain_pct_per_day, "%/일")} <small>(전주 {n(ef.prior_parked_drain_pct_per_day, "%")})</small></dd></div>
   </dl>{ef.method && <p class="chart-method-note">{ef.method}</p>}</div>}
-  {bc && <div class="v3-card"><h2>🩺 배터리 상태 (추세)</h2>
+  {showBattery && <div class="v3-card"><h2>배터리 추세</h2>
     <dl class="v3-grid">
-      <div><dt>평균 충전 종료 SOC</dt><dd>{n(bc.avg_charge_end_soc_pct, "%")}</dd></div>
-      <div><dt>고출력 주행 ({bc.high_power_threshold_kw ?? 180} kW+)</dt><dd>{n(bc.high_power_drive_count, "회")} <small>최고 {n(bc.high_power_peak_kw, " kW")}</small></dd></div>
-      <div><dt>급속충전 (DC)</dt><dd>{n(bc.dc_fast_charge_count, "회")}</dd></div>
+      <div><dt>최근 월 추정 용량</dt><dd>{latestCap ? `${n(latestCap.capacity_kwh, " kWh")}` : "데이터 부족"}{latestCap && <small> ({latestCap.month})</small>}</dd></div>
+      <div><dt>3개월 이동 중앙값</dt><dd>{latestMa3 ? n(latestMa3.ma3_kwh, " kWh") : "데이터 부족"}</dd></div>
+      <div><dt>기준월 대비</dt><dd>{bc?.vs_baseline_pct != null ? <>{signed(bc.vs_baseline_pct, "%")}{bc.baseline_month && <small> ({bc.baseline_month} {n(bc.baseline_capacity_kwh, " kWh")})</small>}</> : "데이터 부족"}</dd></div>
     </dl>
-    {trend.length > 0 && <figure><figcaption><strong>100% 환산 주행가능거리</strong> <small>(점: 주간 값, 선: 4주 이동평균)</small></figcaption>
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="100% 환산 주행가능거리 추세">
+    {capTrend.some((row) => row.capacity_kwh != null) && <figure><figcaption><strong>월별 추정 가용용량</strong> <small>{hasMa3 ? "(실선: 월 값, 점선: 3개월 이동 중앙값)" : "(충전 세션 기반 추정)"}</small></figcaption>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="월별 추정 가용용량 추세">
         {[0, 1, 2].map((s) => <line x1={L} x2={W - R} y1={T + (ph * s) / 2} y2={T + (ph * s) / 2} class="chart-grid-line" />)}
-        {[tMax, (tMin + tMax) / 2, tMin].map((v, s) => <text x={L - 6} y={T + (ph * s) / 2 + 4} text-anchor="end" class="chart-axis-label">{Math.round(v)}</text>)}
-        <path d={maPath} class="chart-capacity-line" />
-        {trend.map((t: any, i: number) => t.range_at_100_km !== null && <circle class="chart-capacity-point" cx={tx(i)} cy={ty(t.range_at_100_km)} r="5"><title>{`${t.week_start} 주 · ${t.range_at_100_km} km · 4주평균 ${t.ma4_km ?? "—"} km`}</title></circle>)}
-        {trend.map((t: any, i: number) => <text x={tx(i)} y={H - 10} text-anchor="middle" class="chart-axis-label">{t.week_start.slice(5)}</text>)}
+        {[cMax, (cMin + cMax) / 2, cMin].map((v, s) => <text x={L - 6} y={T + (ph * s) / 2 + 4} text-anchor="end" class="chart-axis-label">{v.toFixed(1)}</text>)}
+        <path d={capPath} class="chart-capacity-line" />
+        {hasMa3 && <path d={ma3Path} class="chart-capacity-line chart-ma3-line" />}
+        {capTrend.map((row, i) => row.capacity_kwh != null && <circle class="chart-capacity-point" cx={cx(i)} cy={cy(row.capacity_kwh)} r="5"><title>{`${row.month} · ${row.capacity_kwh} kWh${row.ma3_kwh != null ? ` · 3개월 이동 중앙값 ${row.ma3_kwh} kWh` : ""}`}</title></circle>)}
+        {capTrend.map((row, i) => <text x={cx(i)} y={H - 10} text-anchor="middle" class="chart-axis-label">{row.month.slice(5)}</text>)}
       </svg></figure>}
-    <details class="vehicle-chart-table"><summary>주별 수치</summary><table><thead><tr><th>주 시작</th><th>100% 환산</th><th>4주 평균</th></tr></thead><tbody>{trend.map((t: any) => <tr><td>{t.week_start}</td><td>{n(t.range_at_100_km, " km")}</td><td>{n(t.ma4_km, " km")}</td></tr>)}</tbody></table></details>
-    {bc.note && <p class="chart-method-note">{bc.note}</p>}
+    {bc && <p class="chart-method-note-drive">이번 주 운행 참고: 고출력 주행({bc.high_power_threshold_kw ?? 180} kW+) {n(bc.high_power_drive_count, "회")}{bc.high_power_peak_kw != null && ` · 최고 ${n(bc.high_power_peak_kw, " kW")}`} · 급속충전 {n(bc.dc_fast_charge_count, "회")}. 운행 통계이며 열화와 연결하지 않습니다.</p>}
+    {trend.length > 0 && <details class="vehicle-chart-table"><summary>100% 환산 주행가능거리 (참고)</summary>
+      <figure><figcaption><strong>100% 환산 주행가능거리</strong> <small>(점: 주간 값, 선: 4주 이동평균)</small></figcaption>
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="100% 환산 주행가능거리 추세">
+          {[0, 1, 2].map((s) => <line x1={L} x2={W - R} y1={T + (ph * s) / 2} y2={T + (ph * s) / 2} class="chart-grid-line" />)}
+          {[tMax, (tMin + tMax) / 2, tMin].map((v, s) => <text x={L - 6} y={T + (ph * s) / 2 + 4} text-anchor="end" class="chart-axis-label">{Math.round(v)}</text>)}
+          <path d={maPath} class="chart-capacity-line" />
+          {trend.map((row: any, i: number) => row.range_at_100_km !== null && <circle class="chart-capacity-point" cx={tx(i)} cy={ty(row.range_at_100_km)} r="5"><title>{`${row.week_start} 주 · ${row.range_at_100_km} km · 4주평균 ${row.ma4_km ?? "—"} km`}</title></circle>)}
+          {trend.map((row: any, i: number) => <text x={tx(i)} y={H - 10} text-anchor="middle" class="chart-axis-label">{row.week_start.slice(5)}</text>)}
+        </svg></figure>
+      <table><thead><tr><th>주 시작</th><th>100% 환산</th><th>4주 평균</th></tr></thead><tbody>{trend.map((row: any) => <tr><td>{row.week_start}</td><td>{n(row.range_at_100_km, " km")}</td><td>{n(row.ma4_km, " km")}</td></tr>)}</tbody></table>
+    </details>}
+    <p class="chart-method-note">{bc?.method ?? "2026-11-16 주간부터는 SOC가 30%p 이상 오른 충전 세션의 월 중앙값입니다. 그 이전 월은 평균값일 수 있습니다. 추세 관찰용이며 열화나 원인을 확정하지 않습니다."}{bc?.note ? ` ${bc.note}` : ""}</p>
   </div>}
   {lt && <div class="v3-card"><h2>📈 누적 기록 <small>({lt.as_of} 기준)</small></h2><dl class="v3-grid">
     <div><dt>총 주행거리</dt><dd>{n(lt.odometer_km, " km")}</dd></div>
@@ -97,4 +133,6 @@ const maPath = ma.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
   .v3-bar span { position: absolute; inset: 0 auto 0 0; background: var(--yellow, #e6b800); }
   .v3-card svg { width: 100%; height: auto; min-width: 480px; }
   @media (max-width: 720px) { .v3-grid { grid-template-columns: repeat(2, 1fr); } }
+  .chart-ma3-line { stroke-dasharray: 6 5; opacity: .85; }
+  .chart-method-note-drive { color: var(--muted); font-size: .9rem; margin: 8px 0; }
 </style>
