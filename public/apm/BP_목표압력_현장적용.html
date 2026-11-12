@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BP 프레스 목표압력</title>
+<style>
+  :root { --ink:#1c1915; --muted:#5c564c; --line:#d9d1c4; --paper:#f6f2ea; --blue:#1e3f73; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:17px/1.7 "Apple SD Gothic Neo","Malgun Gothic",sans-serif; word-break:keep-all; }
+  main { max-width:1040px; margin:0 auto; padding:32px 20px 80px; }
+  h1 { font-size:30px; line-height:1.35; margin:0 0 8px; }
+  h2 { font-size:22px; margin:36px 0 10px; }
+  p { margin:8px 0; }
+  a { color:var(--blue); }
+  .kicker { color:var(--muted); font-size:13px; margin:0 0 8px; }
+  nav a { display:inline-block; margin:4px 6px 0 0; padding:4px 10px; background:#fff; border:1px solid var(--line); border-radius:999px; color:var(--blue); text-decoration:none; font-size:14px; }
+  .scroll { overflow-x:auto; margin:10px 0 16px; }
+  table { width:100%; border-collapse:collapse; background:#fff; }
+  th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#f3eee4; }
+  code { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.92em; }
+  ol { margin:8px 0 8px 22px; padding:0; }
+  li { margin:8px 0; }
+  .card { background:#fffdf8; border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin:10px 0; }
+  .stop { background:#fff4df; border-color:#edd3a4; }
+  .ok { background:#e7f5ec; border-color:#b7dfc6; }
+</style>
+</head>
+<body>
+<main>
+<p class="kicker">L1_APM · MainProgram · s07_BP · 현장적용서 번외</p>
+<h1>BP 프레스는 품번과 관계없이 100에서 전진을 끊는다</h1>
+<p>이 글은 BR, LM 조작 버튼 현장적용서의 번외다. 업로드한 L1_APM에서 프레스 전진이 어느 압력에서 끝나는지 확인한 내용이다. PLC 프로그램은 이 문서로 고치지 않는다. 화면에 <code>BP_Setup</code>을 나중에 고쳤으면 온라인 값은 아래 표와 다를 수 있다.</p>
+<nav>
+  <a href="#now">1. 지금 동작</a>
+  <a href="#how">2. 목표가 정해지는 순서</a>
+  <a href="#table">3. 품번 표</a>
+  <a href="#stop">4. 100에서 멈추는 출력</a>
+  <a href="#judge">5. 80과 90이 쓰이는 곳</a>
+  <a href="#from">6. 품번이 들어오는 곳</a>
+  <a href="#lower">7. 목표를 바꾸려면</a>
+  <a href="#check">8. 온라인에서 보는 태그</a>
+</nav>
+
+<h2 id="now">1. 지금 동작</h2>
+<p>프레스 압력계는 하나다. 귀, 상부, 중간, 하부마다 압력을 따로 주지 않는다. 그 위치들은 길이만 따로 판정한다.</p>
+<p>램이 전진을 끊는 압력은 품번 1부터 9까지 전부 100이다. 표에 80이나 90이 적혀 있어도 그 값에서 멈추지 않는다. 100에서 압력을 붙잡고 있는 제어도 없다. 게이지가 100을 넘는 순간 전진 솔레노이드를 끈다.</p>
+<p>이 100은 다른 PLC에서 통신으로 읽어 들이는 값이 아니다. 컨트롤러 안의 <code>BP_Setup</code>에서 품번 칸의 최저 압력을 복사한 뒤, 100보다 작으면 100으로 덮는다.</p>
+
+<h2 id="how">2. 목표가 정해지는 순서</h2>
+<p>BP에 있는 조동 데이터의 품번 <code>dCA[1].PDNO</code>를 <code>iCA_BP_PDNo</code>에 넣는다. 그 품번이 1 이상 9 이하면 <code>BP_Setup[품번].minPress</code>를 <code>zBP_TargetPress</code>에 복사한다. 복사한 값이 100보다 작으면 다음 렁이 100을 넣는다.</p>
+<p>업로드 당시 <code>iCA_BP_PDNo</code>는 0이고 <code>zBP_TargetPress</code>는 100이었다. 품번 0은 1~9 조건에 들지 않아서 표를 읽지 않는다. 그때 남아 있는 100은 하한이 넣어 둔 값이다.</p>
+<div class="card">
+  <p><code>s07_BP</code> Rung 23이 표를 복사하고, Rung 24가 100 미만을 100으로 덮는다. 전진 비교는 Rung 18에서 <code>zBP_TargetPress</code>를 본다.</p>
+</div>
+
+<h2 id="table">3. 품번 표</h2>
+<p>아래 숫자는 업로드한 <code>BP_Setup</code>이다. 오른쪽 칸이 램이 실제로 보는 목표다.</p>
+<div class="scroll">
+<table>
+<thead><tr><th>품번</th><th>표의 최저 압력</th><th>표의 최고 압력</th><th>전진이 끊기는 압력</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>80</td><td>120</td><td>100</td></tr>
+<tr><td>2</td><td>80</td><td>110</td><td>100</td></tr>
+<tr><td>3</td><td>90</td><td>120</td><td>100</td></tr>
+<tr><td>4</td><td>90</td><td>140</td><td>100</td></tr>
+<tr><td>5</td><td>90</td><td>151</td><td>100</td></tr>
+<tr><td>6</td><td>90</td><td>151</td><td>100</td></tr>
+<tr><td>7</td><td>0</td><td>0</td><td>100</td></tr>
+<tr><td>8</td><td>0</td><td>900</td><td>100</td></tr>
+<tr><td>9</td><td>0</td><td>900</td><td>100</td></tr>
+</tbody>
+</table>
+</div>
+<p>BR 품번 버튼은 1, 2, 3만 넣는다. 그래서 보통 조업에서 표를 타는 칸은 1, 2, 3이다. 그 칸도 최저가 80 또는 90이라 하한에 걸려 100이 된다. 품번 7은 최저와 최고가 둘 다 0이다. 품번 8과 9는 최고만 900이다.</p>
+
+<h2 id="stop">4. 100에서 멈추는 출력</h2>
+<p>압력계 <code>ai_BPP</code>는 로컬 4번 슬롯 <code>IF16_1</code>의 12채널이다. 4~20 mA를 0~400으로 받는다. 목표 100은 그 눈금의 100이다.</p>
+<ol>
+  <li>자동 전진은 스텝 3이고, 프레스 허가가 있고, 전진 시간초과가 아니고, 압력 도달 타이머가 아직 안 돌 때 <code>uBPFB.op_FWD</code>가 켜진다.</li>
+  <li>전진 안전 <code>uBPFB.zFWD_Safety</code>는 현재 압력이 목표보다 낮을 때만 켜진다. 100 이상이면 안전이 꺼져서 <code>q_BPFW</code>도 나가지 않는다.</li>
+  <li>압력이 100을 넘으면 <code>tm_BPPOk</code>가 시작된다. 타이머가 켜지는 즉시 전진 지령이 꺼진다. 100 ms 동안 목표를 넘긴 상태가 유지되면 <code>zBP_PFWD_Ok</code>가 되고 스텝 4로 넘어간다.</li>
+  <li>전진이 3.5초(<code>tm_BPTime</code> PRE 3500)를 넘기면 전진 지령은 꺼진다. 그 시간초과 가지에는 <code>XIC(OFF)</code>가 있어서 스텝은 넘어가지 않는다. 압력이 100을 넘기기 전에는 스텝 3에 남는다.</li>
+  <li>스텝 4에서 <code>ai_BPP</code>를 <code>dCA[1].BPPress</code>에 저장한다. 그 뒤 압력이 5(<code>ui_BP_Unpress</code>)보다 낮아지면 다음 스텝으로 간다.</li>
+</ol>
+<div class="card stop">
+  <p>목표에 10을 더한 110을 넘으면 <code>zBP_POverBwd_Req</code>가 켜진다. 이 비트를 읽어서 후진을 내는 렁은 없다. 과압이라고 솔레노이드가 후진으로 바뀌지는 않는다.</p>
+</div>
+
+<h2 id="judge">5. 80과 90이 쓰이는 곳</h2>
+<p>표의 최저 압력과 최고 압력은 저장된 압력의 합격 판정에 쓴다. <code>dCA[1].BPPress</code>가 그 품번의 최저와 최고 사이에 있으면 <code>zPBPress_Ok</code>가 켜진다. 품번 1은 80~120, 품번 2는 80~110, 품번 3은 90~120이다.</p>
+<p>이 판정은 램을 멈추는 값이 아니다. 정상으로 끝나면 전진은 이미 100을 넘긴 뒤에 끊기므로, 저장되는 압력도 100을 넘긴 직후의 값이다. 80과 90은 그때 합격으로 볼 하한이다.</p>
+<p>길이 합격은 같은 품번 칸의 mm 최저, 최고로 따로 본다. 압력 합격과 길이 합격이 같이 맞아야 <code>dCA[1].WorkOk_BP</code>가 켜진다.</p>
+
+<h2 id="from">6. 품번이 들어오는 곳</h2>
+<p>품번을 목표 압력으로 통신받는 렁은 없다. BR에서 <code>ui_BR_PN1</code>, <code>ui_BR_PN2</code>, <code>ui_BR_PN3</code>를 누르면 <code>zBR_PNO</code>에 1, 2, 3이 들어간다. 소재가 있고 리프트 상승 센서가 들어오면 그 번호가 대차 데이터로 넘어간다. 계량 완료 때 <code>dCA[0].PDNO</code>가 되고, 대차가 움직이면 BP 자리인 <code>dCA[1].PDNO</code>까지 온다.</p>
+<p><code>BP_Setup</code>은 컨트롤러 태그다. 화면에서 읽고 쓸 수 있다. 로직이 이 표를 고치는 곳은 복사 버튼 <code>ui_Copy_BP_Data</code>뿐이다. 누리면 <code>ui_BP_From</code> 칸을 <code>ui_BP_To</code> 칸으로 한 칸 복사한다.</p>
+
+<h2 id="lower">7. 목표를 바꾸려면</h2>
+<p>표의 최저 압력만 80이나 90으로 바꿔도 전진이 끊기는 압력은 100이다. Rung 24가 100보다 작은 값을 다시 100으로 넣기 때문이다.</p>
+<p>품번마다 다른 압력에서 전진을 끊기려면 두 곳을 같이 맞춰야 한다. 원하는 압력을 그 품번의 <code>minPress</code>에 넣고, Rung 24의 하한 100을 그 압력보다 낮춘다. 하한을 그대로 두면 표는 합격 하한으로만 남는다.</p>
+<div class="card stop">
+  <p>하한 100만 지우면 안 된다. 품번 7, 8, 9의 최저 압력은 0이다. 하한이 없으면 그 품번이 들어올 때 목표가 0이 된다. 압력이 0을 조금만 넘어도 프레스 완료가 되고, 전진 안전도 바로 꺼진다. 전 품번을 100으로 누를 조업이면 하한은 둔다.</p>
+</div>
+<p>이 페이지는 읽는 문서다. 회사 L1_APM에는 렁을 추가하거나 하한을 바꾸지 않는다.</p>
+
+<h2 id="check">8. 온라인에서 보는 태그</h2>
+<p>프레스를 한 번 돌리면서 아래 순서로 본다.</p>
+<ol>
+  <li><code>dCA[1].PDNO</code>와 <code>iCA_BP_PDNo</code>가 같은지 본다. BP에 있는 조동의 품번이다.</li>
+  <li>그 품번의 <code>BP_Setup[품번].minPress</code>를 본다. 100보다 작으면 전진 목표는 표의 숫자가 아니다.</li>
+  <li><code>zBP_TargetPress</code>를 본다. 지금 로직이면 100이다.</li>
+  <li>전진 중에 <code>ai_BPP</code>가 100을 넘는 순간 <code>q_BPFW</code>가 꺼지는지 본다. 100 ms 뒤 스텝이 4로 넘어가면 압력 도달로 끝난 것이다.</li>
+  <li>저장된 <code>dCA[1].BPPress</code>가 표의 최저와 최고 사이에 있는지 본다. 이 비교가 합격이다. 전진을 끊은 값과 같은 숫자가 아니어도 된다.</li>
+</ol>
+<div class="card ok">
+  <p>관련 문서: <a href="작업정리.html">이번 작업 정리</a>, <a href="BR_인터치_조작버튼_현장적용.html">BR, LM 조작 버튼 현장적용서</a>.</p>
+</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이번 작업 정리</title>
+<style>
+  body { margin:0; background:#f6f2ea; color:#1c1915; font:17px/1.65 "Apple SD Gothic Neo","Malgun Gothic",sans-serif; }
+  main { max-width:820px; margin:0 auto; padding:32px 20px 72px; }
+  h1 { font-size:28px; margin:0 0 12px; }
+  h2 { font-size:20px; margin:28px 0 8px; }
+  a { color:#1e3f73; }
+  table { width:100%; border-collapse:collapse; background:#fff; }
+  th, td { border:1px solid #d9d1c4; padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#f3eee4; }
+  code { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.92em; }
+</style>
+</head>
+<body>
+<main>
+<h1>이번 작업 정리</h1>
+<p>한 파일에 몰려 있지 않다. 아래 파일에 각각 있다.</p>
+<table>
+<thead><tr><th>작업</th><th>파일</th></tr></thead>
+<tbody>
+<tr><td>56톱니, 28톱니 기어</td><td><code>gears-56-28.solidcraft</code><br>SolidCraft recovery 폴더</td></tr>
+<tr><td>플로미터 케이스. PCB 고정 홀 6곳</td><td><code>flowmeter-case.solidcraft</code><br>SolidCraft recovery 폴더</td></tr>
+<tr><td>웨건 처짐 대기 10초, 솔 0.45초, 오일 온도를 <code>dHMI_Rep[35]</code>로 넘기는 11줄</td><td><a href="s13_WG_처짐보충_조업설명.html">s13_WG_처짐보충_조업설명.html</a></td></tr>
+<tr><td>BR, LM InTouch 순서와 눌러 보기</td><td><a href="BR_인터치_조작버튼_현장적용.html">BR_인터치_조작버튼_현장적용.html</a></td></tr>
+<tr><td>BP 프레스는 품번 표와 상관없이 100에서 전진을 끊는다. 현장적용서 번외다.</td><td><a href="BP_목표압력_현장적용.html">BP_목표압력_현장적용.html</a></td></tr>
+</tbody>
+</table>
+<h2>지금 쓰는 웨건 값</h2>
+<p>대기 10초, 펌프 2초, 솔 0.45초. 며칠간 에러가 없으면 이 값으로 둔다. 구간별 타이머는 넣지 않는다.</p>
+<h2>LM완료</h2>
+<p>터치판넬 LM완료 ON은 <code>dCA[5].WorkOk_LM</code>에 1을 한 번 쓴다. OFF는 0을 한 번 쓴다. CA 자동, LM 자동에서도 쓸 수 있다. 수동으로 바꿀 필요는 없다.</p>
+<h2>BP 목표압력</h2>
+<p>프레스 전진은 품번 표의 80이나 90에서 끊기지 않는다. 100보다 작은 목표는 100으로 덮인다. 통신으로 받아 오는 값이 아니다. 자세한 확인 순서는 <a href="BP_목표압력_현장적용.html">BP 프레스 목표압력</a>에 있다.</p>
+</main>
+</body>
+</html>

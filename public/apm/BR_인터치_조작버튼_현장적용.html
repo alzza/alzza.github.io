@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BR LM InTouch 현장적용서</title>
+<style>
+  :root { --ink:#1c1915; --line:#d9d1c4; --paper:#f6f2ea; --blue:#1e3f73; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:17px/1.7 "Apple SD Gothic Neo","Malgun Gothic",sans-serif; word-break:keep-all; }
+  main { max-width:920px; margin:0 auto; padding:32px 20px 80px; }
+  h1 { font-size:30px; line-height:1.35; margin:0 0 8px; }
+  h2 { font-size:22px; margin:36px 0 10px; }
+  h3 { font-size:18px; margin:22px 0 8px; }
+  p { margin:8px 0; }
+  .kicker { color:#5c564c; font-size:13px; }
+  a { color:var(--blue); }
+  nav a { display:inline-block; margin:4px 6px 0 0; padding:4px 10px; background:#fff; border:1px solid var(--line); border-radius:999px; color:var(--blue); text-decoration:none; font-size:14px; }
+  table { width:100%; border-collapse:collapse; background:#fff; margin:10px 0 16px; }
+  th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#f3eee4; }
+  code { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.92em; }
+  ol { margin:8px 0 8px 22px; padding:0; }
+  li { margin:8px 0; }
+  .card { background:#fffdf8; border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin:10px 0; }
+  .stop { background:#fff4df; border-color:#edd3a4; }
+  .ok { background:#e7f5ec; border-color:#b7dfc6; }
+  .panel { background:#f4c9d4; border:2px solid #6d5a62; padding:14px; margin:14px 0 8px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .box { background:#f8e4ea; border:1px solid #b79aa4; padding:12px; }
+  .box h3 { margin:0 0 8px; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:8px 0; }
+  .btn { min-width:110px; min-height:46px; border:2px solid #222; background:#d5d5d5; font-weight:800; cursor:pointer; user-select:none; }
+  .btn.go { background:#3dce4a; }
+  .lamp { width:16px; height:16px; border-radius:50%; border:2px solid #333; background:#9a9a9a; display:inline-block; vertical-align:-3px; margin-right:4px; }
+  .lamp.on { background:#3dce4a; }
+  .tag { font:12px/1.35 ui-monospace,Menlo,Consolas,monospace; }
+  .log { margin-top:8px; background:#111; color:#b6f3c0; font:13px/1.45 ui-monospace,Menlo,Consolas,monospace; padding:8px 10px; min-height:56px; }
+  @media (max-width:800px) { .grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main>
+<p class="kicker">L1_APM · WindowMaker · BR, LM</p>
+<h1>BR, LM 조작 버튼을 화면에 넣는 순서</h1>
+<p>이 순서는 PC용 InTouch에 BR과 LM 조작 버튼을 붙이는 작업이다. PLC 프로그램은 손대지 않는다. PLC 태그는 이미 컨트롤러에 있다. InTouch 태그 사전에 같은 Item이 있으면 그 태그를 그대로 버튼에 연결한다.</p>
+<p>BP가 어느 압력에서 전진을 끊는지는 이 순서와 따로 적어 두었다. <a href="BP_목표압력_현장적용.html">BP 프레스 목표압력</a>을 본다.</p>
+<nav>
+  <a href="#open">1. 접속 이름 확인</a>
+  <a href="#tags">2. 태그 확인</a>
+  <a href="#br">3. BR 화면</a>
+  <a href="#lm">4. LM 화면</a>
+  <a href="#check">5. 확인</a>
+</nav>
+
+<h2 id="open">1. 접속 이름 확인</h2>
+<ol>
+  <li>WindowMaker를 연다. 감시 중인 WindowViewer가 아니다.</li>
+  <li>위 메뉴 Special에서 Tagname Dictionary를 연다.</li>
+  <li>찾기 칸에 <code>dHMI_Rep</code>를 입력하고, 화면에서 값이 실제로 바뀌는 태그를 연다.</li>
+  <li>Access Name에 적힌 이름을 적는다. 새 태그를 만들 때도 이 이름을 목록에서 고른다. 키보드로 비슷하게 치지 않는다.</li>
+  <li>Item 칸을 본다. <code>dHMI_Rep[51]</code>처럼 태그 이름만 있으면 접두는 없다. <code>[L1_APM]</code>처럼 대괄호가 앞에 붙어 있으면 그 접두를 같이 적는다.</li>
+</ol>
+
+<h2 id="tags">2. 태그 확인</h2>
+<p>태그 사전 찾기 칸에 아래 Item을 넣는다. 같은 Item이 나오면 그 Tagname을 버튼에 쓴다. 새로 만들지 않는다.</p>
+<p>검색 결과가 없을 때만 New로 추가한다. Type은 <code>I/O Discrete</code>로 둔다. Memory Discrete는 화면 안에서만 도는 태그이므로 고르지 않는다. Access Name은 1번에서 확인한 이름을 고르고, 읽기와 쓰기를 모두 켠다. Item에는 표의 오른쪽 글자를 넣는다. 1번에서 접두를 적어 두었으면 그 접두를 Item 앞에 붙인다. 따옴표와 빈칸은 넣지 않는다.</p>
+<table>
+<thead><tr><th>없을 때 쓸 Tagname</th><th>Item</th><th>어디에 쓰나</th></tr></thead>
+<tbody>
+<tr><td><code>BR_ModeMan</code></td><td><code>cBR.ui_Mode_Man</code></td><td>BR 수동 버튼</td></tr>
+<tr><td><code>BR_ModeAuto</code></td><td><code>cBR.ui_Mode_Auto</code></td><td>BR 자동 버튼</td></tr>
+<tr><td><code>BR_ManLamp</code></td><td><code>cBR.Mode_Man</code></td><td>BR 수동 버튼 색</td></tr>
+<tr><td><code>BR_AutoLamp</code></td><td><code>cBR.Mode_Auto</code></td><td>BR 자동 버튼 색</td></tr>
+<tr><td><code>BR_LiftUp</code></td><td><code>uBRLI.ui_UP_PB</code></td><td>리프트 상승 버튼</td></tr>
+<tr><td><code>BR_LiftDown</code></td><td><code>uBRLI.ui_DOWN_PB</code></td><td>리프트 하강 버튼</td></tr>
+<tr><td><code>BR_UpOut</code></td><td><code>q_BRLIUP</code></td><td>리프트 상승 출력</td></tr>
+<tr><td><code>BR_UpSens</code></td><td><code>i_BRLIUP_LS</code></td><td>리프트 상승 센서</td></tr>
+<tr><td><code>BR_DnOut</code></td><td><code>q_BRLIDN</code></td><td>리프트 하강 출력</td></tr>
+<tr><td><code>BR_DnSens</code></td><td><code>i_BRLIDN_LS</code></td><td>리프트 하강 센서</td></tr>
+<tr><td><code>BR_AlignFwd</code></td><td><code>uBRAL.ui_FWD_PB</code></td><td>정렬 전진 버튼</td></tr>
+<tr><td><code>BR_AlignBwd</code></td><td><code>uBRAL.ui_BWD_PB</code></td><td>정렬 후진 버튼</td></tr>
+<tr><td><code>BR_FwdOut</code></td><td><code>q_BRALFWL</code></td><td>정렬 전진 버튼 색</td></tr>
+<tr><td><code>BR_BwdOut</code></td><td><code>q_BRALBWL</code></td><td>정렬 후진 버튼 색</td></tr>
+<tr><td><code>LM_WorkOk</code></td><td><code>dCA[5].WorkOk_LM</code></td><td>LM완료 ON, OFF와 버튼 색</td></tr>
+</tbody>
+</table>
+<div class="card stop">
+  <p>표의 Tagname은 사전에 없을 때 붙이는 이름이다. 같은 Item으로 이미 등록된 태그가 있으면 그 이름을 쓴다. 리프트와 정렬 버튼을 누르는 Item에 <code>q_BRLIUP</code> 같은 출력 코일을 넣지 않는다. 출력 코일은 버튼 색에만 연결한다.</p>
+</div>
+
+<h2 id="br">3. BR 화면</h2>
+<p>BR 감시 창을 연다. 버튼 여섯 개의 글자를 수동, 자동, 리프트 상승, 리프트 하강, 정렬 전진, 정렬 후진으로 적는다.</p>
+<h3>수동, 자동</h3>
+<ol>
+  <li>Wizard에서 Momentary Pushbutton을 고른다. Toggle은 고르지 않는다.</li>
+  <li>수동 버튼을 화면에 놓고 두 번 누른다.</li>
+  <li>터치 태그에 <code>BR_ModeMan</code>을 넣는다. 마우스 버튼을 누르고 있는 동안 1, 떼면 0이 되게 둔다.</li>
+  <li>같은 버튼에서 Fill Color의 Discrete를 연다. 태그는 <code>BR_ManLamp</code>로 두고, 0은 회색, 1은 초록으로 지정한다.</li>
+  <li>자동 버튼도 같은 종류로 만든다. 터치 태그는 <code>BR_ModeAuto</code>, 색 태그는 <code>BR_AutoLamp</code>다.</li>
+</ol>
+<h3>리프트, 정렬</h3>
+<ol>
+  <li>네 버튼 모두 Momentary Pushbutton으로 만든다.</li>
+  <li>리프트 상승은 터치에 <code>BR_LiftUp</code>을 넣는다. 색은 Discrete Expression에 <code>BR_UpOut OR BR_UpSens</code>를 넣는다. 0은 회색, 1은 초록이다. 출력이 나가 있을 때와 상승 센서가 들어와 있을 때 둘 다 초록이다.</li>
+  <li>리프트 하강은 터치 <code>BR_LiftDown</code>, 색은 <code>BR_DnOut OR BR_DnSens</code>다.</li>
+  <li>정렬 전진은 터치 <code>BR_AlignFwd</code>, 색 <code>BR_FwdOut</code>이다.</li>
+  <li>정렬 후진은 터치 <code>BR_AlignBwd</code>, 색 <code>BR_BwdOut</code>이다.</li>
+</ol>
+<div class="card ok">
+  <p>저장한 뒤 Runtime으로 전환한다. 수동을 한 번 누르면 버튼이 초록으로 유지된다. 다시 수동인 상태에서 리프트 상승을 누르는 동안 그 버튼이 초록이면 연결은 된 것이다. 상승 센서가 들어오기 전에는 손을 떼도 초록이 남을 수 있다. 하강을 누르면 상승 색은 꺼진다.</p>
+</div>
+<div class="panel" id="try-br">
+  <h3>BR 눌러 보기</h3>
+  <p class="hint">이 칸은 PLC에 연결되어 있지 않다. 버튼 색과 비트만 위 순서와 같게 움직인다.</p>
+  <div class="grid">
+    <div class="box">
+      <h3>모드</h3>
+      <div class="row">
+        <button type="button" class="btn" id="brMan">수동</button>
+        <button type="button" class="btn" id="brAuto">자동</button>
+      </div>
+      <div class="tag" id="brModeTag"></div>
+    </div>
+    <div class="box">
+      <h3>조건</h3>
+      <div class="row"><label><input type="checkbox" id="brEn" checked> zEnable</label></div>
+      <div class="row"><label><input type="checkbox" id="brUpSens"> 상승 센서</label> <label><input type="checkbox" id="brDnSens"> 하강 센서</label></div>
+      <div class="row"><label><input type="checkbox" id="brSafe" checked> 리프트 안전</label></div>
+    </div>
+    <div class="box">
+      <h3>리프트</h3>
+      <div class="row">
+        <button type="button" class="btn" id="brUp">리프트 상승</button>
+        <button type="button" class="btn" id="brDn">리프트 하강</button>
+      </div>
+      <div class="row"><span class="lamp" id="lampUp"></span>q_BRLIUP <span class="lamp" id="lampDn"></span>q_BRLIDN</div>
+      <div class="tag" id="brLiftTag"></div>
+    </div>
+    <div class="box">
+      <h3>정렬</h3>
+      <div class="row">
+        <button type="button" class="btn" id="brFwd">정렬 전진</button>
+        <button type="button" class="btn" id="brBwd">정렬 후진</button>
+      </div>
+      <div class="row"><span class="lamp" id="lampFwd"></span>q_BRALFWL <span class="lamp" id="lampBwd"></span>q_BRALBWL</div>
+      <div class="tag" id="brAlTag"></div>
+    </div>
+  </div>
+</div>
+
+<h2 id="lm">4. LM완료</h2>
+<p><code>dCA[5].WorkOk_LM</code>은 모드 조건이 없다. CA가 자동이어도, LM이 자동이어도, 수동이어도 1과 0이 들어간다. LM을 수동으로 바꾼 뒤에 누를 필요는 없다.</p>
+<ol>
+  <li>사각형 버튼 두 개를 그리고 글자를 ON, OFF로 적는다. Momentary Pushbutton으로 만들지 않는다.</li>
+  <li>ON 버튼을 두 번 누르고 Touch Links의 Action을 연다.</li>
+  <li>On Left Click에 <code>LM_WorkOk = 1;</code> 한 줄만 넣는다.</li>
+  <li>OFF 버튼의 On Left Click에는 <code>LM_WorkOk = 0;</code> 한 줄만 넣는다.</li>
+  <li>ON 버튼 Fill Color의 Discrete 태그는 <code>LM_WorkOk</code>다. 1이면 초록, 0이면 회색이다.</li>
+  <li>OFF 버튼 Fill Color도 <code>LM_WorkOk</code>다. 0이면 초록, 1이면 회색이다.</li>
+</ol>
+<p>ON을 한 번 누르면 1이 남고, OFF를 한 번 누르면 0이 남는다. 버튼을 누르고 있는 동안에만 1을 유지하게 만들지 않는다. 이 비트가 1이고 LM이 홈이면 대차는 <code>zCA_LM_Ok</code>로 LM을 통과시킨다. 돌아가는 밀링을 바로 세우지는 않는다.</p>
+<div class="card ok">
+  <p>Runtime에서 ON을 한 번 누른다. ON이 초록으로 남고 OFF가 회색이면 된다. OFF를 한 번 누르면 색이 바뀌고, PLC의 <code>dCA[5].WorkOk_LM</code>도 같이 0이 되면 된다.</p>
+</div>
+<div class="panel" id="try-lm">
+  <h3>LM완료 눌러 보기</h3>
+  <p class="hint">이 칸은 PLC에 연결되어 있지 않다. 모드는 없다. 색은 dCA[5].WorkOk_LM 하나다.</p>
+  <div class="box">
+    <div class="row">
+      <button type="button" class="btn" id="lmOn">ON</button>
+      <button type="button" class="btn" id="lmOff">OFF</button>
+    </div>
+    <div class="tag" id="lmOkTag"></div>
+    <div class="row"><label><input type="checkbox" id="lmHome" checked> 홈</label> <span class="lamp" id="lampPass"></span>zCA_LM_Ok</div>
+  </div>
+</div>
+<div class="log" id="log">대기</div>
+
+<h2 id="check">5. 확인</h2>
+<ol>
+  <li>Runtime에서 BR 수동을 누른다. PLC의 <code>cBR.Mode_Man</code>이 1이 된다.</li>
+  <li>BR 자동을 누른다. <code>cBR.Mode_Auto</code>가 1이 되고 <code>cBR.Mode_Man</code>은 0이 된다.</li>
+  <li>다시 수동으로 두고 리프트 상승을 누른다. 누르는 동안 <code>uBRLI.ui_UP_PB</code>가 1이다. 유압과 비상, 안전 조건이 맞으면 <code>q_BRLIUP</code>이 1이 된다.</li>
+  <li>LM완료 ON을 누른다. 모드를 바꾸지 않아도 <code>dCA[5].WorkOk_LM</code>이 1로 남는다. OFF를 누르면 0으로 남는다.</li>
+</ol>
+<table>
+<thead><tr><th>화면에서 보이는 상태</th><th>고치는 곳</th></tr></thead>
+<tbody>
+<tr><td>버튼을 눌러도 PLC 값이 안 바뀐다</td><td>Access Name을 1번의 감시 태그와 같게 다시 고른다. Item 철자를 표와 맞추고, 쓰기가 꺼져 있으면 켠다.</td></tr>
+<tr><td>수동을 누른 직후 색이 바로 회색이 된다</td><td>버튼 색을 <code>BR_ManLamp</code> 또는 <code>LM_ManLamp</code>에 연결한다. <code>ui_Mode</code> 태그에는 색을 연결하지 않는다.</td></tr>
+<tr><td>Item 저장이 거절된다</td><td>기존 감시 태그 Item 앞에 있던 접두를 새 Item 앞에도 붙인다.</td></tr>
+<tr><td>태그는 1인데 실린더가 안 움직인다</td><td>BR을 수동으로 둔다. <code>cBR.zEnable</code>이 1인지 확인한다. 비상정지나 고장이 있으면 버튼 값이 맞아도 출력은 나가지 않는다.</td></tr>
+</tbody>
+</table>
+<script>
+var br = { uiMan:0, uiAuto:0, man:0, auto:1, en:1 };
+var li = { up:0, dn:0 };
+var al = { fw:0, bw:0 };
+var q = { up:0, dn:0, fw:0, bw:0 };
+var sens = { up:0, dn:0, safe:1 };
+var lm = { home:1, ok:0 };
+function log(s) {
+  var el = document.getElementById("log");
+  el.textContent = s + "\n" + el.textContent.split("\n").slice(0, 4).join("\n");
+}
+function pulse(st, which) {
+  st.uiMan = which === "man" ? 1 : 0;
+  st.uiAuto = which === "auto" ? 1 : 0;
+  log((st === br ? "cBR" : "cLM") + ".ui_Mode_" + (which === "man" ? "Man" : "Auto") + " = 1");
+  render();
+  setTimeout(function () {
+    st.uiMan = 0; st.uiAuto = 0;
+    st.man = which === "man" ? 1 : 0;
+    st.auto = which === "auto" ? 1 : 0;
+    log((st === br ? "cBR" : "cLM") + ".Mode_" + (which === "man" ? "Man" : "Auto") + " = 1, ui 비트는 0");
+    render();
+  }, 250);
+}
+function scan() {
+  var man = br.man && br.en && sens.safe;
+  q.up = (man && (li.up || q.up) && !li.dn && !sens.up && !q.dn) ? 1 : 0;
+  q.dn = (man && (li.dn || q.dn) && !li.up && !sens.dn && !q.up) ? 1 : 0;
+  q.fw = (man && (al.fw || q.fw) && !al.bw) ? 1 : 0;
+  q.bw = (man && (al.bw || q.bw) && !al.fw) ? 1 : 0;
+}
+function paint(id, on) { document.getElementById(id).classList.toggle("go", !!on); }
+function render() {
+  scan();
+  paint("brMan", br.man); paint("brAuto", br.auto);
+  paint("brUp", q.up || sens.up); paint("brDn", q.dn || sens.dn);
+  paint("brFwd", q.fw); paint("brBwd", q.bw);
+  document.getElementById("lampUp").classList.toggle("on", q.up === 1);
+  document.getElementById("lampDn").classList.toggle("on", q.dn === 1);
+  document.getElementById("lampFwd").classList.toggle("on", q.fw === 1);
+  document.getElementById("lampBwd").classList.toggle("on", q.bw === 1);
+  document.getElementById("brModeTag").textContent = "cBR.ui_Mode_Man=" + br.uiMan + "  Mode_Man=" + br.man + "   ui_Mode_Auto=" + br.uiAuto + "  Mode_Auto=" + br.auto;
+  document.getElementById("brLiftTag").textContent = "ui_UP_PB=" + li.up + "  q_BRLIUP=" + q.up + "  i_BRLIUP_LS=" + sens.up + "   ui_DOWN_PB=" + li.dn + "  q_BRLIDN=" + q.dn + "  i_BRLIDN_LS=" + sens.dn;
+  document.getElementById("brAlTag").textContent = "uBRAL.ui_FWD_PB=" + al.fw + "  q_BRALFWL=" + q.fw + "   ui_BWD_PB=" + al.bw + "  q_BRALBWL=" + q.bw;
+  paint("lmOn", lm.ok); paint("lmOff", !lm.ok);
+  document.getElementById("lmOkTag").textContent = "dCA[5].WorkOk_LM=" + lm.ok + "   홈=" + lm.home + "   zCA_LM_Ok=" + ((lm.ok && lm.home) ? 1 : 0);
+  document.getElementById("lampPass").classList.toggle("on", lm.ok === 1 && lm.home === 1);
+}
+function hold(id, obj, key, name) {
+  var el = document.getElementById(id);
+  function down(e) { e.preventDefault(); obj[key] = 1; log(name + " = 1"); render(); }
+  function up() { if (!obj[key]) return; obj[key] = 0; log(name + " = 0"); render(); }
+  el.addEventListener("mousedown", down);
+  window.addEventListener("mouseup", up);
+  el.addEventListener("touchstart", down, { passive: false });
+  el.addEventListener("touchend", up);
+}
+hold("brUp", li, "up", "uBRLI.ui_UP_PB");
+hold("brDn", li, "dn", "uBRLI.ui_DOWN_PB");
+hold("brFwd", al, "fw", "uBRAL.ui_FWD_PB");
+hold("brBwd", al, "bw", "uBRAL.ui_BWD_PB");
+document.getElementById("brMan").onclick = function () { pulse(br, "man"); };
+document.getElementById("brAuto").onclick = function () { pulse(br, "auto"); };
+document.getElementById("brEn").onchange = function () { br.en = this.checked ? 1 : 0; log("cBR.zEnable = " + br.en); render(); };
+document.getElementById("brUpSens").onchange = function () { sens.up = this.checked ? 1 : 0; render(); };
+document.getElementById("brDnSens").onchange = function () { sens.dn = this.checked ? 1 : 0; render(); };
+document.getElementById("brSafe").onchange = function () { sens.safe = this.checked ? 1 : 0; render(); };
+document.getElementById("lmOn").onclick = function () { lm.ok = 1; log("dCA[5].WorkOk_LM = 1"); render(); };
+document.getElementById("lmOff").onclick = function () { lm.ok = 0; log("dCA[5].WorkOk_LM = 0"); render(); };
+document.getElementById("lmHome").onchange = function () { lm.home = this.checked ? 1 : 0; render(); };
+render();
+</script>
+</main>
+</body>
+</html>
