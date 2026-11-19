@@ -84,6 +84,7 @@
       <div class="calc" role="region" aria-labelledby="calc-title">
 <span class="badgelabel">패러데이 법칙 계산 · 전류효율은 입력한 가정입니다.</span>
 <h3 id="calc-title">Cathode 판 크기에 맞춰 석출량을 계산합니다.</h3>
+<p>DK 320 A/m²를 예로 들면, 폭 980 mm와 침지 높이 1,065 mm에서 음극 49매의 양면 면적은 약 102.28 m²이고 계산 전류는 약 32.73 kA입니다. 현장 DK와 비교하려면 현장에서 쓰는 유효 면적 기준을 맞춰야 합니다.</p>
 <p>한 Cell에 조동 <strong>50매</strong>, Cathode blank <strong>49매</strong>를 사용하는 구성입니다. Cathode 한 장의 양면에 구리가 고르게 석출되고, 49매에 전류가 균등하게 나뉜다고 가정합니다. blank 자체 무게는 구리 생산량에 포함하지 않습니다.</p>
 <div class="interactive">
 <div class="controls">
@@ -91,7 +92,7 @@
 <div class="control"><label for="calc-width">판 한 면의 실제 전착 폭 (mm)</label><input id="calc-width" type="number" min="1" max="5000" step="any" value="980" placeholder="실제 폭 입력" aria-describedby="geometry-help"></div>
 <div class="control"><label for="calc-height">판 한 면의 실제 침지 높이 (mm)</label><input id="calc-height" type="number" min="1" max="5000" step="any" value="1065" placeholder="실제 침지 높이 입력" aria-describedby="geometry-help"></div>
 <div class="control"><label for="calc-current">Cell 전체 전류 (A)</label><input id="calc-current" type="number" min="0" max="200000" step="any" value="1000"></div>
-<div class="control"><label for="calc-density">전착 면적 기준 전류밀도 (A/m²)</label><input id="calc-density" type="number" min="0" max="2000" step="any" placeholder="전류밀도 입력" disabled></div>
+<div class="control"><label for="calc-density">음극 전류밀도 DK (A/m²)</label><input id="calc-density" type="number" min="0" max="2000" step="any" placeholder="예: 320" disabled><small>DK 단위가 A/m²이면 표시값을 그대로 입력합니다. A/dm²이면 100을 곱합니다. 예를 들어 3.2 A/dm²는 320 A/m²입니다.</small></div>
 <div class="control"><label for="calc-hours">실제 누적 통전 시간 (h)</label><input id="calc-hours" type="number" min="0" max="10000" step="any" value="24"></div>
 <div class="control"><label for="calc-eff">가정한 전류효율 <output id="eff-out" for="calc-eff">95%</output></label><input id="calc-eff" type="range" min="0" max="100" step="0.1" value="95"></div>
 </div>
